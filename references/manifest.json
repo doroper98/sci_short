@@ -1,0 +1,251 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-10-16",
+  "timezone": "Asia/Seoul",
+  "videos": [
+    {
+      "id": "ref-01",
+      "title_ko": "망막의 광신호 변환",
+      "path": "references/videos/01-retina.mp4",
+      "original_filename": "1-ClipDown.app_AQNwy-zSn3Lj-e5ujAPmQcz6THUb_FMIZR2IT3is9OTV7kyojseLmolZoQWDxBqdRFk920T1tDVXMQNHVGVxXZbxdaPAMXZU4iYPEOU.mp4",
+      "bytes": 6401517,
+      "sha256": "7b17f9abb9c178a70a6402dd5dc2a824fb692fb5d16cbd2ea86c845ed04f691b",
+      "duration_seconds": 59.115147,
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 720,
+          "height": 1280,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null,
+          "duration": "59.000000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "44100",
+          "channels": 2,
+          "duration": "59.115147"
+        }
+      ],
+      "source": "user attachment",
+      "issues": []
+    },
+    {
+      "id": "ref-02",
+      "title_ko": "도플러 효과와 초음속 충격파",
+      "path": "references/videos/02-doppler.mp4",
+      "original_filename": "2-ClipDown.app_AQOxyUEpGjvYQY59IuF9-DFMeCwGvBrkLwvLRg1ixk4H2EGEROSuK9_ZIk_smDABDMHo_JUr5lbpZ11jOb5jT02nK7wyjla1j-kQxAc.mp4",
+      "bytes": 2024366,
+      "sha256": "c08ff5e35764468aa7ab07d36f8105bba655dab888ca405ebbb1e6e490e5dd3c",
+      "duration_seconds": 19.130385,
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 720,
+          "height": 1280,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null,
+          "duration": "19.000000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "44100",
+          "channels": 2,
+          "duration": "19.130385"
+        }
+      ],
+      "source": "user attachment",
+      "issues": []
+    },
+    {
+      "id": "ref-03",
+      "title_ko": "파란 하늘과 붉은 노을",
+      "path": "references/videos/03-sky-and-sunset.mp4",
+      "original_filename": "3-ClipDown.app_AQNUIhOSZ6kWdQhsPl8KDjaBihJHeLJHx6X2WmSqeInSsTxBzGGiZUVcwJ1bttRmUPl29tgfVth2P6xADcNbjEL5txG7pGe-8g2RRsw.mp4",
+      "bytes": 1018954,
+      "sha256": "ca4512e3a3504453cefbe4151008165a314c3d3b14309c5db03c2ac7a7b77d61",
+      "duration_seconds": 19.618005,
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 720,
+          "height": 1280,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null,
+          "duration": "19.500000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "44100",
+          "channels": 2,
+          "duration": "19.618005"
+        }
+      ],
+      "source": "user attachment",
+      "issues": [
+        "Original file produces partial-file / invalid-NAL warnings near the end; source is preserved byte-for-byte. Frames through approximately 18.9 s were inspected; extracted audio was approximately 17.90 s."
+      ]
+    },
+    {
+      "id": "ref-04",
+      "title_ko": "우주선 입자 소나기",
+      "path": "references/videos/04-cosmic-ray-shower.mp4",
+      "original_filename": "4-ClipDown.app_AQNiNryAOA7qimwaAPcPRFGOS0V_fdiIWG8bdHWj8RyX4qWpBfthvbYbyiOBQLB3_7ZZ7NJo99dyaHIIP2ff7oKG4F8pleOGBn5wT80.mp4",
+      "bytes": 9356088,
+      "sha256": "9a649557d8ae39800db3b2e4d597f928848c6592b6c35618a36b698ef902faf8",
+      "duration_seconds": 34.110708,
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 720,
+          "height": 1280,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null,
+          "duration": "34.000000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "48000",
+          "channels": 2,
+          "duration": "34.110708"
+        }
+      ],
+      "source": "user attachment",
+      "issues": []
+    },
+    {
+      "id": "ref-05",
+      "title_ko": "블랙홀 병합과 중력파",
+      "path": "references/videos/05-black-hole-merger.mp4",
+      "original_filename": "5-ClipDown.app_AQOVfFrJLjprimvp-6R3TemLjg4le-d5G11Me73G5MGHD9X1NtFAoBhbtyh9tfciNPNMqCFRoU6cgXxN3m8fZ9MyevM2dRVtv1fQyyI.mp4",
+      "bytes": 2831840,
+      "sha256": "0f13e3a43a6eee5b41106d429499602de95578c7b10bcf0183df70171672d59c",
+      "duration_seconds": 17.133469,
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 720,
+          "height": 1280,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null,
+          "duration": "17.000000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "44100",
+          "channels": 2,
+          "duration": "17.133469"
+        }
+      ],
+      "source": "user attachment",
+      "issues": []
+    },
+    {
+      "id": "ref-06",
+      "title_ko": "전자레인지의 불균일 가열",
+      "path": "references/videos/06-microwave-heating.mp4",
+      "original_filename": "6-ClipDown.app_AQMkffLIla2OhV4lNhegLh3eX6GAgxiTv4ZHiL6JVrWBma74s80_5oxeddGlQ9SVNG6XJ7HV7PRQiME6fFyr8j1CfRGoCJw-o7dbUA0.mp4",
+      "bytes": 4531763,
+      "sha256": "61f517bc006a8d811d453d93be42dad578241b044d2a4280e2011b61a045c2dd",
+      "duration_seconds": 36.116042,
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 720,
+          "height": 1280,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null,
+          "duration": "36.000000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "48000",
+          "channels": 2,
+          "duration": "36.116042"
+        }
+      ],
+      "source": "user attachment",
+      "issues": []
+    },
+    {
+      "id": "ref-07",
+      "title_ko": "우주의 평탄성과 급팽창",
+      "path": "references/videos/07-flat-universe.mp4",
+      "original_filename": "7-ClipDown.app_AQOZXa5JBn9cU-LYzQNhcFaF8ohJ608m35O-L4E0kbhDfOiBoiY1HgdBWhFo-XeDMccQs3i_3ythUjR1z9FpiDCfrX1xBVj-4fOibOA.mp4",
+      "bytes": 10776397,
+      "sha256": "c1e8d462e5727c43573df7d7c0430acbcb4657bf48b2872117f7ad54154894c6",
+      "duration_seconds": 183.320136,
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 720,
+          "height": 1280,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null,
+          "duration": "183.200000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "44100",
+          "channels": 2,
+          "duration": "183.320136"
+        }
+      ],
+      "source": "user attachment",
+      "issues": []
+    }
+  ],
+  "contact_sheets": [
+    "references/contact-sheets/01-retina.jpg",
+    "references/contact-sheets/02-doppler.jpg",
+    "references/contact-sheets/03-sky-and-sunset.jpg",
+    "references/contact-sheets/04-cosmic-ray-shower.jpg",
+    "references/contact-sheets/05-black-hole-merger.jpg",
+    "references/contact-sheets/06-microwave-heating.jpg",
+    "references/contact-sheets/07-flat-universe-part-1.jpg",
+    "references/contact-sheets/07-flat-universe-part-2.jpg",
+    "references/contact-sheets/overview.jpg"
+  ]
+}
