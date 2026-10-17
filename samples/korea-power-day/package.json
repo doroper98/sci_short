@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "@napi-rs/canvas": "1.0.11"
+  },
+  "name": "korea-power-day",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "stills": "node render.mjs",
+    "render": "node render.mjs --video",
+    "validate": "node --input-type=module -e \"import {validate} from './model.mjs'; console.log(validate())\""
+  }
+}
