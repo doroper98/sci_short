@@ -235,6 +235,42 @@
       ],
       "source": "user attachment",
       "issues": []
+    },
+    {
+      "id": "ref-08",
+      "title_ko": "천둥의 거리별 도착 시간과 이어지는 소리",
+      "recorded_date": "2026-10-20",
+      "path": "references/videos/08-thunder.mp4",
+      "original_filename": "1-ClipDown.app_AQPDj6x_ofWGMgLS0nj91p4uPdUKVyNqI78ZSsp-xRjkofTNXJ5q-qOD7VVV4dqpznw-2t-mdYeGruO1U9F81HXkI1R7ZaCaXcUldM8.mp4",
+      "bytes": 710301,
+      "sha256": "0d063dd1f9a258dc5b8b50160ce0d75660dbbb02cf67f596dc2d32c3fa3252f8",
+      "duration_seconds": 14.325306,
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 720,
+          "height": 1280,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null,
+          "duration": "14.200000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "44100",
+          "channels": 2,
+          "duration": "14.325306"
+        }
+      ],
+      "source": "user attachment",
+      "issues": [],
+      "analysis": "docs/SOUND_DESIGN.md",
+      "validation_notes": "프레임 및 오디오 신호 분석. 직접 청취와 사건별 A/V 동기 정밀 검증은 미실시."
     }
   ],
   "contact_sheets": [

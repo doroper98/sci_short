@@ -14,6 +14,9 @@
 | 5 | [블랙홀 병합](videos/05-black-hole-merger.mp4) | [장면 모음](contact-sheets/05-black-hole-merger.jpg) |
 | 6 | [전자레인지](videos/06-microwave-heating.mp4) | [장면 모음](contact-sheets/06-microwave-heating.jpg) |
 | 7 | [우주 평탄성](videos/07-flat-universe.mp4) | [전반](contact-sheets/07-flat-universe-part-1.jpg) · [후반](contact-sheets/07-flat-universe-part-2.jpg) |
+| 8 | [천둥의 도착 시간 차이](videos/08-thunder.mp4) | [화면·음향 분석과 한계](../docs/SOUND_DESIGN.md#첨부-천둥-영상에서-확인한-것) |
+
+8번은 2026-10-20 추가 첨부이며 원본 바이트를 그대로 보존했습니다. 설명 원리의 적용 제안은 [애니메이션 품질 기준](../docs/ANIMATION_QUALITY.md)에 있습니다.
 
 [전체 비교 이미지](contact-sheets/overview.jpg)는 각 영상의 초반·중반·후반을 세로로 놓았습니다.
 장면 모음은 프레임 추출 결과이며 원본 MP4를 대체하지 않습니다.
