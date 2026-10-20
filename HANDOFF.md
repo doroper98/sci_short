@@ -2,6 +2,21 @@
 
 기록일: 2026-10-16, Asia/Seoul. 대상 저장소: https://github.com/doroper98/sci_short
 
+## 2026-10-20: 영어 태양·노을 영상 — 내레이션 대기
+
+사용자가 태양 고도에 따른 흰색/붉은색 차이를 설명하는 2분 이내 영어 내레이션·영어 자막 영상을 요청했다.
+`samples/sunlight-color/`에 영어 대본, Rayleigh 산란·대기량 모형, 입체적인 지구·분자·빛 경로 렌더러, 영어 자막, 공통 사건에 연결한 설명용 소리, 자체 배경음악을 만들었다.
+103.17초 / 1080×1920 / 30fps H.264·AAC 검토본은 `previews/sunlight-color/one-sun-two-colors-preview.mp4`에 있다.
+**요청은 아직 완전히 끝나지 않았다. 영어 내레이션이 없다.** 현재 자막 시간은 예상 발화 속도 기준이며 실제 음성으로 다시 계산해야 한다. 영상에도 `NARRATION PENDING`을 표시했다.
+
+Hugging Face 연결은 프록시 CONNECT 403으로 차단되었다. 일반 네트워크 추가 권한은 부여됐지만 환경 프록시 정책은 그대로였다.
+모델 도메인 허용 초안은 저장됐으며 도구가 `requires_publish: true`를 반환했다. 사용자에게 환경 설정 검토·저장·Publish를 안내했고, 별도로 기존 M3 유지 또는 다른 영어 목소리 허용 여부를 물었다. 답을 받았다고 가정하지 않는다.
+기존 음성 기준 때문에 다른 목소리로 자동 대체하지 않았다. 영어에서는 한국어 `니다` 끝 억양 보정이 적용되지 않는다.
+
+다음 작업: 네트워크 설정 적용 또는 사용자의 음성 선택을 확인 → `narrate.py` 실행 → 실제 음성 길이로 `timeline.json`과 SRT 생성 → `node render.mjs`로 사건·정지화면 갱신 → `sound.py` → 영상 재렌더 → `finish.py` → 결과 확인·새 링크 전달.
+실행 방법과 과학적 단순화는 [제작 README](samples/sunlight-color/README.md), 검토본 상태와 검증은 [전달 안내](previews/sunlight-color/README.md)에 기록한다.
+현재 branch는 `production/sunlight-color`, 전달 branch는 `preview/sunlight-color`다.
+
 ## 2026-10-20: 밀도와 입체감을 제작 기준에 반영
 
 사용자가 참고 영상처럼 밀도 있고 입체감 있는 영상을 만들도록 저장소 업데이트를 요청했다.
