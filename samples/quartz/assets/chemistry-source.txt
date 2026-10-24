@@ -1,0 +1,10 @@
+USGS PHREEQC phreeqc.dat
+https://raw.githubusercontent.com/usgs-coupled/phreeqc3/master/database/phreeqc.dat
+Retrieved 2026-10-24. This equilibrium phase equation supports bulk silica dissolution/precipitation, not a unique elementary surface mechanism.
+
+Quartz
+	SiO2 + 2 H2O = H4SiO4
+	-log_k -3.98
+	-delta_h 5.99 kcal
+	-analytic 0.41 0 -1309
+	-Vm 22.67
