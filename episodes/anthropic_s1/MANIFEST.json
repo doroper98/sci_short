@@ -1,0 +1,257 @@
+{
+  "status": "Reviewed narrow payload authorized for dedicated branch publication; no media/assets included",
+  "files": [
+    {
+      "path": ".gitignore",
+      "size_bytes": 181,
+      "sha256": "24593ebd7ead8f2b30feb3e48b2728a6fe405b58081c1d02f2f221ff65291516",
+      "origin": "Assistant-created handoff documentation",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "AGENTS.md",
+      "size_bytes": 946,
+      "sha256": "28c833e430a5dc984d7f1a5be5474ac338461c379a9ad8cb50db6e50f9be297e",
+      "origin": "Assistant-authored scoped episode guidance",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "CONTINUE_CODEX_KO.txt",
+      "size_bytes": 3953,
+      "sha256": "b8e6d4efd6a9b06c1651a204a7cf3bbc1a194a19ae0bb97d7a10afa4fe3e22ab",
+      "origin": "Assistant-created handoff documentation",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "DEPENDENCIES_AND_RIGHTS.txt",
+      "size_bytes": 4122,
+      "sha256": "33061a021fce18caa4664e765a12337b16e3b1ea74d4292604d51f8462f0cf9c",
+      "origin": "Assistant-created handoff documentation",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "FACT_AUDIT.txt",
+      "size_bytes": 4233,
+      "sha256": "43a71a6c28f71fb3043ff217a02cd7d7e5e342526a10aab11b5988bfec24c2eb",
+      "origin": "Assistant-written factual audit and short arithmetic reconciliations of public SEC data",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "HANDOFF.txt",
+      "size_bytes": 594,
+      "sha256": "a1d88f51dfb07ba5a304aaf1bfda70eda37169c9c730c94b450ec120692afbab",
+      "origin": "Assistant-authored episode handoff status",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "README.txt",
+      "size_bytes": 2235,
+      "sha256": "65aff58a54317c3532976c6a55414675a347b8ff65e0c61bc854094240377e60",
+      "origin": "Assistant-created handoff documentation",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "START_HERE.md",
+      "size_bytes": 1656,
+      "sha256": "96a649bebf2469c18c69cdc56cc43d3f743bf0f38e98663c49496976efedaeea",
+      "origin": "Assistant-authored Korean entry point and copyable continuation prompt",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "audit_pronunciation.py",
+      "size_bytes": 2327,
+      "sha256": "fbcd6cb921ca11d08d219bc143992ec30b2ba2596e3a3c5d35127b49b50dd6d0",
+      "origin": "Assistant-authored episode code; portable path adaptation; imports external osint_generator, no vendored implementation",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "chart_motion.py",
+      "size_bytes": 3243,
+      "sha256": "692756a0b645572c615aeb9a7c471b64617f8b21f05104d21e8be7ddd1dab64e",
+      "origin": "Assistant-authored episode code; portable path adaptation; imports external osint_generator, no vendored implementation",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "episode_paths.py",
+      "size_bytes": 194,
+      "sha256": "13965a03f2c700ee1e28912b6d09ae3fba6db3ca4125ffb38aa6297929e589a2",
+      "origin": "Assistant-created handoff documentation",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "episode_settings.json",
+      "size_bytes": 654,
+      "sha256": "5dc19addd539e1372cbe30224db6b214b517d9b1a5cb183daea2d27dc9dcbf46",
+      "origin": "Assistant-created compact factual data or validation metadata; public SEC facts, no full source text",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "explainer_scenes.py",
+      "size_bytes": 10280,
+      "sha256": "a1796a1f5b7dbcf375f49ace761846ac529d03249360768b64c1d1892c8646ea",
+      "origin": "Assistant-authored episode code; portable path adaptation; imports external osint_generator, no vendored implementation",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "financial_validation.json",
+      "size_bytes": 367,
+      "sha256": "6db0ca7a766ab57ea9523365b98488d2224486ec1385b512878821673939cbab",
+      "origin": "Assistant-created compact factual data or validation metadata; public SEC facts, no full source text",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "finish_audio.py",
+      "size_bytes": 4159,
+      "sha256": "41f7aad8b00a596855300a7b52aea95910006b5d76bb10d26b188eeb07d140b8",
+      "origin": "Assistant-authored episode code; portable path adaptation; imports external osint_generator, no vendored implementation",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "measure_raw.py",
+      "size_bytes": 1659,
+      "sha256": "0a91ef8e49702201203479706388716844cff694d77a4903b9de7e56c477bdeb",
+      "origin": "Assistant-authored episode code; portable path adaptation; imports external osint_generator, no vendored implementation",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "narration_ko_v1.txt",
+      "size_bytes": 13700,
+      "sha256": "8613258ba30ca22c2fc3b3db5a082491b54f2fba21b5535d0be0716af8501797",
+      "origin": "Assistant-authored Korean narration/storyboard based on public filing facts, not full filing reproduction",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "narrative_scenes.py",
+      "size_bytes": 12566,
+      "sha256": "2672cc7a267e05052ed889fea3a76c96414eecad6026a5f2a49b779455b89670",
+      "origin": "Assistant-authored episode code; portable path adaptation; imports external osint_generator, no vendored implementation",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "pronunciation_audit.json",
+      "size_bytes": 18240,
+      "sha256": "ec1448036763e5f05580bf3c769fd4732dbab27c1f01f7a00d5505570b7ff6e5",
+      "origin": "Assistant-created compact factual data or validation metadata; public SEC facts, no full source text",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "raw_timing.json",
+      "size_bytes": 74417,
+      "sha256": "fef99c58f003e5e84f2ab794f31e826cccf65aa19f180df2ee60450d2d0f7f5b",
+      "origin": "Assistant-created phonetic inputs/timing metadata; audio bytes excluded; filenames only",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "render_episode.py",
+      "size_bytes": 5988,
+      "sha256": "2c05fb4984f6c627041bb30709ad304612672ebdaf3fc1a8e4ad95f8e41e85e1",
+      "origin": "Assistant-authored episode code; portable path adaptation; imports external osint_generator, no vendored implementation",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "sankey_scene.py",
+      "size_bytes": 2905,
+      "sha256": "9cab46ae7eb8ea509dc886415d2ef46b89f1b758676ad6c6821e8d546956bfa3",
+      "origin": "Assistant-authored episode code; portable path adaptation; imports external osint_generator, no vendored implementation",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "sentences.json",
+      "size_bytes": 43245,
+      "sha256": "0aba0e5dfc0c6dcd56facbd84bbc679405c035c4fb778228b0b5a3757940c656",
+      "origin": "Assistant-created phonetic inputs/timing metadata; audio bytes excluded; filenames only",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "sentences_before_pronunciation_audit.json",
+      "size_bytes": 43226,
+      "sha256": "17721ed6a69b4d9a541556f1e9798bd87064c2a8c902426d8e5bca5139353a19",
+      "origin": "Assistant-created phonetic inputs/timing metadata; audio bytes excluded; filenames only",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "shots.json",
+      "size_bytes": 3812,
+      "sha256": "884875bbddac5d248a5ffb92981a5bae88b16fb8eaf7dda08ea49be857f45f1e",
+      "origin": "Assistant-created compact factual data or validation metadata; public SEC facts, no full source text",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "source/verified_context.yaml",
+      "size_bytes": 4529,
+      "sha256": "1e46513e52e6b74601bcca251eebd99164f3f1450ac9c91b2a87cd05bbb6004d",
+      "origin": "Assistant-created compact factual data or validation metadata; public SEC facts, no full source text",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "source/verified_financials.yaml",
+      "size_bytes": 4046,
+      "sha256": "9715f0cf50ee4771876338b40705ff3f1accedd9c9b6f862fa080f66b4db1636",
+      "origin": "Assistant-created compact factual data or validation metadata; public SEC facts, no full source text",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "storyboard.txt",
+      "size_bytes": 7525,
+      "sha256": "ac50f6892b24176b4601362e0cfb5354342e1b3d080bd121355ca20840306b5c",
+      "origin": "Assistant-authored Korean narration/storyboard based on public filing facts, not full filing reproduction",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "synthesize_episode.py",
+      "size_bytes": 3368,
+      "sha256": "4f08a052285d194b662942918f561508973e080af9430b5ee2f2b4b85bff7a20",
+      "origin": "Assistant-authored episode code; portable path adaptation; imports external osint_generator, no vendored implementation",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    },
+    {
+      "path": "voice_reference.json",
+      "size_bytes": 4219,
+      "sha256": "04d782c44f1e9f9ff4ace441b0ce23f6ac0505d8bc223d284bca631669c282ea",
+      "origin": "Public repository configuration values and pinned hashes, no executable vendor code or asset bytes",
+      "privacy": "Reviewed: no secrets/private identifiers/absolute environment paths; public source facts and production metadata only",
+      "license_status": "Original assistant-created material or factual/configuration data; no license grant assigned; third-party dependencies excluded; owner may choose license separately"
+    }
+  ],
+  "manifest_self": "MANIFEST.json is generated index; listed separately to avoid recursive self-hash",
+  "excluded": [
+    "model weights",
+    "fonts",
+    "music",
+    "all audio/video/images",
+    "vendor code",
+    "full SEC source",
+    "private logs",
+    "Library identifiers"
+  ],
+  "scan": "pattern scan and reviewed origin/content; no findings, not a proof of absence"
+}

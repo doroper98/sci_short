@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "checks": {
+    "operating_expense_components": true,
+    "operating_result": true,
+    "net_result": true,
+    "cash_bridge": true,
+    "noncash_components": true,
+    "working_capital_components": true,
+    "investing_components": true,
+    "non_gaap": true
+  },
+  "evidence": "production primary-source excerpts; original not included"
+}

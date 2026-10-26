@@ -1,0 +1,231 @@
+schema_version: 1
+provenance:
+  source_url: https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+  filed: '2026-10-26'
+  evidence_route: Production research primary-source excerpts
+  local_original_available: false
+  unit: USD millions unless stated
+annual_halfyear:
+  source: p147 table30 / p22 / F-7
+  periods:
+  - FY2023
+  - FY2024
+  - FY2025
+  - H1-2025
+  - H1-2026
+  revenue:
+  - 41
+  - 386
+  - 4585
+  - 1163
+  - 16286
+  compute_infrastructure:
+  - 433
+  - 2522
+  - 7326
+  - 2334
+  - 8945
+  personnel:
+  - 95
+  - 454
+  - 1839
+  - 538
+  - 3152
+  bartz_settlement:
+  - 0
+  - 0
+  - 1500
+  - 0
+  - 0
+  sales_marketing_partnerships:
+  - 2
+  - 43
+  - 568
+  - 120
+  - 3168
+  other_operating_admin:
+  - 62
+  - 347
+  - 1412
+  - 306
+  - 1714
+  operating_expense:
+  - 592
+  - 3366
+  - 12645
+  - 3298
+  - 16979
+  operating_result:
+  - -551
+  - -2980
+  - -8060
+  - -2135
+  - -693
+  interest_income:
+  - 69
+  - 106
+  - 431
+  - 115
+  - 1111
+  convertible_fair_value_result:
+  - -1045
+  - -5434
+  - -34308
+  - -10942
+  - -72388
+  other_nonoperating:
+  - -2
+  - 0
+  - -8
+  - 0
+  - -8757
+  tax_expense:
+  - 2
+  - 1
+  - 20
+  - 7
+  - 21
+  net_result:
+  - -1531
+  - -8309
+  - -41965
+  - -12969
+  - -80748
+  operating_cashflow:
+  - -1627
+  - -5692
+  - -2637
+  - -1513
+  - 3929
+quarterly:
+  source: p157 table62; adjusted operating result p160
+  periods:
+  - 2025-Q1
+  - 2025-Q2
+  - 2025-Q3
+  - 2025-Q4
+  - 2026-Q1
+  - 2026-Q2
+  revenue:
+  - 376
+  - 787
+  - 1382
+  - 2040
+  - 4731
+  - 11555
+  compute_infrastructure:
+  - 944
+  - 1390
+  - 2047
+  - 2945
+  - 3387
+  - 5558
+  operating_result:
+  - -935
+  - -1200
+  - -3089
+  - -2836
+  - -1667
+  - 974
+  net_result:
+  - -6592
+  - -6377
+  - -12138
+  - -16858
+  - -14439
+  - -66309
+  adjusted_operating_result_non_gaap:
+  - -830
+  - -1019
+  - -1284
+  - -1721
+  - -617
+  - 2235
+  gaap_margin_percent_rounded:
+  - -249
+  - -152
+  - -224
+  - -139
+  - -35
+  - 8
+  adjusted_margin_percent_rounded:
+  - -221
+  - -129
+  - -93
+  - -84
+  - -13
+  - 19
+h1_2026_cash:
+  source: F-12; CFO p168
+  net_result: -80748
+  noncash_total: 83509
+  working_capital_total: 1168
+  operating_cashflow: 3929
+  noncash:
+    share_based_compensation: 2185
+    depreciation: 97
+    convertible_fair_value: 72388
+    donation: 126
+    other_financial_instrument_fair_value: 8720
+    other: -7
+  working_capital:
+    accounts_receivable: -4982
+    prepaids_other: 2094
+    payables_accruals: 2679
+    leases: -3
+    deferred_revenue: 1380
+  investing_cashflow: -17181
+  investment_purchases: -18972
+  investment_sales_maturities: 2610
+  property_plant_equipment: -482
+  other_investing: -337
+  financing_cashflow: 110774
+  preferred_share_financing: 110432
+  ending_cash: 112389
+  ending_short_term_investments: 19262
+non_gaap:
+  source: p160
+  h1_2026:
+    operating: -693
+    sbc: 2185
+    donation: 126
+    adjusted: 1618
+  fy2025:
+    operating: -8060
+    sbc: 1165
+    donation: 541
+    bartz: 1500
+    adjusted: -4854
+revenue_mix:
+  source: p138
+  periods:
+  - FY2024
+  - FY2025
+  - H1-2026
+  consumption_percent_rounded:
+  - 75
+  - 83
+  - 80
+  subscription_percent_rounded:
+  - 25
+  - 17
+  - 20
+classification:
+  source: p140; F-39
+  compute_is_cost_of_revenue: false
+  h1_2026_functional_cost_of_revenue: 2380
+  h1_2026_functional_research_development: 9741
+  subscription_contract_max_months: 12
+  marketplace_fees: costs
+  customer_contracts: direct contractual relationships
+  subscription_contract_max_months_qualifier: generally; some enterprise consumption
+    contracts have annual/multiyear minimum spend
+constraints:
+- Never equate net loss with cash burned
+- Never compare FY2025 with H1-2026 as YoY or equivalent full-year periods
+- Never derive gross profit by subtracting nature-based compute expense
+- Other financial instrument fair-value loss 8720 is not the full other nonoperating
+  expense 8757
+- Cash and short-term investments 131651 are not all internally earned
+- Investing cash outflow is not all capital expenditure
+- Revenue mix rounded percentages must not imply exact dollar flows

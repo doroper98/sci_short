@@ -1,0 +1,46 @@
+THIRD-PARTY ASSETS — EXCLUDED FROM THIS PAYLOAD
+Evidence is local pinned license/registry review, not a new legal clearance or assertion of commercial authorization.
+
+Supertonic3 M3: Supertone/supertonic-3 revision3cadd1ee6394adea1bd021217a0e650ede09a323.
+Existing user-provided release source:
+https://github.com/doroper98/prismatic_nplm_git/releases/download/tts-assets-supertonic3-v1/supertonic-3-tts-assets.zip
+Expected370277184bytes; SHA256842e9f83e974b3dcdf727814fea2af594a68f3d962798a53f7df93042d9765f3.
+Production verified archive and eight pinned files. Recheck upstream config hashes locally before inference.
+Local accompanying LICENSE is BigScience Open RAIL-M dated2022-08-18, not MIT.
+Section6 says licensor claims no rights in output except as provided, and output use must comply with license.
+AttachmentA includes lawful-use restrictions and explicit intelligible machine-generated disclosure.
+Retain model license/notices, review current model card and voice rights; do not redistribute weights here.
+Speed0.95,16steps,M3,seed_salt v1. Use existing repository pronunciation dictionaries, not guessed substitutions.
+
+MMS_FA: official URL https://dl.fbaipublicfiles.com/mms/torchaudio/ctc_alignment_mling_uroman/model.pt
+Expected bytes1262047414; SHA1 0300fd9ae57a63e3bd239ae1337e32127a587214.
+User-supplied license metadata CC BY-NC4.0; attribution Meta MMS / torchaudio MMS_FA and noncommercial limitation.
+Verify official license/terms in new environment; do not infer commercially distributable final outputs from this note.
+Store only ignored assets/tts/mms_fa/model.pt in upstream checkout; NEVER commit weights.
+Official fetch previously failed with proxy tunnel403. No file was received. No mirror/proxy/security changes authorized.
+Original ending treatment: repository MMS alignment + WORLD, suffix니다,last3characters,4semitones downward,
+pre/crossfade0.03s,f0 60–260Hz,frame5ms,existing octave-clean settings. Do not substitute heuristic timing.
+
+Fonts: IBM Plex Sans KR Regular/Medium/SemiBold/Bold and IBM Plex Mono Medium/SemiBold — registry says SIL OFL1.1.
+Official references https://github.com/google/fonts/tree/main/ofl/ibmplexsanskr
+https://github.com/google/fonts/tree/main/ofl/ibmplexmono
+GmarketSans Bold/Medium — registry says Gmarket free-font terms, NOT established as OFL.
+https://corp.gmarket.com/fonts/ ; review exact font redistribution/conversion/credit terms before use.
+No font binaries included. Supply legally obtained files into ignored fonts/ directory.
+
+BGM selected for this episode: The Life and Death of a Certain K. Zabriskie, Patriarch, Chris Zabriskie, Vendaface.
+Registry evidence assets/audio/bgm/registry.yaml and RIGHTS.md: CC BY4.0, attribution required.
+Official reference https://chriszabriskie.com/use/ ; recheck exact track and current evidence before distribution.
+Expected SHA1c0ddb7b38ee7866c32d2510a84125cf611a54e93.
+Credit: "The Life and Death of a Certain K. Zabriskie, Patriarch" by Chris Zabriskie / From the album Vendaface /
+Licensed under Creative Commons Attribution4.0 / https://creativecommons.org/licenses/by/4.0/ / https://chriszabriskie.com
+Record edits/looping/mixing. Do not silently replace with Mario Bava or another track.
+Mix preserve existing repository bed0.43,duck0.5,bass110Hz+5dB,sub0.35,normref0.4,-14LUFS,TP-1.5,limiter-2dB.
+
+OPTIONAL AUDIO PAYLOAD — NOT INCLUDED OR APPROVED FOR PUBLICATION
+132 current MP3 files were synthesized locally from included assistant-authored Korean script using exact pinned M3.
+These are raw model outputs, not WAVs, with no BGM, MMS processing or final-fall correction. Earlier superseded MP3s also exist.
+A future optional export must select ONLY current sentences.json files and record hashes; do not copy whole cache.
+Open RAIL-M section6 provides relevant output evidence but is not blanket clearance of voice/model/input rights.
+Machine-generated speech disclosure and use restrictions must be addressed; owner/publication approval remains pending.
+No raw/generated audio, preview videos/images, model weights, BGM, fonts, full SEC HTML or vendor code are in this payload.

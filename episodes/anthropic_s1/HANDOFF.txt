@@ -1,0 +1,5 @@
+Current state: reviewed script, phonetic input, animated chart source and compact SEC-derived facts are preserved here.
+Raw audio synthesis and decode checks succeeded in producing environment; audio bytes are intentionally excluded.
+MMS official acquisition failed with proxy tunnel403; alignment/final-fall/listening/render/mix/finalQA remain.
+Execution: work from this directory; set OSINT_GENERATOR_ROOT to authorized separately obtained checkout; follow CONTINUE_CODEX_KO.txt.
+Do not confuse root science-short project state with this10-minute finance episode. Future updates belong here.

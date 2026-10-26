@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "sentence_gap_sec": 0.2,
+  "scene_gap_sec": 1.0,
+  "lead_sec": 1.2,
+  "credits_sec": 10.0,
+  "timing_reason": "Parent authorization: reduce excessive gaps for approximately 10-minute film; preserve M3 speed0.95 and all narration substance. Episode-local pacing only; repository rules unchanged.",
+  "bgm": "music.zabriskie_patriarch",
+  "bgm_reason": "Parent confirmed existing repository BGM satisfies user request; keep original mixer style, bass treatment, ducking and credits.",
+  "final_voice_status": "Await original MMS model or explicit acceptance of alternative boundary method; no silent omission or substitution."
+}

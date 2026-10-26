@@ -1,0 +1,177 @@
+{
+  "voice": {
+    "repo": "Supertone/supertonic-3",
+    "revision": "3cadd1ee6394adea1bd021217a0e650ede09a323",
+    "asset_dir": "assets/tts/supertonic",
+    "voice_style": "M3",
+    "speed": 0.95,
+    "total_step": 16,
+    "silence_sec": 0.3,
+    "max_chunk_len": 120,
+    "seed_salt": "v1",
+    "assets": {
+      "onnx/duration_predictor.onnx": "7506c6781997d06c7e0f203e8c16555fe39ad115",
+      "onnx/text_encoder.onnx": "bef43a4d0bd4889e08aaa2c2e107ecc5aebd6e00",
+      "onnx/vector_estimator.onnx": "6460a27d6787bead8f0cc6973c28be6281930076",
+      "onnx/vocoder.onnx": "5e94809905565e9bfbc54a130137c37e03bc2048",
+      "onnx/tts.json": "310fe80fdba5a36d03a4c0c85561be5c3e1c2da7",
+      "onnx/unicode_indexer.json": "c8133b892e49c85f47880f1ac0226f91579ea5ac",
+      "voice_styles/M3.json": "7764333982bc4d4d27b3872ead13dfe4b0400d81",
+      "LICENSE": "e6ab935ad6e8025ce4bf68e7382bd5332f4329ea"
+    }
+  },
+  "prosody": {
+    "final_fall": {
+      "enabled": true,
+      "suffix": "니다",
+      "span_chars": 3,
+      "semitones": 4.0,
+      "pre_sec": 0.03,
+      "crossfade_sec": 0.03,
+      "f0_floor_hz": 60,
+      "f0_ceil_hz": 260,
+      "frame_ms": 5,
+      "octave_clean": {
+        "enabled": true,
+        "ratio_hi": 1.5,
+        "ratio_lo": 0.6,
+        "gate_db": -30,
+        "rms_ms": 20,
+        "record_frames": 10
+      }
+    }
+  },
+  "audio_mix_reference": {
+    "bed_gain": 0.43,
+    "bgm_floor": {
+      "beat_clarity_min": 6.0,
+      "onsets_per_min_min": 300.0,
+      "voice_band_max": 0.1,
+      "voice_band_hz": [
+        300,
+        3000
+      ],
+      "window_sec": 360,
+      "sr": 22050,
+      "n_fft": 4096
+    },
+    "bgm_default": [
+      "music.zabriskie_mario_bava",
+      "music.zabriskie_patriarch"
+    ],
+    "duck_depth": 0.5,
+    "duck_pre_sec": 0.25,
+    "duck_post_sec": 0.3,
+    "duck_smooth_sec": 0.35,
+    "narration_peak": 0.8,
+    "master_peak": 0.97,
+    "loudnorm": {
+      "I": -14,
+      "TP": -1.5,
+      "LRA": 11
+    },
+    "post_limiter_dbfs": -2.0,
+    "sfx_policy": "events_and_scene_starts_only",
+    "sample_rate": 44100,
+    "seed": 3,
+    "tail_sec": 0.5,
+    "loop_xfade_sec": 4.0,
+    "fade_in_sec": 1.2,
+    "fade_out_sec": 4.0,
+    "fx_duck": 0.25,
+    "qa": {
+      "i_tol_lu": 1.0,
+      "music_under_narration_db": [
+        -13,
+        -9
+      ],
+      "tp_codec_margin_db": 0.15,
+      "sentence_rms_dev_db": 3.0,
+      "sentence_rms_window_sec": 0.02,
+      "sentence_rms_floor_db": -40,
+      "bed_bass_rise_db": [
+        4,
+        8
+      ],
+      "bed_bass_band_hz": [
+        30,
+        120
+      ],
+      "bed_mid_band_hz": [
+        200,
+        2000
+      ]
+    },
+    "crossfade_sec": 4.0,
+    "norm_eps": 1e-06,
+    "bed_bass": {
+      "shelf": {
+        "freq_hz": 110,
+        "gain_db": 5.0,
+        "q": 0.7
+      },
+      "sub": {
+        "band_hz": [
+          55,
+          220
+        ],
+        "out_lp_hz": 110,
+        "filter_order": 4,
+        "gain": 0.35,
+        "env_attack_sec": 0.03,
+        "env_release_sec": 0.25,
+        "env_block_sec": 0.001
+      },
+      "swell": {
+        "sec": 2.5,
+        "depth": 0.35
+      },
+      "norm_ref": 0.4
+    },
+    "sfx": {
+      "whoosh": {
+        "dur_sec": 1.2,
+        "shape_pow": 2.2,
+        "low_b": 0.08,
+        "low_a": -0.92,
+        "low_gain": 0.6,
+        "high_b": 0.3,
+        "high_a": -0.7,
+        "high_gain": 0.25,
+        "release_sec": 0.08,
+        "release_tau_sec": 0.05,
+        "gain": 0.2
+      },
+      "boom": {
+        "dur_sec": 2.6,
+        "f0_hz": 34,
+        "sweep_hz": 44,
+        "sweep_tau_sec": 0.25,
+        "tone_tau_sec": 0.8,
+        "tone_gain": 0.55,
+        "noise_b": 0.02,
+        "noise_a": -0.98,
+        "noise_tau_sec": 0.3,
+        "noise_gain": 0.6
+      },
+      "tick": {
+        "dur_sec": 0.12,
+        "freq_hz": 1800,
+        "tau_sec": 0.015,
+        "gain": 0.18
+      },
+      "title_card": {
+        "offset_sec": 0.2,
+        "whoosh_dur_sec": 1.4,
+        "whoosh_v": 1.0,
+        "boom_v": 0.6
+      },
+      "scene_start": {
+        "lead_sec": 0.05,
+        "whoosh_dur_sec": 0.9,
+        "whoosh_v": 0.55
+      }
+    }
+  },
+  "status": "configuration only; third-party assets not included"
+}

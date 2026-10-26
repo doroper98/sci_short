@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "timing_source": "measured raw after pronunciation audit; original MMS/final fall pending",
+  "shots": [
+    {
+      "sentence_index": 0,
+      "kind": "opening",
+      "start": 1.2,
+      "end": 26.41133786848073
+    },
+    {
+      "sentence_index": 6,
+      "kind": "filing",
+      "start": 26.41133786848073,
+      "end": 66.32197278911565
+    },
+    {
+      "sentence_index": 14,
+      "kind": "business",
+      "start": 66.32197278911565,
+      "end": 86.95036281179138
+    },
+    {
+      "sentence_index": 18,
+      "kind": "mix",
+      "start": 86.95036281179138,
+      "end": 108.71061224489796
+    },
+    {
+      "sentence_index": 23,
+      "kind": "loop",
+      "start": 108.71061224489796,
+      "end": 123.66390022675738
+    },
+    {
+      "sentence_index": 26,
+      "kind": "revenue",
+      "start": 123.66390022675738,
+      "end": 139.1327210884354
+    },
+    {
+      "sentence_index": 29,
+      "kind": "customers",
+      "start": 139.1327210884354,
+      "end": 166.0465986394558
+    },
+    {
+      "sentence_index": 35,
+      "kind": "nrr",
+      "start": 166.0465986394558,
+      "end": 186.82664399092974
+    },
+    {
+      "sentence_index": 39,
+      "kind": "runrate",
+      "start": 186.82664399092974,
+      "end": 197.62045351473924
+    },
+    {
+      "sentence_index": 41,
+      "kind": "quarter",
+      "start": 197.62045351473924,
+      "end": 219.2109977324263
+    },
+    {
+      "sentence_index": 46,
+      "kind": "sankey",
+      "start": 219.2109977324263,
+      "end": 240.01773242630387
+    },
+    {
+      "sentence_index": 51,
+      "kind": "adjusted",
+      "start": 240.01773242630387,
+      "end": 255.91414965986397
+    },
+    {
+      "sentence_index": 54,
+      "kind": "revenue",
+      "start": 255.91414965986397,
+      "end": 268.6962358276644
+    },
+    {
+      "sentence_index": 57,
+      "kind": "accounting",
+      "start": 268.6962358276644,
+      "end": 297.1438321995464
+    },
+    {
+      "sentence_index": 63,
+      "kind": "fairvalue",
+      "start": 297.1438321995464,
+      "end": 334.7777324263038
+    },
+    {
+      "sentence_index": 71,
+      "kind": "cash",
+      "start": 334.7777324263038,
+      "end": 362.6395238095238
+    },
+    {
+      "sentence_index": 76,
+      "kind": "liquidity",
+      "start": 362.6395238095238,
+      "end": 390.0739455782313
+    },
+    {
+      "sentence_index": 82,
+      "kind": "commitments",
+      "start": 390.0739455782313,
+      "end": 442.26002267573693
+    },
+    {
+      "sentence_index": 93,
+      "kind": "risk",
+      "start": 442.26002267573693,
+      "end": 468.7687528344671
+    },
+    {
+      "sentence_index": 98,
+      "kind": "concentration",
+      "start": 468.7687528344671,
+      "end": 484.3538775510204
+    },
+    {
+      "sentence_index": 102,
+      "kind": "risk",
+      "start": 484.3538775510204,
+      "end": 494.4692970521542
+    },
+    {
+      "sentence_index": 104,
+      "kind": "safety",
+      "start": 494.4692970521542,
+      "end": 508.95630385487533
+    },
+    {
+      "sentence_index": 107,
+      "kind": "concentration",
+      "start": 508.95630385487533,
+      "end": 524.242947845805
+    },
+    {
+      "sentence_index": 110,
+      "kind": "pbc",
+      "start": 524.242947845805,
+      "end": 536.2055782312926
+    },
+    {
+      "sentence_index": 113,
+      "kind": "governance",
+      "start": 536.2055782312926,
+      "end": 601.5850113378688
+    },
+    {
+      "sentence_index": 125,
+      "kind": "opening",
+      "start": 601.5850113378688,
+      "end": 609.9394557823132
+    },
+    {
+      "sentence_index": 127,
+      "kind": "ending",
+      "start": 609.9394557823132,
+      "end": 630.1854421768711
+    },
+    {
+      "sentence_index": null,
+      "kind": "credits",
+      "start": 630.1854421768711,
+      "end": 640.185442176871
+    }
+  ]
+}
