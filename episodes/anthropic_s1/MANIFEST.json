@@ -1,8 +1,8 @@
 {
   "schema_version": 2,
-  "status": "Source pushed on explicit user request; media upload to private draft release failed with HTTP 401; no public media release. See DELIVERY_STATUS.txt.",
+  "status": "Source pushed on user request. Original-quality video delivered privately as three MP4 attachments; all encoded packets retained. GitHub release upload remains blocked by HTTP 401. No public media release.",
   "baseline_commit": "0c87669c678f9cf00fecd92cca78bc182c945532",
-  "updated_at": "2026-10-27T01:41:30.102039+00:00",
+  "updated_at": "2026-10-27T01:50:26.937504+00:00",
   "files": [
     {
       "path": ".gitignore",
@@ -30,8 +30,8 @@
     },
     {
       "path": "DELIVERY_STATUS.txt",
-      "size_bytes": 1836,
-      "sha256": "dd9546f6aad51ed20dca1c204854e67c78d4c418143e579dba8f5689cf023e22",
+      "size_bytes": 2550,
+      "sha256": "feab5e455613ba6922f1d0a25f7f2fab8e44093c54dc1e1530b2d4a1cd9be2bd",
       "origin": "Assistant-authored verified push and media upload status",
       "privacy": "Reviewed scoped text/code/metadata; local execution paths are documented intentionally; no credentials or full source HTML.",
       "license_status": "Original contribution or factual/configuration data; no new blanket license assigned; external assets excluded."
