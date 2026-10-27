@@ -29,7 +29,7 @@ def main():
     assert '만천구백 곳' in rows[30]['tts']
     assert '오십쩜일 퍼센트' in rows[118]['tts']
     assert '천백사십오억' in rows[85]['tts']
-    result=dict(schema_version=2,sentences=len(rows),changed=len(changes),unchanged=len(rows)-len(changes),changes=changes,issues=issues,caption_groups_mapped=cue_count,screen_text_unchanged=True,numeric_guard='950곳 preserved as 구백오십 곳; avoids repository two-digit counter partial match',listening='No perceptual listening tool available; no listening QA claimed.',mms='Official fetch failed: Tunnel connection failed: 403 Forbidden; no bytes received; no alignment or final fall applied')
+    result=dict(schema_version=2,sentences=len(rows),changed=len(changes),unchanged=len(rows)-len(changes),changes=changes,issues=issues,caption_groups_mapped=cue_count,screen_text_unchanged=True,numeric_guard='950곳 preserved as 구백오십 곳; avoids repository two-digit counter partial match',listening='Text audit only; no perceptual listening QA claimed.',mms='Alignment status is recorded by finish_audio.py in plan.json; this audit does not infer audio completion.')
     (ROOT/'pronunciation_audit.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
     print(json.dumps({k:v for k,v in result.items() if k!='changes'},ensure_ascii=False))
 if __name__=='__main__':main()

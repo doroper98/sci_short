@@ -17,3 +17,9 @@ plan.json
 captions.json
 audio_progress.json
 integration_frames/
+out/
+scene_checks/
+*.png
+*.jpg
+*.srt
+*.f32

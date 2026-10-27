@@ -1,3 +1,7 @@
+2026-10-27 update: current acquisition and license checks are in asset_verification.json
+and SOURCE_CREDITS.txt. Official MMS and exact SEC HTML downloads succeeded this session.
+The notes below preserve the prior handoff assessment; old access failures are historical.
+
 THIRD-PARTY ASSETS — EXCLUDED FROM THIS PAYLOAD
 Evidence is local pinned license/registry review, not a new legal clearance or assertion of commercial authorization.
 

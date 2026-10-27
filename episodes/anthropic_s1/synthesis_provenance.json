@@ -1,0 +1,818 @@
+{
+  "schema_version": 1,
+  "sentences": [
+    {
+      "sid": "s000",
+      "fingerprint": "96c2a3fe0403a0ffac6904baa8c742c0f457441733636bc927707ea24ae0853b",
+      "audio_sha256": "8495493e5b562f6190684480da13bcf331678f2eee739235e17399c991f78f20",
+      "reused": true
+    },
+    {
+      "sid": "s001",
+      "fingerprint": "b770f74afb8b7141f56471c06a6925bc2ca70883695166820ddbe65faa422275",
+      "audio_sha256": "bbb5952c9104edb32343d18e908991706c3bb538c9dd033c2dd9eb9a6bf79495",
+      "reused": true
+    },
+    {
+      "sid": "s002",
+      "fingerprint": "58d43ab4a6652aba8317b58edf993247c6f0553fdbe8d0af3820c986db7cdbfe",
+      "audio_sha256": "a73355bfe1708fba3f256854d2c58c3992375ec6f8c4ebcfec312d201ac1184b",
+      "reused": true
+    },
+    {
+      "sid": "s003",
+      "fingerprint": "57dfc013d4c9769046d7b4613d43dc851fef62d7af969b395f10600e545d880a",
+      "audio_sha256": "e2b32769b67bcdb15596e86cf68273db4535de41ca36d21c4010621e8d5508d1",
+      "reused": true
+    },
+    {
+      "sid": "s004",
+      "fingerprint": "d7fa4faa7bbdca68fb8701bbe45d78858fdd9cec900e2c342d1f06d577b2d67a",
+      "audio_sha256": "4fb8ca784f2f17e907ec3850e91a24ce3f4fd7a368cc949e34a27d75f0304a1e",
+      "reused": true
+    },
+    {
+      "sid": "s005",
+      "fingerprint": "f1e907f8cac7568600b29b5b4839f095accd34e9aa368720ae402fe0ae4df83d",
+      "audio_sha256": "455ce9cfa8551c5922df33f206ecb05536314f617bd1bfa5efdfc75cbea5b1b4",
+      "reused": true
+    },
+    {
+      "sid": "s006",
+      "fingerprint": "2c5e27568dbcc9402f8a1cda27bee5ab86557c720dbac3de94d9ee32b9aabf3b",
+      "audio_sha256": "10e4b09fc16ceb0105b567957d20fc59e00bbfbac5ec6c1ae80ee5e84f987193",
+      "reused": true
+    },
+    {
+      "sid": "s007",
+      "fingerprint": "f4a6ce6ffdd1f95e9404abfee9c3989bf6dc1b399a66a9dcc3cbf0ede6a36a20",
+      "audio_sha256": "b371a0878f70c75a84af28b07fca76c07c1e5a401aecb5958b5f1ac85892b0d7",
+      "reused": true
+    },
+    {
+      "sid": "s008",
+      "fingerprint": "7e6ffad9a077e329a7c2c35ff1a65c3504f44ad379173b87ca6313dc63b9060d",
+      "audio_sha256": "cd94f47c6dd557564464a81abe3afb1555af1ab85f1ec4f244f4616ee968246a",
+      "reused": true
+    },
+    {
+      "sid": "s009",
+      "fingerprint": "272c805c48e33651f03780a68a0871efab80b9554f920fcbd5a82cdcdbfb2e66",
+      "audio_sha256": "f4dd414836b61d48d8e3c39d4dccb0c84cea90c9bbd2a17c9dd1981daa3a15f8",
+      "reused": true
+    },
+    {
+      "sid": "s010",
+      "fingerprint": "f7fcc7c8c02f265b3d88e43360c260beede20647be8663ecf9e1fba0b8af2d92",
+      "audio_sha256": "e06dcc09499c2e3ce27b49e087cdb427dd6e52ac7d5915fa77851c1ca3fd6c23",
+      "reused": true
+    },
+    {
+      "sid": "s011",
+      "fingerprint": "569f09d1060148a3814b3f7086c5bc5d9018155498e5d438b50916913ce55999",
+      "audio_sha256": "d4c988cdd49c023e3b11435dc40440fe2d58e73d94dfe508e8ee7a954157f707",
+      "reused": true
+    },
+    {
+      "sid": "s012",
+      "fingerprint": "af823771c3ce1fd5cc9ac2770bf10d24f172a2cdefe3971d5d0aa01b5dc70bfc",
+      "audio_sha256": "1d0d16c78fa6c611786e5a703057a31c63c43fbc4ab142b22d385078ff708dfc",
+      "reused": true
+    },
+    {
+      "sid": "s013",
+      "fingerprint": "c2014c264e98adcee59bae4e31c2df13c44a750fc5e29dcdf271dcd2c2e0e915",
+      "audio_sha256": "e08f57134cfd25d601a9daa5ff90f3b81e9abc3ed29d2802345e8aed9207dced",
+      "reused": true
+    },
+    {
+      "sid": "s014",
+      "fingerprint": "e0ae4f559e70792a0edddde955938b18f217e74f213c48ce12ae0441246cdcba",
+      "audio_sha256": "4e7e73ddff10e0c24b39631a99160ac756632b37bd6026ba9324e5ea709f9982",
+      "reused": true
+    },
+    {
+      "sid": "s015",
+      "fingerprint": "144e7f5c603b6290ee0ebf8711e1868b2446c5c0b036b5a197c819c82ebf50c6",
+      "audio_sha256": "978e3496e8c89fb41afed81ff6f09bd2848b4efb7cf65b369abbaeb6156cc284",
+      "reused": true
+    },
+    {
+      "sid": "s016",
+      "fingerprint": "768439d2e33a27eaabfd8d8b662ca52985da5841c009bc7e264488d6ab83d748",
+      "audio_sha256": "49ca1a117ab05e84d1bbaaef38cffb01ed2660c0fbe8a5178a6ce5aa015f7621",
+      "reused": true
+    },
+    {
+      "sid": "s017",
+      "fingerprint": "0e9cb5570024858af7e98dff9a7430d4a1ddb150407c7bdc1a6429dcb1fe3acd",
+      "audio_sha256": "6370a41c99871c31796a8dd737a99a8c41eec55f23b823d2b01e15436645a769",
+      "reused": true
+    },
+    {
+      "sid": "s018",
+      "fingerprint": "c36532adb29e8c701a283fd5f03384b98b8dfe8b08f30c473242a18dcf5dd2dd",
+      "audio_sha256": "5c10540a26014c75620cf04f4959a35c5591fcfd6aa171dadacf49ed3848f31e",
+      "reused": true
+    },
+    {
+      "sid": "s019",
+      "fingerprint": "d5bfeb05a55463a40df0a58fdeab35dd1332610a5e62453006fec67b7ad7c84b",
+      "audio_sha256": "7a79e57a2d80e368c9b610f8804c02891efd2b05a36f165b262805d0817d3e03",
+      "reused": true
+    },
+    {
+      "sid": "s020",
+      "fingerprint": "cbda41e1d07fb273db076951c75f2e325b8d8dcccc73e13ef4aee2388bcf6f5e",
+      "audio_sha256": "0e23deb2cedce70874ce53168610c83ad07d59fdee47a17199a9624704ba327c",
+      "reused": true
+    },
+    {
+      "sid": "s021",
+      "fingerprint": "9d1da06e17b5801d655eb31b4e30128d0c8b681cbc74543a3b3b21625190d785",
+      "audio_sha256": "f240c95f4bdd78f705fa53e4d4daa187974de314150d05e206e98d4982f31ce3",
+      "reused": true
+    },
+    {
+      "sid": "s022",
+      "fingerprint": "acc90b1158f0b03d9f78917246fb8f5f3ddd0ac719e76c6df5ac2f1e0575bfc5",
+      "audio_sha256": "1fe3fd79caa284adbb833efb68114b180989389eab3bd62c9676a0556909542e",
+      "reused": true
+    },
+    {
+      "sid": "s023",
+      "fingerprint": "845ef82d1ad7d2864c04be4543b870373a8111f5177190f980baea858ff6cd9f",
+      "audio_sha256": "c7e2b77b1b64ed25a7c7f005cfe72461100532783452d042e09c870b27bf9b6b",
+      "reused": true
+    },
+    {
+      "sid": "s024",
+      "fingerprint": "2d1805ea220f1c2bd735ca0ed6de75100ab7a32022273174e0c3811f4add2756",
+      "audio_sha256": "5a32790f66d5ec63382f07313532c6e7ba36bea88bad88b6b101ff6cfd441762",
+      "reused": true
+    },
+    {
+      "sid": "s025",
+      "fingerprint": "08779d6bc19056dce44b3da3c3cd068f582d75ca9074fe5910a7f441ff75fec8",
+      "audio_sha256": "fd2053e749d71e515b810f6eb01d2a93cedcdd2aee26963a9c9557ceab4f856d",
+      "reused": true
+    },
+    {
+      "sid": "s026",
+      "fingerprint": "148ad20ec06b3944a15427475357ae7ac918307ab07cd27bef194e3885289463",
+      "audio_sha256": "8bee576b72df1016d44bbc11c9464c7e46b8b9cd752fc8bb9740b008ee096a1b",
+      "reused": true
+    },
+    {
+      "sid": "s027",
+      "fingerprint": "24fd9776301deeee165698e3258a12964b2b06ed211550f4a423a244bcca7f64",
+      "audio_sha256": "bcdeabe38f9a30d457b29a50f4e1ac81945ff80015bdf630042e0db19cff4fa0",
+      "reused": true
+    },
+    {
+      "sid": "s028",
+      "fingerprint": "7de24b915353521e1cf34ecade6fdfb384d194507e9545048574b87fc4a56954",
+      "audio_sha256": "96fb32d15e1be294a1536626741530a5860546000be016f96c2ce7596cca29f0",
+      "reused": true
+    },
+    {
+      "sid": "s029",
+      "fingerprint": "384fe77e8f13e2a5543d881da33908261e5f840bdae0634e1969c2776023d567",
+      "audio_sha256": "37390accba580c493ca3ae2f01cbd3ae4ad3004a012188151f13d2a12e1d4b1b",
+      "reused": true
+    },
+    {
+      "sid": "s030",
+      "fingerprint": "9e1601674958140f5e553e268ca8f78a332db4594f0e0f696e9465e948a7ade0",
+      "audio_sha256": "d16e89a77738e54f8cddfac9a47966b9ff60b7344d81c5c0a096110d430ab324",
+      "reused": true
+    },
+    {
+      "sid": "s031",
+      "fingerprint": "7b98afbde83d055374b8e2bb65ec65e57300d8e3e0abee4cf728cd44c7bcba5b",
+      "audio_sha256": "9ea3ff3926a8821c4a77d77f0e510e16b2a55ea6cfa9ac0d30c2f8f3fd948b00",
+      "reused": true
+    },
+    {
+      "sid": "s032",
+      "fingerprint": "79ccc2bd507b1d7b2360464933a74922806526864e565d17bebd4aecc5bc083e",
+      "audio_sha256": "03af559e113a8b58f55c3b46b29984995c95ca9aa3030ff85aeaf488d6fcef7e",
+      "reused": true
+    },
+    {
+      "sid": "s033",
+      "fingerprint": "5f9faa808cc0cc797f35904a5cd0d0838fa136ddb921769acc955232a0bf1683",
+      "audio_sha256": "1dc5c7e9b6059548c67ea5ed78c0b36967cf75a8f2c7400051258e4b8eea9b2a",
+      "reused": true
+    },
+    {
+      "sid": "s034",
+      "fingerprint": "848db55cea7e74ade978715014c8a39c8a8a0ad9a37201a0cbb4e56f542ba282",
+      "audio_sha256": "2a355fac763c8ee65f1a6602e009644747b00ddaf84e99f58ad1e2901eca4bd2",
+      "reused": true
+    },
+    {
+      "sid": "s035",
+      "fingerprint": "fdef79a850e43c1a07774bdeeb2bfd0b5295d47f51a064288a657bfcac76a191",
+      "audio_sha256": "f44c2a50123f20f1ec3c9213d6f3f54b651fb205d9bfca6412268d4e13f8c859",
+      "reused": true
+    },
+    {
+      "sid": "s036",
+      "fingerprint": "b44b1cbdccf1219fb85bc7fa4e139543fec433f957a5c4ed4e322704098c0f66",
+      "audio_sha256": "e99d14a47cc84d063e54c3810be9e572a6d6616ed85b2d20ea4a0ef48d499534",
+      "reused": true
+    },
+    {
+      "sid": "s037",
+      "fingerprint": "4628ae5277704cb12fa892bbce581a1ffccd44b9dc6a389670fd4827f6fc2860",
+      "audio_sha256": "e02a79c890c6aa615b8397e8c0a968160183253383c468ffe563e09f7df622f3",
+      "reused": true
+    },
+    {
+      "sid": "s038",
+      "fingerprint": "c901889c5c25000fb64f645e293f22402db72ac594da3a9aa3919bba327c3013",
+      "audio_sha256": "bf7de6f6eb74868567b9dfa1a50a92473d2b12e663e64c3bb13cecc24a2fbeb2",
+      "reused": true
+    },
+    {
+      "sid": "s039",
+      "fingerprint": "071ad64afb7c4b18ffa84bea3c169bee0ffafbebe87983b6881346c9ea3b5a57",
+      "audio_sha256": "79910d4f06deeab5537b89dbe7ff70535303f5c62cf94ecc535b3ce6a687b2fe",
+      "reused": true
+    },
+    {
+      "sid": "s040",
+      "fingerprint": "580cea744b528ec5667dd8df40fd3f5f04f0bdfc9d459819998beba5d6ece0e2",
+      "audio_sha256": "b81ff5f68c701cad9f36b6fa623f6cb0977eea15e129cbc49dd8b712ceaa3b9c",
+      "reused": true
+    },
+    {
+      "sid": "s041",
+      "fingerprint": "3394349842f151c572d2ee06a2294f4e21ad966ca84ceace510b82b1c4aae812",
+      "audio_sha256": "392e027f161e4085014e9ba9634d04df8d4842156cdb54897add5bb9ebfafc8a",
+      "reused": true
+    },
+    {
+      "sid": "s042",
+      "fingerprint": "ebc8760a0d515063294b5cd2affc5a84cbd0e3f721f0c602189c6035b440510b",
+      "audio_sha256": "b3f672817ff33ec194b998b5a0b84fc6446fc427ee108c13fe51427d8c4722b1",
+      "reused": true
+    },
+    {
+      "sid": "s043",
+      "fingerprint": "623e79de4283cd4e39332748ad5402ff1fbd3d1523830139f3a42cc97ebc8a54",
+      "audio_sha256": "6db884b64712615bb74d87e975144cb1a42cda25b5882c045a4bd644b5d7d603",
+      "reused": true
+    },
+    {
+      "sid": "s044",
+      "fingerprint": "8e9bcb4d4c81a9694f6d9f7d86876e0ba2141ba8a491697ed697321d2fa43945",
+      "audio_sha256": "58f81834d9c99cc0ca2552ef742e5991decabc3821de1b4e9331284720e4a991",
+      "reused": true
+    },
+    {
+      "sid": "s045",
+      "fingerprint": "62c81f32a53d83a08c0f28426e0586db4e8ebd4c1da154f38908f1c6a77e9a1e",
+      "audio_sha256": "d8b690c1da77f4e003ba5070dce901fb047da1d9bca2a192048e1a92df499236",
+      "reused": true
+    },
+    {
+      "sid": "s046",
+      "fingerprint": "6cb5d06e071f1a20f9ae653577483b74c027afd3c628c67844c716d952f760b4",
+      "audio_sha256": "98c401f6269e3ca4b61844462b091ade502318ddeae344afdb6c4da3670c4aff",
+      "reused": true
+    },
+    {
+      "sid": "s047",
+      "fingerprint": "f58f8fdf7d932d7e469f316915bb230b8043c4ef65549b6fb83583abcc62d95d",
+      "audio_sha256": "191513408ee08b3748fba9042563a5433e7595a6f973ad405ebb632e24fc3eee",
+      "reused": true
+    },
+    {
+      "sid": "s048",
+      "fingerprint": "e3ee300770cebc6e9cca8dc0cd1726b1a5bcce1c098282e6a757cace2fa98bd4",
+      "audio_sha256": "b630ea80122f9aca56744bb50e59e0175da8ba4d9c81526ef33fe7e74c8a40f9",
+      "reused": true
+    },
+    {
+      "sid": "s049",
+      "fingerprint": "129ad969d2e25557284b44082bfc216651f2cf5522bc5a066382c54e4be5b268",
+      "audio_sha256": "d29081659d2d7d28fb6e7289377cdc8022f05cfb41fbe2541ce5081bcaff1967",
+      "reused": true
+    },
+    {
+      "sid": "s050",
+      "fingerprint": "06356ae4debe1d987144caeaac0661be3222b0ee8292a63f8fa255e31e456245",
+      "audio_sha256": "363e1cdfdd2f7adffdb145b1f8fbae7b4d323fe0a1e3f5a4615d43b37c67dbc4",
+      "reused": true
+    },
+    {
+      "sid": "s051",
+      "fingerprint": "2c8a2c76f0952c00853f752e5544720b4aa147082c9ad3b7d4cf6489255354cd",
+      "audio_sha256": "687b51ceaa4a0baf06a25ca7a747a582b551334ec12c1d77d66580809b9d154b",
+      "reused": true
+    },
+    {
+      "sid": "s052",
+      "fingerprint": "9d400060adf8cda1bb224dc7a6c6837664df6ecc75d141dc54a13961ef671000",
+      "audio_sha256": "140796110e86b4a375ed770b63436aa650134d707349999ad2fc29dfaeabbdf3",
+      "reused": true
+    },
+    {
+      "sid": "s053",
+      "fingerprint": "4988f3e47193f91cf79db80e7e13d24c183c3448e9fe23aecc60ec4ba96d5655",
+      "audio_sha256": "155dec102e2f0209fa4f0c2cbc87be710d74cdf2ce98dca23167cf7daf9f15fb",
+      "reused": true
+    },
+    {
+      "sid": "s054",
+      "fingerprint": "4ee5247454de22649b2f958ff5b975658785376865759023849993966c9ddf62",
+      "audio_sha256": "f0ac9ecee928262edd618323aad10dc5489f95b0c962cf4b3e4ef05bfa73f0ac",
+      "reused": true
+    },
+    {
+      "sid": "s055",
+      "fingerprint": "4ac138b4cf3fb61c8b0683f3592fd22034dfd15fa4d1b61462d5b552f3f1ee07",
+      "audio_sha256": "5391641944933fbc09846018fdd9b5c4b9233a057edaf8dde3e554d6d9c2b9dc",
+      "reused": true
+    },
+    {
+      "sid": "s056",
+      "fingerprint": "9a35fefc1f47ac0cea808d686679520a29a6266d1afe327a13bbb166ec9ea2a8",
+      "audio_sha256": "d259a75c542d5b65ff96b53c397bd226106162953e9412d01ae289265a8d3441",
+      "reused": true
+    },
+    {
+      "sid": "s057",
+      "fingerprint": "ad22fc0fdde1e0378c3d5abfbe0586065fa0609c388fee4906741f1eef421835",
+      "audio_sha256": "9bc6d9afd3cefd64c082a196385c2505688886e705313a96144ecda869fec0d0",
+      "reused": true
+    },
+    {
+      "sid": "s058",
+      "fingerprint": "d56de9f4a115eb2196831a61db8d4d9524d9b05e52c1063f6a02421f82e87e31",
+      "audio_sha256": "f058694247bf4f316096195914fd06d0db4ff4192575b9e0da91ba390c0eb317",
+      "reused": true
+    },
+    {
+      "sid": "s059",
+      "fingerprint": "a6cd0c2891855f9217ecb8c27362ffd88f37d3066db492fefc7b3d1858ba9ff0",
+      "audio_sha256": "5652770769dd6ee632fd52007e8cf83279c621ae6f937b94528aadfd4e402688",
+      "reused": true
+    },
+    {
+      "sid": "s060",
+      "fingerprint": "f73dfccbb80fba1cec7d8a3d28a13b6dbcc02c3be1f2b96efa3ec96b2154ed7f",
+      "audio_sha256": "1fd0ce8f04c21084a962d1bcbf9591c178b44fa8a711382001a5deaacb4fa6fa",
+      "reused": true
+    },
+    {
+      "sid": "s061",
+      "fingerprint": "9d72422550450d7985fee6534105e629d6f3f07676da48c9823e79f5197b74bf",
+      "audio_sha256": "a9b4098b13cdfe897d87f18623ea78e45df16ffed7d0a16fac0ec42e4dd8c46f",
+      "reused": true
+    },
+    {
+      "sid": "s062",
+      "fingerprint": "e2845070ffe62fb87b096012a160dd6d5ac228c1293ebfb0655e647f2f130b06",
+      "audio_sha256": "3953025c72bcda2770c42ea551108eb9a8d89c33746be2d1761c78b1f9bd946e",
+      "reused": true
+    },
+    {
+      "sid": "s063",
+      "fingerprint": "d38f08609c33874e80fb614a51eb62a0768b115cc2897d55d801b5665010fce2",
+      "audio_sha256": "7e26ed693754362a34a830b2450180f8ab87eb90f2c27cd69ec5c79f0dcd7e8b",
+      "reused": true
+    },
+    {
+      "sid": "s064",
+      "fingerprint": "9a2469f1ef9cf3b3405dc4bdf5df84ab21e0a9ca3866d0a8323816c38dc0ae10",
+      "audio_sha256": "93abaf25da825144a512f81f51abfe26bdf8b178e9bcb8c9ba8d316eb953fe48",
+      "reused": true
+    },
+    {
+      "sid": "s065",
+      "fingerprint": "00dadcf9cf3ffb1ca69051f71238c475a01383d1795968f7f602246089722158",
+      "audio_sha256": "e3cf9f12e483afc4fe0502eaa6460d3bc74e3d5c2099388477800b7285ae2a2a",
+      "reused": false
+    },
+    {
+      "sid": "s066",
+      "fingerprint": "9240a5b0640ee342e1b40bc174cd8fb13613b26701ef825da19f9219844413e8",
+      "audio_sha256": "fe4b6ef0f50ca8e1a7977ac4a4e92738789e7d5cdacb9144fc693b54bcbad73f",
+      "reused": false
+    },
+    {
+      "sid": "s067",
+      "fingerprint": "ebc12d96eb9bd1d929f4b89058ff70738168c31064dcb6467765a8356510766b",
+      "audio_sha256": "95b764e77c8283516a261cd1a8ac2821fcff95d4223a756e525f6d524dc45511",
+      "reused": false
+    },
+    {
+      "sid": "s068",
+      "fingerprint": "9a365aa2523a02ef113b90d74a3cd2f603fbc0da29a1e62e06e917b97c486252",
+      "audio_sha256": "6eb2d88aa48cadb8a6a6b18b214c50c1af4beeec4bf769612237b5ef430c986f",
+      "reused": false
+    },
+    {
+      "sid": "s069",
+      "fingerprint": "5f6bcf9adf11070ab4b157936f7d60730eb9bd5c0435e8a867af4cc9f97791fd",
+      "audio_sha256": "e14aeea9a0a7e6dcebb0d8a84f929ba0e8f5a54bcd197d36a9f4eb4f52421597",
+      "reused": false
+    },
+    {
+      "sid": "s070",
+      "fingerprint": "d63b48c8bafe1a3484b26fdc13dc4fdc2821c2f7a4393f3924a48cd9c86b2144",
+      "audio_sha256": "3f2a9bb8167151d25114c71b1f0c5dc3bf9f028fc9a0d94c969ebf1a94848f48",
+      "reused": false
+    },
+    {
+      "sid": "s071",
+      "fingerprint": "015d2c8ba8b8f7a0751e5e0ddedbfcb0927c20147e709c431294d531024aaf70",
+      "audio_sha256": "ceaa3a055053c3949c6d6e07900704f8bb411eb5e1322fb364d7414402ee7e3d",
+      "reused": false
+    },
+    {
+      "sid": "s072",
+      "fingerprint": "64d553d46ea3b4d27cd52680983930db7b812d604f1b725dc8c07f6fc674d1f7",
+      "audio_sha256": "c98dfb7f5eba1b1666998c421265e7d80b49ef8947f0995a5ce39705c14f1cc2",
+      "reused": false
+    },
+    {
+      "sid": "s073",
+      "fingerprint": "08ad8e921b4e92e45d5561ff46f69d8de9a8ccaae98da2f8c22b69514c5efaef",
+      "audio_sha256": "b4f44abf20dc100f6c3fd0741a9b8c7ddeab215b16d7529b577bdabeb4255158",
+      "reused": false
+    },
+    {
+      "sid": "s074",
+      "fingerprint": "0c974a8cba6ad3e1543e8468bb55ec021c07012ed82aa37bdb049ecf0a624f54",
+      "audio_sha256": "b8963353545c8ba396ec2fe173b8e7c30670c0c8d1b2c24d8e59709ab5187e7a",
+      "reused": false
+    },
+    {
+      "sid": "s075",
+      "fingerprint": "d0d41563312fb68a80005a631839dba714df4396c2858f1b3684176ae45d4508",
+      "audio_sha256": "7c42f1b5eddbc89cffbeb4c6d5f6b5d3da3cd57367d5912a6702b0a6dd7b1f58",
+      "reused": false
+    },
+    {
+      "sid": "s076",
+      "fingerprint": "9c1577019b31de6b54474677e00790f94159e0749378971a982c55f955792aec",
+      "audio_sha256": "7472aaab352b3683cb873cace05f6f857a2c2a3a2d9e4e253aed9c7ec26e6bb3",
+      "reused": false
+    },
+    {
+      "sid": "s077",
+      "fingerprint": "8112f839b0d9bb2cf78f81ca766d5f56614d1912740a2391bf0fd5dc62b49762",
+      "audio_sha256": "d8ec1f0237f4df31889db7ac05f4740fe77d9e1ca2be4914a405c3bf576ba609",
+      "reused": false
+    },
+    {
+      "sid": "s078",
+      "fingerprint": "8bb0ac2ab698ec8a1b93bb29069bee85a00f9b30114510239b3edd73e39cca35",
+      "audio_sha256": "65bef394772c499ec51d7e2a83aac120006f89a3ff2de16889930ed28369ae43",
+      "reused": false
+    },
+    {
+      "sid": "s079",
+      "fingerprint": "d056a43869717c13b1644937d054a0dd6f4d103c076f4e8442c76ac498d5e9dd",
+      "audio_sha256": "6f6366190867aedf6e5bdd81a07e76746de047e31f879176a6ccd5b0d4d57d01",
+      "reused": false
+    },
+    {
+      "sid": "s080",
+      "fingerprint": "f4b552120089d275ef1b3a48de512fbea1be3d029353a85d6c57a0f86cc97c0c",
+      "audio_sha256": "49f8d50612ed870751191989cc2cba76de7522b6d23c505aca9d1a8807a8451a",
+      "reused": false
+    },
+    {
+      "sid": "s081",
+      "fingerprint": "fb9f4efae0a649f1da8a4734ae9c29f10b13e60893c15fafb58672f683581e4c",
+      "audio_sha256": "5499cc9ad27497b0926793abd3108f18dbe0739291678f14424751a09b7e23e8",
+      "reused": false
+    },
+    {
+      "sid": "s082",
+      "fingerprint": "ef179fd02dfa717d087590e386da361566632ff4f3b8d4c1093c786211d570c7",
+      "audio_sha256": "ad62c374a714e9f47f3acd4e3a2b9b344bf2f9f8132627ba4e4a3f186538d64f",
+      "reused": false
+    },
+    {
+      "sid": "s083",
+      "fingerprint": "10bdddbec5e31cde77ebdef3631d043a257fbcd3803aae913c5343f3120827fa",
+      "audio_sha256": "5999bd72edab063dec7cb8ce194fdbcb7a7d266f06b545a34afbee83b261b4ba",
+      "reused": false
+    },
+    {
+      "sid": "s084",
+      "fingerprint": "ad8448c38844665a054d7698be15dd1ff1ea7858426c556ae14668dbd7db290a",
+      "audio_sha256": "503c2a054177e7f0281ad265ac93985ace0d2aa48ba6d1aae0973f9ba953f955",
+      "reused": false
+    },
+    {
+      "sid": "s085",
+      "fingerprint": "fdc6e7d44596a6f551293de91f8db38d6fe4d5287f2085dd951186dcefb030fc",
+      "audio_sha256": "d6e28147628e48be5ce2a1808c90a73f9a4dd3137a11ebf7cdefee6659fb53a3",
+      "reused": false
+    },
+    {
+      "sid": "s086",
+      "fingerprint": "60d92a2bce4313d78ea1e8dac6c4d75488c032f63d6587c39b9c11cae4deba0a",
+      "audio_sha256": "52ee37e611eedc4484a255f884097e29576bfb89719fcecf55c0485f5a3760d6",
+      "reused": false
+    },
+    {
+      "sid": "s087",
+      "fingerprint": "ee0990d43aa2914cb3060e9c85141df528308dc9220ac2931053ee40a6944a4f",
+      "audio_sha256": "343169877b289c9ef36802700800634c0d4d055e50d59a4d9c497790b52a7019",
+      "reused": false
+    },
+    {
+      "sid": "s088",
+      "fingerprint": "1a03083da3f7b157345cf42e119d9d8f52286b740e9936f9ab77391ad0be260d",
+      "audio_sha256": "b69fa7ca93f7d7029a4cfba43f4f57a92378c52aff562090f63cd0326939be6b",
+      "reused": false
+    },
+    {
+      "sid": "s089",
+      "fingerprint": "5053f4afec1b163c6fd9027490f1bfa30d5171c65bfd4a8d51e1bd932e7400b2",
+      "audio_sha256": "527d141b351584b964fdeaaef21e106aac7be04995370049875855fe3fad1e41",
+      "reused": false
+    },
+    {
+      "sid": "s090",
+      "fingerprint": "e4524c0c10801b78450f3d0e1b383800065fb22674068bf6cf2c31c337edef02",
+      "audio_sha256": "95e5fc2aa50cf56e31811c99c456b1e0fe873197a0283280427eb8ff5118460d",
+      "reused": false
+    },
+    {
+      "sid": "s091",
+      "fingerprint": "0c10315b25729ae2ad608850d7c05dc264ea55ddfc3c6caaec3901dd8e69520c",
+      "audio_sha256": "40d00b43255c0089dc80a3b9a10d5a10af55ca4f633785378fd2d9ca67281d18",
+      "reused": false
+    },
+    {
+      "sid": "s092",
+      "fingerprint": "249670d1e52df9f46c6214516fa71ddf10e97712b6138a10f543d27bbc852fa2",
+      "audio_sha256": "e4a984e5d457ecd54fad11498750ea14947cce0c0cb3df3450723d97b96a76f6",
+      "reused": false
+    },
+    {
+      "sid": "s093",
+      "fingerprint": "c7b4da08e52d156e8993b4ad629275b90a39dd80a7148f5f3ee5cf80aa874698",
+      "audio_sha256": "847895f7592ba637339fa3aa6cb4d8ae2c36b2d7ec35bdcc6357711fefc18e6d",
+      "reused": false
+    },
+    {
+      "sid": "s094",
+      "fingerprint": "0667d2ee839147e1ca0f18261fd8c8a5db046442e1da6a12bee77affb586c4be",
+      "audio_sha256": "6ffc06b873994765e696b8c1128e9a83f09d996d91e46a903e9e20f21db8a04c",
+      "reused": false
+    },
+    {
+      "sid": "s095",
+      "fingerprint": "8346293c154f2ccc1c38ed56bc95c02d84ad6a31757fce59ab9934db90c65615",
+      "audio_sha256": "8c798bc41d8d8cad203f70fe798961c5af214760e7aeb68793c8e032ef5836c1",
+      "reused": false
+    },
+    {
+      "sid": "s096",
+      "fingerprint": "85afc52e88b76d167bcdfcfd9e1c7c78428727eb84f46dedaf45902bcc9bddbc",
+      "audio_sha256": "1486bdb19513119729c3fceef59a9514d16759a0691aebf95253a6f59d2c1e99",
+      "reused": false
+    },
+    {
+      "sid": "s097",
+      "fingerprint": "1aaf0c9efb34968e58c9d36f8a7abf2f31699c71ef537bf86cb131f00edc0a0e",
+      "audio_sha256": "1aa048f1fc76ab92a48252f8933226762431a0a7d9ca3bf18c6a4a338a5616e1",
+      "reused": false
+    },
+    {
+      "sid": "s098",
+      "fingerprint": "f414ff53bf1cfcdcd0f77f625dedd915a1c2d99884ff97bbb436214a3fe999c4",
+      "audio_sha256": "18d9cc934d6b6fa658d648c05ee802096299406615fe43b1209efae363ecc224",
+      "reused": false
+    },
+    {
+      "sid": "s099",
+      "fingerprint": "0d63894c66475da0ab51fa68274e1dc1a207c5cf5439e1eb26d1eae2d0195c3f",
+      "audio_sha256": "431dbf8de27544585c5817fafba77c7a6dbfc687d9774691d6c75b09fa986632",
+      "reused": false
+    },
+    {
+      "sid": "s100",
+      "fingerprint": "1cc7472b7b52d72acfa10abffec8219ad4b1096f7c75bb1962b6f3c03fa2fa19",
+      "audio_sha256": "751ea2def1b42dd5f4cfe308c0c6c26921dc627f3ace1f4833027c3e9245066a",
+      "reused": false
+    },
+    {
+      "sid": "s101",
+      "fingerprint": "88b888c2040b1be09b8716e7d207e287e3a5a1b66516eae686baaf4506f8bc91",
+      "audio_sha256": "2ccdec0d9ce83ff572c0684bcff0cefbad6ca32f433df2c16c2cd16f98b0f46e",
+      "reused": false
+    },
+    {
+      "sid": "s102",
+      "fingerprint": "892651a21d3f888e839ae6014dedc75e768d0d824c0b78874dcc246db67594ee",
+      "audio_sha256": "12b281aa05588aafa489f9ca537f8c9aaf3527d2e98f4dabc6a3a3c6f581ffae",
+      "reused": false
+    },
+    {
+      "sid": "s103",
+      "fingerprint": "ea07a00b58e7d7a1e1419a4018872ea97ffc09ae9dba9bfe8cde18ab7d7c069e",
+      "audio_sha256": "d19343a45123c1fe9bdd3e74d7ef8c09d053dd4770ad2e74148cf2f96866a5a4",
+      "reused": false
+    },
+    {
+      "sid": "s104",
+      "fingerprint": "e37a07288e6c8e0a34bdea30dcae361d31ebeef12a0328f17a7101c2a5ee6b85",
+      "audio_sha256": "9519e373ed0bd0aca6aba4229dd54daf83b21515f7c843d0312dd9fb7b8f683d",
+      "reused": false
+    },
+    {
+      "sid": "s105",
+      "fingerprint": "fad2c2fbf422413d1f61ac603d18c117464bfa7a93c176bb13b62c5916aca0e2",
+      "audio_sha256": "e0d4f9501b604279cfd80f1db78c97c6de298e6e29fb1b17fea32a7b6a79becd",
+      "reused": false
+    },
+    {
+      "sid": "s106",
+      "fingerprint": "7598d92d4e2316ec77db77505a9573f9634d52573eb43d0c634dfc8a2b655813",
+      "audio_sha256": "7883a8a2e3616ed8ad429c125938e2ee26defea592b73b40e57245ab0058a364",
+      "reused": false
+    },
+    {
+      "sid": "s107",
+      "fingerprint": "2d1186f48126c43548ddc280f1b7f4bd5452d8d48bdcfa33d7773dd517aac3bc",
+      "audio_sha256": "40c1cdfb0422813b7cece889cc8afb61344aeb190313e676dae41a478b8bb346",
+      "reused": false
+    },
+    {
+      "sid": "s108",
+      "fingerprint": "f9008d1c6f7684d3e6baa551761c9c37dd6a007bb6688822c4d8c822cad5bfb4",
+      "audio_sha256": "f9db84a4cbf4a43a34a524de3c4efab1f3781d4f27c1d0cb24b88fc48b74e04e",
+      "reused": false
+    },
+    {
+      "sid": "s109",
+      "fingerprint": "830ee7d1fb607c48185683d47104d71f4f4202fe99240e73ff96c27ea78eab98",
+      "audio_sha256": "f24be8903efc29fdcaad45d94a2e93624229541ecdd35171a3d177a82299deaa",
+      "reused": false
+    },
+    {
+      "sid": "s110",
+      "fingerprint": "244a465f411504255d289796c3671ec24842fcd44cd8c8efbe309dc90debbcff",
+      "audio_sha256": "285ffdc8b7278dcd2835456112391129567a51d24a9a881f8f9ef6f7eee2041a",
+      "reused": false
+    },
+    {
+      "sid": "s111",
+      "fingerprint": "e5e2d69b83e829b76da9359f6a09794527c79ba73466bc74f119e3f35a56cf90",
+      "audio_sha256": "f4f94e3294735e3b006d81ce1527d9fa64234b8214f92e2c39e9cf4185f808a7",
+      "reused": false
+    },
+    {
+      "sid": "s112",
+      "fingerprint": "c3609091c640fe30170b8abe3f6068ee5c65d0db4789c6420fa3062294cc8d01",
+      "audio_sha256": "5a4ab3fd962c8aaeb9cdf8ef1dfaad54880f7ec1dcf8665d6319f349a22a1b44",
+      "reused": false
+    },
+    {
+      "sid": "s113",
+      "fingerprint": "94f4192789fba439002b1428ed89a356772453ec58eeb4978db96a9c45cbd978",
+      "audio_sha256": "bdb3b8c13e4077d52a0b1b5487516d610fd15efd19b2d1455fcaf3ee60aeb61d",
+      "reused": false
+    },
+    {
+      "sid": "s114",
+      "fingerprint": "4053533bf20acf8baefa686afe189a3b255e96ce332b417f0389c6c809935d2c",
+      "audio_sha256": "854ce4af522d31c0cf61f5ac0dc546e4fff4e3a3e6d03542e2bcf51ab9a9df3d",
+      "reused": false
+    },
+    {
+      "sid": "s115",
+      "fingerprint": "cc44838eba282c3e3f9534fdd7fb0aa5a4586f1a13139034c9ca46fe44b64451",
+      "audio_sha256": "de4c8c9b850f3704617bec0d5c1ecd856408620a15b1ac6e7912ece1272e5a59",
+      "reused": false
+    },
+    {
+      "sid": "s116",
+      "fingerprint": "244596219082e17fc3c594a4ffbc0ee73d96d69eb018b90a6bbd934d9092694a",
+      "audio_sha256": "4db685326c03e211526dd5ec3b2995335578286b94c07717b3ba840bff70be63",
+      "reused": false
+    },
+    {
+      "sid": "s117",
+      "fingerprint": "dfe2ea1d6e869db8533bf9cc9e92c815afacbf1bd483ba85712704d40dadf161",
+      "audio_sha256": "86a2bdda000848160bd6a20950b98c589e35b7562ee295b0b9f11956828b60e5",
+      "reused": false
+    },
+    {
+      "sid": "s118",
+      "fingerprint": "562bb7fcefbf96e47af30864ffbb0df5dacbc5adccb5cbdd61cb387fe336fc78",
+      "audio_sha256": "0522c61f76e2eff86e9eb93d9dc62b6c003393f696fb4fb48e9be0b6e0c9242b",
+      "reused": false
+    },
+    {
+      "sid": "s119",
+      "fingerprint": "59fe4c8b7ed6b1347ab81293bf5a68a243e4ed2173e2cc6ee7b8307ee201df90",
+      "audio_sha256": "cee67b8f84ee28c11fa3d8a44bc08d24049486b3a3f6a453400192fbe2dad8d7",
+      "reused": false
+    },
+    {
+      "sid": "s120",
+      "fingerprint": "392a30aa509f3365efd502c916cdb82187e753e549439bd6f0b0bf51c0293011",
+      "audio_sha256": "0bdc54bd5eead35eec446ab49c0eac4ef52d843ce11705a013dbe33613bdc7f6",
+      "reused": false
+    },
+    {
+      "sid": "s121",
+      "fingerprint": "0e855c0ff07aa9c4d074e162a199d110008d91d70bd36c9e74574e3db78451dd",
+      "audio_sha256": "c377fad4fedcbda78513b440f8289c7bb9bf049ff3892abc8663aaed0f40c992",
+      "reused": false
+    },
+    {
+      "sid": "s122",
+      "fingerprint": "3545cc2acdc8651aa861041635c0986fcc87bd6ea76f0d733c9bc268be201a0b",
+      "audio_sha256": "d577870c6b42afe92b6dba575bcc1dca4c6d4ae82173143d6ba6edecde64dd5c",
+      "reused": false
+    },
+    {
+      "sid": "s123",
+      "fingerprint": "0be50974e29f641015b89619a5fe047dfd4ff6860e08b164bce355c8e2a3eea7",
+      "audio_sha256": "0806c4347e554b73c131ec86ba65f3bbaa75ed849a4d9a39e7fb0b711f0248b0",
+      "reused": false
+    },
+    {
+      "sid": "s124",
+      "fingerprint": "72365b2fb36f02e55e555b366f8aef42675e1795d7b88672f7e0cc771f953ba6",
+      "audio_sha256": "8a4a08bc7fa1fc966ddbcb397db7bbffa9481ee28993079d3cbda78d62091f12",
+      "reused": false
+    },
+    {
+      "sid": "s125",
+      "fingerprint": "29507ed895febbbe4a8d3d6d206423786fbd4af2e53f00246accdb95a1097198",
+      "audio_sha256": "0fdc49932c8de85fb6fea2736edd792d18dfe3ca98bff42aaaa5d0a30d7e04bc",
+      "reused": false
+    },
+    {
+      "sid": "s126",
+      "fingerprint": "735c3ffcb414619cb704985ff3b0588be8f06fc81eb2be6f10595ef65619c086",
+      "audio_sha256": "9ecc82fe819c7a3b97e2da0ecf04c1eb70cd8ed00375af42ec8a19d230da6ee2",
+      "reused": false
+    },
+    {
+      "sid": "s127",
+      "fingerprint": "68b0de77087dc776d1b1c59c1eb94276af9d7ac42350bc74f707742eb59cf6e0",
+      "audio_sha256": "a26f5ef9163f4f4355d9a91f8a82cd74b63095e70a810a5f7206995f4248bcaa",
+      "reused": false
+    },
+    {
+      "sid": "s128",
+      "fingerprint": "401771f74dde5f419bbf12dce4f0b76c0d54733831974f79e248ac972a2d8394",
+      "audio_sha256": "6b274c9ddcc466c0abf599c836d78dce193ae6748a0a288ab595817d62705903",
+      "reused": false
+    },
+    {
+      "sid": "s129",
+      "fingerprint": "0f9f3d1c4c03996bfb5573015eb0b5f43ebaf5082323e51cbd20c24f1232fb92",
+      "audio_sha256": "ccf3126a6ffed941ad99cd8f569617f0b361e1a2da16a30ab541c5002b5db128",
+      "reused": false
+    },
+    {
+      "sid": "s130",
+      "fingerprint": "5558bce856f12b1f7e9543d9be2114e175d71252e93f49ce25a3f367fc9e8dea",
+      "audio_sha256": "daaeb29270160ea7a55effe8e4f1aa247f7518bd05f0831db049a4247e147cfa",
+      "reused": false
+    },
+    {
+      "sid": "s131",
+      "fingerprint": "125672f69cc244ddb89c5c74d35638bf3eca1a7aac769cfacb0e49de81d4343c",
+      "audio_sha256": "90312843c968840849df79eba727db6613e126800e1422b3d7887bf116ba6560",
+      "reused": false
+    }
+  ],
+  "voice_config": {
+    "repo": "Supertone/supertonic-3",
+    "revision": "3cadd1ee6394adea1bd021217a0e650ede09a323",
+    "asset_dir": "assets/tts/supertonic",
+    "voice_style": "M3",
+    "speed": 0.95,
+    "total_step": 16,
+    "silence_sec": 0.3,
+    "max_chunk_len": 120,
+    "seed_salt": "v1",
+    "assets": {
+      "onnx/duration_predictor.onnx": "7506c6781997d06c7e0f203e8c16555fe39ad115",
+      "onnx/text_encoder.onnx": "bef43a4d0bd4889e08aaa2c2e107ecc5aebd6e00",
+      "onnx/vector_estimator.onnx": "6460a27d6787bead8f0cc6973c28be6281930076",
+      "onnx/vocoder.onnx": "5e94809905565e9bfbc54a130137c37e03bc2048",
+      "onnx/tts.json": "310fe80fdba5a36d03a4c0c85561be5c3e1c2da7",
+      "onnx/unicode_indexer.json": "c8133b892e49c85f47880f1ac0226f91579ea5ac",
+      "voice_styles/M3.json": "7764333982bc4d4d27b3872ead13dfe4b0400d81",
+      "LICENSE": "e6ab935ad6e8025ce4bf68e7382bd5332f4329ea"
+    }
+  }
+}

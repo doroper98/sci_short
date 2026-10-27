@@ -261,6 +261,6 @@
   "caption_groups_mapped": 166,
   "screen_text_unchanged": true,
   "numeric_guard": "950곳 preserved as 구백오십 곳; avoids repository two-digit counter partial match",
-  "listening": "No perceptual listening tool available; no listening QA claimed.",
-  "mms": "Official fetch failed: Tunnel connection failed: 403 Forbidden; no bytes received; no alignment or final fall applied"
+  "listening": "Text audit only; no perceptual listening QA claimed.",
+  "mms": "Alignment status is recorded by finish_audio.py in plan.json; this audit does not infer audio completion."
 }

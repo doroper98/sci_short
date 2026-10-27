@@ -3,8 +3,15 @@ from episode_paths import EPISODE_ROOT, OSINT_ROOT
 import math
 from PIL import Image,ImageDraw,ImageFont
 from pathlib import Path
+from functools import lru_cache
+from fontTools.ttLib import TTFont
 from explainer_scenes import base,font,center,arrow,ease,INK,MUTED,TEAL,RED,GOLD
 
+
+@lru_cache(maxsize=1)
+def display_font():
+    path=EPISODE_ROOT/'fonts/GmarketSansBold.otf'
+    return ImageFont.truetype(str(path),49),frozenset(TTFont(path).getBestCmap())
 
 def card(d:ImageDraw.ImageDraw,box:tuple[int,int,int,int],title:str,value:str,note:str,col:str=TEAL)->None:
     x,y,r,b=box
@@ -12,12 +19,13 @@ def card(d:ImageDraw.ImageDraw,box:tuple[int,int,int,int],title:str,value:str,no
     d.rounded_rectangle(box,radius=22,fill='#ffffff')
     d.rectangle((x+25,y+30,x+31,b-30),fill=col)
     d.text((x+53,y+34),title,font=font(31,True),fill=INK)
-    display=ImageFont.truetype(str(EPISODE_ROOT/'fonts/GmarketSansBold.otf'),49)
+    display,cmap=display_font()
     tx=float(x+53)
     for char in value:
         if char==' ':tx+=49*.3
         else:
-            d.text((tx,y+102),char,font=display,fill=col);tx+=d.textlength(char,font=display)
+            face=display if ord(char) in cmap else font(49,True)
+            d.text((tx,y+102),char,font=face,fill=col);tx+=d.textlength(char,font=face)
     d.text((x+53,b-64),note,font=font(26),fill=MUTED)
 
 
@@ -133,7 +141,7 @@ def scene(t:float,kind:str)->Image.Image:
           'Music: The Life and Death of a Certain K. Zabriskie, Patriarch',
           'Chris Zabriskie · Album: Vendaface · CC BY 4.0',
           'creative commons: creativecommons.org/licenses/by/4.0/ · chriszabriskie.com',
-          'Narration: Supertonic 3 M3 · speed 0.95 · local synthesis',
+          '내레이션은 AI 합성 음성입니다 · Supertonic 3 M3 · 속도 0.95',
           'Fonts: IBM Plex Sans KR / IBM Plex Mono / GmarketSans',
           '계산·차트: 공시의 기간·분류·반올림·조건을 유지'
         ]

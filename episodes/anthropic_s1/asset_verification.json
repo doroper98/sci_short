@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "7d85942e536e0eb0796292aa628540d8319cf9af",
+  "supertonic_archive": {
+    "size_bytes": 370277184,
+    "sha256": "842e9f83e974b3dcdf727814fea2af594a68f3d962798a53f7df93042d9765f3",
+    "url": "https://github.com/doroper98/prismatic_nplm_git/releases/download/tts-assets-supertonic3-v1/supertonic-3-tts-assets.zip"
+  },
+  "supertonic_files": [
+    {
+      "path": "onnx/duration_predictor.onnx",
+      "sha1": "7506c6781997d06c7e0f203e8c16555fe39ad115",
+      "size_bytes": 3700147
+    },
+    {
+      "path": "onnx/text_encoder.onnx",
+      "sha1": "bef43a4d0bd4889e08aaa2c2e107ecc5aebd6e00",
+      "size_bytes": 36416150
+    },
+    {
+      "path": "onnx/vector_estimator.onnx",
+      "sha1": "6460a27d6787bead8f0cc6973c28be6281930076",
+      "size_bytes": 256534781
+    },
+    {
+      "path": "onnx/vocoder.onnx",
+      "sha1": "5e94809905565e9bfbc54a130137c37e03bc2048",
+      "size_bytes": 101424195
+    },
+    {
+      "path": "onnx/tts.json",
+      "sha1": "310fe80fdba5a36d03a4c0c85561be5c3e1c2da7",
+      "size_bytes": 8253
+    },
+    {
+      "path": "onnx/unicode_indexer.json",
+      "sha1": "c8133b892e49c85f47880f1ac0226f91579ea5ac",
+      "size_bytes": 277676
+    },
+    {
+      "path": "voice_styles/M3.json",
+      "sha1": "7764333982bc4d4d27b3872ead13dfe4b0400d81",
+      "size_bytes": 290198
+    },
+    {
+      "path": "LICENSE",
+      "sha1": "e6ab935ad6e8025ce4bf68e7382bd5332f4329ea",
+      "size_bytes": 15007
+    }
+  ],
+  "mms": {
+    "size_bytes": 1262047414,
+    "sha1": "0300fd9ae57a63e3bd239ae1337e32127a587214",
+    "verified_before_load": true
+  },
+  "fonts": [
+    {
+      "path": "GmarketSansBold.otf",
+      "size_bytes": 1236912,
+      "sha256": "caea9ca1b2606736e56e76b41193f685abd45fafe0c784385e3b78c1eceef309"
+    },
+    {
+      "path": "GmarketSansMedium.otf",
+      "size_bytes": 1190544,
+      "sha256": "157141eb16f1e9598c0eca15a472f04d73930f48514308ea92a234abeda88478"
+    },
+    {
+      "path": "IBMPlexMono-Medium.ttf",
+      "size_bytes": 136704,
+      "sha256": "a9b4c49bb299e05b5f6c481e7fb5e78943d2793249a0c8874ab574a2d1ea6755"
+    },
+    {
+      "path": "IBMPlexMono-SemiBold.ttf",
+      "size_bytes": 140216,
+      "sha256": "d3c38e55c78f5b0f28009fddba4834ec503278936a5986032424c9bd2d23aa46"
+    },
+    {
+      "path": "IBMPlexSansKR-Bold.ttf",
+      "size_bytes": 2875584,
+      "sha256": "9d82a8be5330f6d7b53121262867b402baca672eb69b852928f06d185d357f7d"
+    },
+    {
+      "path": "IBMPlexSansKR-Medium.ttf",
+      "size_bytes": 2866736,
+      "sha256": "4a7130f56ce50bf10f9d383f624e50bad2c80bebc63e51f4269ece2c7d919166"
+    },
+    {
+      "path": "IBMPlexSansKR-Regular.ttf",
+      "size_bytes": 2797100,
+      "sha256": "53750379270312368cf7641901f43a98dd892e3d9d5798cf25cdc245c85c71c0"
+    },
+    {
+      "path": "IBMPlexSansKR-SemiBold.ttf",
+      "size_bytes": 2854744,
+      "sha256": "823c1956adf56c27c06b062725dfce23f266e4fd1366290f2957c8407482a817"
+    }
+  ],
+  "bgm": {
+    "id": "music.zabriskie_patriarch",
+    "sha1": "c0ddb7b38ee7866c32d2510a84125cf611a54e93",
+    "source_commit": "bd37b582bfd78859df89a893670cc191b4072718",
+    "license": "CC BY 4.0"
+  },
+  "network": {
+    "http_policy": "unrestricted/enforced",
+    "proxy_and_tls_preserved": true,
+    "probes": {
+      "mms": {
+        "url": "https://dl.fbaipublicfiles.com/mms/torchaudio/ctc_alignment_mling_uroman/model.pt",
+        "status": 200,
+        "length": "1262047414",
+        "date": "2026-10-27T00:24:41.565926+00:00"
+      },
+      "supertonic": {
+        "url": "https://github.com/doroper98/prismatic_nplm_git/releases/download/tts-assets-supertonic3-v1/supertonic-3-tts-assets.zip",
+        "status": 200,
+        "length": "370277184",
+        "date": "2026-10-27T00:24:42.295377+00:00"
+      },
+      "sec": {
+        "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm",
+        "status": 200,
+        "length": null,
+        "date": "2026-10-27T00:24:42.702683+00:00"
+      }
+    }
+  },
+  "license_review": {
+    "Supertonic": "Pinned LICENSE SHA1 checked; Open RAIL-M, output section 6 and machine-generated disclosure Attachment A reviewed.",
+    "MMS": "Official facebookresearch/fairseq examples/mms README: code and model weights CC-BY-NC 4.0.",
+    "IBM_Plex": "Official Google Fonts OFL files retrieved for both families.",
+    "BGM": "Official chriszabriskie.com/use/ page retrieved and read; permits credited commercial use under CC BY 4.0. A subsequent duplicate request returned 403; no bypass.",
+    "Gmarket": "Original upstream registry identifies Gmarket free-font terms. Current official /fonts/ URL returned 404 and corporate root showed maintenance; current full terms could not be reopened. Font binaries are excluded from source delivery."
+  },
+  "rules_sha256": "5db323bedf437d301f19d1fb5c690cfaa75a36592524de3b18d72bb79dea476a"
+}

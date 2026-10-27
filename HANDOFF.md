@@ -1,5 +1,11 @@
 # Codex 인수인계
 
+## 별도 Anthropic S-1 에피소드 — 2026-10-27
+
+사용자의 후속 요청으로 [Anthropic S-1 에피소드](episodes/anthropic_s1/START_HERE.md)의 실제 한국어 내레이션·BGM 영상과 동기 SRT를 로컬 생성했습니다. `episodes/anthropic_s1/out/final.mp4`는 1920×1080, 24fps, 10분 40.708초입니다. 실행·검증·해시는 해당 폴더의 `HANDOFF.txt`, `validation_results.json`, `MANIFEST.json`에 있습니다. 실제 청취 검토는 0/132문장으로 남아 있습니다. 미디어·외부 자산은 Git에서 제외했고 공개 업로드·push는 수행하지 않았습니다.
+
+아래는 기존 과학영상 프로젝트의 2026-10-16 기록입니다. 별도 재무 에피소드 상태와 구분합니다.
+
 기록일: 2026-10-16, Asia/Seoul. 대상 저장소: https://github.com/doroper98/sci_short
 
 ## 사용자 요청과 확정 사항

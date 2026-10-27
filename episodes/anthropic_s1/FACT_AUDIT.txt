@@ -39,3 +39,23 @@ p256 CURRENT board6 includes3 LTBT nominees. POST-IPO authorized7 seats, LTBT ge
 p294 ClassN generally nonvoting, automatic1:1 A conversion in registered offering/open market sale OR qualified third-party transfer (recipient not currentN holder/affiliate, and after transfer not>9.99% beneficial ownership/control of any equity class). Script says certain-condition third-party transfer, not unconditional.
 pp2–3 NRR fixed base customers with >=$1 revenue in year-ago quarter, current revenue/base revenue; Q3-26/Q3-25, excludes new outside cohort, captures churn/contraction; Pro/Max excluded. ~900%=9x, not+900%growth.
 Old superseded storyboard removed. Chapter times remain editorial targets, not measured speech/SRT times.
+
+
+DIRECT RECHECK IN THIS SESSION — 2026-10-27
+The exact SEC HTML was retrieved directly through the existing proxy with TLS verification intact.
+source_validation.json records its 14,169,264 bytes and SHA256, 51 matching financial table rows,
+8 arithmetic checks and 14 definition/contract/governance phrase checks. All passed.
+The surrounding primary-source paragraphs were also read for NRR cohort/period/Pro-Max exclusion,
+minimum/estimated/maximum commitments, termination rights, current six-person board versus
+post-IPO seven authorized seats (T four including vacancy; A+F three), and Class N transfer conditions.
+Blank IPO price/share count/proceeds/timing were not estimated. No news source substituted.
+The inherited source data and spoken financial meanings required no numerical correction.
+All 132 sentences were generated anew in this session. Restarts reused only provenance-checked files.
+MMS official model size and SHA1 and Supertonic ZIP plus eight individual assets were verified.
+Original MMS alignment: 132/132 passed. WORLD final fall: all 128 nida targets applied; four other
+endings correctly skipped. One MP3 (s014) fell just below the unchanged 0.62 alignment gate; the
+identical seeded lossless TTS PCM passed at 0.6482. Its alignment, correction and trim use that same PCM.
+New speech duration 592.588163 s; corrected plan 640.188163 s; mixer tail adds 0.5 s.
+166 aligned captions: no omission/overlap, maximum 1468.06 px, maximum 14.23 nonspace characters/s.
+Actual perceptual listening: 0/132; no listening capability was available.
+Final media measurements are in validation_results.json; earlier production notes above are history.

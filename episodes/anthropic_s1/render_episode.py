@@ -50,6 +50,7 @@ def compose(kind:str,local:float,text:str='',draft:bool=False)->Image.Image:
     # Original source reference stays above the removed internal-preview footer.
     d.rectangle((0,1008,1920,1080),fill=BG)
     if draft:d.text((100,1016),'화면 배치 검수 · 실제 자막 시각은 MMS 정렬 후 확정',font=font(22),fill=MUTED)
+    else:d.text((100,1016),'AI 합성 음성: Supertonic 3 M3  ·  Music: Chris Zabriskie (CC BY 4.0)  ·  음악 편집·저음 보강·믹스',font=font(22),fill=MUTED)
     if text:
         lines=caption_lines(text)
         # Final cues are one line from aligned audio; frame tests use representative excerpt only.
@@ -62,6 +63,7 @@ def compose(kind:str,local:float,text:str='',draft:bool=False)->Image.Image:
 def animation_phase(shot:dict, t:float, rows:list[dict])->float:
     anchors={
         26:[(26,0),(27,3.4),(28,6.5)],
+        41:[(41,0),(42,2.0),(43,6.0),(44,8.0)],
         46:[(46,0),(47,3.5),(48,6.5)],
         57:[(57,0),(58,1.6),(59,2.2),(60,3.0),(61,3.8),(62,6.5)],
         71:[(71,0),(72,2.0),(73,5.5),(74,7.0)],
@@ -78,7 +80,7 @@ def animation_phase(shot:dict, t:float, rows:list[dict])->float:
 
 
 def main()->None:
-    ap=argparse.ArgumentParser();ap.add_argument('--frames-only',action='store_true');args=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--frames-only',action='store_true');ap.add_argument('--video-only',action='store_true');args=ap.parse_args()
     if args.frames_only:
         data=json.loads((ROOT/'raw_timing.json').read_text());rows=data['sentences'];total=data['duration']
     else:
@@ -87,6 +89,10 @@ def main()->None:
             if r['tts'].rstrip('.!? ').endswith('니다'):
                 assert r.get('prosody',{}).get('final_fall',{}).get('applied'),r['sid']
         assert all(r.get('alignment',{}).get('source')=='mms_forced_alignment' for r in rows)
+        from mix_final import validated_plan
+        from rules import load_rules
+        validated_plan()
+        total+=load_rules().audio.tail_sec
     shots=[]
     for j,(idx,kind) in enumerate(CUTS):
         a=rows[idx]['t0'];b=rows[CUTS[j+1][0]]['t0'] if j+1<len(CUTS) else total
@@ -116,6 +122,9 @@ def main()->None:
         p.stdin.write(im.tobytes())
         if n%(24*15)==0:print(f'RENDER {t:.0f}/{total:.0f}s',flush=True)
     p.stdin.close();assert p.wait()==0
+    if not args.video_only:
+        from mix_final import main as mix_main
+        mix_main()
 
 
 if __name__=='__main__':main()

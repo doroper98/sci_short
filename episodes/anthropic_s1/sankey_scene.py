@@ -3,9 +3,11 @@ from episode_paths import EPISODE_ROOT, OSINT_ROOT
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 import yaml
+from functools import lru_cache
 
 OUT=EPISODE_ROOT
 
+@lru_cache(maxsize=32)
 def font(size:int,bold:bool=False)->ImageFont.FreeTypeFont:
     return ImageFont.truetype(str(OUT/'fonts'/('IBMPlexSansKR-SemiBold.ttf' if bold else 'IBMPlexSansKR-Regular.ttf')),size)
 
@@ -45,8 +47,8 @@ def frame(t:float)->Image.Image:
             d.text((1370,target_y+h/2-38),label,font=font(29,True),fill='#203239')
             d.text((1370,target_y+h/2+2),f'{val/1000:.3f}',font=font(37,True),fill=color)
         src_y+=h; target_y+=h+45
-    d.text((100,930),'띠의 두께는 금액에 비례합니다. 비용의 구성이지 현금 지출의 흐름은 아닙니다.',font=font(29),fill='#435c63')
-    d.text((100,990),'출처: Anthropic S-1 (2026-10-26), p.147 표30 / F-7 · 합계 대사 완료 · 내부 모션 검수',font=font(24),fill='#66797d')
+    d.text((100,865),'띠의 두께는 금액에 비례합니다. 비용의 구성이지 현금 지출의 흐름은 아닙니다.',font=font(26),fill='#435c63')
+    d.text((100,976),'출처: Anthropic S-1 (2026-10-26), p.147 표30 / F-7 · 합계 대사 완료',font=font(24),fill='#66797d')
     return im
 
 if __name__=='__main__':

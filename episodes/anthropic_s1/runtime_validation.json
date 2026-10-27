@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "7d85942e536e0eb0796292aa628540d8319cf9af",
+  "tests": {
+    "audio_pronunciation_alignment_prosody": {
+      "passed": 84,
+      "failed": 0,
+      "seconds": 493.0
+    },
+    "font_typography": {
+      "passed": 7,
+      "failed": 0
+    }
+  },
+  "pycairo": "1.28.0 actual C extension",
+  "fontconfig": "IBM Plex Sans KR Medium and GmarketSansBold resolved to requested families",
+  "production_rules_cache_equivalence": {
+    "phonetic_strings_equal": 132,
+    "total": 132
+  },
+  "raw_audio_count": 132,
+  "raw_audio_decodes": 132
+}

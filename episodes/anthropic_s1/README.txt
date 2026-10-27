@@ -1,25 +1,23 @@
-REVIEWED TEXT/CODE HANDOFF — FINAL VIDEO DOES NOT EXIST
-Target: doroper98/sci_short, dedicated branch; this folder is the reviewed narrow text/code payload.
-User authorized saving this reviewed narrow payload. No third-party asset or raw-audio publication is authorized.
+Anthropic S-1 한국어 설명 영상 — 2026-10-27 제작 결과
 
-Status:132 Korean sentences;42 pronunciation changes regenerated,90 audio files reused in the producing environment.
-Speech592.585s; draft timeline640.185s. Audio files are NOT included. No MMS alignment, original final-fall correction,
-final narrated MP4, or aligned final SRT exists. Selected repo tests49 pass/1 Cairo environment error;
-132 decodes passed, zero silent sentences/clipping;166 text-to-phonetic caption groups mapped. Listening QA outstanding.
+실제 내레이션·지정 BGM을 포함한 out/final.mp4와 동기 자막 out/final.srt를 생성했다.
+1920×1080 / 24fps / 10분 40.708초. 132문장, 원 MMS 정렬, 128개 WORLD 말끝 보정,
+166개 자막. 실제 청취 검토는 0/132개로 남아 있다.
 
-Start here: CONTINUE_CODEX_KO.txt; DEPENDENCIES_AND_RIGHTS.txt; FACT_AUDIT.txt; MANIFEST.json.
-Run scripts from this directory. Set OSINT_GENERATOR_ROOT to a separately authorized osint_generator checkout.
-Expected upstream version7.4.0, commit7d85942e536e0eb0796292aa628540d8319cf9af.
-This export contains no upstream repository code or installed libraries. Access/license to that checkout is separate.
-Portable changes are path adaptation only; syntax validated, not an end-to-end rerun without dependencies.
-raw_timing.json/shot times describe omitted raw audio and must be remeasured after regeneration.
+HANDOFF.txt: 이번 실행·이전 인계의 구분과 남은 제한.
+out/VERIFICATION_KO.txt: 최종 실측 요약.
+validation_results.json / visual_review.json / source_validation.json: 상세 검증.
+SOURCE_CREDITS.txt: 출처·라이선스·AI 음성 고지·음악 편집 내역.
+RUN_PRODUCTION.txt / requirements-production.txt: 실제 실행과 설치 버전.
+MANIFEST.json / file_changes.json: 허용 소스 목록과 원 인계 대비 전후 해시.
 
-Dependencies: Python3, ffmpeg, numpy, scipy, Pillow, PyYAML, pydantic, ONNX Runtime, torch/torchaudio,
-pyworld, uroman and real pycairo. Follow authorized upstream environment instructions/pins.
-Cairo CFFI fallback allowed imports in production but failed one typography test; install actual pycairo for full test QA.
-Do not blindly install arbitrary latest versions or change the current voice settings.
+이 디렉터리에서 실행한다. OSINT_GENERATOR_ROOT는 별도 osint_generator 7.4.0의
+7d85942e536e0eb0796292aa628540d8319cf9af 체크아웃을 가리켜야 한다.
+Supertonic 3 M3 ×0.95, 16 steps, seed_salt v1 유지. 임의 가속·내용 삭제를 하지 않았다.
+현재 다운로드·해시 결과는 asset_verification.json에 기록했다.
 
-Only original assistant-authored text/code, small factual datasets, sanitized metadata and continuation prompts are included.
-No blanket MIT/CC license was assigned: owner must select or confirm a publication license for original contributions.
-No statement that all SEC-hosted issuer content is public domain is made. Only facts/short paraphrases are included.
-See separate excluded-audio license assessment. Third-party assets remain excluded even if some have permissive licenses.
+모델·폰트·음악·음성·영상·전체 SEC 원문은 Git 및 소스 ZIP에 포함하지 않는다.
+영상은 로컬 검토용이다. 공개 업로드·Git push는 하지 않았다. 외부 저장소 코드를
+에피소드로 복제하지 않았다. 기여 코드에 포괄적인 MIT/CC 라이선스를 새로 부여하지 않았다.
+CONTINUE_CODEX_KO.txt는 미완성 시점의 역사 기록이다. 현재 상태는 HANDOFF.txt를 우선한다.
+기존 60~90초 어린이 과학영상 기획과는 별도 재무 에피소드다.

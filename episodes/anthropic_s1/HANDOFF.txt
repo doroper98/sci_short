@@ -1,5 +1,53 @@
-Current state: reviewed script, phonetic input, animated chart source and compact SEC-derived facts are preserved here.
-Raw audio synthesis and decode checks succeeded in producing environment; audio bytes are intentionally excluded.
-MMS official acquisition failed with proxy tunnel403; alignment/final-fall/listening/render/mix/finalQA remain.
-Execution: work from this directory; set OSINT_GENERATOR_ROOT to authorized separately obtained checkout; follow CONTINUE_CODEX_KO.txt.
-Do not confuse root science-short project state with this10-minute finance episode. Future updates belong here.
+Anthropic S-1 한국어 영상 — 실제 제작 결과 (2026-10-27, Asia/Seoul)
+
+이번 세션의 산출물
+- out/final.mp4: 실제 한국어 내레이션·지정 BGM·화면 자막, 1920×1080, 24fps.
+- out/final.srt: 원 MMS 문자 정렬에 대응하는 166개 자막.
+- SOURCE_CREDITS.txt: 출처·라이선스·AI 음성 고지·음악 편집 내역.
+- RUN_PRODUCTION.txt / requirements-production.txt: 재현 방법과 설치 버전.
+- validation_results.json / source_validation.json / visual_review.json: 실제 검증.
+- out/VERIFICATION_KO.txt: 최종 실측 결과와 제한 요약.
+
+이전 인계와 이번 실행
+시작 커밋 0c87669c678f9cf00fecd92cca78bc182c945532. 원 MANIFEST의 30개 파일은
+크기·SHA256이 모두 일치했다. 인계 음성은 0/132개여서 이번에 전부 새로 합성했다.
+발음 감사의 '42개 변경/90개 유지'는 과거 발음문과의 비교다. 이전 음성을 재사용한 수가 아니다.
+과거 592.585초/640.185초를 확정값으로 사용하지 않았다. 이번 실제 발화 592.588163초,
+타임라인 640.188163초, 원 믹서의 0.5초 꼬리 포함 최종 컨테이너 640.708333초다.
+
+이번에 직접 수행한 작업
+- 별도 osint_generator 7.4.0 / 7d85942e536e0eb0796292aa628540d8319cf9af 사용.
+- 기존 프록시·TLS를 유지하며 공식 SEC 원문과 MMS를 다운로드했다.
+- MMS 크기·SHA1, Supertonic ZIP 크기·SHA256과 내부 8개 파일 해시 확인.
+- SEC 재무표 51행, 계산 8개, 정의·계약·지배구조 문구 14개 대조.
+- Supertonic 3 M3, speed 0.95, 16 steps, seed_salt v1로 132문장 생성.
+- 원 MMS → 원 WORLD 말끝 보정 → 원음 기준 트림 순서 유지.
+  정렬 점수 최소 0.6482, 평균 0.90137. '니다' 128/128개 보정, 다른 어미 4개 제외.
+  s014는 같은 설정·시드의 압축 전 PCM이 원 MMS 기준을 통과하여 정렬·보정·트림에
+  같은 WAV를 사용했다. 원 MP3도 보존했다. 임계값·텍스트·목소리를 바꾸지 않았다.
+- 원 믹서 적용. 음악 강도 1.0은 상대 음량 검사에서 실패하여 프로젝트 연출 intensity를
+  0.57로 조정했다. bed 0.43, duck 0.5, 110Hz +5dB, sub 0.35, normref 0.4,
+  -14LUFS, TP -1.5, limiter -2 규칙은 유지했다. 최종 측정은 validation_results.json 참조.
+- 실제 MP4의 대표 장면 28개, 주요 전환 20개, 긴 자막 9개와 마지막 프레임 등
+  58개 화면을 검토했다. 모든 프레임을 연속 재생해 시청했다는 뜻은 아니다.
+- 실제 pycairo로 환경 오류 해결. upstream 음성·정렬·보정 등 84개 검사,
+  폰트·타이포그래피 7개 검사 통과. 원저장소 코드는 변경하지 않았다.
+
+최종 자동 검증
+전체 A/V 디코딩, 스트림·길이, 132문장 파형 동기, 자막 대응·폭·글리프·읽기 속도,
+클리핑·실측 음량·음악 상대 음량을 확인했다. 실제 결과·통과 여부·해시는
+validation_results.json과 out/VERIFICATION_KO.txt에 있다.
+
+남은 제한과 재개 조건
+1. 실제 청취 0/132개. 이 환경에 지각적 청취 수단이 없어 숫자·월·분기·회사명·약어·
+   끊김·말끝의 자연스러움은 승인하지 않았다. final.mp4를 재생할 수 있는 환경에서
+   전 문장을 듣고 문장 ID별 결과를 기록해야 한다. 신호 검사는 청취를 대신하지 않는다.
+2. Gmarket 폰트 공식 약관 경로 404, 회사 홈페이지는 점검 안내였다. 기존 권리 registry와
+   파일 해시는 확인했지만 현재 전체 약관은 다시 읽지 못했다. 공식 사이트 정상화 후 재확인한다.
+3. 지정 채팅 output 디렉터리는 OS 쓰기 권한이 없어 만들 수 없었다. 파일은 이 저장소의
+   out/에 보존했다. 작업공간에서 열거나 다운로드해야 한다.
+
+공개 사이트·YouTube 업로드와 Git push는 하지 않았다. 모델·폰트·BGM·음성·영상·
+전체 SEC와 대용량 중간파일은 Git 및 소스 ZIP에서 제외한다. 원래 30개 파일의
+변경 전후 해시는 file_changes.json, 현재 소스 목록은 MANIFEST.json에 있다.
+이 편을 루트의 60~90초 과학영상 목표와 혼동하지 않는다.

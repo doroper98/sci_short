@@ -2,6 +2,9 @@ from __future__ import annotations
 from episode_paths import EPISODE_ROOT, OSINT_ROOT
 
 import json
+import hashlib
+import argparse
+import time
 import re
 import sys
 from pathlib import Path
@@ -16,6 +19,7 @@ from script.tts import forced_align, align, prosody, trim
 from script.schema import Plan, PlanSentence, PlanProsody, PlanAlignment
 from rules import load_rules
 from synthesize_episode import spoken
+from audio_inputs import raw_input
 
 
 def stamp(t:float)->str:
@@ -24,19 +28,58 @@ def stamp(t:float)->str:
 
 
 def main()->None:
+    ap=argparse.ArgumentParser();ap.add_argument('--wait-for-raw',action='store_true');ap.add_argument('--collect-errors',action='store_true');args=ap.parse_args()
+    model=forced_align.asset_dir()/'model.pt'
+    assert model.stat().st_size==1262047414, 'MMS size mismatch; do not load'
     forced_align.require_assets()
     settings=json.loads((ROOT/'episode_settings.json').read_text());rules=load_rules(); rows=json.loads((ROOT/'sentences.json').read_text())['sentences']
-    built=[]; cues=[]; starts={}; cursor=settings['lead_sec']
+    built=[]; cues=[]; starts={}; failures=[];cursor=settings['lead_sec']
     ft=ImageFont.truetype(str(ROOT/'fonts/IBMPlexSansKR-Medium.ttf'),43)
     for n,r in enumerate(rows):
-        mp=Path(r['raw_mp3']); assert mp.is_file(),str(mp)
+        mp=ROOT/r['raw_mp3']
+        if args.wait_for_raw:
+            deadline=time.monotonic()+1800
+            while not mp.with_suffix('.provenance.json').is_file():
+                if time.monotonic()>deadline:raise TimeoutError(f'Raw synthesis did not finish: {r["id"]}')
+                time.sleep(1)
+        mp=raw_input(r)
+        assert mp.is_file(),str(mp)
+        raw_sha=hashlib.sha256(mp.read_bytes()).hexdigest()
+        tts_sha=hashlib.sha256(r['tts'].encode()).hexdigest()
         al=align.read(mp)
+        if al is not None and (''.join(al['characters'])!=r['tts'] or al.get('audio_sha256')!=raw_sha or al.get('tts_sha256')!=tts_sha or al.get('model_sha1')!='0300fd9ae57a63e3bd239ae1337e32127a587214'):
+            al=None
         if al is None:
-            al=forced_align.align_file(mp,r['tts']); align.write(mp,al)
-        raw=trim.decode(mp)
-        y,rec=prosody.final_fall(raw,al,r['tts'],rules.tts_rules.prosody.final_fall)
-        out,offset=trim.trim(y,ref=raw); off=offset/trim.SR
-        npy=ROOT/'corrected_voice'/(r['id']+'.npy');npy.parent.mkdir(exist_ok=True);np.save(npy,out)
+            try:
+                al=forced_align.align_file(mp,r['tts'])
+            except forced_align.ForcedAlignError as exc:
+                if not args.collect_errors:raise
+                failures.append({'sid':r['id'],'error':str(exc)})
+                (ROOT/'alignment_failures.json').write_text(json.dumps({'schema_version':1,'failures':failures},ensure_ascii=False,indent=2))
+                print(f'ALIGNMENT BLOCKED {r["id"]}: {exc}',flush=True)
+                continue
+            al.update(audio_sha256=raw_sha,tts_sha256=tts_sha,model_sha1='0300fd9ae57a63e3bd239ae1337e32127a587214')
+            align.write(mp,al)
+        assert al['alignment_source']=='mms_forced_alignment'
+        assert len(al['characters'])==len(al['character_start_times_seconds'])==len(al['character_end_times_seconds'])==len(r['tts'])
+        npy=ROOT/'corrected_voice'/(r['id']+'.npy');npy.parent.mkdir(exist_ok=True)
+        cache=npy.with_suffix('.processing.json')
+        inputs={'raw_sha256':raw_sha,'tts_sha256':tts_sha,'alignment':al,
+                'final_fall':rules.tts_rules.prosody.final_fall.model_dump(mode='json'),
+                'upstream_commit':'7d85942e536e0eb0796292aa628540d8319cf9af'}
+        fingerprint=hashlib.sha256(json.dumps(inputs,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
+        old=json.loads(cache.read_text()) if cache.exists() else {}
+        if npy.exists() and old.get('fingerprint')==fingerprint and old.get('corrected_sha256')==hashlib.sha256(npy.read_bytes()).hexdigest():
+            out=np.load(npy);off=old['trim_offset'];rec=prosody.FinalFallRecord.model_validate(old['final_fall'])
+        else:
+            raw=trim.decode(mp)
+            y,rec=prosody.final_fall(raw,al,r['tts'],rules.tts_rules.prosody.final_fall)
+            out,offset=trim.trim(y,ref=raw);off=offset/trim.SR
+            np.save(npy,out)
+            cache.write_text(json.dumps({'schema_version':1,'fingerprint':fingerprint,
+                'corrected_sha256':hashlib.sha256(npy.read_bytes()).hexdigest(),'raw_sha256':raw_sha,
+                'trim_offset':off,'final_fall':rec.model_dump(mode='json')},ensure_ascii=False,indent=2))
+        if r['tts'].rstrip('.!? ').endswith('니다'):assert rec.applied,(r['id'],rec)
         scene=f"chapter{r['chapter']:02d}"
         if scene not in starts:
             if n:cursor+=settings['scene_gap_sec']
@@ -64,6 +107,8 @@ def main()->None:
         cursor+=dur+settings['sentence_gap_sec']
         (ROOT/'audio_progress.json').write_text(json.dumps({'schema_version':1,'done':n+1,'total':len(rows),'duration_so_far':cursor,'last_alignment_score':al.get('score_mean'),'last_prosody':rec.model_dump()},ensure_ascii=False,indent=2))
         print(f"CORRECTED {n+1}/{len(rows)} score={al.get('score_mean')} fall={rec.applied} duration={dur:.2f}",flush=True)
+    assert not failures, f'{len(failures)} unresolved alignments; no final plan or captions created'
+    (ROOT/'alignment_failures.json').write_text(json.dumps({'schema_version':1,'failures':[]},indent=2))
     plan=Plan(sentences=built,cards=[],scene_start=starts,total=cursor+settings['credits_sec'],voice='supertonic-3 M3 ×0.95 + configured final_fall',title='Anthropic S-1 — 성장, 회계, 현금, 그리고 통제권',subtitle='2026년 10월 26일 제출 공시',date='2026.10.26')
     (ROOT/'plan.json').write_text(plan.model_dump_json(indent=2))
     (ROOT/'captions.json').write_text(json.dumps({'schema_version':1,'cues':cues},ensure_ascii=False,indent=2))

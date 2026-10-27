@@ -1,0 +1,80 @@
+Anthropic S-1 한국어 영상 — 재현 절차
+
+기준
+- sci_short 원 인계: 0c87669c678f9cf00fecd92cca78bc182c945532
+- 별도 osint_generator: 7.4.0 / 7d85942e536e0eb0796292aa628540d8319cf9af
+- Python 3.12, ffmpeg 7.1.5, 실제 pycairo 1.28.0.
+- Python 전체 설치 버전: requirements-production.txt. torch/torchaudio는 CPU 2.8.0을 사용.
+  2.9에서는 원래 forced_align API가 제거되므로 임의 최신 버전으로 바꾸지 않는다.
+- 모델, 폰트, 음원, 음성, 전체 SEC HTML은 소스 패키지에 포함하지 않는다.
+
+이번 실행 환경에서 이어가기
+  source /workspace/work/episode_env.sh
+  cd /workspace/sci_short/episodes/anthropic_s1
+
+새 환경에서는 OSINT_GENERATOR_ROOT를 별도 고정 커밋 체크아웃으로 지정하고,
+가상환경과 실제 pycairo, fontconfig, ffmpeg, 에피소드 fonts/ 디렉터리를 준비한다.
+원저장소 tools/fetch_data.py fonts의 OSINT_FONT_DIR를 에피소드 fonts/로 지정할 수 있다.
+fontconfig에도 그 디렉터리를 등록한다. 폰트 해시는 asset_verification.json에 기록했다.
+이 환경은 시스템 디렉터리를 수정하지 않고 /workspace/work/sysroot에 Debian 개발
+헤더를 풀어 pycairo를 GCC로 빌드했다. CFFI를 pycairo로 가장하는 대체는 제거했다.
+
+자산
+1. DEPENDENCIES_AND_RIGHTS.txt의 지정 Supertonic ZIP을 다운로드한다.
+   크기 370277184와 SHA256 842e9f83e974b3dcdf727814fea2af594a68f3d962798a53f7df93042d9765f3 확인.
+   upstream assets/tts/supertonic/에 풀고 config.yaml의 8개 파일 SHA1을 전부 확인한다.
+2. upstream에서 python tools/fetch_data.py mms_fa 실행.
+   assets/tts/mms_fa/model.pt가 1262047414바이트이며 SHA1이
+   0300fd9ae57a63e3bd239ae1337e32127a587214인지 로드 전에 확인한다.
+3. BGM은 원저장소 커밋 bd37b582bfd78859df89a893670cc191b4072718의
+   assets/audio/bgm/The Life and Death of a Certain K. Zabriskie, Patriarch - Chris Zabriskie.mp3.
+   SHA1 c0ddb7b38ee7866c32d2510a84125cf611a54e93를 확인한다. 다른 곡으로 대체하지 않는다.
+4. 정확한 SEC 원문을 작업용 경로에 다운로드한다. 전체 HTML은 Git에 넣지 않는다.
+   https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm
+
+실행 순서 (에피소드 디렉터리에서)
+  python validate_source.py --sec-html /path/to/anthropicpbc-sx1.htm
+  python synthesize_episode.py
+  python audit_pronunciation.py
+  python finish_audio.py --collect-errors
+
+정렬 실패가 있는 경우에는 alignment_failures.json을 확인한다. 자동으로 기준을 낮추지 않는다.
+이번 s014는 동일한 고정 TTS 입력으로 MP3 압축 전 PCM을 보존했을 때 원 MMS 기준을
+통과했다. 이런 경우에만 다음 명령으로 재현하고 이후 finish_audio.py를 다시 실행한다.
+  python recover_lossless.py --sid s014
+  python finish_audio.py --collect-errors
+
+recover_lossless.py도 같은 MMS 기준에 못 미치면 실패하며 최종 plan을 만들 수 없다.
+audio_input_overrides.json에는 선택된 원음의 해시·입력·선택 이유를 기록한다.
+소스 패키지만 새로 받았다면 원음 생성 뒤 이 명령으로 해당 WAV를 다시 만들어야 한다.
+원 MP3를 보존하며, 무손실 원음을 선택한 문장은 정렬·WORLD·원음 기준 트림 모두
+그 동일한 WAV를 사용한다. 텍스트·목소리·시드·0.95 속도·16단계를 바꾸지 않는다.
+
+  python measure_raw.py
+  python validate_episode.py
+  python render_episode.py
+  python validate_episode.py --final
+  python review_final_frames.py
+
+render_episode.py의 기본 실행은 영상 렌더 뒤 mix_final.py를 호출해 실제 내레이션과
+지정 BGM을 혼합한다. --video-only는 진단용이다. --frames-only의 화면은 초안 검수용이며
+최종 영상이 아니다. 최종 산출물은 out/final.mp4와 out/final.srt다.
+믹스만 다시 할 때: python mix_final.py
+이 편의 프로젝트 연출 bgm_intensity는 0.57이다. 초기 1.0에서 음악 상대 음량이
+원 QA 기준을 초과해 조정했으며, 원 믹서의 bed/duck/bass/loudness 규칙은 유지했다.
+review_final_frames.py는 실제 최종 MP4의 58개 검수 프레임과 모음 이미지를 만든다.
+프레임 추출 자체는 화면 검토나 청취 완료를 뜻하지 않는다.
+
+가드와 캐시
+- 원음 재사용: 현재 발음문·전체 음성 설정 fingerprint + 오디오 SHA256 일치.
+- 정렬 재사용: 실제 문자 배열·발음 SHA256·원음 SHA256·MMS 모델 SHA1 일치.
+- 보정 재사용: 원음·정렬·보정 규칙 fingerprint + corrected .npy SHA256 일치.
+- 최종 렌더: 132문장, 원 MMS 출처, 대상 문장의 실제 final_fall 적용, 길이·배열 검증.
+- episode_paths.py는 반복되는 upstream 규칙 YAML 파싱만 캐시한다. 파일 변경 때
+  무효화하고 독립 모델 사본을 반환한다. 규칙 값이나 원저장소 파일은 수정하지 않았다.
+  이 적용 전후 132개 발음문이 모두 같음을 확인했다.
+
+검수의 한계
+텍스트 감사, 신호 검사, 모델 점수와 영상 디코딩은 사람의 청취를 대신하지 않는다.
+이번 환경에는 실제 청취 입력 수단이 없어 전 문장 청취 완료를 주장하지 않는다.
+최종 실측 결과와 남은 제한은 validation_results.json, HANDOFF.txt를 확인한다.

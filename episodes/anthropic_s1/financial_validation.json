@@ -10,5 +10,5 @@
     "investing_components": true,
     "non_gaap": true
   },
-  "evidence": "production primary-source excerpts; original not included"
+  "evidence": "2026-10-27 direct retrieval of exact SEC filing; 51 table comparisons and 8 arithmetic checks passed; see source_validation.json"
 }

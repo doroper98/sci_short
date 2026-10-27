@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "timing_source": "measured raw after pronunciation audit; original MMS/final fall pending",
+  "timing_source": "corrected aligned plan",
   "shots": [
     {
       "sentence_index": 0,
@@ -18,157 +18,157 @@
       "sentence_index": 14,
       "kind": "business",
       "start": 66.32197278911565,
-      "end": 86.95036281179138
+      "end": 86.95310657596372
     },
     {
       "sentence_index": 18,
       "kind": "mix",
-      "start": 86.95036281179138,
-      "end": 108.71061224489796
+      "start": 86.95310657596372,
+      "end": 108.7133560090703
     },
     {
       "sentence_index": 23,
       "kind": "loop",
-      "start": 108.71061224489796,
-      "end": 123.66390022675738
+      "start": 108.7133560090703,
+      "end": 123.66664399092971
     },
     {
       "sentence_index": 26,
       "kind": "revenue",
-      "start": 123.66390022675738,
-      "end": 139.1327210884354
+      "start": 123.66664399092971,
+      "end": 139.13546485260773
     },
     {
       "sentence_index": 29,
       "kind": "customers",
-      "start": 139.1327210884354,
-      "end": 166.0465986394558
+      "start": 139.13546485260773,
+      "end": 166.04934240362812
     },
     {
       "sentence_index": 35,
       "kind": "nrr",
-      "start": 166.0465986394558,
-      "end": 186.82664399092974
+      "start": 166.04934240362812,
+      "end": 186.82938775510206
     },
     {
       "sentence_index": 39,
       "kind": "runrate",
-      "start": 186.82664399092974,
-      "end": 197.62045351473924
+      "start": 186.82938775510206,
+      "end": 197.62319727891156
     },
     {
       "sentence_index": 41,
       "kind": "quarter",
-      "start": 197.62045351473924,
-      "end": 219.2109977324263
+      "start": 197.62319727891156,
+      "end": 219.21374149659863
     },
     {
       "sentence_index": 46,
       "kind": "sankey",
-      "start": 219.2109977324263,
-      "end": 240.01773242630387
+      "start": 219.21374149659863,
+      "end": 240.0204761904762
     },
     {
       "sentence_index": 51,
       "kind": "adjusted",
-      "start": 240.01773242630387,
-      "end": 255.91414965986397
+      "start": 240.0204761904762,
+      "end": 255.9168934240363
     },
     {
       "sentence_index": 54,
       "kind": "revenue",
-      "start": 255.91414965986397,
-      "end": 268.6962358276644
+      "start": 255.9168934240363,
+      "end": 268.6989795918367
     },
     {
       "sentence_index": 57,
       "kind": "accounting",
-      "start": 268.6962358276644,
-      "end": 297.1438321995464
+      "start": 268.6989795918367,
+      "end": 297.1465759637187
     },
     {
       "sentence_index": 63,
       "kind": "fairvalue",
-      "start": 297.1438321995464,
-      "end": 334.7777324263038
+      "start": 297.1465759637187,
+      "end": 334.7804761904761
     },
     {
       "sentence_index": 71,
       "kind": "cash",
-      "start": 334.7777324263038,
-      "end": 362.6395238095238
+      "start": 334.7804761904761,
+      "end": 362.6422448979591
     },
     {
       "sentence_index": 76,
       "kind": "liquidity",
-      "start": 362.6395238095238,
-      "end": 390.0739455782313
+      "start": 362.6422448979591,
+      "end": 390.0766666666666
     },
     {
       "sentence_index": 82,
       "kind": "commitments",
-      "start": 390.0739455782313,
-      "end": 442.26002267573693
+      "start": 390.0766666666666,
+      "end": 442.2627437641722
     },
     {
       "sentence_index": 93,
       "kind": "risk",
-      "start": 442.26002267573693,
-      "end": 468.7687528344671
+      "start": 442.2627437641722,
+      "end": 468.77147392290243
     },
     {
       "sentence_index": 98,
       "kind": "concentration",
-      "start": 468.7687528344671,
-      "end": 484.3538775510204
+      "start": 468.77147392290243,
+      "end": 484.35659863945574
     },
     {
       "sentence_index": 102,
       "kind": "risk",
-      "start": 484.3538775510204,
-      "end": 494.4692970521542
+      "start": 484.35659863945574,
+      "end": 494.47201814058957
     },
     {
       "sentence_index": 104,
       "kind": "safety",
-      "start": 494.4692970521542,
-      "end": 508.95630385487533
+      "start": 494.47201814058957,
+      "end": 508.9590249433107
     },
     {
       "sentence_index": 107,
       "kind": "concentration",
-      "start": 508.95630385487533,
-      "end": 524.242947845805
+      "start": 508.9590249433107,
+      "end": 524.2456689342404
     },
     {
       "sentence_index": 110,
       "kind": "pbc",
-      "start": 524.242947845805,
-      "end": 536.2055782312926
+      "start": 524.2456689342404,
+      "end": 536.208299319728
     },
     {
       "sentence_index": 113,
       "kind": "governance",
-      "start": 536.2055782312926,
-      "end": 601.5850113378688
+      "start": 536.208299319728,
+      "end": 601.5877324263041
     },
     {
       "sentence_index": 125,
       "kind": "opening",
-      "start": 601.5850113378688,
-      "end": 609.9394557823132
+      "start": 601.5877324263041,
+      "end": 609.9421768707485
     },
     {
       "sentence_index": 127,
       "kind": "ending",
-      "start": 609.9394557823132,
-      "end": 630.1854421768711
+      "start": 609.9421768707485,
+      "end": 630.1881632653065
     },
     {
       "sentence_index": null,
       "kind": "credits",
-      "start": 630.1854421768711,
-      "end": 640.185442176871
+      "start": 630.1881632653065,
+      "end": 640.6881632653063
     }
   ]
 }

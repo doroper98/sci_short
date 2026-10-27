@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "sentences": {
+    "s014": {
+      "path": "raw_voice/s014_lossless.wav",
+      "sha256": "23b111cee9580ec0a1c96465ba8a9539752ee401fe9d8a52ecfc0e71d2a6632c",
+      "tts": "앤트로픽은 이천이십일 년에 설립됐습니다.",
+      "synthesis_fingerprint": "e0ae4f559e70792a0edddde955938b18f217e74f213c48ce12ae0441246cdcba",
+      "sample_rate": 44100,
+      "alignment_score": 0.6482,
+      "reason": "MMS score on MP3 fell below upstream threshold; identical seeded PCM before lossy encoding passed unchanged MMS threshold."
+    }
+  }
+}

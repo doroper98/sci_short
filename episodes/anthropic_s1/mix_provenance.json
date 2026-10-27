@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "7d85942e536e0eb0796292aa628540d8319cf9af",
+  "bgm": "music.zabriskie_patriarch",
+  "sound": {
+    "bgm": "music.zabriskie_patriarch",
+    "intensity": [
+      [
+        0.0,
+        0.57
+      ],
+      [
+        640.6881632653063,
+        0.57
+      ]
+    ],
+    "cues": []
+  },
+  "audio_rules": {
+    "bed_gain": 0.43,
+    "bgm_floor": {
+      "beat_clarity_min": 6.0,
+      "onsets_per_min_min": 300.0,
+      "voice_band_max": 0.1,
+      "voice_band_hz": [
+        300.0,
+        3000.0
+      ],
+      "window_sec": 360.0,
+      "sr": 22050,
+      "n_fft": 4096
+    },
+    "bgm_default": [
+      "music.zabriskie_mario_bava",
+      "music.zabriskie_patriarch"
+    ],
+    "duck_depth": 0.5,
+    "duck_pre_sec": 0.25,
+    "duck_post_sec": 0.3,
+    "duck_smooth_sec": 0.35,
+    "narration_peak": 0.8,
+    "master_peak": 0.97,
+    "loudnorm": {
+      "I": -14.0,
+      "TP": -1.5,
+      "LRA": 11.0
+    },
+    "post_limiter_dbfs": -2.0,
+    "sfx_policy": "events_and_scene_starts_only",
+    "sample_rate": 44100,
+    "seed": 3,
+    "tail_sec": 0.5,
+    "loop_xfade_sec": 4.0,
+    "fade_in_sec": 1.2,
+    "fade_out_sec": 4.0,
+    "fx_duck": 0.25,
+    "crossfade_sec": 4.0,
+    "qa": {
+      "i_tol_lu": 1.0,
+      "music_under_narration_db": [
+        -13.0,
+        -9.0
+      ],
+      "tp_codec_margin_db": 0.15,
+      "sentence_rms_dev_db": 3.0,
+      "sentence_rms_window_sec": 0.02,
+      "sentence_rms_floor_db": -40.0,
+      "bed_bass_rise_db": [
+        4.0,
+        8.0
+      ],
+      "bed_bass_band_hz": [
+        30.0,
+        120.0
+      ],
+      "bed_mid_band_hz": [
+        200.0,
+        2000.0
+      ]
+    },
+    "norm_eps": 1e-06,
+    "bed_bass": {
+      "shelf": {
+        "freq_hz": 110.0,
+        "gain_db": 5.0,
+        "q": 0.7
+      },
+      "sub": {
+        "band_hz": [
+          55.0,
+          220.0
+        ],
+        "out_lp_hz": 110.0,
+        "filter_order": 4,
+        "gain": 0.35,
+        "env_attack_sec": 0.03,
+        "env_release_sec": 0.25,
+        "env_block_sec": 0.001
+      },
+      "swell": {
+        "sec": 2.5,
+        "depth": 0.35
+      },
+      "norm_ref": 0.4
+    },
+    "sfx": {
+      "whoosh": {
+        "dur_sec": 1.2,
+        "shape_pow": 2.2,
+        "low_b": 0.08,
+        "low_a": -0.92,
+        "low_gain": 0.6,
+        "high_b": 0.3,
+        "high_a": -0.7,
+        "high_gain": 0.25,
+        "release_sec": 0.08,
+        "release_tau_sec": 0.05,
+        "gain": 0.2
+      },
+      "boom": {
+        "dur_sec": 2.6,
+        "f0_hz": 34.0,
+        "sweep_hz": 44.0,
+        "sweep_tau_sec": 0.25,
+        "tone_tau_sec": 0.8,
+        "tone_gain": 0.55,
+        "noise_b": 0.02,
+        "noise_a": -0.98,
+        "noise_tau_sec": 0.3,
+        "noise_gain": 0.6
+      },
+      "tick": {
+        "dur_sec": 0.12,
+        "freq_hz": 1800.0,
+        "tau_sec": 0.015,
+        "gain": 0.18
+      },
+      "title_card": {
+        "offset_sec": 0.2,
+        "whoosh_dur_sec": 1.4,
+        "whoosh_v": 1.0,
+        "boom_v": 0.6
+      },
+      "scene_start": {
+        "lead_sec": 0.05,
+        "whoosh_dur_sec": 0.9,
+        "whoosh_v": 0.55
+      }
+    }
+  },
+  "intensity_reason": "Initial intensity 1.0 measured music at -6.12 dB relative to narration, outside original QA range [-13, -9]. Episode sound intensity reduced to 0.57 (about -4.88 dB); all original mixer rules preserved. Final measurement is in validation_results.json.",
+  "mix_peak_before_master_normalization": 0.9654361009597778,
+  "loudnorm": {
+    "pass1": {
+      "input_i": -15.25,
+      "input_tp": -0.31,
+      "input_lra": 2.7,
+      "input_thresh": -25.48,
+      "target_offset": 0.16
+    },
+    "pass2": {
+      "output_i": -14.01,
+      "output_tp": -1.5,
+      "normalization_type": "dynamic"
+    },
+    "post_limiter_dbfs": -2.0
+  },
+  "final_measured_loudness": {
+    "I": -14.08,
+    "TP": -1.54,
+    "LRA": 2.7
+  },
+  "duration_sec": 640.6881632653063,
+  "music_edits": {
+    "start_at_sec": 0,
+    "used_sec": 640.6881632653063,
+    "looped": false,
+    "processing": "upstream bass shelf + sub-octave + scene swells + peak reference normalization + narration ducking + fades + two-pass loudnorm + limiter"
+  },
+  "listening_qa": "No perceptual audio input tool available; no full listening approval claimed."
+}

@@ -1,0 +1,3631 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-27T01:10:04.952629+00:00",
+  "sentences": 132,
+  "speech_sec": 592.5881632653061,
+  "timeline_sec": 640.1881632653063,
+  "mms_score_min": 0.6482,
+  "mms_score_mean": 0.9013719696969698,
+  "nida_target_count": 128,
+  "final_fall_applied_count": 128,
+  "raw_reference_trim_verified": true,
+  "character_alignment_and_caption_mapping_verified": true,
+  "caption_count": 166,
+  "caption_overlap_count": 0,
+  "caption_missing_sentence_count": 0,
+  "caption_max_width_px": 1468.06,
+  "caption_max_chars_per_second": 14.23,
+  "caption_over_15_cps": [],
+  "caption_over_20_cps": [],
+  "zero_audio_count": 0,
+  "corrected_clipped_fraction_max": 0.0,
+  "sentence_records": [
+    {
+      "sid": "s000",
+      "rms": 0.060040127485990524,
+      "peak": 0.366668701171875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "8495493e5b562f6190684480da13bcf331678f2eee739235e17399c991f78f20",
+      "corrected_sha256": "e6c69fa4cd2227afc89fc5f228e9f210beeaaba2820367c5c7f4563741ac9e8b",
+      "alignment_score": 0.775,
+      "trim_offset": 0.45961451247165536,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.66,
+          4.215
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 90.17,
+        "f0_end_hz": 70.33,
+        "octave_fixed_n": 32
+      }
+    },
+    {
+      "sid": "s001",
+      "rms": 0.06853083521127701,
+      "peak": 0.421783447265625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "bbb5952c9104edb32343d18e908991706c3bb538c9dd033c2dd9eb9a6bf79495",
+      "corrected_sha256": "3fc48c729942386afa08f249e64f4fcd9b4c07f00139fc0c22f4df8433e3ed25",
+      "alignment_score": 0.8949,
+      "trim_offset": 0.49786848072562356,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.83,
+          4.605
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 93.67,
+        "f0_end_hz": 76.52,
+        "octave_fixed_n": 30
+      }
+    },
+    {
+      "sid": "s002",
+      "rms": 0.06421662867069244,
+      "peak": 0.368499755859375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "a73355bfe1708fba3f256854d2c58c3992375ec6f8c4ebcfec312d201ac1184b",
+      "corrected_sha256": "5ba92400896c6ae3d2fe1afe52083f766c0bdfd83110100af6bf8f41bee78cb6",
+      "alignment_score": 0.8162,
+      "trim_offset": 0.41419501133786846,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.82,
+          4.325
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 121.45,
+        "f0_end_hz": 67.91,
+        "octave_fixed_n": 21
+      }
+    },
+    {
+      "sid": "s003",
+      "rms": 0.06410891562700272,
+      "peak": 0.381744384765625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "e2b32769b67bcdb15596e86cf68273db4535de41ca36d21c4010621e8d5508d1",
+      "corrected_sha256": "a5b51d4187efefff9fbff1489a96b22e98b52307b5f98170af08327cffcf0195",
+      "alignment_score": 0.9537,
+      "trim_offset": 0.44439909297052155,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.225,
+          3.78
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 90.68,
+        "f0_end_hz": 81.78,
+        "octave_fixed_n": 18
+      }
+    },
+    {
+      "sid": "s004",
+      "rms": 0.07022934406995773,
+      "peak": 0.390899658203125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "4fb8ca784f2f17e907ec3850e91a24ce3f4fd7a368cc949e34a27d75f0304a1e",
+      "corrected_sha256": "6c4fc30ab95d97ae42b201030f8f0185f8e136e02f284d0e95959c458ef5badb",
+      "alignment_score": 0.9518,
+      "trim_offset": 0.4427437641723356,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.415,
+          4.2
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 96.42,
+        "f0_end_hz": 70.04,
+        "octave_fixed_n": 14
+      }
+    },
+    {
+      "sid": "s005",
+      "rms": 0.055427681654691696,
+      "peak": 0.366851806640625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "455ce9cfa8551c5922df33f206ecb05536314f617bd1bfa5efdfc75cbea5b1b4",
+      "corrected_sha256": "2934fb86db583158ef28e7ab328c21d0906efed499bb344d8301758da33112b1",
+      "alignment_score": 0.9055,
+      "trim_offset": 0.4885260770975057,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          5.0,
+          5.605
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 87.42,
+        "f0_end_hz": 67.66,
+        "octave_fixed_n": 23
+      }
+    },
+    {
+      "sid": "s006",
+      "rms": 0.06705103814601898,
+      "peak": 0.36431884765625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "10e4b09fc16ceb0105b567957d20fc59e00bbfbac5ec6c1ae80ee5e84f987193",
+      "corrected_sha256": "0b2b0ffad577f6b1930cb3175d03364efd3adbb3b4702273a3d6231cf06d3bc2",
+      "alignment_score": 0.7359,
+      "trim_offset": 0.44841269841269843,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.63,
+          5.135
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 85.28,
+        "f0_end_hz": 70.48,
+        "octave_fixed_n": 9
+      }
+    },
+    {
+      "sid": "s007",
+      "rms": 0.0664571225643158,
+      "peak": 0.384765625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "b371a0878f70c75a84af28b07fca76c07c1e5a401aecb5958b5f1ac85892b0d7",
+      "corrected_sha256": "4e08d78cf2f198197bbd9f303a8f9a47789c4679afae3fc520569e7c2c0d8966",
+      "alignment_score": 0.9613,
+      "trim_offset": 0.5504988662131519,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          2.295,
+          2.95
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 81.78,
+        "f0_end_hz": 66.03,
+        "octave_fixed_n": 25
+      }
+    },
+    {
+      "sid": "s008",
+      "rms": 0.06501425057649612,
+      "peak": 0.385528564453125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "cd94f47c6dd557564464a81abe3afb1555af1ab85f1ec4f244f4616ee968246a",
+      "corrected_sha256": "0b1e98ba3252cd8d4b0b365cb818e806bef2aa5705cab6a3422079584173aa7c",
+      "alignment_score": 0.9745,
+      "trim_offset": 0.4743764172335601,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.305,
+          4.875
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 80.23,
+        "f0_end_hz": 80.29,
+        "octave_fixed_n": 29
+      }
+    },
+    {
+      "sid": "s009",
+      "rms": 0.06176014989614487,
+      "peak": 0.38629150390625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "f4dd414836b61d48d8e3c39d4dccb0c84cea90c9bbd2a17c9dd1981daa3a15f8",
+      "corrected_sha256": "f46b836aa93b41972b39cfbe39a8b210f19b6a380d931aab9eba83a5b195bfd0",
+      "alignment_score": 0.8912,
+      "trim_offset": 0.4888888888888889,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          6.535,
+          7.165
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 86.39,
+        "f0_end_hz": 69.18,
+        "octave_fixed_n": 22
+      }
+    },
+    {
+      "sid": "s010",
+      "rms": 0.061664361506700516,
+      "peak": 0.358917236328125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "e06dcc09499c2e3ce27b49e087cdb427dd6e52ac7d5915fa77851c1ca3fd6c23",
+      "corrected_sha256": "1956da86ad803bda0d34912255adc01a52ff79d56efb410cb4d6ab4b727dc80b",
+      "alignment_score": 0.9334,
+      "trim_offset": 0.6089569160997732,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.54,
+          5.23
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 135.24,
+        "f0_end_hz": 73.45,
+        "octave_fixed_n": 3
+      }
+    },
+    {
+      "sid": "s011",
+      "rms": 0.07190138846635818,
+      "peak": 0.405303955078125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "d4c988cdd49c023e3b11435dc40440fe2d58e73d94dfe508e8ee7a954157f707",
+      "corrected_sha256": "aa8dad20f3ed8afbc4b2e280b9de549803cacaa62fe52cda8f2bac9503823558",
+      "alignment_score": 0.9723,
+      "trim_offset": 0.49952380952380954,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.42,
+          4.05
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 95.36,
+        "f0_end_hz": 63.65,
+        "octave_fixed_n": 28
+      }
+    },
+    {
+      "sid": "s012",
+      "rms": 0.05771948769688606,
+      "peak": 0.32379150390625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "1d0d16c78fa6c611786e5a703057a31c63c43fbc4ab142b22d385078ff708dfc",
+      "corrected_sha256": "48f14bb82223d975cf5e23f85d7191e6d7e16027e41882100f0db841318411df",
+      "alignment_score": 0.8024,
+      "trim_offset": 0.4362358276643991,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          7.655,
+          8.37
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 95.22,
+        "f0_end_hz": 96.51,
+        "octave_fixed_n": 2
+      }
+    },
+    {
+      "sid": "s013",
+      "rms": 0.061525266617536545,
+      "peak": 0.405548095703125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "e08f57134cfd25d601a9daa5ff90f3b81e9abc3ed29d2802345e8aed9207dced",
+      "corrected_sha256": "d3bd8c43060f0db4e6ee5af13b1f628f6d8c0a41898a203af1501d8efad8335a",
+      "alignment_score": 0.8758,
+      "trim_offset": 0.5156916099773242,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.165,
+          4.845
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 84.82,
+        "f0_end_hz": 118.42,
+        "octave_fixed_n": 28
+      }
+    },
+    {
+      "sid": "s014",
+      "rms": 0.06608672440052032,
+      "peak": 0.384063720703125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "23b111cee9580ec0a1c96465ba8a9539752ee401fe9d8a52ecfc0e71d2a6632c",
+      "corrected_sha256": "bc4851892991e8f0068a7035773fb505526ca53e7f5e266403ff9ad4f85ea8cc",
+      "alignment_score": 0.6482,
+      "trim_offset": 0.46616780045351475,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          2.27,
+          2.71
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 116.11,
+        "f0_end_hz": 125.36,
+        "octave_fixed_n": 2
+      }
+    },
+    {
+      "sid": "s015",
+      "rms": 0.06254056841135025,
+      "peak": 0.37890625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "978e3496e8c89fb41afed81ff6f09bd2848b4efb7cf65b369abbaeb6156cc284",
+      "corrected_sha256": "1cd72de65a3707c13f7cd9000a486e96e42688aae17c218651bfc79a0e1f463d",
+      "alignment_score": 0.9216,
+      "trim_offset": 0.53421768707483,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          7.755,
+          8.48
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 119.14,
+        "f0_end_hz": 73.65,
+        "octave_fixed_n": 31
+      }
+    },
+    {
+      "sid": "s016",
+      "rms": 0.06494459509849548,
+      "peak": 0.4019775390625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "49ca1a117ab05e84d1bbaaef38cffb01ed2660c0fbe8a5178a6ce5aa015f7621",
+      "corrected_sha256": "623fee3b0400282a610cf835259f52edd50b07e984d2c4018773937bee48a8ab",
+      "alignment_score": 0.9071,
+      "trim_offset": 0.563968253968254,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.86,
+          4.625
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 87.76,
+        "f0_end_hz": 76.85,
+        "octave_fixed_n": 7
+      }
+    },
+    {
+      "sid": "s017",
+      "rms": 0.05814387649297714,
+      "peak": 0.360992431640625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "6370a41c99871c31796a8dd737a99a8c41eec55f23b823d2b01e15436645a769",
+      "corrected_sha256": "27c35e9266e3d28ce58d43ac46a940c6f507be1f4c8eac08d9d2efb0050a2734",
+      "alignment_score": 0.9219,
+      "trim_offset": 0.42498866213151926,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          6.0,
+          6.48
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 86.45,
+        "f0_end_hz": 111.16,
+        "octave_fixed_n": 28
+      }
+    },
+    {
+      "sid": "s018",
+      "rms": 0.060742881149053574,
+      "peak": 0.376068115234375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "5c10540a26014c75620cf04f4959a35c5591fcfd6aa171dadacf49ed3848f31e",
+      "corrected_sha256": "45a807c0ab0a40677fdcd85070050869a876542acb257f4efb35d3db164fb93f",
+      "alignment_score": 0.9727,
+      "trim_offset": 0.40458049886621317,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          2.895,
+          3.465
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 92.27,
+        "f0_end_hz": 64.7,
+        "octave_fixed_n": 21
+      }
+    },
+    {
+      "sid": "s019",
+      "rms": 0.060590215027332306,
+      "peak": 0.435577392578125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "7a79e57a2d80e368c9b610f8804c02891efd2b05a36f165b262805d0817d3e03",
+      "corrected_sha256": "e31fb1466071bf92a593119dc4c533a03a04f9ae313456849a9d2515ee95f507",
+      "alignment_score": 0.7036,
+      "trim_offset": 0.4595011337868481,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          5.9,
+          6.46
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 83.81,
+        "f0_end_hz": 88.59,
+        "octave_fixed_n": 47
+      }
+    },
+    {
+      "sid": "s020",
+      "rms": 0.06188575550913811,
+      "peak": 0.361236572265625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "0e23deb2cedce70874ce53168610c83ad07d59fdee47a17199a9624704ba327c",
+      "corrected_sha256": "a5749fc57310f945816ff7db9ed58416e63d201cf6e45375dac02e478857656e",
+      "alignment_score": 0.9461,
+      "trim_offset": 0.5212244897959184,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          1.685,
+          2.115
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 96.38,
+        "f0_end_hz": 67.68,
+        "octave_fixed_n": 0
+      }
+    },
+    {
+      "sid": "s021",
+      "rms": 0.06829999387264252,
+      "peak": 0.43426513671875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "f240c95f4bdd78f705fa53e4d4daa187974de314150d05e206e98d4982f31ce3",
+      "corrected_sha256": "8e89a44a33560746e7f1320a8276d4d7b218bc224d45f756a9d55a072923d6c2",
+      "alignment_score": 0.9705,
+      "trim_offset": 0.4869387755102041,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.16,
+          3.85
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 88.57,
+        "f0_end_hz": 73.58,
+        "octave_fixed_n": 29
+      }
+    },
+    {
+      "sid": "s022",
+      "rms": 0.06148160621523857,
+      "peak": 0.39111328125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "1fe3fd79caa284adbb833efb68114b180989389eab3bd62c9676a0556909542e",
+      "corrected_sha256": "6f522734d3b1e152853d3ab0b73aa81cde7edac6a4efe1c03b0b94130823daae",
+      "alignment_score": 0.9468,
+      "trim_offset": 0.4245578231292517,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          7.135,
+          7.78
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 82.22,
+        "f0_end_hz": 71.64,
+        "octave_fixed_n": 25
+      }
+    },
+    {
+      "sid": "s023",
+      "rms": 0.059847477823495865,
+      "peak": 0.41339111328125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "c7e2b77b1b64ed25a7c7f005cfe72461100532783452d042e09c870b27bf9b6b",
+      "corrected_sha256": "d9cf734d32a9abb68b9d36ac4cac987a08be567d96d76bb6d7ae3c24beb42745",
+      "alignment_score": 0.9079,
+      "trim_offset": 0.5411111111111111,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          6.765,
+          7.34
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 126.23,
+        "f0_end_hz": 66.52,
+        "octave_fixed_n": 8
+      }
+    },
+    {
+      "sid": "s024",
+      "rms": 0.06791506707668304,
+      "peak": 0.336212158203125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "5a32790f66d5ec63382f07313532c6e7ba36bea88bad88b6b101ff6cfd441762",
+      "corrected_sha256": "174a4277167f5c8e8ce4df3851e1a5ba6507a6292aed187fbd6b5d43561ffefd",
+      "alignment_score": 0.9545,
+      "trim_offset": 0.40732426303854874,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          1.57,
+          2.39
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 86.28,
+        "f0_end_hz": 83.97,
+        "octave_fixed_n": 30
+      }
+    },
+    {
+      "sid": "s025",
+      "rms": 0.056007638573646545,
+      "peak": 0.373260498046875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "fd2053e749d71e515b810f6eb01d2a93cedcdd2aee26963a9c9557ceab4f856d",
+      "corrected_sha256": "8be36c457bd64139c2c6e81e1cbb15b63c5319bb225dd799d8caa6ae31014c0d",
+      "alignment_score": 0.9383,
+      "trim_offset": 0.4870068027210884,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.87,
+          5.34
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 81.29,
+        "f0_end_hz": 63.82,
+        "octave_fixed_n": 0
+      }
+    },
+    {
+      "sid": "s026",
+      "rms": 0.07042037695646286,
+      "peak": 0.479461669921875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "8bee576b72df1016d44bbc11c9464c7e46b8b9cd752fc8bb9740b008ee096a1b",
+      "corrected_sha256": "4470c33d840c29b6ee74b1e5f99f3119fdf4f9f1778aa8769d4b50ba0a838aee",
+      "alignment_score": 0.9382,
+      "trim_offset": 0.47129251700680275,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          2.65,
+          3.48
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 97.57,
+        "f0_end_hz": 78.27,
+        "octave_fixed_n": 7
+      }
+    },
+    {
+      "sid": "s027",
+      "rms": 0.0637250691652298,
+      "peak": 0.420867919921875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "bcdeabe38f9a30d457b29a50f4e1ac81945ff80015bdf630042e0db19cff4fa0",
+      "corrected_sha256": "a4a9982e48db8b7a6265f3acb2952401e92e5341ed8063224d2ffa988fc61654",
+      "alignment_score": 0.6567,
+      "trim_offset": 0.37,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          7.45,
+          8.13
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 97.65,
+        "f0_end_hz": 66.53,
+        "octave_fixed_n": 29
+      }
+    },
+    {
+      "sid": "s028",
+      "rms": 0.05981547385454178,
+      "peak": 0.364166259765625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "96fb32d15e1be294a1536626741530a5860546000be016f96c2ce7596cca29f0",
+      "corrected_sha256": "35f9d0472bb30c55c6823dc5f52009e18c0bf30e67c4084b3ef483fd2055a55c",
+      "alignment_score": 0.8407,
+      "trim_offset": 0.5440136054421769,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.76,
+          5.295
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 85.12,
+        "f0_end_hz": 66.87,
+        "octave_fixed_n": 28
+      }
+    },
+    {
+      "sid": "s029",
+      "rms": 0.06018541008234024,
+      "peak": 0.373046875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "37390accba580c493ca3ae2f01cbd3ae4ad3004a012188151f13d2a12e1d4b1b",
+      "corrected_sha256": "b9e7a89e95bac235a5740f42e347a196ddcf7513c743df3230277b47a080ffb0",
+      "alignment_score": 0.9342,
+      "trim_offset": 0.4711791383219955,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          1.225,
+          1.595
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 87.56,
+        "f0_end_hz": 85.09,
+        "octave_fixed_n": 17
+      }
+    },
+    {
+      "sid": "s030",
+      "rms": 0.06563423573970795,
+      "peak": 0.41363525390625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "d16e89a77738e54f8cddfac9a47966b9ff60b7344d81c5c0a096110d430ab324",
+      "corrected_sha256": "d23dec0513d68cbba8be54eadcc9c5f516f4a0d8ed24157429558308fb3f8d4d",
+      "alignment_score": 0.7903,
+      "trim_offset": 0.49439909297052154,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          13.575,
+          14.215
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 113.98,
+        "f0_end_hz": 118.3,
+        "octave_fixed_n": 35
+      }
+    },
+    {
+      "sid": "s031",
+      "rms": 0.06460006535053253,
+      "peak": 0.4075927734375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "9ea3ff3926a8821c4a77d77f0e510e16b2a55ea6cfa9ac0d30c2f8f3fd948b00",
+      "corrected_sha256": "94697145ccc79e03ae9fce776f71b37f0306a3a23d7a3d2f8ecc0984683c2360",
+      "alignment_score": 0.9123,
+      "trim_offset": 0.3814965986394558,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          2.505,
+          3.165
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 111.88,
+        "f0_end_hz": 71.78,
+        "octave_fixed_n": 9
+      }
+    },
+    {
+      "sid": "s032",
+      "rms": 0.06717788428068161,
+      "peak": 0.48388671875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "03af559e113a8b58f55c3b46b29984995c95ca9aa3030ff85aeaf488d6fcef7e",
+      "corrected_sha256": "9225d1f6a7673898e404e84c4685f72b9d7add6e770ad20408cfda5973f87512",
+      "alignment_score": 0.8244,
+      "trim_offset": 0.5294104308390023,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.81,
+          5.405
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 107.55,
+        "f0_end_hz": 69.18,
+        "octave_fixed_n": 31
+      }
+    },
+    {
+      "sid": "s033",
+      "rms": 0.05690685659646988,
+      "peak": 0.3082275390625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "1dc5c7e9b6059548c67ea5ed78c0b36967cf75a8f2c7400051258e4b8eea9b2a",
+      "corrected_sha256": "c6356de15c44e2e93d49860264b4c9b407fbcfd6ac02491865bc00bffa161a46",
+      "alignment_score": 0.8775,
+      "trim_offset": 0.4949659863945578,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          1.685,
+          2.42
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 94.41,
+        "f0_end_hz": 70.79,
+        "octave_fixed_n": 31
+      }
+    },
+    {
+      "sid": "s034",
+      "rms": 0.06492088735103607,
+      "peak": 0.3419189453125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "2a355fac763c8ee65f1a6602e009644747b00ddaf84e99f58ad1e2901eca4bd2",
+      "corrected_sha256": "fae230717b42dacf1d46c172f0956f4f25cf3fa27a4e7a1c325894ebe5e1f755",
+      "alignment_score": 0.9414,
+      "trim_offset": 0.5479591836734694,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          2.085,
+          2.755
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 92.15,
+        "f0_end_hz": 72.36,
+        "octave_fixed_n": 9
+      }
+    },
+    {
+      "sid": "s035",
+      "rms": 0.06406503915786743,
+      "peak": 0.421478271484375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "f44c2a50123f20f1ec3c9213d6f3f54b651fb205d9bfca6412268d4e13f8c859",
+      "corrected_sha256": "d19b53fc88e4b21790aebc051132dd8f6037f43b8dad13f51bcd5a296ff3e2ee",
+      "alignment_score": 0.6632,
+      "trim_offset": 0.42401360544217687,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.845,
+          5.67
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 81.75,
+        "f0_end_hz": 96.74,
+        "octave_fixed_n": 11
+      }
+    },
+    {
+      "sid": "s036",
+      "rms": 0.06843122839927673,
+      "peak": 0.450897216796875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "e99d14a47cc84d063e54c3810be9e572a6d6616ed85b2d20ea4a0ef48d499534",
+      "corrected_sha256": "3ce54a706ca45e83c763d9f92dbb57fa8807be4f38b05d6e447656083d65ae37",
+      "alignment_score": 0.9436,
+      "trim_offset": 0.41514739229024944,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          8.165,
+          8.81
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 99.24,
+        "f0_end_hz": 80.35,
+        "octave_fixed_n": 25
+      }
+    },
+    {
+      "sid": "s037",
+      "rms": 0.06221729516983032,
+      "peak": 0.36090087890625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "e02a79c890c6aa615b8397e8c0a968160183253383c468ffe563e09f7df622f3",
+      "corrected_sha256": "8c52f45d8903ca4bafee7527d8db5ce3f6ae5af00ffb77d9c34df43aeabd455d",
+      "alignment_score": 0.8987,
+      "trim_offset": 0.3321768707482993,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.91,
+          5.645
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 83.57,
+        "f0_end_hz": 72.98,
+        "octave_fixed_n": 23
+      }
+    },
+    {
+      "sid": "s038",
+      "rms": 0.05919540300965309,
+      "peak": 0.34649658203125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "bf7de6f6eb74868567b9dfa1a50a92473d2b12e663e64c3bb13cecc24a2fbeb2",
+      "corrected_sha256": "0ccbf3fff2032622c52ea51f26af03ff4838d9ecbd7f7b41e99bdcc0d8774fcc",
+      "alignment_score": 0.9485,
+      "trim_offset": 0.43673469387755104,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          1.74,
+          2.525
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 96.41,
+        "f0_end_hz": 75.24,
+        "octave_fixed_n": 14
+      }
+    },
+    {
+      "sid": "s039",
+      "rms": 0.05817588046193123,
+      "peak": 0.420562744140625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "79910d4f06deeab5537b89dbe7ff70535303f5c62cf94ecc535b3ce6a687b2fe",
+      "corrected_sha256": "ef47431dbd002756d24b7b8eb70444d89d4bfa406f48a440231dcded21d8573e",
+      "alignment_score": 0.9635,
+      "trim_offset": 0.46478458049886623,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          6.27,
+          7.01
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 90.68,
+        "f0_end_hz": 72.84,
+        "octave_fixed_n": 1
+      }
+    },
+    {
+      "sid": "s040",
+      "rms": 0.06959869712591171,
+      "peak": 0.35394287109375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "b81ff5f68c701cad9f36b6fa623f6cb0977eea15e129cbc49dd8b712ceaa3b9c",
+      "corrected_sha256": "2ab1e637a5d65ade63717b82432a0ff2fa514361aff562f009b5fd9dc78ebb95",
+      "alignment_score": 0.9128,
+      "trim_offset": 0.5756462585034013,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.06,
+          3.825
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 87.99,
+        "f0_end_hz": 70.2,
+        "octave_fixed_n": 29
+      }
+    },
+    {
+      "sid": "s041",
+      "rms": 0.0693255066871643,
+      "peak": 0.43878173828125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "392e027f161e4085014e9ba9634d04df8d4842156cdb54897add5bb9ebfafc8a",
+      "corrected_sha256": "1fc2af145d14706e6001c0cc6fe27316b9ee3d6a03ea2b8de10004d994c71bdf",
+      "alignment_score": 0.9444,
+      "trim_offset": 0.5546031746031747,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          2.52,
+          2.98
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 88.16,
+        "f0_end_hz": 62.85,
+        "octave_fixed_n": 1
+      }
+    },
+    {
+      "sid": "s042",
+      "rms": 0.059365466237068176,
+      "peak": 0.357666015625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "b3f672817ff33ec194b998b5a0b84fc6446fc427ee108c13fe51427d8c4722b1",
+      "corrected_sha256": "c145088e5682602a2349421f9792ac284dbab94ebb5f9330129aaea74a8e247c",
+      "alignment_score": 0.8825,
+      "trim_offset": 0.482562358276644,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          5.45,
+          6.105
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 84.69,
+        "f0_end_hz": 59.69,
+        "octave_fixed_n": 25
+      }
+    },
+    {
+      "sid": "s043",
+      "rms": 0.06366343796253204,
+      "peak": 0.340179443359375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "6db884b64712615bb74d87e975144cb1a42cda25b5882c045a4bd644b5d7d603",
+      "corrected_sha256": "e14a3e8f6c5f759e03006431e1a40624018bbd55780362d6edd92de242262842",
+      "alignment_score": 0.7887,
+      "trim_offset": 0.4954648526077097,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          2.625,
+          3.205
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 89.91,
+        "f0_end_hz": 68.93,
+        "octave_fixed_n": 30
+      }
+    },
+    {
+      "sid": "s044",
+      "rms": 0.0649217814207077,
+      "peak": 0.388397216796875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "58f81834d9c99cc0ca2552ef742e5991decabc3821de1b4e9331284720e4a991",
+      "corrected_sha256": "3c432e378afba44ade7884c2dc1e5449a4af4233f8064f919c122d4f24e5ddbb",
+      "alignment_score": 0.9235,
+      "trim_offset": 0.4827664399092971,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          7.295,
+          7.98
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 131.96,
+        "f0_end_hz": 67.43,
+        "octave_fixed_n": 19
+      }
+    },
+    {
+      "sid": "s045",
+      "rms": 0.06554985046386719,
+      "peak": 0.38177490234375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "d8b690c1da77f4e003ba5070dce901fb047da1d9bca2a192048e1a92df499236",
+      "corrected_sha256": "a6186094abb695f4777ff3a0a96681c1bf98d248d3bb1b62adcc3c91beb6daff",
+      "alignment_score": 0.9492,
+      "trim_offset": 0.5544897959183673,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          2.93,
+          3.525
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 94.22,
+        "f0_end_hz": 71.54,
+        "octave_fixed_n": 20
+      }
+    },
+    {
+      "sid": "s046",
+      "rms": 0.06335203349590302,
+      "peak": 0.362884521484375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "98c401f6269e3ca4b61844462b091ade502318ddeae344afdb6c4da3670c4aff",
+      "corrected_sha256": "1857688ff82dd2a2ce95acc18377dc039a63b65ee4b8b39cf62f1763166e162e",
+      "alignment_score": 0.8462,
+      "trim_offset": 0.4480952380952381,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          1.77,
+          2.585
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 100.07,
+        "f0_end_hz": 70.7,
+        "octave_fixed_n": 13
+      }
+    },
+    {
+      "sid": "s047",
+      "rms": 0.06672771275043488,
+      "peak": 0.45391845703125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "191513408ee08b3748fba9042563a5433e7595a6f973ad405ebb632e24fc3eee",
+      "corrected_sha256": "26e457f1aa608afb0d37b4fd08a90fe0f53c1e3dd97988b7a7b9d8ef7be86f08",
+      "alignment_score": 0.9256,
+      "trim_offset": 0.5402494331065759,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          7.08,
+          7.62
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 92.05,
+        "f0_end_hz": 64.8,
+        "octave_fixed_n": 2
+      }
+    },
+    {
+      "sid": "s048",
+      "rms": 0.06537709385156631,
+      "peak": 0.371246337890625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "b630ea80122f9aca56744bb50e59e0175da8ba4d9c81526ef33fe7e74c8a40f9",
+      "corrected_sha256": "35c15383b60f07f57d083b3254b934188fc7dcdade7d30822c88cd7a9643a307",
+      "alignment_score": 0.9462,
+      "trim_offset": 0.5185034013605442,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.71,
+          4.345
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 83.73,
+        "f0_end_hz": 62.18,
+        "octave_fixed_n": 39
+      }
+    },
+    {
+      "sid": "s049",
+      "rms": 0.06354475766420364,
+      "peak": 0.34893798828125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "d29081659d2d7d28fb6e7289377cdc8022f05cfb41fbe2541ce5081bcaff1967",
+      "corrected_sha256": "1cfdeb57599b270e91ad3e52e535dabb632c293b7c2fa59d63449caca27dbce8",
+      "alignment_score": 0.8113,
+      "trim_offset": 0.4775510204081633,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          1.845,
+          2.38
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 87.39,
+        "f0_end_hz": 82.62,
+        "octave_fixed_n": 22
+      }
+    },
+    {
+      "sid": "s050",
+      "rms": 0.06104600429534912,
+      "peak": 0.400146484375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "363e1cdfdd2f7adffdb145b1f8fbae7b4d323fe0a1e3f5a4615d43b37c67dbc4",
+      "corrected_sha256": "4dda64e86c4e888bfe1b255a9f714c3e728262ccf7ab2e5da350459035c764b6",
+      "alignment_score": 0.9074,
+      "trim_offset": 0.5820634920634921,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          5.455,
+          5.995
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 103.25,
+        "f0_end_hz": 64.45,
+        "octave_fixed_n": 13
+      }
+    },
+    {
+      "sid": "s051",
+      "rms": 0.056427158415317535,
+      "peak": 0.382049560546875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "687b51ceaa4a0baf06a25ca7a747a582b551334ec12c1d77d66580809b9d154b",
+      "corrected_sha256": "a71482c972b60fe9f4b2d47b903c9403dac994ac3a45478737b511556a90e3d6",
+      "alignment_score": 0.8068,
+      "trim_offset": 0.5899546485260772,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.245,
+          4.915
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 84.46,
+        "f0_end_hz": 69.36,
+        "octave_fixed_n": 30
+      }
+    },
+    {
+      "sid": "s052",
+      "rms": 0.06299439072608948,
+      "peak": 0.323974609375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "140796110e86b4a375ed770b63436aa650134d707349999ad2fc29dfaeabbdf3",
+      "corrected_sha256": "36448fb04e6b6211a3a6dc172b83ba5162aa7f85c933ce9c24067f3747d7ebeb",
+      "alignment_score": 0.914,
+      "trim_offset": 0.371156462585034,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          5.22,
+          5.62
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 118.39,
+        "f0_end_hz": 65.27,
+        "octave_fixed_n": 1
+      }
+    },
+    {
+      "sid": "s053",
+      "rms": 0.06259550899267197,
+      "peak": 0.341461181640625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "155dec102e2f0209fa4f0c2cbc87be710d74cdf2ce98dca23167cf7daf9f15fb",
+      "corrected_sha256": "fe6964626535833c59b3aefd93ad32efbe4d3bbf3bc631c483cef6d6f3ab0d72",
+      "alignment_score": 0.9473,
+      "trim_offset": 0.5431065759637188,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          5.805,
+          6.545
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 87.32,
+        "f0_end_hz": 61.11,
+        "octave_fixed_n": 7
+      }
+    },
+    {
+      "sid": "s054",
+      "rms": 0.06483817100524902,
+      "peak": 0.387115478515625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "f0ac9ecee928262edd618323aad10dc5489f95b0c962cf4b3e4ef05bfa73f0ac",
+      "corrected_sha256": "dc167e62731c14e75568bba364ae6f87d73ae8fa46e8af9197179fad5c8aa89e",
+      "alignment_score": 0.9413,
+      "trim_offset": 0.623265306122449,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.025,
+          3.65
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 82.84,
+        "f0_end_hz": 108.14,
+        "octave_fixed_n": 42
+      }
+    },
+    {
+      "sid": "s055",
+      "rms": 0.061008211225271225,
+      "peak": 0.38494873046875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "5391641944933fbc09846018fdd9b5c4b9233a057edaf8dde3e554d6d9c2b9dc",
+      "corrected_sha256": "2bbaaeb282b9c1f9efc09f586af386c039ffbfa032d8a655734daade7bb7e558",
+      "alignment_score": 0.9815,
+      "trim_offset": 0.4696145124716553,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          5.055,
+          5.48
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 117.11,
+        "f0_end_hz": 82.84,
+        "octave_fixed_n": 7
+      }
+    },
+    {
+      "sid": "s056",
+      "rms": 0.0649450272321701,
+      "peak": 0.352447509765625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "d259a75c542d5b65ff96b53c397bd226106162953e9412d01ae289265a8d3441",
+      "corrected_sha256": "a777e86b6bda7f0d28050b0596b1bcb49ac1006639e65acb88d178adb1f4f59b",
+      "alignment_score": 0.9368,
+      "trim_offset": 0.5210430839002268,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.315,
+          4.01
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 107.04,
+        "f0_end_hz": 75.72,
+        "octave_fixed_n": 0
+      }
+    },
+    {
+      "sid": "s057",
+      "rms": 0.05881797894835472,
+      "peak": 0.376312255859375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "9bc6d9afd3cefd64c082a196385c2505688886e705313a96144ecda869fec0d0",
+      "corrected_sha256": "e8651cceeed9192dc408bb1968dccc55d832fa53d218502153b0f7be92290acc",
+      "alignment_score": 0.945,
+      "trim_offset": 0.5639229024943311,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.635,
+          4.23
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 90.9,
+        "f0_end_hz": 71.9,
+        "octave_fixed_n": 25
+      }
+    },
+    {
+      "sid": "s058",
+      "rms": 0.06331124901771545,
+      "peak": 0.431549072265625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "f058694247bf4f316096195914fd06d0db4ff4192575b9e0da91ba390c0eb317",
+      "corrected_sha256": "4298308a809da816bf330688d8a047dc9125c1c25ffa2e1f1fa0d1f74172f50c",
+      "alignment_score": 0.9573,
+      "trim_offset": 0.543469387755102,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.44,
+          4.27
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 84.38,
+        "f0_end_hz": 82.41,
+        "octave_fixed_n": 7
+      }
+    },
+    {
+      "sid": "s059",
+      "rms": 0.06258578598499298,
+      "peak": 0.41436767578125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "5652770769dd6ee632fd52007e8cf83279c621ae6f937b94528aadfd4e402688",
+      "corrected_sha256": "e71218cf6ddbc3af93733a6e398812edf28622a347a22e8f2bb4308268ab4262",
+      "alignment_score": 0.9421,
+      "trim_offset": 0.4365532879818594,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.84,
+          4.425
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 82.52,
+        "f0_end_hz": 89.74,
+        "octave_fixed_n": 28
+      }
+    },
+    {
+      "sid": "s060",
+      "rms": 0.059566617012023926,
+      "peak": 0.410247802734375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "1fd0ce8f04c21084a962d1bcbf9591c178b44fa8a711382001a5deaacb4fa6fa",
+      "corrected_sha256": "a7efa0450e5280aac66aa3ead3a1f1ca26fc42bd5dacbd7186c39967fa3ecfa0",
+      "alignment_score": 0.8559,
+      "trim_offset": 0.43439909297052154,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          6.03,
+          6.725
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 80.3,
+        "f0_end_hz": 81.69,
+        "octave_fixed_n": 29
+      }
+    },
+    {
+      "sid": "s061",
+      "rms": 0.06887287646532059,
+      "peak": 0.396636962890625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "a9b4098b13cdfe897d87f18623ea78e45df16ffed7d0a16fac0ec42e4dd8c46f",
+      "corrected_sha256": "ae3278003d6032fe3a164a32d21819a0d4ec46d91ab732c79b25f93b050b7e4d",
+      "alignment_score": 0.8783,
+      "trim_offset": 0.4711791383219955,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          5.95,
+          6.68
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 83.1,
+        "f0_end_hz": 71.92,
+        "octave_fixed_n": 25
+      }
+    },
+    {
+      "sid": "s062",
+      "rms": 0.06706932932138443,
+      "peak": 0.48272705078125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "3953025c72bcda2770c42ea551108eb9a8d89c33746be2d1761c78b1f9bd946e",
+      "corrected_sha256": "6f7c7a83def7658ac1194ba648674c7439b81db9ee1f42ae312d68cf6fbfe6a9",
+      "alignment_score": 0.9411,
+      "trim_offset": 0.4724263038548753,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.42,
+          5.17
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 122.9,
+        "f0_end_hz": 97.13,
+        "octave_fixed_n": 11
+      }
+    },
+    {
+      "sid": "s063",
+      "rms": 0.06249975040555,
+      "peak": 0.397857666015625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "7e26ed693754362a34a830b2450180f8ab87eb90f2c27cd69ec5c79f0dcd7e8b",
+      "corrected_sha256": "fa4012397290fa87d86f172020013eebc8801d0f5a7a7a8d443244a607985777",
+      "alignment_score": 0.9625,
+      "trim_offset": 0.4950340136054422,
+      "final_fall": {
+        "applied": false,
+        "reason": "'니다' 로 끝나지 않는다",
+        "region_sec": null,
+        "semitones": null,
+        "f0_start_hz": null,
+        "f0_end_hz": null,
+        "octave_fixed_n": null
+      }
+    },
+    {
+      "sid": "s064",
+      "rms": 0.06215694546699524,
+      "peak": 0.403533935546875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "93abaf25da825144a512f81f51abfe26bdf8b178e9bcb8c9ba8d316eb953fe48",
+      "corrected_sha256": "3dfebf97d46d48a438aa5fa33871f6fb5d6b2356a95257cf68886baa55fd6669",
+      "alignment_score": 0.9291,
+      "trim_offset": 0.4251020408163265,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          6.505,
+          7.32
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 93.6,
+        "f0_end_hz": 78.93,
+        "octave_fixed_n": 32
+      }
+    },
+    {
+      "sid": "s065",
+      "rms": 0.0644238293170929,
+      "peak": 0.396636962890625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "e3cf9f12e483afc4fe0502eaa6460d3bc74e3d5c2099388477800b7285ae2a2a",
+      "corrected_sha256": "27453f0d9feb234c8501fd42218fd20e3ad3e35c90b6a5b46184f4d57e633d8d",
+      "alignment_score": 0.94,
+      "trim_offset": 0.5473242630385488,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          5.07,
+          5.765
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 91.06,
+        "f0_end_hz": 66.64,
+        "octave_fixed_n": 36
+      }
+    },
+    {
+      "sid": "s066",
+      "rms": 0.06046266853809357,
+      "peak": 0.32171630859375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "fe4b6ef0f50ca8e1a7977ac4a4e92738789e7d5cdacb9144fc693b54bcbad73f",
+      "corrected_sha256": "a28f9491a204e461043e047dd5f4ea5ff532461d236dcebcd13d0880d1257c71",
+      "alignment_score": 0.8797,
+      "trim_offset": 0.5112244897959184,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          2.625,
+          3.055
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 81.08,
+        "f0_end_hz": 64.49,
+        "octave_fixed_n": 4
+      }
+    },
+    {
+      "sid": "s067",
+      "rms": 0.06115362420678139,
+      "peak": 0.443939208984375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "95b764e77c8283516a261cd1a8ac2821fcff95d4223a756e525f6d524dc45511",
+      "corrected_sha256": "eecc662f5bf9ae8d966e23d86c459269a14252f84d6748a3d30e9e00c41cea00",
+      "alignment_score": 0.9028,
+      "trim_offset": 0.5651020408163265,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.185,
+          3.905
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 80.22,
+        "f0_end_hz": 74.02,
+        "octave_fixed_n": 20
+      }
+    },
+    {
+      "sid": "s068",
+      "rms": 0.0651625394821167,
+      "peak": 0.40771484375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "6eb2d88aa48cadb8a6a6b18b214c50c1af4beeec4bf769612237b5ef430c986f",
+      "corrected_sha256": "fc7affa9f56622fce26850c980fa56b5811ce2f6a45b6eb505a0e13930fccb9b",
+      "alignment_score": 0.9381,
+      "trim_offset": 0.4828798185941043,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.78,
+          4.4
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 95.52,
+        "f0_end_hz": 62.04,
+        "octave_fixed_n": 23
+      }
+    },
+    {
+      "sid": "s069",
+      "rms": 0.0627368688583374,
+      "peak": 0.3768310546875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "e14aeea9a0a7e6dcebb0d8a84f929ba0e8f5a54bcd197d36a9f4eb4f52421597",
+      "corrected_sha256": "fc23c7c5777f26ffc6add7bbb586c453885d183678cac00f0477a13df07d491d",
+      "alignment_score": 0.9411,
+      "trim_offset": 0.5443083900226757,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          5.25,
+          6.115
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 114.34,
+        "f0_end_hz": 78.75,
+        "octave_fixed_n": 10
+      }
+    },
+    {
+      "sid": "s070",
+      "rms": 0.059975817799568176,
+      "peak": 0.373931884765625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "3f2a9bb8167151d25114c71b1f0c5dc3bf9f028fc9a0d94c969ebf1a94848f48",
+      "corrected_sha256": "bfe47acfe442cbdf9bb57c492253479e70aaa914e27016a05c8453d2957dc8cf",
+      "alignment_score": 0.9371,
+      "trim_offset": 0.5063265306122449,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          5.43,
+          6.085
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 81.63,
+        "f0_end_hz": 69.03,
+        "octave_fixed_n": 4
+      }
+    },
+    {
+      "sid": "s071",
+      "rms": 0.06515192985534668,
+      "peak": 0.33758544921875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "ceaa3a055053c3949c6d6e07900704f8bb411eb5e1322fb364d7414402ee7e3d",
+      "corrected_sha256": "afc510203aff5cdafe12a2978279f0c3a45593e27204a7586f13280cb8831b84",
+      "alignment_score": 0.9546,
+      "trim_offset": 0.5594331065759637,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.175,
+          3.93
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 87.71,
+        "f0_end_hz": 70.87,
+        "octave_fixed_n": 24
+      }
+    },
+    {
+      "sid": "s072",
+      "rms": 0.06508313864469528,
+      "peak": 0.47698974609375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "c98dfb7f5eba1b1666998c421265e7d80b49ef8947f0995a5ce39705c14f1cc2",
+      "corrected_sha256": "28a316074dfec99e2a05a0ace0b136446ea6110e59e674db51d0fa072e764d8b",
+      "alignment_score": 0.8811,
+      "trim_offset": 0.5350340136054422,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          6.72,
+          7.315
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 89.99,
+        "f0_end_hz": 68.38,
+        "octave_fixed_n": 18
+      }
+    },
+    {
+      "sid": "s073",
+      "rms": 0.06889992952346802,
+      "peak": 0.481597900390625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "b4f44abf20dc100f6c3fd0741a9b8c7ddeab215b16d7529b577bdabeb4255158",
+      "corrected_sha256": "42f1a04da78176e340c4a0c580f4549e4de13abec5fc363edf2fe96e23969882",
+      "alignment_score": 0.8061,
+      "trim_offset": 0.4256462585034014,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          6.97,
+          7.6
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 80.53,
+        "f0_end_hz": 70.53,
+        "octave_fixed_n": 12
+      }
+    },
+    {
+      "sid": "s074",
+      "rms": 0.05763104930520058,
+      "peak": 0.371002197265625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "b8963353545c8ba396ec2fe173b8e7c30670c0c8d1b2c24d8e59709ab5187e7a",
+      "corrected_sha256": "79bf0f6210d767aadb4214db6a3ad875bb02b06590a03ae51035996cde0ae468",
+      "alignment_score": 0.9368,
+      "trim_offset": 0.45963718820861676,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.88,
+          4.575
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 83.92,
+        "f0_end_hz": 67.43,
+        "octave_fixed_n": 3
+      }
+    },
+    {
+      "sid": "s075",
+      "rms": 0.06390471756458282,
+      "peak": 0.388275146484375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "7c42f1b5eddbc89cffbeb4c6d5f6b5d3da3cd57367d5912a6702b0a6dd7b1f58",
+      "corrected_sha256": "dc1af02950b96b2520a5b0a3ba7228a4eda6ced7bf026bd01c3ce5096703c733",
+      "alignment_score": 0.9446,
+      "trim_offset": 0.46505668934240363,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          6.115,
+          7.01
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 87.75,
+        "f0_end_hz": 70.93,
+        "octave_fixed_n": 9
+      }
+    },
+    {
+      "sid": "s076",
+      "rms": 0.0654132217168808,
+      "peak": 0.391845703125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "7472aaab352b3683cb873cace05f6f857a2c2a3a2d9e4e253aed9c7ec26e6bb3",
+      "corrected_sha256": "75e2deb909694afbc540c3eec5580e7bd4aa27ea3a5cfe81856319622c66fe9d",
+      "alignment_score": 0.8739,
+      "trim_offset": 0.4248526077097506,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.92,
+          5.59
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 86.38,
+        "f0_end_hz": 66.48,
+        "octave_fixed_n": 33
+      }
+    },
+    {
+      "sid": "s077",
+      "rms": 0.06132156774401665,
+      "peak": 0.3638916015625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "d8ec1f0237f4df31889db7ac05f4740fe77d9e1ca2be4914a405c3bf576ba609",
+      "corrected_sha256": "eb44b58f7e506ccfddc0a7e0798f654b99750165adebf17f612a2a9a23a7f64f",
+      "alignment_score": 0.9334,
+      "trim_offset": 0.5180498866213152,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.09,
+          3.805
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 81.99,
+        "f0_end_hz": 71.11,
+        "octave_fixed_n": 33
+      }
+    },
+    {
+      "sid": "s078",
+      "rms": 0.059840839356184006,
+      "peak": 0.34893798828125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "65bef394772c499ec51d7e2a83aac120006f89a3ff2de16889930ed28369ae43",
+      "corrected_sha256": "98d954923a7968acfae4db3e9b1c695879294750a582b756562e4cc26055b39c",
+      "alignment_score": 0.9134,
+      "trim_offset": 0.5133560090702948,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          5.935,
+          6.83
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 94.97,
+        "f0_end_hz": 69.02,
+        "octave_fixed_n": 26
+      }
+    },
+    {
+      "sid": "s079",
+      "rms": 0.06495829671621323,
+      "peak": 0.364837646484375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "6f6366190867aedf6e5bdd81a07e76746de047e31f879176a6ccd5b0d4d57d01",
+      "corrected_sha256": "c7cdaa3199d2f2a028635a0d898156d8839eb9468999ab4d73220e091e25be44",
+      "alignment_score": 0.9606,
+      "trim_offset": 0.4715419501133787,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.535,
+          4.17
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 90.74,
+        "f0_end_hz": 65.5,
+        "octave_fixed_n": 28
+      }
+    },
+    {
+      "sid": "s080",
+      "rms": 0.06941071897745132,
+      "peak": 0.459686279296875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "49f8d50612ed870751191989cc2cba76de7522b6d23c505aca9d1a8807a8451a",
+      "corrected_sha256": "2d53bcf36eb71c98066bf5db062e9d896023d3669c31f657479fc7b9a975e7f4",
+      "alignment_score": 0.9763,
+      "trim_offset": 0.6103854875283447,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.505,
+          4.285
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 103.97,
+        "f0_end_hz": 72.01,
+        "octave_fixed_n": 4
+      }
+    },
+    {
+      "sid": "s081",
+      "rms": 0.06080929562449455,
+      "peak": 0.358428955078125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "5499cc9ad27497b0926793abd3108f18dbe0739291678f14424751a09b7e23e8",
+      "corrected_sha256": "98b096e548438b3028093fedf7cf36792e03d0ce3296579328afb7ee3bea9ead",
+      "alignment_score": 0.919,
+      "trim_offset": 0.3786167800453515,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.98,
+          4.395
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 81.72,
+        "f0_end_hz": 70.27,
+        "octave_fixed_n": 0
+      }
+    },
+    {
+      "sid": "s082",
+      "rms": 0.05973421782255173,
+      "peak": 0.329193115234375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "ad62c374a714e9f47f3acd4e3a2b9b344bf2f9f8132627ba4e4a3f186538d64f",
+      "corrected_sha256": "9c63de7dbf9836422d00d33068518fa88f00b853e8d66c9cd82f779e51e0c1d8",
+      "alignment_score": 0.8811,
+      "trim_offset": 0.5595011337868481,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.625,
+          4.21
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 86.34,
+        "f0_end_hz": 66.8,
+        "octave_fixed_n": 47
+      }
+    },
+    {
+      "sid": "s083",
+      "rms": 0.06193726509809494,
+      "peak": 0.35321044921875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "5999bd72edab063dec7cb8ce194fdbcb7a7d266f06b545a34afbee83b261b4ba",
+      "corrected_sha256": "581f4176eca4c635e0d4b2f3931fe4801841f8ef98e41a21c9ae93029aaaf1fa",
+      "alignment_score": 0.9342,
+      "trim_offset": 0.5423809523809524,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.2,
+          4.62
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 86.18,
+        "f0_end_hz": 81.54,
+        "octave_fixed_n": 2
+      }
+    },
+    {
+      "sid": "s084",
+      "rms": 0.06075258180499077,
+      "peak": 0.3941650390625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "503c2a054177e7f0281ad265ac93985ace0d2aa48ba6d1aae0973f9ba953f955",
+      "corrected_sha256": "f51389447c9df2e1520f85835bf732d4dda4f4a5edd412a1f95a00c2b35c98fb",
+      "alignment_score": 0.6869,
+      "trim_offset": 0.461859410430839,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          7.705,
+          8.445
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 82.06,
+        "f0_end_hz": 67.14,
+        "octave_fixed_n": 27
+      }
+    },
+    {
+      "sid": "s085",
+      "rms": 0.06537661701440811,
+      "peak": 0.482269287109375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "d6e28147628e48be5ce2a1808c90a73f9a4dd3137a11ebf7cdefee6659fb53a3",
+      "corrected_sha256": "08295e4d078721b5aeae3dd0f3dd2f2a9c509a236a67c56b8619e8bff58df397",
+      "alignment_score": 0.7968,
+      "trim_offset": 0.40138321995464854,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          6.69,
+          7.64
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 90.47,
+        "f0_end_hz": 70.15,
+        "octave_fixed_n": 11
+      }
+    },
+    {
+      "sid": "s086",
+      "rms": 0.060191214084625244,
+      "peak": 0.42279052734375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "52ee37e611eedc4484a255f884097e29576bfb89719fcecf55c0485f5a3760d6",
+      "corrected_sha256": "26fc42874b30c94623ea0eb391b6a3891e1aea5d5c3d332d784e3f0916d99a18",
+      "alignment_score": 0.814,
+      "trim_offset": 0.5060997732426303,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.5,
+          5.24
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 81.95,
+        "f0_end_hz": 68.98,
+        "octave_fixed_n": 33
+      }
+    },
+    {
+      "sid": "s087",
+      "rms": 0.05956323817372322,
+      "peak": 0.36981201171875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "343169877b289c9ef36802700800634c0d4d055e50d59a4d9c497790b52a7019",
+      "corrected_sha256": "eee4b2fe20f0cf1cad3eee680b2c939ead2e395c6da7efa92180bdd00bcf982e",
+      "alignment_score": 0.7498,
+      "trim_offset": 0.4827664399092971,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.02,
+          4.63
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 91.78,
+        "f0_end_hz": 75.55,
+        "octave_fixed_n": 29
+      }
+    },
+    {
+      "sid": "s088",
+      "rms": 0.05881335958838463,
+      "peak": 0.3790283203125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "b69fa7ca93f7d7029a4cfba43f4f57a92378c52aff562090f63cd0326939be6b",
+      "corrected_sha256": "419aaaaa7a740634aa5a92608b5f6ee68f3c5240e7e4a8dde45e88e84051c1d1",
+      "alignment_score": 0.8359,
+      "trim_offset": 0.5218367346938776,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.795,
+          4.355
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 81.36,
+        "f0_end_hz": 106.48,
+        "octave_fixed_n": 29
+      }
+    },
+    {
+      "sid": "s089",
+      "rms": 0.05947057530283928,
+      "peak": 0.464599609375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "527d141b351584b964fdeaaef21e106aac7be04995370049875855fe3fad1e41",
+      "corrected_sha256": "05afe1f0729b9a1d7682048ea330581869ae50b34d18e7185d6d8413be16e90b",
+      "alignment_score": 0.9181,
+      "trim_offset": 0.5641269841269841,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          5.635,
+          6.03
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 102.0,
+        "f0_end_hz": 111.7,
+        "octave_fixed_n": 5
+      }
+    },
+    {
+      "sid": "s090",
+      "rms": 0.06344446539878845,
+      "peak": 0.327301025390625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "95e5fc2aa50cf56e31811c99c456b1e0fe873197a0283280427eb8ff5118460d",
+      "corrected_sha256": "4c44142cd7ffbbc1e2ef06d10127d1d9ac066a5fe9fd7cb48bcb65e6dbf626e0",
+      "alignment_score": 0.9117,
+      "trim_offset": 0.5041496598639456,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          2.565,
+          3.325
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 89.09,
+        "f0_end_hz": 72.75,
+        "octave_fixed_n": 44
+      }
+    },
+    {
+      "sid": "s091",
+      "rms": 0.06022075563669205,
+      "peak": 0.39788818359375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "40d00b43255c0089dc80a3b9a10d5a10af55ca4f633785378fd2d9ca67281d18",
+      "corrected_sha256": "32cf763c077c79618fd5b8dca8efc3a9ccd0e2d96798452d75a2b1a0a169a36e",
+      "alignment_score": 0.938,
+      "trim_offset": 0.501609977324263,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.36,
+          4.065
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 95.95,
+        "f0_end_hz": 68.53,
+        "octave_fixed_n": 4
+      }
+    },
+    {
+      "sid": "s092",
+      "rms": 0.05879240110516548,
+      "peak": 0.43408203125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "e4a984e5d457ecd54fad11498750ea14947cce0c0cb3df3450723d97b96a76f6",
+      "corrected_sha256": "97b79634df92f315a3b8390f817164b5108578691a8a749648cc1f7f9fa5ed74",
+      "alignment_score": 0.9547,
+      "trim_offset": 0.5175963718820862,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.185,
+          4.94
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 88.44,
+        "f0_end_hz": 74.89,
+        "octave_fixed_n": 22
+      }
+    },
+    {
+      "sid": "s093",
+      "rms": 0.06246154010295868,
+      "peak": 0.336090087890625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "847895f7592ba637339fa3aa6cb4d8ae2c36b2d7ec35bdcc6357711fefc18e6d",
+      "corrected_sha256": "707ced20760aaa59eb087f5417c524921506fdcac3e31e740e1a377c674ca42f",
+      "alignment_score": 0.9736,
+      "trim_offset": 0.468843537414966,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          6.22,
+          7.05
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 91.71,
+        "f0_end_hz": 67.32,
+        "octave_fixed_n": 22
+      }
+    },
+    {
+      "sid": "s094",
+      "rms": 0.06285473704338074,
+      "peak": 0.369354248046875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "6ffc06b873994765e696b8c1128e9a83f09d996d91e46a903e9e20f21db8a04c",
+      "corrected_sha256": "b3ea863f652295f2cd2818cb4953221eb291f3879f9c78fec0036094d44957ae",
+      "alignment_score": 0.943,
+      "trim_offset": 0.5063492063492063,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.63,
+          5.305
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 85.65,
+        "f0_end_hz": 93.26,
+        "octave_fixed_n": 2
+      }
+    },
+    {
+      "sid": "s095",
+      "rms": 0.06596311926841736,
+      "peak": 0.3800048828125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "8c798bc41d8d8cad203f70fe798961c5af214760e7aeb68793c8e032ef5836c1",
+      "corrected_sha256": "b6b10cd215a86454650b6f7216c53575aee39a36853fc25cc70ec1559c852ae4",
+      "alignment_score": 0.9225,
+      "trim_offset": 0.5065079365079365,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.425,
+          3.865
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 92.19,
+        "f0_end_hz": 61.49,
+        "octave_fixed_n": 1
+      }
+    },
+    {
+      "sid": "s096",
+      "rms": 0.05769141763448715,
+      "peak": 0.37261962890625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "1486bdb19513119729c3fceef59a9514d16759a0691aebf95253a6f59d2c1e99",
+      "corrected_sha256": "ce3fb8eec6f651d7cfa8bd82e53915e648957031c6c000dbb16c80e95dc02252",
+      "alignment_score": 0.9304,
+      "trim_offset": 0.5010430839002268,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          6.175,
+          6.845
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 86.75,
+        "f0_end_hz": 69.89,
+        "octave_fixed_n": 30
+      }
+    },
+    {
+      "sid": "s097",
+      "rms": 0.058129582554101944,
+      "peak": 0.37774658203125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "1aa048f1fc76ab92a48252f8933226762431a0a7d9ca3bf18c6a4a338a5616e1",
+      "corrected_sha256": "36bd9ec1e2e3d19448b15d3afa31cbc7acc650032e356cbcde7a0de48f57345b",
+      "alignment_score": 0.9581,
+      "trim_offset": 0.5436507936507936,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.1,
+          4.805
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 86.81,
+        "f0_end_hz": 70.6,
+        "octave_fixed_n": 5
+      }
+    },
+    {
+      "sid": "s098",
+      "rms": 0.06273125857114792,
+      "peak": 0.389068603515625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "18d9cc934d6b6fa658d648c05ee802096299406615fe43b1209efae363ecc224",
+      "corrected_sha256": "5ecac7d830155ba412031af61eecbab1d36729d5f7f32ff82499bad7c85a2701",
+      "alignment_score": 0.7337,
+      "trim_offset": 0.5584126984126984,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          5.42,
+          6.075
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 82.61,
+        "f0_end_hz": 69.09,
+        "octave_fixed_n": 42
+      }
+    },
+    {
+      "sid": "s099",
+      "rms": 0.06232813373208046,
+      "peak": 0.34844970703125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "431dbf8de27544585c5817fafba77c7a6dbfc687d9774691d6c75b09fa986632",
+      "corrected_sha256": "a65a27c63165aa5f0b05d2580ff4fa85c9a1afe509f5035d76eb726784fe2edd",
+      "alignment_score": 0.8296,
+      "trim_offset": 0.4275510204081633,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          2.565,
+          2.965
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 94.05,
+        "f0_end_hz": 67.06,
+        "octave_fixed_n": 4
+      }
+    },
+    {
+      "sid": "s100",
+      "rms": 0.06243467703461647,
+      "peak": 0.489990234375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "751ea2def1b42dd5f4cfe308c0c6c26921dc627f3ace1f4833027c3e9245066a",
+      "corrected_sha256": "f68cf9195d020089bdfb90d7dc17391b3cc7491f07365ca0094cd9380978cebe",
+      "alignment_score": 0.757,
+      "trim_offset": 0.41537414965986397,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.795,
+          5.11
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 87.46,
+        "f0_end_hz": 58.67,
+        "octave_fixed_n": 0
+      }
+    },
+    {
+      "sid": "s101",
+      "rms": 0.06327947229146957,
+      "peak": 0.447418212890625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "2ccdec0d9ce83ff572c0684bcff0cefbad6ca32f433df2c16c2cd16f98b0f46e",
+      "corrected_sha256": "23f36f52d9c8e83125c1cddbffe314bad7334a0e56191a509f63a39b9f2caac0",
+      "alignment_score": 0.9125,
+      "trim_offset": 0.45965986394557823,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          1.985,
+          2.585
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 89.88,
+        "f0_end_hz": 79.35,
+        "octave_fixed_n": 2
+      }
+    },
+    {
+      "sid": "s102",
+      "rms": 0.06295253336429596,
+      "peak": 0.370849609375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "12b281aa05588aafa489f9ca537f8c9aaf3527d2e98f4dabc6a3a3c6f581ffae",
+      "corrected_sha256": "904a1227310908c3284ddb993ac72034679bfa2b545ae6e785bb9fc11a116fbf",
+      "alignment_score": 0.9329,
+      "trim_offset": 0.4388888888888889,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          5.12,
+          5.84
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 95.36,
+        "f0_end_hz": 74.83,
+        "octave_fixed_n": 48
+      }
+    },
+    {
+      "sid": "s103",
+      "rms": 0.06174200400710106,
+      "peak": 0.35888671875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "d19343a45123c1fe9bdd3e74d7ef8c09d053dd4770ad2e74148cf2f96866a5a4",
+      "corrected_sha256": "f3352d907e6bdbc2ece499f55825f9166e80f51f97d58f6b8242375c2add9726",
+      "alignment_score": 0.9515,
+      "trim_offset": 0.4764172335600907,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.535,
+          5.205
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 87.14,
+        "f0_end_hz": 73.81,
+        "octave_fixed_n": 33
+      }
+    },
+    {
+      "sid": "s104",
+      "rms": 0.05928701534867287,
+      "peak": 0.38958740234375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "9519e373ed0bd0aca6aba4229dd54daf83b21515f7c843d0312dd9fb7b8f683d",
+      "corrected_sha256": "b4e884d6bc6f49769ab790047a1e77d433fc213cb3bdb59e57565a245c0bc779",
+      "alignment_score": 0.9235,
+      "trim_offset": 0.4957142857142857,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.045,
+          4.715
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 86.26,
+        "f0_end_hz": 71.48,
+        "octave_fixed_n": 4
+      }
+    },
+    {
+      "sid": "s105",
+      "rms": 0.06044388189911842,
+      "peak": 0.356964111328125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "e0d4f9501b604279cfd80f1db78c97c6de298e6e29fb1b17fea32a7b6a79becd",
+      "corrected_sha256": "b6178421c1ec7e9b09ca0ff4a4dd5b2d7f9552628eecebad59c6d196faaae609",
+      "alignment_score": 0.903,
+      "trim_offset": 0.5296825396825396,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.855,
+          4.295
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 83.73,
+        "f0_end_hz": 63.66,
+        "octave_fixed_n": 1
+      }
+    },
+    {
+      "sid": "s106",
+      "rms": 0.057688433676958084,
+      "peak": 0.355438232421875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "7883a8a2e3616ed8ad429c125938e2ee26defea592b73b40e57245ab0058a364",
+      "corrected_sha256": "84194a2be7cb5fca0c18c6a504709cbdc5a1b4d01ab1d0f65fb4cbedbededef9",
+      "alignment_score": 0.8442,
+      "trim_offset": 0.6452834467120181,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          6.175,
+          6.745
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 97.4,
+        "f0_end_hz": 79.66,
+        "octave_fixed_n": 1
+      }
+    },
+    {
+      "sid": "s107",
+      "rms": 0.058393694460392,
+      "peak": 0.3822021484375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "40c1cdfb0422813b7cece889cc8afb61344aeb190313e676dae41a478b8bb346",
+      "corrected_sha256": "3e039555757dc1050a897b2a39b1b326c3f2659acb218c049a0bb32b9cf97922",
+      "alignment_score": 0.8854,
+      "trim_offset": 0.43795918367346937,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          8.155,
+          8.54
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 91.35,
+        "f0_end_hz": 62.04,
+        "octave_fixed_n": 7
+      }
+    },
+    {
+      "sid": "s108",
+      "rms": 0.06936751306056976,
+      "peak": 0.41357421875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "f9db84a4cbf4a43a34a524de3c4efab1f3781d4f27c1d0cb24b88fc48b74e04e",
+      "corrected_sha256": "a71ddf7c800e7585bd0f35739c69cc7feed62096e9051a535b437a21ab33d8a5",
+      "alignment_score": 0.9232,
+      "trim_offset": 0.5067120181405895,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          2.545,
+          3.25
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 84.1,
+        "f0_end_hz": 73.08,
+        "octave_fixed_n": 31
+      }
+    },
+    {
+      "sid": "s109",
+      "rms": 0.06598621606826782,
+      "peak": 0.50390625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "f24be8903efc29fdcaad45d94a2e93624229541ecdd35171a3d177a82299deaa",
+      "corrected_sha256": "f755ca507978719dbd7dcbd8a6cf0a295712161fca0b3632b115042738633848",
+      "alignment_score": 0.8958,
+      "trim_offset": 0.47276643990929706,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          2.975,
+          3.36
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 86.23,
+        "f0_end_hz": 59.95,
+        "octave_fixed_n": 1
+      }
+    },
+    {
+      "sid": "s110",
+      "rms": 0.05610576644539833,
+      "peak": 0.3077392578125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "285ffdc8b7278dcd2835456112391129567a51d24a9a881f8f9ef6f7eee2041a",
+      "corrected_sha256": "f499f9e19108245c3b0eb77fb6d5fd32f6489609c2056594bc028e5d2f6be302",
+      "alignment_score": 0.8793,
+      "trim_offset": 0.3932426303854875,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          2.505,
+          2.875
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 82.4,
+        "f0_end_hz": 58.35,
+        "octave_fixed_n": 0
+      }
+    },
+    {
+      "sid": "s111",
+      "rms": 0.06373967230319977,
+      "peak": 0.376678466796875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "f4f94e3294735e3b006d81ce1527d9fa64234b8214f92e2c39e9cf4185f808a7",
+      "corrected_sha256": "5d4c17b65819c8787c90aa81bf76d5e143adf0932db0e5c54b2c1533a0e91d02",
+      "alignment_score": 0.938,
+      "trim_offset": 0.4305215419501134,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          1.135,
+          1.48
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 84.15,
+        "f0_end_hz": 87.98,
+        "octave_fixed_n": 10
+      }
+    },
+    {
+      "sid": "s112",
+      "rms": 0.06589297950267792,
+      "peak": 0.37646484375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "5a4ab3fd962c8aaeb9cdf8ef1dfaad54880f7ec1dcf8665d6319f349a22a1b44",
+      "corrected_sha256": "d9da4e8ae3759e6d0f1e1eb15df7e6df872f3624e62a20c00d83ee472c1db6d8",
+      "alignment_score": 0.9397,
+      "trim_offset": 0.5257823129251701,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          7.62,
+          8.49
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 88.8,
+        "f0_end_hz": 72.34,
+        "octave_fixed_n": 44
+      }
+    },
+    {
+      "sid": "s113",
+      "rms": 0.06662639230489731,
+      "peak": 0.404754638671875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "bdb3b8c13e4077d52a0b1b5487516d610fd15efd19b2d1455fcaf3ee60aeb61d",
+      "corrected_sha256": "ac4016d7ded262b603c1187cbc9d68358ea16a3a0364c8695f82916367237648",
+      "alignment_score": 0.9234,
+      "trim_offset": 0.3436054421768707,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.815,
+          4.24
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 110.7,
+        "f0_end_hz": 70.58,
+        "octave_fixed_n": 0
+      }
+    },
+    {
+      "sid": "s114",
+      "rms": 0.06572744250297546,
+      "peak": 0.42578125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "854ce4af522d31c0cf61f5ac0dc546e4fff4e3a3e6d03542e2bcf51ab9a9df3d",
+      "corrected_sha256": "94c425133a65d99ede31544dc48e703bbacb0fbea44028df04bc01e806b5ec2f",
+      "alignment_score": 0.8577,
+      "trim_offset": 0.4418140589569161,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.985,
+          5.67
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 125.89,
+        "f0_end_hz": 87.69,
+        "octave_fixed_n": 36
+      }
+    },
+    {
+      "sid": "s115",
+      "rms": 0.058117710053920746,
+      "peak": 0.36456298828125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "de4c8c9b850f3704617bec0d5c1ecd856408620a15b1ac6e7912ece1272e5a59",
+      "corrected_sha256": "e0a183ae0a540262e349a5f3e7f20db83f75f259254315d5d805b30b980fbfdc",
+      "alignment_score": 0.9395,
+      "trim_offset": 0.4599546485260771,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.735,
+          5.34
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 95.45,
+        "f0_end_hz": 60.31,
+        "octave_fixed_n": 6
+      }
+    },
+    {
+      "sid": "s116",
+      "rms": 0.06199949234724045,
+      "peak": 0.404266357421875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "4db685326c03e211526dd5ec3b2995335578286b94c07717b3ba840bff70be63",
+      "corrected_sha256": "7ab8cb232536687c1297f36a8d429ba671f44d45409485f4d34335dc9a733077",
+      "alignment_score": 0.9734,
+      "trim_offset": 0.5288662131519274,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.235,
+          4.905
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 84.47,
+        "f0_end_hz": 69.94,
+        "octave_fixed_n": 29
+      }
+    },
+    {
+      "sid": "s117",
+      "rms": 0.06595329940319061,
+      "peak": 0.378692626953125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "86a2bdda000848160bd6a20950b98c589e35b7562ee295b0b9f11956828b60e5",
+      "corrected_sha256": "93d21e70c8f7005d7f48485028dee8e2a5203a77ff53eb6b5d6583ba893445fd",
+      "alignment_score": 0.929,
+      "trim_offset": 0.47399092970521545,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          2.68,
+          3.24
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 91.61,
+        "f0_end_hz": 104.46,
+        "octave_fixed_n": 10
+      }
+    },
+    {
+      "sid": "s118",
+      "rms": 0.05856849253177643,
+      "peak": 0.40203857421875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "0522c61f76e2eff86e9eb93d9dc62b6c003393f696fb4fb48e9be0b6e0c9242b",
+      "corrected_sha256": "f1f5e499223c631bd99d45ce6908800fce7d306a154e6ec26877abaf9be50641",
+      "alignment_score": 0.8874,
+      "trim_offset": 0.41095238095238096,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          8.195,
+          9.035
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 97.62,
+        "f0_end_hz": 69.72,
+        "octave_fixed_n": 1
+      }
+    },
+    {
+      "sid": "s119",
+      "rms": 0.06168549880385399,
+      "peak": 0.44921875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "cee67b8f84ee28c11fa3d8a44bc08d24049486b3a3f6a453400192fbe2dad8d7",
+      "corrected_sha256": "a3378dda06e1b07b317894ed7684bac9169ee67a1ab304c657e7c0487dccaa05",
+      "alignment_score": 0.9496,
+      "trim_offset": 0.5302721088435374,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          5.415,
+          6.035
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 107.88,
+        "f0_end_hz": 66.61,
+        "octave_fixed_n": 15
+      }
+    },
+    {
+      "sid": "s120",
+      "rms": 0.05911092460155487,
+      "peak": 0.342437744140625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "0bdc54bd5eead35eec446ab49c0eac4ef52d843ce11705a013dbe33613bdc7f6",
+      "corrected_sha256": "1aa80b18259e6080c85df29bd3f86fc132565fa3ae5b506a859b8fbb93d2a5ca",
+      "alignment_score": 0.9681,
+      "trim_offset": 0.5853287981859411,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.325,
+          3.995
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 86.56,
+        "f0_end_hz": 74.47,
+        "octave_fixed_n": 31
+      }
+    },
+    {
+      "sid": "s121",
+      "rms": 0.060636136680841446,
+      "peak": 0.37103271484375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "c377fad4fedcbda78513b440f8289c7bb9bf049ff3892abc8663aaed0f40c992",
+      "corrected_sha256": "45cf4c7077c7997916edcf8150de06f5771425a2c7812d1ecb212cdfeb1b313c",
+      "alignment_score": 0.9592,
+      "trim_offset": 0.4651700680272109,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.06,
+          3.91
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 88.76,
+        "f0_end_hz": 72.28,
+        "octave_fixed_n": 0
+      }
+    },
+    {
+      "sid": "s122",
+      "rms": 0.06402522325515747,
+      "peak": 0.403411865234375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "d577870c6b42afe92b6dba575bcc1dca4c6d4ae82173143d6ba6edecde64dd5c",
+      "corrected_sha256": "ffbf0d323345f0fda127e5b15e7e7cd5df521f9ccbf2b047fa573d4881c903f7",
+      "alignment_score": 0.9245,
+      "trim_offset": 0.4951927437641723,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          6.39,
+          7.25
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 100.07,
+        "f0_end_hz": 75.27,
+        "octave_fixed_n": 33
+      }
+    },
+    {
+      "sid": "s123",
+      "rms": 0.05974392965435982,
+      "peak": 0.3831787109375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "0806c4347e554b73c131ec86ba65f3bbaa75ed849a4d9a39e7fb0b711f0248b0",
+      "corrected_sha256": "40622408f82bb773be9b300316965536c8d44747c6a9b1777230e740c2893243",
+      "alignment_score": 0.9321,
+      "trim_offset": 0.5874603174603175,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          9.11,
+          9.88
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 86.14,
+        "f0_end_hz": 82.67,
+        "octave_fixed_n": 26
+      }
+    },
+    {
+      "sid": "s124",
+      "rms": 0.06512667238712311,
+      "peak": 0.478759765625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "8a4a08bc7fa1fc966ddbcb397db7bbffa9481ee28993079d3cbda78d62091f12",
+      "corrected_sha256": "6786705f5dfb6df89c7b811de1ba96f9ab46e4eee6258b49e89622f1f475cc67",
+      "alignment_score": 0.9524,
+      "trim_offset": 0.5091383219954648,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          5.675,
+          6.425
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 86.95,
+        "f0_end_hz": 107.89,
+        "octave_fixed_n": 35
+      }
+    },
+    {
+      "sid": "s125",
+      "rms": 0.05940316990017891,
+      "peak": 0.350494384765625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "0fdc49932c8de85fb6fea2736edd792d18dfe3ca98bff42aaaa5d0a30d7e04bc",
+      "corrected_sha256": "651366622ac6a1016875989d861759178f8e616a4d11a79643bd0ec9ba80d835",
+      "alignment_score": 0.9454,
+      "trim_offset": 0.49705215419501136,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          3.915,
+          4.53
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 84.72,
+        "f0_end_hz": 67.84,
+        "octave_fixed_n": 5
+      }
+    },
+    {
+      "sid": "s126",
+      "rms": 0.07312902063131332,
+      "peak": 0.4599609375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "9ecc82fe819c7a3b97e2da0ecf04c1eb70cd8ed00375af42ec8a19d230da6ee2",
+      "corrected_sha256": "56d581302a6889404ffb844c33174f86aa6fe1dd25e6ce331cab128de5be5a22",
+      "alignment_score": 0.9428,
+      "trim_offset": 0.5409297052154195,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          4.17,
+          4.69
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 81.66,
+        "f0_end_hz": 87.39,
+        "octave_fixed_n": 17
+      }
+    },
+    {
+      "sid": "s127",
+      "rms": 0.0557570606470108,
+      "peak": 0.291595458984375,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "a26f5ef9163f4f4355d9a91f8a82cd74b63095e70a810a5f7206995f4248bcaa",
+      "corrected_sha256": "65b1ccd1cf075df92fe7f2805f6686d8e92856ebef9336ff2d9218392f19ba0e",
+      "alignment_score": 0.9326,
+      "trim_offset": 0.5003401360544217,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          1.755,
+          2.49
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 110.86,
+        "f0_end_hz": 71.64,
+        "octave_fixed_n": 3
+      }
+    },
+    {
+      "sid": "s128",
+      "rms": 0.0694509893655777,
+      "peak": 0.455291748046875,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "6b274c9ddcc466c0abf599c836d78dce193ae6748a0a288ab595817d62705903",
+      "corrected_sha256": "0aadd33dae8774936c376e9309eff90bbc41bf7f8c9ec00db66e106a2fe69944",
+      "alignment_score": 0.9395,
+      "trim_offset": 0.5334240362811792,
+      "final_fall": {
+        "applied": false,
+        "reason": "'니다' 로 끝나지 않는다",
+        "region_sec": null,
+        "semitones": null,
+        "f0_start_hz": null,
+        "f0_end_hz": null,
+        "octave_fixed_n": null
+      }
+    },
+    {
+      "sid": "s129",
+      "rms": 0.057815175503492355,
+      "peak": 0.324981689453125,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "ccf3126a6ffed941ad99cd8f569617f0b361e1a2da16a30ab541c5002b5db128",
+      "corrected_sha256": "6c3fc387c4668aa756bd82e5bbc92b4e58a3499ba43bd18830efbe86f76d93c7",
+      "alignment_score": 0.9457,
+      "trim_offset": 0.47267573696145126,
+      "final_fall": {
+        "applied": false,
+        "reason": "'니다' 로 끝나지 않는다",
+        "region_sec": null,
+        "semitones": null,
+        "f0_start_hz": null,
+        "f0_end_hz": null,
+        "octave_fixed_n": null
+      }
+    },
+    {
+      "sid": "s130",
+      "rms": 0.06745666265487671,
+      "peak": 0.44097900390625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "daaeb29270160ea7a55effe8e4f1aa247f7518bd05f0831db049a4247e147cfa",
+      "corrected_sha256": "8c4495d77287484934a90f148c509db7f9e7098a59f4a5c5c0b103ee217f0c1e",
+      "alignment_score": 0.9727,
+      "trim_offset": 0.42480725623582766,
+      "final_fall": {
+        "applied": false,
+        "reason": "'니다' 로 끝나지 않는다",
+        "region_sec": null,
+        "semitones": null,
+        "f0_start_hz": null,
+        "f0_end_hz": null,
+        "octave_fixed_n": null
+      }
+    },
+    {
+      "sid": "s131",
+      "rms": 0.06426995992660522,
+      "peak": 0.324462890625,
+      "clipped_fraction": 0.0,
+      "raw_sha256": "90312843c968840849df79eba727db6613e126800e1422b3d7887bf116ba6560",
+      "corrected_sha256": "d30e85df007399618715a43ab11c6bd5be1dbadadaedb343e02de23b69ac93de",
+      "alignment_score": 0.9763,
+      "trim_offset": 0.45918367346938777,
+      "final_fall": {
+        "applied": true,
+        "reason": null,
+        "region_sec": [
+          5.755,
+          6.295
+        ],
+        "semitones": 4.0,
+        "f0_start_hz": 91.64,
+        "f0_end_hz": 86.31,
+        "octave_fixed_n": 23
+      }
+    }
+  ],
+  "listening": {
+    "sentences_perceptually_reviewed": 0,
+    "status": "No perceptual listening tool available; signal and text checks do not establish listening approval."
+  },
+  "final_decoded_sample_peak": 0.8355345726013184,
+  "final_decoded_clipped_sample_count": 0,
+  "decoded_narration_sync_max_abs_sec": 0.0009070294784580499,
+  "decoded_narration_sync": [
+    {
+      "sid": "s000",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s001",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s002",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s003",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s004",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s005",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s006",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s007",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s008",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s009",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s010",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s011",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s012",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s013",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s014",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s015",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s016",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s017",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s018",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s019",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s020",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s021",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s022",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s023",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s024",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s025",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s026",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s027",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s028",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s029",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s030",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s031",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s032",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s033",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s034",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s035",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s036",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s037",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s038",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s039",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s040",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s041",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s042",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s043",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s044",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s045",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s046",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s047",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s048",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s049",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s050",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s051",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s052",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s053",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s054",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s055",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s056",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s057",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s058",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s059",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s060",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s061",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s062",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s063",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s064",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s065",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s066",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s067",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s068",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s069",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s070",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s071",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s072",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s073",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s074",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s075",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s076",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s077",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s078",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s079",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s080",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s081",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s082",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s083",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s084",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s085",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s086",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s087",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s088",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s089",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s090",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s091",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s092",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s093",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s094",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s095",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s096",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s097",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s098",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s099",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s100",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s101",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s102",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s103",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s104",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s105",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s106",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s107",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s108",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s109",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s110",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s111",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s112",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s113",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s114",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s115",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s116",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s117",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s118",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s119",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s120",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s121",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s122",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s123",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s124",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s125",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s126",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s127",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s128",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s129",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s130",
+      "lag_sec": 0.0009070294784580499
+    },
+    {
+      "sid": "s131",
+      "lag_sec": 0.0009070294784580499
+    }
+  ],
+  "audio_qa": {
+    "schema_version": 1,
+    "final_loudness": {
+      "I": -14.08,
+      "TP": -1.54,
+      "LRA": 2.7
+    },
+    "mix_peak": 0.9616,
+    "narration_rms_db": -17.78,
+    "music_rms_in_narration_db": -28.78,
+    "music_under_narration_db": -11.0,
+    "narration_seconds": 592.6,
+    "loudness_ok": true,
+    "true_peak_ok": true,
+    "music_level_ok": true,
+    "peak_ok": true,
+    "sentence_rms_db": {
+      "s000": -17.41,
+      "s001": -17.3,
+      "s002": -16.68,
+      "s003": -17.19,
+      "s004": -16.55,
+      "s005": -17.61,
+      "s006": -16.34,
+      "s007": -16.87,
+      "s008": -16.83,
+      "s009": -17.46,
+      "s010": -16.71,
+      "s011": -16.75,
+      "s012": -16.51,
+      "s013": -17.99,
+      "s014": -16.9,
+      "s015": -16.92,
+      "s016": -17.35,
+      "s017": -17.13,
+      "s018": -17.55,
+      "s019": -18.69,
+      "s020": -16.96,
+      "s021": -17.74,
+      "s022": -17.54,
+      "s023": -18.3,
+      "s024": -15.48,
+      "s025": -17.93,
+      "s026": -18.17,
+      "s027": -17.88,
+      "s028": -17.19,
+      "s029": -17.14,
+      "s030": -17.37,
+      "s031": -17.65,
+      "s032": -18.52,
+      "s033": -16.06,
+      "s034": -15.97,
+      "s035": -17.78,
+      "s036": -17.93,
+      "s037": -16.54,
+      "s038": -17.01,
+      "s039": -18.9,
+      "s040": -15.83,
+      "s041": -17.76,
+      "s042": -17.05,
+      "s043": -16.32,
+      "s044": -17.0,
+      "s045": -16.94,
+      "s046": -16.72,
+      "s047": -17.87,
+      "s048": -16.9,
+      "s049": -16.33,
+      "s050": -17.76,
+      "s051": -18.27,
+      "s052": -15.93,
+      "s053": -16.26,
+      "s054": -17.16,
+      "s055": -17.49,
+      "s056": -16.31,
+      "s057": -17.83,
+      "s058": -18.35,
+      "s059": -18.1,
+      "s060": -18.11,
+      "s061": -16.67,
+      "s062": -18.75,
+      "s063": -17.67,
+      "s064": -17.57,
+      "s065": -17.11,
+      "s066": -16.29,
+      "s067": -18.72,
+      "s068": -17.49,
+      "s069": -17.17,
+      "s070": -17.44,
+      "s071": -15.91,
+      "s072": -18.73,
+      "s073": -18.33,
+      "s074": -17.95,
+      "s075": -17.12,
+      "s076": -17.22,
+      "s077": -17.26,
+      "s078": -16.73,
+      "s079": -16.73,
+      "s080": -18.0,
+      "s081": -16.79,
+      "s082": -16.35,
+      "s083": -16.43,
+      "s084": -17.58,
+      "s085": -18.8,
+      "s086": -18.47,
+      "s087": -17.48,
+      "s088": -17.59,
+      "s089": -19.46,
+      "s090": -15.92,
+      "s091": -18.01,
+      "s092": -18.56,
+      "s093": -16.08,
+      "s094": -16.9,
+      "s095": -16.99,
+      "s096": -17.63,
+      "s097": -17.78,
+      "s098": -17.53,
+      "s099": -16.49,
+      "s100": -19.46,
+      "s101": -18.55,
+      "s102": -16.92,
+      "s103": -16.87,
+      "s104": -17.57,
+      "s105": -16.97,
+      "s106": -17.34,
+      "s107": -17.78,
+      "s108": -17.25,
+      "s109": -19.26,
+      "s110": -16.44,
+      "s111": -16.98,
+      "s112": -16.62,
+      "s113": -17.23,
+      "s114": -17.81,
+      "s115": -17.45,
+      "s116": -17.94,
+      "s117": -16.8,
+      "s118": -18.12,
+      "s119": -18.79,
+      "s120": -17.01,
+      "s121": -17.42,
+      "s122": -17.41,
+      "s123": -17.52,
+      "s124": -18.78,
+      "s125": -17.12,
+      "s126": -17.71,
+      "s127": -16.05,
+      "s128": -18.01,
+      "s129": -16.62,
+      "s130": -17.88,
+      "s131": -15.54
+    },
+    "sentence_rms_outliers": [],
+    "bed_bass_ratio_db": 14.45,
+    "bed_bass_ratio_before_db": 9.1,
+    "bed_bass_rise_db": 5.35,
+    "bed_bass_ok": true,
+    "bed_bass_note": null,
+    "method": "내레이션 스템 = plan npy 재배치(믹서 규칙) × 최소제곱 스케일, 음악 = mix − 내레이션(모노 평균)"
+  },
+  "audio_issues": [],
+  "audio_warnings": [],
+  "final": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 24,
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "sample_rate": 44100,
+    "channels": 2,
+    "duration_sec": 640.708333,
+    "av_duration_difference_sec": 0.020328000000063184,
+    "av_start_difference_sec": 0.0,
+    "full_audio_video_decode": "pass",
+    "size_bytes": 25179247,
+    "sha256": "9887374df62582a5464b9c088f2811219e358b80a9ed1c50778432286e7b9aa5"
+  },
+  "automated_pass": true,
+  "final_srt_sha256": "b4070812db36a837d3e48970bc49fa58c39e2a48134e3ab7b452af4fb6aad544",
+  "final_srt_identity_checked_at": "2026-10-27T01:12:32.780930+00:00"
+}

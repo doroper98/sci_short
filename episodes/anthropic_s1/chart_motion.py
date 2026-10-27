@@ -3,11 +3,13 @@ from episode_paths import EPISODE_ROOT, OSINT_ROOT
 import math
 import subprocess
 from pathlib import Path
+from functools import lru_cache
 from PIL import Image, ImageDraw, ImageFont
 
 OUT = EPISODE_ROOT
 FONTS = OUT / 'fonts'
 
+@lru_cache(maxsize=32)
 def font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont:
     return ImageFont.truetype(str(FONTS / ('IBMPlexSansKR-SemiBold.ttf' if bold else 'IBMPlexSansKR-Regular.ttf')), size)
 
@@ -19,6 +21,7 @@ def frame(t: float) -> Image.Image:
     d=ImageDraw.Draw(im)
     d.text((110,65),'매출의 성장, 영업손익의 전환',font=font(60,True),fill='#202d33')
     d.text((112,150),'2026년 1분기 → 2분기  |  단위: 십억 달러',font=font(31),fill='#56666e')
+    d.text((1615,61),'2026.10.26',font=font(26),fill='#56666e')
     d.rounded_rectangle((110,245,1050,850),radius=22,fill='#ffffff')
     d.rounded_rectangle((1090,245,1810,850),radius=22,fill='#ffffff')
     d.text((150,280),'매출',font=font(38,True),fill='#203137')
@@ -46,7 +49,7 @@ def frame(t: float) -> Image.Image:
             d.text((x-76,b+20 if val<0 else a-53),f'{val:+.3f}',font=font(35,True),fill='#354e53')
         d.text((x-48,790),name,font=font(30),fill='#354e53')
     d.text((112,850),'매출·영업손익은 서로 다른 척도입니다. 각 패널의 단위와 기준선을 확인하세요.',font=font(29),fill='#435c63')
-    d.text((112,976),'출처: Anthropic S-1 (2026-10-26), pp.147·157·160 — 연구자 전달 검증값',font=font(23),fill='#596b70')
+    d.text((112,976),'출처: Anthropic S-1 (2026-10-26), pp.147·157·160 · SEC 원문 직접 대조',font=font(23),fill='#596b70')
     d.text((112,1016),'내부 차트 모션 검수 · 최종 영상 아님 · 내레이션 및 원문 독립 대조 대기',font=font(23),fill='#68787c')
     return im
 

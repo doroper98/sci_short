@@ -11,12 +11,7 @@ from pydantic import BaseModel
 
 ROOT = EPISODE_ROOT
 sys.path.insert(0, str(OSINT_ROOT))
-# libcairo runtime is available, but pycairo headers are not; use its supported CFFI binding.
-try:
-    import cairo
-except ImportError:
-    import cairocffi as cairo
-    sys.modules['cairo']=cairo
+import cairo  # Actual pycairo is required; do not conceal a broken font environment.
 from script.tts import supertonic
 
 
@@ -62,6 +57,9 @@ def spoken(s: str) -> str:
 
 
 def main() -> None:
+    cfg=supertonic.config()
+    assert (cfg.voice_style,cfg.speed,cfg.total_step,cfg.seed_salt,cfg.revision)==('M3',.95,16,'v1','3cadd1ee6394adea1bd021217a0e650ede09a323')
+    supertonic.supertonic_assets.require_assets(cfg)
     rows=[]; chapter=-1
     for line in (ROOT/'narration_ko_v1.txt').read_text().splitlines():
         if line.startswith('['): chapter+=1;continue
@@ -73,13 +71,23 @@ def main() -> None:
             assert not re.search(r'[0-9A-Za-z]',tts),tts
             key=hashlib.sha1(tts.encode()).hexdigest()[:10]
             p=ROOT/'raw_voice'/f'{len(rows):03d}_{key}.mp3'
-            rows.append(Sentence(id=f's{len(rows):03d}',chapter=chapter,text=text,tts=tts,raw_mp3=str(p)))
+            rows.append(Sentence(id=f's{len(rows):03d}',chapter=chapter,text=text,tts=tts,raw_mp3=str(p.relative_to(ROOT))))
     (ROOT/'sentences.json').write_text(json.dumps({'schema_version':1,'status':'raw synthesis before required MMS alignment and final fall','sentences':[r.model_dump() for r in rows]},ensure_ascii=False,indent=2))
-    cfg=supertonic.config()
+    provenance=[]
     for i,row in enumerate(rows):
-        p=Path(row.raw_mp3)
-        if not p.exists():supertonic.synth_one(row.tts,p,cfg)
+        p=ROOT/row.raw_mp3
+        sidecar=p.with_suffix('.provenance.json')
+        inputs={'tts':row.tts,'config':cfg.model_dump(mode='json'),'cache_salt':supertonic.cache_salt(cfg)}
+        fingerprint=hashlib.sha256(json.dumps(inputs,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
+        old=json.loads(sidecar.read_text()) if sidecar.exists() else {}
+        reused=p.exists() and old.get('fingerprint')==fingerprint and old.get('audio_sha256')==hashlib.sha256(p.read_bytes()).hexdigest()
+        if not reused:
+            supertonic.synth_one(row.tts,p,cfg)
+        rec={'schema_version':1,'sid':row.id,'fingerprint':fingerprint,'audio_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),**inputs}
+        sidecar.write_text(json.dumps(rec,ensure_ascii=False,indent=2))
+        provenance.append({'sid':row.id,'fingerprint':fingerprint,'audio_sha256':rec['audio_sha256'],'reused':reused})
         print(f'RAW {i+1}/{len(rows)} {p.name}',flush=True)
+    (ROOT/'synthesis_provenance.json').write_text(json.dumps({'schema_version':1,'sentences':provenance,'voice_config':cfg.model_dump(mode='json')},ensure_ascii=False,indent=2))
 
 
 if __name__=='__main__':main()

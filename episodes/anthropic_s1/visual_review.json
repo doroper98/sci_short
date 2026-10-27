@@ -1,0 +1,384 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-10-27T01:12:32.780930+00:00",
+  "method": "Assistant visual inspection of decoded final-video contact sheets; sampled frames, not continuous playback.",
+  "frame_count": 58,
+  "representative_shots": 28,
+  "major_transition_samples": 20,
+  "long_caption_samples": 9,
+  "last_frame": true,
+  "observations": [
+    "Dates, units, sources and post-IPO qualifiers remain visible.",
+    "Sankey, accounting waterfall, cash waterfall, quarterly comparison and governance inspected.",
+    "Long captions do not cover the main charts; font fallback resolves the previously missing dash.",
+    "Final credits include AI voice disclosure and music attribution."
+  ],
+  "video_packet_sha256": "cc062edc7e16a0b480963ae51203102ebb519c398ca2665e22ea4ae49e679cef",
+  "audio_only_remix_preserves_video_packets": true,
+  "final_mp4_sha256": "9887374df62582a5464b9c088f2811219e358b80a9ed1c50778432286e7b9aa5",
+  "sheets": [
+    {
+      "path": "out/review_chapters.png",
+      "sha256": "7af4ae68edca809c07bbb46b9bfff4553d918f3c860b5aa41d0a06330471fd6e"
+    },
+    {
+      "path": "out/review_transitions.png",
+      "sha256": "6679edf1a20a39e8fea443e59beaa07177d9cec41d55d0721d5d70a5e7cbe26a"
+    },
+    {
+      "path": "out/review_long_captions.png",
+      "sha256": "e7546cd8490862eead4721192d5ba375a5d4c12bb904ca81c0be723f9f96273a"
+    }
+  ],
+  "frames": [
+    {
+      "group": "chapters",
+      "label": "00 opening",
+      "frame": 513,
+      "time": 21.375
+    },
+    {
+      "group": "chapters",
+      "label": "01 filing",
+      "frame": 1400,
+      "time": 58.333333333333336
+    },
+    {
+      "group": "chapters",
+      "label": "02 business",
+      "frame": 1988,
+      "time": 82.83333333333333
+    },
+    {
+      "group": "chapters",
+      "label": "03 mix",
+      "frame": 2505,
+      "time": 104.375
+    },
+    {
+      "group": "chapters",
+      "label": "04 loop",
+      "frame": 2896,
+      "time": 120.66666666666667
+    },
+    {
+      "group": "chapters",
+      "label": "05 revenue",
+      "frame": 3265,
+      "time": 136.04166666666666
+    },
+    {
+      "group": "chapters",
+      "label": "06 customers",
+      "frame": 3856,
+      "time": 160.66666666666666
+    },
+    {
+      "group": "chapters",
+      "label": "07 nrr",
+      "frame": 4384,
+      "time": 182.66666666666666
+    },
+    {
+      "group": "chapters",
+      "label": "08 runrate",
+      "frame": 4691,
+      "time": 195.45833333333334
+    },
+    {
+      "group": "chapters",
+      "label": "09 quarter",
+      "frame": 5157,
+      "time": 214.875
+    },
+    {
+      "group": "chapters",
+      "label": "10 sankey",
+      "frame": 5661,
+      "time": 235.875
+    },
+    {
+      "group": "chapters",
+      "label": "11 adjusted",
+      "frame": 6066,
+      "time": 252.75
+    },
+    {
+      "group": "chapters",
+      "label": "12 revenue",
+      "frame": 6387,
+      "time": 266.125
+    },
+    {
+      "group": "chapters",
+      "label": "13 accounting",
+      "frame": 6995,
+      "time": 291.4583333333333
+    },
+    {
+      "group": "chapters",
+      "label": "14 fairvalue",
+      "frame": 7854,
+      "time": 327.25
+    },
+    {
+      "group": "chapters",
+      "label": "15 cash",
+      "frame": 8570,
+      "time": 357.0833333333333
+    },
+    {
+      "group": "chapters",
+      "label": "16 liquidity",
+      "frame": 9230,
+      "time": 384.5833333333333
+    },
+    {
+      "group": "chapters",
+      "label": "17 commitments",
+      "frame": 10364,
+      "time": 431.8333333333333
+    },
+    {
+      "group": "chapters",
+      "label": "18 risk",
+      "frame": 11123,
+      "time": 463.4583333333333
+    },
+    {
+      "group": "chapters",
+      "label": "19 concentration",
+      "frame": 11550,
+      "time": 481.25
+    },
+    {
+      "group": "chapters",
+      "label": "20 risk",
+      "frame": 11819,
+      "time": 492.4583333333333
+    },
+    {
+      "group": "chapters",
+      "label": "21 safety",
+      "frame": 12145,
+      "time": 506.0416666666667
+    },
+    {
+      "group": "chapters",
+      "label": "22 concentration",
+      "frame": 12509,
+      "time": 521.2083333333334
+    },
+    {
+      "group": "chapters",
+      "label": "23 pbc",
+      "frame": 12812,
+      "time": 533.8333333333334
+    },
+    {
+      "group": "chapters",
+      "label": "24 governance",
+      "frame": 14124,
+      "time": 588.5
+    },
+    {
+      "group": "chapters",
+      "label": "25 opening",
+      "frame": 14599,
+      "time": 608.2916666666666
+    },
+    {
+      "group": "chapters",
+      "label": "26 ending",
+      "frame": 15027,
+      "time": 626.125
+    },
+    {
+      "group": "chapters",
+      "label": "27 credits",
+      "frame": 15326,
+      "time": 638.5833333333334
+    },
+    {
+      "group": "transitions",
+      "label": "quarter 10%",
+      "frame": 4795,
+      "time": 199.79166666666666
+    },
+    {
+      "group": "transitions",
+      "label": "quarter 35%",
+      "frame": 4924,
+      "time": 205.16666666666666
+    },
+    {
+      "group": "transitions",
+      "label": "quarter 60%",
+      "frame": 5054,
+      "time": 210.58333333333334
+    },
+    {
+      "group": "transitions",
+      "label": "quarter 85%",
+      "frame": 5183,
+      "time": 215.95833333333334
+    },
+    {
+      "group": "transitions",
+      "label": "sankey 10%",
+      "frame": 5311,
+      "time": 221.29166666666666
+    },
+    {
+      "group": "transitions",
+      "label": "sankey 35%",
+      "frame": 5436,
+      "time": 226.5
+    },
+    {
+      "group": "transitions",
+      "label": "sankey 60%",
+      "frame": 5561,
+      "time": 231.70833333333334
+    },
+    {
+      "group": "transitions",
+      "label": "sankey 85%",
+      "frame": 5686,
+      "time": 236.91666666666666
+    },
+    {
+      "group": "transitions",
+      "label": "accounting 10%",
+      "frame": 6517,
+      "time": 271.5416666666667
+    },
+    {
+      "group": "transitions",
+      "label": "accounting 35%",
+      "frame": 6688,
+      "time": 278.6666666666667
+    },
+    {
+      "group": "transitions",
+      "label": "accounting 60%",
+      "frame": 6858,
+      "time": 285.75
+    },
+    {
+      "group": "transitions",
+      "label": "accounting 85%",
+      "frame": 7029,
+      "time": 292.875
+    },
+    {
+      "group": "transitions",
+      "label": "cash 10%",
+      "frame": 8102,
+      "time": 337.5833333333333
+    },
+    {
+      "group": "transitions",
+      "label": "cash 35%",
+      "frame": 8269,
+      "time": 344.5416666666667
+    },
+    {
+      "group": "transitions",
+      "label": "cash 60%",
+      "frame": 8436,
+      "time": 351.5
+    },
+    {
+      "group": "transitions",
+      "label": "cash 85%",
+      "frame": 8603,
+      "time": 358.4583333333333
+    },
+    {
+      "group": "transitions",
+      "label": "governance 10%",
+      "frame": 13026,
+      "time": 542.75
+    },
+    {
+      "group": "transitions",
+      "label": "governance 35%",
+      "frame": 13418,
+      "time": 559.0833333333334
+    },
+    {
+      "group": "transitions",
+      "label": "governance 60%",
+      "frame": 13810,
+      "time": 575.4166666666666
+    },
+    {
+      "group": "transitions",
+      "label": "governance 85%",
+      "frame": 14203,
+      "time": 591.7916666666666
+    },
+    {
+      "group": "long_captions",
+      "label": "s027 51 chars",
+      "frame": 3118,
+      "time": 129.91666666666666
+    },
+    {
+      "group": "long_captions",
+      "label": "s036 50 chars",
+      "frame": 4179,
+      "time": 174.125
+    },
+    {
+      "group": "long_captions",
+      "label": "s030 49 chars",
+      "frame": 3590,
+      "time": 149.58333333333334
+    },
+    {
+      "group": "long_captions",
+      "label": "s085 49 chars",
+      "frame": 9819,
+      "time": 409.125
+    },
+    {
+      "group": "long_captions",
+      "label": "s019 48 chars",
+      "frame": 2232,
+      "time": 93.0
+    },
+    {
+      "group": "long_captions",
+      "label": "s061 48 chars",
+      "frame": 6941,
+      "time": 289.2083333333333
+    },
+    {
+      "group": "long_captions",
+      "label": "s107 48 chars",
+      "frame": 12288,
+      "time": 512.0
+    },
+    {
+      "group": "long_captions",
+      "label": "s009 47 chars",
+      "frame": 978,
+      "time": 40.75
+    },
+    {
+      "group": "long_captions",
+      "label": "s022 47 chars",
+      "frame": 2501,
+      "time": 104.20833333333333
+    },
+    {
+      "group": "long_captions",
+      "label": "last frame",
+      "frame": 15376,
+      "time": 640.6666666666666
+    }
+  ],
+  "perceptual_audio_reviewed_sentences": 0
+}

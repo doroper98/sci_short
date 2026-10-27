@@ -6,6 +6,8 @@
   "credits_sec": 10.0,
   "timing_reason": "Parent authorization: reduce excessive gaps for approximately 10-minute film; preserve M3 speed0.95 and all narration substance. Episode-local pacing only; repository rules unchanged.",
   "bgm": "music.zabriskie_patriarch",
+  "bgm_intensity": 0.57,
+  "bgm_intensity_reason": "Initial intensity 1.0 measured music at -6.12 dB relative to narration, outside original QA range [-13, -9]. Episode sound intensity reduced to 0.57 (about -4.88 dB); all original mixer rules preserved. Final measurement is in validation_results.json.",
   "bgm_reason": "Parent confirmed existing repository BGM satisfies user request; keep original mixer style, bass treatment, ducking and credits.",
-  "final_voice_status": "Await original MMS model or explicit acceptance of alternative boundary method; no silent omission or substitution."
+  "final_voice_status": "All 132 sentences aligned with original MMS; 128 nida targets corrected with original WORLD rules. See validation_results.json. s014 uses identical seeded lossless PCM to pass the unchanged alignment threshold."
 }

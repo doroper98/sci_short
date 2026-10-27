@@ -1,0 +1,661 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-10-27T00:52:00.682507+00:00",
+  "source_url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm",
+  "source_size_bytes": 14169264,
+  "source_sha256": "b6836006abac03a7ab0244b79b968d9bcecde9f49ada9b79be78546d427f541e",
+  "source_opened_directly": true,
+  "numeric_checks": [
+    {
+      "name": "annual_halfyear.revenue",
+      "table_index": 30,
+      "pass": true,
+      "observed": [
+        41,
+        386,
+        4585,
+        1163,
+        16286
+      ],
+      "expected": [
+        41,
+        386,
+        4585,
+        1163,
+        16286
+      ]
+    },
+    {
+      "name": "annual_halfyear.compute_infrastructure",
+      "table_index": 30,
+      "pass": true,
+      "observed": [
+        433,
+        2522,
+        7326,
+        2334,
+        8945
+      ],
+      "expected": [
+        433,
+        2522,
+        7326,
+        2334,
+        8945
+      ]
+    },
+    {
+      "name": "annual_halfyear.personnel",
+      "table_index": 30,
+      "pass": true,
+      "observed": [
+        95,
+        454,
+        1839,
+        538,
+        3152
+      ],
+      "expected": [
+        95,
+        454,
+        1839,
+        538,
+        3152
+      ]
+    },
+    {
+      "name": "annual_halfyear.bartz_settlement",
+      "table_index": 30,
+      "pass": true,
+      "observed": [
+        0,
+        0,
+        1500,
+        0,
+        0
+      ],
+      "expected": [
+        0,
+        0,
+        1500,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "annual_halfyear.sales_marketing_partnerships",
+      "table_index": 30,
+      "pass": true,
+      "observed": [
+        2,
+        43,
+        568,
+        120,
+        3168
+      ],
+      "expected": [
+        2,
+        43,
+        568,
+        120,
+        3168
+      ]
+    },
+    {
+      "name": "annual_halfyear.other_operating_admin",
+      "table_index": 30,
+      "pass": true,
+      "observed": [
+        62,
+        347,
+        1412,
+        306,
+        1714
+      ],
+      "expected": [
+        62,
+        347,
+        1412,
+        306,
+        1714
+      ]
+    },
+    {
+      "name": "annual_halfyear.operating_expense",
+      "table_index": 30,
+      "pass": true,
+      "observed": [
+        592,
+        3366,
+        12645,
+        3298,
+        16979
+      ],
+      "expected": [
+        592,
+        3366,
+        12645,
+        3298,
+        16979
+      ]
+    },
+    {
+      "name": "annual_halfyear.operating_result",
+      "table_index": 30,
+      "pass": true,
+      "observed": [
+        -551,
+        -2980,
+        -8060,
+        -2135,
+        -693
+      ],
+      "expected": [
+        -551,
+        -2980,
+        -8060,
+        -2135,
+        -693
+      ]
+    },
+    {
+      "name": "annual_halfyear.interest_income",
+      "table_index": 30,
+      "pass": true,
+      "observed": [
+        69,
+        106,
+        431,
+        115,
+        1111
+      ],
+      "expected": [
+        69,
+        106,
+        431,
+        115,
+        1111
+      ]
+    },
+    {
+      "name": "annual_halfyear.convertible_fair_value_result",
+      "table_index": 30,
+      "pass": true,
+      "observed": [
+        -1045,
+        -5434,
+        -34308,
+        -10942,
+        -72388
+      ],
+      "expected": [
+        -1045,
+        -5434,
+        -34308,
+        -10942,
+        -72388
+      ]
+    },
+    {
+      "name": "annual_halfyear.other_nonoperating",
+      "table_index": 30,
+      "pass": true,
+      "observed": [
+        -2,
+        0,
+        -8,
+        0,
+        -8757
+      ],
+      "expected": [
+        -2,
+        0,
+        -8,
+        0,
+        -8757
+      ]
+    },
+    {
+      "name": "annual_halfyear.tax_expense",
+      "table_index": 30,
+      "pass": true,
+      "observed": [
+        2,
+        1,
+        20,
+        7,
+        21
+      ],
+      "expected": [
+        2,
+        1,
+        20,
+        7,
+        21
+      ]
+    },
+    {
+      "name": "annual_halfyear.net_result",
+      "table_index": 30,
+      "pass": true,
+      "observed": [
+        -1531,
+        -8309,
+        -41965,
+        -12969,
+        -80748
+      ],
+      "expected": [
+        -1531,
+        -8309,
+        -41965,
+        -12969,
+        -80748
+      ]
+    },
+    {
+      "name": "annual_halfyear.operating_cashflow",
+      "table_index": 71,
+      "pass": true,
+      "observed": [
+        -1627,
+        -5692,
+        -2637,
+        -1513,
+        3929
+      ],
+      "expected": [
+        -1627,
+        -5692,
+        -2637,
+        -1513,
+        3929
+      ]
+    },
+    {
+      "name": "quarterly.revenue",
+      "table_index": 62,
+      "pass": true,
+      "observed": [
+        376,
+        787,
+        1382,
+        2040,
+        4731,
+        11555
+      ],
+      "expected": [
+        376,
+        787,
+        1382,
+        2040,
+        4731,
+        11555
+      ]
+    },
+    {
+      "name": "quarterly.compute_infrastructure",
+      "table_index": 62,
+      "pass": true,
+      "observed": [
+        944,
+        1390,
+        2047,
+        2945,
+        3387,
+        5558
+      ],
+      "expected": [
+        944,
+        1390,
+        2047,
+        2945,
+        3387,
+        5558
+      ]
+    },
+    {
+      "name": "quarterly.operating_result",
+      "table_index": 62,
+      "pass": true,
+      "observed": [
+        -935,
+        -1200,
+        -3089,
+        -2836,
+        -1667,
+        974
+      ],
+      "expected": [
+        -935,
+        -1200,
+        -3089,
+        -2836,
+        -1667,
+        974
+      ]
+    },
+    {
+      "name": "quarterly.net_result",
+      "table_index": 62,
+      "pass": true,
+      "observed": [
+        -6592,
+        -6377,
+        -12138,
+        -16858,
+        -14439,
+        -66309
+      ],
+      "expected": [
+        -6592,
+        -6377,
+        -12138,
+        -16858,
+        -14439,
+        -66309
+      ]
+    },
+    {
+      "name": "quarterly.adjusted_operating_result_non_gaap",
+      "table_index": 64,
+      "pass": true,
+      "observed": [
+        -830,
+        -1019,
+        -1284,
+        -1721,
+        -617,
+        2235
+      ],
+      "expected": [
+        -830,
+        -1019,
+        -1284,
+        -1721,
+        -617,
+        2235
+      ]
+    },
+    {
+      "name": "quarterly.gaap_margin_percent_rounded",
+      "table_index": 64,
+      "pass": true,
+      "observed": [
+        -249,
+        -152,
+        -224,
+        -139,
+        -35,
+        8
+      ],
+      "expected": [
+        -249,
+        -152,
+        -224,
+        -139,
+        -35,
+        8
+      ]
+    },
+    {
+      "name": "quarterly.adjusted_margin_percent_rounded",
+      "table_index": 64,
+      "pass": true,
+      "observed": [
+        -221,
+        -129,
+        -93,
+        -84,
+        -13,
+        19
+      ],
+      "expected": [
+        -221,
+        -129,
+        -93,
+        -84,
+        -13,
+        19
+      ]
+    },
+    {
+      "name": "cash.net_result",
+      "table_index": 113,
+      "pass": true,
+      "observed": -80748,
+      "expected": -80748
+    },
+    {
+      "name": "cash.operating_cashflow",
+      "table_index": 113,
+      "pass": true,
+      "observed": 3929,
+      "expected": 3929
+    },
+    {
+      "name": "cash.investing_cashflow",
+      "table_index": 113,
+      "pass": true,
+      "observed": -17181,
+      "expected": -17181
+    },
+    {
+      "name": "cash.investment_purchases",
+      "table_index": 113,
+      "pass": true,
+      "observed": -18972,
+      "expected": -18972
+    },
+    {
+      "name": "cash.investment_sales_maturities",
+      "table_index": 113,
+      "pass": true,
+      "observed": 2610,
+      "expected": 2610
+    },
+    {
+      "name": "cash.property_plant_equipment",
+      "table_index": 113,
+      "pass": true,
+      "observed": -482,
+      "expected": -482
+    },
+    {
+      "name": "cash.other_investing",
+      "table_index": 113,
+      "pass": true,
+      "observed": -337,
+      "expected": -337
+    },
+    {
+      "name": "cash.financing_cashflow",
+      "table_index": 113,
+      "pass": true,
+      "observed": 110774,
+      "expected": 110774
+    },
+    {
+      "name": "cash.preferred_share_financing",
+      "table_index": 113,
+      "pass": true,
+      "observed": 110432,
+      "expected": 110432
+    },
+    {
+      "name": "cash.noncash.share_based_compensation",
+      "table_index": 113,
+      "pass": true,
+      "observed": 2185,
+      "expected": 2185
+    },
+    {
+      "name": "cash.noncash.depreciation",
+      "table_index": 113,
+      "pass": true,
+      "observed": 97,
+      "expected": 97
+    },
+    {
+      "name": "cash.noncash.convertible_fair_value",
+      "table_index": 113,
+      "pass": true,
+      "observed": 72388,
+      "expected": 72388
+    },
+    {
+      "name": "cash.noncash.donation",
+      "table_index": 113,
+      "pass": true,
+      "observed": 126,
+      "expected": 126
+    },
+    {
+      "name": "cash.noncash.other_financial_instrument_fair_value",
+      "table_index": 113,
+      "pass": true,
+      "observed": 8720,
+      "expected": 8720
+    },
+    {
+      "name": "cash.noncash.other",
+      "table_index": 113,
+      "pass": true,
+      "observed": -7,
+      "expected": -7
+    },
+    {
+      "name": "cash.working_capital.accounts_receivable",
+      "table_index": 113,
+      "pass": true,
+      "observed": -4982,
+      "expected": -4982
+    },
+    {
+      "name": "cash.working_capital.prepaids_other",
+      "table_index": 113,
+      "pass": true,
+      "observed": 2094,
+      "expected": 2094
+    },
+    {
+      "name": "cash.working_capital.payables_accruals",
+      "table_index": 113,
+      "pass": true,
+      "observed": 2679,
+      "expected": 2679
+    },
+    {
+      "name": "cash.working_capital.leases",
+      "table_index": 113,
+      "pass": true,
+      "observed": -3,
+      "expected": -3
+    },
+    {
+      "name": "cash.working_capital.deferred_revenue",
+      "table_index": 113,
+      "pass": true,
+      "observed": 1380,
+      "expected": 1380
+    },
+    {
+      "name": "cash.ending_cash",
+      "table_index": 106,
+      "pass": true,
+      "observed": 112389,
+      "expected": 112389
+    },
+    {
+      "name": "cash.ending_short_term_investments",
+      "table_index": 106,
+      "pass": true,
+      "observed": 19262,
+      "expected": 19262
+    },
+    {
+      "name": "non_gaap.h1_2026.operating",
+      "table_index": 60,
+      "pass": true,
+      "observed": -693,
+      "expected": -693
+    },
+    {
+      "name": "non_gaap.h1_2026.sbc",
+      "table_index": 60,
+      "pass": true,
+      "observed": 2185,
+      "expected": 2185
+    },
+    {
+      "name": "non_gaap.h1_2026.donation",
+      "table_index": 60,
+      "pass": true,
+      "observed": 126,
+      "expected": 126
+    },
+    {
+      "name": "non_gaap.h1_2026.adjusted",
+      "table_index": 60,
+      "pass": true,
+      "observed": 1618,
+      "expected": 1618
+    },
+    {
+      "name": "non_gaap.fy2025.operating",
+      "table_index": 60,
+      "pass": true,
+      "observed": -8060,
+      "expected": -8060
+    },
+    {
+      "name": "non_gaap.fy2025.sbc",
+      "table_index": 60,
+      "pass": true,
+      "observed": 1165,
+      "expected": 1165
+    },
+    {
+      "name": "non_gaap.fy2025.donation",
+      "table_index": 60,
+      "pass": true,
+      "observed": 541,
+      "expected": 541
+    },
+    {
+      "name": "non_gaap.fy2025.adjusted",
+      "table_index": 60,
+      "pass": true,
+      "observed": -4854,
+      "expected": -4854
+    }
+  ],
+  "arithmetic_checks": {
+    "opex_components_all_periods": true,
+    "operating_result_all_periods": true,
+    "net_result_all_periods": true,
+    "cash_bridge": true,
+    "noncash_components": true,
+    "working_capital_components": true,
+    "investing_components": true,
+    "non_gaap_bridges": true
+  },
+  "context_phrase_checks": {
+    "NRR_cohort": true,
+    "NRR_ratio": true,
+    "NRR_exclusions": true,
+    "current_board": true,
+    "post_IPO_board": true,
+    "ClassT_four": true,
+    "A_F_three": true,
+    "ClassN_condition": true,
+    "Microsoft_period": true,
+    "Google_minimum": true,
+    "Google_extra_estimate": true,
+    "Amazon_period": true,
+    "SpaceXAI_cancel": true,
+    "Broadcom_lease": true
+  },
+  "scope": "Exact financial tables plus reviewed surrounding business/commitment/governance paragraphs. No news substituted.",
+  "pass": true
+}

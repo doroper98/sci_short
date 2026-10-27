@@ -4,6 +4,7 @@ from episode_paths import EPISODE_ROOT, OSINT_ROOT
 import math
 from pathlib import Path
 from typing import Callable
+from functools import lru_cache
 
 import yaml
 from PIL import Image, ImageDraw, ImageFont
@@ -13,6 +14,7 @@ F = yaml.safe_load((OUT / 'source/verified_financials.yaml').read_text())
 BG, INK, MUTED, TEAL, RED, GOLD = '#f0eee7', '#22343b', '#60747a', '#347b83', '#b96f57', '#a6804d'
 
 
+@lru_cache(maxsize=64)
 def font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont:
     return ImageFont.truetype(str(OUT / 'fonts' / ('IBMPlexSansKR-SemiBold.ttf' if bold else 'IBMPlexSansKR-Regular.ttf')), size)
 
@@ -113,7 +115,7 @@ def customer(t: float) -> Image.Image:
         if p>0:
             y=b[1]+20*(1-p); d.rounded_rectangle((b[0],y,b[2],b[3]),radius=24,fill=col)
             d.text((b[0]+34,y+25),label,font=font(38,True),fill=INK)
-    d.text((160,895),'세 집단을 더하지 않습니다. 더 큰 고객은 앞의 집단에 이미 포함됩니다.',font=font(30),fill=INK)
+    d.text((160,858),'세 집단을 더하지 않습니다. 더 큰 고객은 앞의 집단에 이미 포함됩니다.',font=font(28),fill=INK)
     return im
 
 
@@ -157,7 +159,7 @@ def governance(t: float) -> Image.Image:
         center(d,(910,290),'4자리 · 1공석 포함',27,TEAL,True)
         center(d,(910,705),'A+F가 나머지 3자리 선출',25,GOLD,True)
     if t>3:
-        d.rounded_rectangle((100,835,1810,920),radius=16,fill='#ffffff')
+        d.rounded_rectangle((100,835,1810,891),radius=16,fill='#ffffff')
         d.text((125,855),'Class A: 1주 1표 · 통제력 제한   |   T/F는 경제적 권리 없음 · 신탁은 일상 경영자가 아님',font=font(29),fill=INK)
     return im
 
