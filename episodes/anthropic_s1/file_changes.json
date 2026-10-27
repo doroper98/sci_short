@@ -48,24 +48,24 @@
       "path": "HANDOFF.txt",
       "before_size_bytes": 594,
       "before_sha256": "a1d88f51dfb07ba5a304aaf1bfda70eda37169c9c730c94b450ec120692afbab",
-      "after_size_bytes": 4208,
-      "after_sha256": "82775407051e165fde708ceaffde353799f91b1c1b985991ce6789426c18aebe",
+      "after_size_bytes": 4463,
+      "after_sha256": "60b403631edc59f7b659d9a353b47bb6af6952b9612db377ac533b939669d36c",
       "changed": true
     },
     {
       "path": "README.txt",
       "before_size_bytes": 2235,
       "before_sha256": "65aff58a54317c3532976c6a55414675a347b8ff65e0c61bc854094240377e60",
-      "after_size_bytes": 1686,
-      "after_sha256": "e443f7f60a613b7faba4e63b08610d0c1cdc69e0d62b2c86d391fa6320f98e23",
+      "after_size_bytes": 1941,
+      "after_sha256": "c6b21ac29f7cc59936baef3359bead8e64ddc4ca6471a4f337c44bc3e2eb58de",
       "changed": true
     },
     {
       "path": "START_HERE.md",
       "before_size_bytes": 1656,
       "before_sha256": "96a649bebf2469c18c69cdc56cc43d3f743bf0f38e98663c49496976efedaeea",
-      "after_size_bytes": 1598,
-      "after_sha256": "3453807f31a1b3dbccaeca191511a4cf986f21dc94525c13ab3dac91db0a94b4",
+      "after_size_bytes": 1791,
+      "after_sha256": "c3265637abeeb44aa92bfc08aa08f8b77d757dd1a6db2a1c40064a67294f2fc2",
       "changed": true
     },
     {
@@ -248,7 +248,7 @@
   "root_handoff": {
     "path": "../../HANDOFF.md",
     "before_sha256": "1e51ff740b4d058f5bbf602cbb02a973b37098bc261f6b984dbd9b9de01d747d",
-    "after_sha256": "6fc27cd01902d338afe1ce0b05b45c3300306b24a04186f579be3222458e0ad6"
+    "after_sha256": "7c1f8301b1203993b4e905ae423716b22ac70af71a055f90bd751bf4bfb4815e"
   },
   "manifest_self": "Current MANIFEST excluded from its own recursive hash."
 }

@@ -1,8 +1,8 @@
 {
   "schema_version": 2,
-  "status": "Locally completed video production; source and measurements preserved; perceptual listening 0/132 outstanding; no public upload or push.",
+  "status": "Source pushed on explicit user request; media upload to private draft release failed with HTTP 401; no public media release. See DELIVERY_STATUS.txt.",
   "baseline_commit": "0c87669c678f9cf00fecd92cca78bc182c945532",
-  "updated_at": "2026-10-27T01:12:32.780930+00:00",
+  "updated_at": "2026-10-27T01:41:30.102039+00:00",
   "files": [
     {
       "path": ".gitignore",
@@ -29,6 +29,14 @@
       "license_status": "Original contribution or factual/configuration data; no new blanket license assigned; external assets excluded."
     },
     {
+      "path": "DELIVERY_STATUS.txt",
+      "size_bytes": 1836,
+      "sha256": "dd9546f6aad51ed20dca1c204854e67c78d4c418143e579dba8f5689cf023e22",
+      "origin": "Assistant-authored verified push and media upload status",
+      "privacy": "Reviewed scoped text/code/metadata; local execution paths are documented intentionally; no credentials or full source HTML.",
+      "license_status": "Original contribution or factual/configuration data; no new blanket license assigned; external assets excluded."
+    },
+    {
       "path": "DEPENDENCIES_AND_RIGHTS.txt",
       "size_bytes": 4393,
       "sha256": "0f4d2b93e56f948f28a84b13b3f69e6a55ce93c6138388bcd5cb76254c5622e5",
@@ -46,16 +54,16 @@
     },
     {
       "path": "HANDOFF.txt",
-      "size_bytes": 4208,
-      "sha256": "82775407051e165fde708ceaffde353799f91b1c1b985991ce6789426c18aebe",
+      "size_bytes": 4463,
+      "sha256": "60b403631edc59f7b659d9a353b47bb6af6952b9612db377ac533b939669d36c",
       "origin": "Assistant-authored episode handoff status",
       "privacy": "Reviewed scoped text/code/metadata; local execution paths are documented intentionally; no credentials or full source HTML.",
       "license_status": "Original contribution or factual/configuration data; no new blanket license assigned; external assets excluded."
     },
     {
       "path": "README.txt",
-      "size_bytes": 1686,
-      "sha256": "e443f7f60a613b7faba4e63b08610d0c1cdc69e0d62b2c86d391fa6320f98e23",
+      "size_bytes": 1941,
+      "sha256": "c6b21ac29f7cc59936baef3359bead8e64ddc4ca6471a4f337c44bc3e2eb58de",
       "origin": "Assistant-created handoff documentation",
       "privacy": "Reviewed scoped text/code/metadata; local execution paths are documented intentionally; no credentials or full source HTML.",
       "license_status": "Original contribution or factual/configuration data; no new blanket license assigned; external assets excluded."
@@ -78,8 +86,8 @@
     },
     {
       "path": "START_HERE.md",
-      "size_bytes": 1598,
-      "sha256": "3453807f31a1b3dbccaeca191511a4cf986f21dc94525c13ab3dac91db0a94b4",
+      "size_bytes": 1791,
+      "sha256": "c3265637abeeb44aa92bfc08aa08f8b77d757dd1a6db2a1c40064a67294f2fc2",
       "origin": "Assistant-authored Korean entry point and copyable continuation prompt",
       "privacy": "Reviewed scoped text/code/metadata; local execution paths are documented intentionally; no credentials or full source HTML.",
       "license_status": "Original contribution or factual/configuration data; no new blanket license assigned; external assets excluded."
@@ -159,7 +167,7 @@
     {
       "path": "file_changes.json",
       "size_bytes": 10092,
-      "sha256": "0355d35a434772b16a58521ab7cf27df8aba25e63dfb78c6d300d31475019bbb",
+      "sha256": "8e83fd56b54ef693169083f77ff9525e891254322fd7bf7ece218ab9f3576400",
       "origin": "Assistant-authored production documentation or measured provenance; no asset bytes",
       "privacy": "Reviewed scoped text/code/metadata; local execution paths are documented intentionally; no credentials or full source HTML.",
       "license_status": "Original contribution or factual/configuration data; no new blanket license assigned; external assets excluded."

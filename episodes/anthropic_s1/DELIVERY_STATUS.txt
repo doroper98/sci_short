@@ -1,0 +1,24 @@
+전달 상태 — 2026-10-27 (Asia/Seoul)
+
+사용자의 명시적 push 요청에 따라 제작 소스·원고·설정·검증 결과를 원격에 푸시했다.
+브랜치: codex/anthropic-s1-completion-20261027
+https://github.com/doroper98/sci_short/tree/codex/anthropic-s1-completion-20261027
+제작 완료 커밋: 5fdef7e3e0a8c42622392165a032c19bed832ee1
+원격 refs/heads의 커밋 일치를 git ls-remote로 확인했다.
+
+영상은 Git 제외 대상이며 이 공개 브랜치에 포함하지 않았다.
+비공개 초안 릴리스에 final.mp4, final.srt, 검토 ZIP, 출처 문서를 첨부하려고 시도했다.
+GitHub API의 초안 생성은 성공했으나 uploads.github.com의 실제 파일 업로드가
+HTTP 401 Bad credentials로 실패했다. 확인 결과 첨부 파일은 0개였다.
+오해를 막기 위해 빈 초안 릴리스는 삭제했다. 영상 공개 발행은 하지 않았다.
+현재 환경은 네트워크 unrestricted/enforced이나, 업로드 서버 인증 성공을 뜻하지 않는다.
+프록시·TLS·인증 정보를 임의 변경하거나 다른 계정으로 우회하지 않았다.
+
+남은 파일은 로컬 out/final.mp4, out/final.srt, out/Anthropic_S1_KO_review.zip이다.
+실제 미디어를 원격으로 받으려면 uploads.github.com의 GitHub 릴리스 자산 업로드에
+유효한 인증이 환경에 설정된 뒤 초안 생성·첨부·재다운로드 해시 검사를 재개해야 한다.
+GitHub 브랜치의 Download ZIP은 소스만 포함하며 위 영상 ZIP과 다르다.
+
+기존 HANDOFF/README 및 검토 ZIP 안의 'push하지 않았다' 문구는 제작 완료 당시의
+기록이다. 현재 전달 상태는 이 문서를 우선한다. 기존 검토 ZIP은 제작 시점의 고정
+스냅샷으로 보존했다. 영상 SHA256은 validation_results.json의 final.sha256에 있다.

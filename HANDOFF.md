@@ -1,5 +1,7 @@
 # Codex 인수인계
 
+2026-10-27 전달 업데이트: Anthropic 에피소드 소스 브랜치를 사용자 요청으로 푸시했습니다. 미디어 파일 업로드는 인증 401로 실패했습니다. [현재 전달 상태](episodes/anthropic_s1/DELIVERY_STATUS.txt)를 우선합니다. 아래의 미푸시 문구는 이전 제작 완료 당시 기록입니다.
+
 ## 별도 Anthropic S-1 에피소드 — 2026-10-27
 
 사용자의 후속 요청으로 [Anthropic S-1 에피소드](episodes/anthropic_s1/START_HERE.md)의 실제 한국어 내레이션·BGM 영상과 동기 SRT를 로컬 생성했습니다. `episodes/anthropic_s1/out/final.mp4`는 1920×1080, 24fps, 10분 40.708초입니다. 실행·검증·해시는 해당 폴더의 `HANDOFF.txt`, `validation_results.json`, `MANIFEST.json`에 있습니다. 실제 청취 검토는 0/132문장으로 남아 있습니다. 미디어·외부 자산은 Git에서 제외했고 공개 업로드·push는 수행하지 않았습니다.
