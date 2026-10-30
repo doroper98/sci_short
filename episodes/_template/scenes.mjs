@@ -20,7 +20,8 @@ export const events = [];
 
 // Caption position per scene (baseline of the last caption line). Default ≈ 1480 for 1920 height.
 export const captionLayout = {
-  // phenomenon: {y: 1480},
+  // default: {plate: true},          // square backing plate for every scene (default is shadowed text, no plate)
+  // phenomenon: {y: 1480, plate: true},
 };
 
 export const titles = {

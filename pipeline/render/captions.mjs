@@ -12,8 +12,9 @@ export const CAPTION_DEFAULTS = Object.freeze({
   fade: 0.08,
   y: null,           // baseline of the LAST line; default = H - safe.bottom - 20 (≈1480 for 1920)
   x: null,           // centre x; default = centre of the safe column (keeps clear of action buttons)
-  plate: true,
-  padX: 26, padY: 16, radius: 18,
+  plate: false,      // false = text with a soft shadow only (default); true or 'square' = backing plate (square corners); 'round' = radius 18
+  padX: 26, padY: 16, radius: 0,
+  shadow: true,      // soft dark shadow behind the glyphs when there is no plate
 });
 
 /** Split '**marked**' spans: → {plain, ranges:[[a,b),…]} on whitespace-normalised text. */
@@ -69,7 +70,8 @@ const warned = new Set();
 /**
  * Draw the caption cue active at t. opts: see CAPTION_DEFAULTS plus {color, accent, plateColor, theme}.
  * Move captions per scene with opts.y when the phenomenon sits low in the frame.
- * Returns the plate rectangle {x,y,w,h} (or null) so scenes can avoid it.
+ * Returns the caption rectangle {x,y,w,h} (or null) so scenes can avoid it. Default: no plate, shadowed text;
+ * pass {plate: true} (square) or {plate: 'round'} per scene via captionLayout when the background is busy.
  */
 export function drawCaptions(stage, timeline, t, opts = {}) {
   const opt = {...CAPTION_DEFAULTS, ...opts};
@@ -91,8 +93,11 @@ export function drawCaptionText(stage, text, opts = {}) {
   ctx.save();
   ctx.globalAlpha *= opt.alpha ?? 1;
   if (opt.plate) {
-    rect(ctx, box.x, box.y, box.w, box.h, opt.radius, opt.plateColor || rgba(th.plate || '#06222E', 0.86));
-    rect(ctx, box.x, box.y, box.w, box.h, opt.radius, null, rgba(th.border || '#1C3A45', 0.9), 1.5);
+    const r = opt.plate === 'round' ? 18 : (opt.radius || 0);
+    rect(ctx, box.x, box.y, box.w, box.h, r, opt.plateColor || rgba(th.plate || '#06222E', 0.86));
+    rect(ctx, box.x, box.y, box.w, box.h, r, null, rgba(th.border || '#1C3A45', 0.9), 1.5);
+  } else if (opt.shadow) {
+    ctx.shadowColor = 'rgba(0,0,0,0.85)'; ctx.shadowBlur = 18; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 2;
   }
   ctx.textBaseline = 'alphabetic';
   L.lines.forEach((line, i) => drawRuns(stage, line, L.offsets[i], L.ranges, x, yLast - (L.lines.length - 1 - i) * lh,
