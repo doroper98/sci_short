@@ -1,5 +1,19 @@
 # 한국어 나레이션과 자막
 
+## 2026-10-30 구현 상태와 결정
+
+표준 음성은 이제 `pipeline/narration/`에서 직접 재현합니다. 실행 방법은 [pipeline/README.md](../pipeline/README.md), 절차는 [스킬](../skills/science-short/SKILL.md)에 있습니다.
+
+이전 세션에서 "osint_generator와 같은 목소리가 안 나온다"고 느낀 원인은 셋이었습니다.
+
+1. **모델 변환본**: Hugging Face 차단 때문에 석영 영상은 Sherpa-ONNX INT8 변환본(speaker id 7 추정)을 썼습니다. 원본 FP32 파일이 아닙니다.
+2. **억양 보정 미적용**: MMS 정렬 가중치를 받지 못해 글자 시각이 없었고, `니다` 끝 억양 하강을 적용할 수 없었습니다.
+3. **어미 변경**: 보정 대상을 없애기 위해 대본을 `~요/~죠`로 썼습니다. 결과적으로 톤이 어려졌습니다.
+
+이번 결정: 내레이션은 **합니다체**로 씁니다. 원본 FP32 모델은 사용자 GitHub 릴리스 미러에서 받고, MMS와 torch CPU 휠은 [허용 호스트](NETWORK_AND_ASSETS.md)를 열어 받습니다.
+정렬 없이 만든 음성은 `timeline.json`에 `degraded: true`로 남고 마감 단계가 기본적으로 거부합니다.
+
+
 ## 확인한 최종 음성
 
 사용자는 `doroper98/osint_generator`의 최종 목소리를 참고하라고 지시했습니다.
