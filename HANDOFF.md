@@ -2,6 +2,48 @@
 
 기록일: 2026-10-16, Asia/Seoul. 대상 저장소: https://github.com/doroper98/sci_short
 
+## 2026-10-30: 제작 스킬 고도화 — 표준 음성 복원, 공통 파이프라인, 3분 쇼츠 기준
+
+사용자 지시 요약: (1) osint_generator와 같은 목소리(튜닝 포함)가 나오지 않는 문제 해결, (2) 어떤 과학·공학 주제든 지시 후 약 1시간 안에 완성되는 스킬, (3) 장치 해부도 참고 영상(9~13번)의 메커니즘적 자세함 + 수정 영상의 배경지식 + 소화할 수 있는 호흡, (4) 최대 **3분**(처음 2분에서 변경), 세로 쇼츠, 11~16세 대상, 유치하지 않게, (5) 르포 보고서(`agents_reviewer`) 글꼴 체계.
+작업 브랜치 `claude/serene-brahmagupta-880vh6`는 `preview/quartz` 위에 쌓았다. PR: https://github.com/doroper98/sci_short/pull/1 (드래프트, main 미병합).
+
+### 음성이 어긋났던 세 원인과 해결
+
+1. Hugging Face 차단으로 석영 영상은 Sherpa-ONNX INT8 변환본(speaker 7 추정)을 썼다 → 사용자 GitHub 릴리스 미러(`prismatic_nplm_git`, SHA-256 `842e9f83…`)에서 **원본 FP32 8개 파일**을 받아 `config/voice-reference.json`의 SHA-1과 전부 대조한다.
+2. MMS 정렬 가중치가 없어 `니다` 끝 억양 보정을 못 했다 → 사용자가 `dl.fbaipublicfiles.com`·`download.pytorch.org`를 허용해 MMS(1.26GB)와 torch CPU를 받았다. 정렬·보정·원음 기준 트림을 원 저장소 고정 커밋 `131db009`(script/tts는 7.4.0 제작 커밋 `7d85942e`와 동일)에서 그대로 옮겼다.
+3. 보정 대상을 피하려고 어미를 `~요/~죠`로 썼다 → 내레이션은 **합니다체**로 확정.
+
+구현: `pipeline/narration/` (README에 설치·네트워크 우회 포함). 테스트 119개 통과. 기본 모드 스모크: 3문장 44초, 정렬 점수 0.89~0.96, 니다 문장 2/2 보정. 두 번 실행 시 `narration.wav` 바이트 동일.
+`--skip-alignment`는 명시적 열화 모드이며 `timeline.degraded: true`로 남고 `finish.py`가 기본적으로 거부한다.
+
+### 공통 제작 도구와 에피소드 구조
+
+- `pipeline/render/` (Node, @napi-rs/canvas): 1080×1920 무대, 3D 투영·구·지시선·눈금, 자막(글자 시각 기반 큐, 하단 안전 영역 위), 헤더·진행바·엔드카드, 테마(기본 `noturno`), ffmpeg 인코딩, 검토 정지화면·컨택트 시트. 글꼴은 `fetch_fonts.py`로 GmarketSans(제목)·Noto Sans KR(본문)을 받는다. 바이너리는 Git 제외, 해시는 `assets/fonts/fonts-manifest.json`.
+- `pipeline/audio/`: 사건 기반 설명용 음향(`sfx.py`, 화면 사건과 2ms 이내 일치 검사), 말소리 아래 더킹 믹스(`mix.py`), 2-pass loudnorm 마감과 validation.json(`finish.py`, 180초 초과·degraded 거부).
+- `pipeline/validate.py`: 규격·자막·타임라인 정합 19항목.
+- `pipeline/new_episode.py <slug>` → `episodes/<slug>/{brief.md, script.json, scenes.mjs, sound.json, render.mjs, run.sh}`. `run.sh`가 narrate → stills → render → sfx → mix → finish → validate를 순서대로 돌린다.
+- 타임라인 계약(v1)은 `pipeline/README.md`에 있다. 자막은 `timeline.captions`에서만 그린다.
+
+통합 테스트(2026-10-30): 템플릿 대본 5문장(얼음이 뜨는 이유, 합니다체)을 실제 M3 음성으로 합성해 전 단계 실행. 20.3초, 총 90초 소요(합성·정렬 약 50초, 렌더 24fps), 검증 19/19 PASS, 니다 문장 5/5 보정 적용, 정렬 점수 0.89~0.97. 정지화면 12장과 최종 MP4 프레임 4장을 직접 확인했다. **직접 청취·휴대전화 재생은 미수행.** 결과물은 사용자에게 채팅으로 전달했고 Git에는 넣지 않았다.
+
+### 기준 문서
+
+- `docs/EPISODE_FLOW.md`: 비트 구조(훅 → 기원·배경 → 본질 → 메커니즘 → 현상·사례 → 오해 → 한 줄), 시간 예산(권장 150~170초), 호흡 수치(6.5음절/초 기준 750~850음절), 메커니즘 비트의 3단 계기판·추적 표식, 유치함 금지 목록, 글꼴·테마.
+- `skills/science-short/SKILL.md`: 1시간 제작 절차. `.claude/skills/science-short`는 이곳을 가리키는 심볼릭 링크.
+- `docs/NETWORK_AND_ASSETS.md`: 허용 호스트와 확인 결과. 추가로 `download-r2.pytorch.org`를 열면 pip 한 줄로 torch 설치 가능.
+- `docs/REFERENCE_ANALYSIS.md` 말미: 장치 해부도 계열(9~13번) 공통 문법과 편별 관찰.
+
+### 남은 한계와 다음 작업
+
+1. 청취 검증 0건. 끝 억양(특히 f0가 60Hz 하한 아래로 내려간 문장), 숫자·단위 발음("이 점 사오", "기가헤르츠")을 사람이 들어야 한다.
+2. 첫 실제 에피소드 미제작. 스킬 절차대로 주제 하나를 받아 1시간 안에 완주하며 시간 예산과 양식을 검증한다.
+3. 템플릿 장면은 예시다. 비교 패널의 얼음 분자 배치가 격자 장면과 일치하지 않는 등 과학 검수 대상이 아니다.
+4. MMS 가중치는 CC BY-NC 4.0. 공개·수익화 범위를 정할 때 재검토한다. GmarketSans 약관도 재배포 전 확인한다.
+5. 안전 영역 수치(하단 420px, 우측 140px)는 추정값이다. 실제 쇼츠·릴스 앱에서 확인해 조정한다.
+6. 렌더 속도 약 24fps는 가벼운 템플릿 기준이다. 밀도 높은 장면은 더 느릴 수 있으므로 핵심 구간 정지화면을 먼저 뽑는다.
+
+아래는 이전 시점의 기록이다.
+
 ## 2026-10-24: 한국어 석영 결정 성장 영상
 
 사용자는 광물, 특히 수정·석영의 결정 성장 과정을 음성 나레이션과 자막이 들어간 과학 영상으로 요청했다. 이번 영상은 **한국어**로 명시했다. 이전 영어 요청을 이번 영상의 언어 선호로 다시 적용하지 않는다.

@@ -1,0 +1,8 @@
+# Audio + font tooling for pipeline/audio and pipeline/render/fetch_fonts.py (Python 3.13).
+# venv lives outside the repo:  python3 -m venv ~/.venv-scishort-render && ~/.venv-scishort-render/bin/pip install -r pipeline/audio/requirements.txt
+numpy==2.5.4
+scipy==1.18.1
+soundfile==0.14.0
+fonttools==4.68.0
+# tests only
+pytest==9.2.0

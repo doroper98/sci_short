@@ -1,60 +1,68 @@
 # sci_short
 
-아이가 과학 현상을 직관적으로 이해할 수 있는 **약 60~90초 한국어 과학 영상**을 만드는 프로젝트입니다.
-현상의 작동 과정과 공간 관계가 보이는 밀도 있는 애니메이션, 과학을 설명하는 소리, 한국어 나레이션과 자막을 함께 설계합니다.
+어떤 과학·공학 주제든 **최대 3분, 1080×1920 세로 쇼츠**의 한국어 과학 영상으로 만드는 저장소입니다.
+대상은 초등학교 고학년부터 고등학교 저학년(약 11~16세)입니다. 장치 해부도 수준의 메커니즘 자세함, 이해를 돕는 배경지식, 소화할 수 있는 호흡을 함께 설계하고, 유치하지 않은 톤을 유지합니다.
 
-현재는 **참고자료·제작 기준과 한국 전력 하루 영상 시제품**이 있습니다. [시제품 실행 방법과 한계](samples/korea-power-day/README.md)를 참고하세요. 내레이션과 현상에 연결된 설명용 음향은 해당 시제품에 아직 구현하지 않았습니다.
+현재 상태(2026-10-30): **표준 음성 파이프라인과 공통 제작 도구가 작동하며 통합 테스트를 통과했습니다.** 첫 실제 에피소드는 아직 만들지 않았습니다. 상세는 [HANDOFF.md](HANDOFF.md).
 
-최신 완성 영상: [수정은 어떻게 자랄까?](previews/quartz/README.md) — 약 1분 54초, 한국어 M3 내레이션·한국어 자막·결정 성장과 연결된 설명용 소리를 포함합니다. [제작 코드와 재현 방법](samples/quartz/README.md)도 보존했습니다.
-
-추가 제작: [태양·노을 영어 영상](samples/sunlight-color/README.md)의 1분 43초 검토본에는 영어 자막과 현상에 연결된 음향이 있습니다. 영어 내레이션은 모델 다운로드 제한으로 아직 대기 중입니다.
-
-## Codex에서 시작하기
+## 시작하기
 
 1. [AGENTS.md](AGENTS.md) — 작업 범위와 이어가기 원칙
-2. [HANDOFF.md](HANDOFF.md) — 확정 사항, 미정 사항, 다음 작업
-3. [참고 영상 분석](docs/REFERENCE_ANALYSIS.md) — 7개 영상의 장면·장점·주의점
-4. [유연한 화면 설계](docs/CREATIVE_DIRECTION.md) — 주제에 따라 표현을 선택하는 방법
-5. [한국어 음성·자막](docs/NARRATION_AND_CAPTIONS.md) — 확인된 표준 음성과 동기화 방향
-6. [애니메이션 품질](docs/ANIMATION_QUALITY.md) — 설명의 밀도, 공간·움직임, 실제 렌더 검토
-7. [과학을 설명하는 소리](docs/SOUND_DESIGN.md) — 원인과 결과를 귀로도 이해시키는 설계
+2. [HANDOFF.md](HANDOFF.md) — 현재 상태, 결정 사항, 남은 한계
+3. [에피소드 구성](docs/EPISODE_FLOW.md) — 기원·배경 → 본질 → 메커니즘 → 현상·사례 → 한 줄 결론, 시간 예산과 호흡
+4. [제작 스킬](skills/science-short/SKILL.md) — 주제 지시 후 약 1시간 안에 완성하는 절차
+5. [파이프라인 안내](pipeline/README.md) — 도구, 타임라인 계약, 단계별 실행
+6. [네트워크·자산](docs/NETWORK_AND_ASSETS.md) — 허용해야 할 호스트와 모델·글꼴 출처
+7. [한국어 음성·자막](docs/NARRATION_AND_CAPTIONS.md) — 표준 음성 근거와 구현 상태
+8. [애니메이션 품질](docs/ANIMATION_QUALITY.md), [과학을 설명하는 소리](docs/SOUND_DESIGN.md), [화면 설계](docs/CREATIVE_DIRECTION.md)
+9. [참고 영상 분석](docs/REFERENCE_ANALYSIS.md) — 현상 설명 계열 1~8번, 장치 해부도 계열 9~13번
 
-원본 영상은 [references/videos](references/videos)에 실제 파일로 들어 있습니다. 채팅의 임시 첨부 경로나 외부 다운로드에 의존하지 않습니다.
-빠르게 훑으려면 [전체 비교 이미지](references/contact-sheets/overview.jpg)와 [참고자료 안내](references/README.md)를 보세요.
+## 한 편 만들기
 
-## 확정된 방향
+```bash
+python pipeline/narration/fetch_assets.py --all     # Supertonic 3 FP32 + MMS (처음 한 번)
+python pipeline/render/fetch_fonts.py               # GmarketSans + Noto Sans KR (처음 한 번)
+python pipeline/new_episode.py <slug> --title "제목"
+#   episodes/<slug>/brief.md → script.json → scenes.mjs → sound.json 작성
+episodes/<slug>/run.sh                               # narrate → stills → render → sfx → mix → finish → validate
+```
 
-- 아이도 이해할 수 있는 직관적인 과학 설명, 길이는 약 1분~1분 30초.
-- 한국어 나레이션은 `doroper98/osint_generator`에서 최종 채택한 목소리·억양을 참고.
-- 한국어 자막을 적절하게 넣고 실제 발화와 화면 변화에 맞춤.
-- 다양한 과학 주제를 다룰 수 있도록 화면 구성·장면 수·표현 방식을 획일적으로 고정하지 않음.
-- 입체감 있는 공간에서 현상의 작동 과정을 보여주고, 관찰·원인·비교가 이어지며 설명의 밀도를 높임.
-- 화면과 소리를 같은 사건·물리 모형·시간표에 연결하고 중요한 차이를 듣는 여유를 확보함.
+가상환경과 설치 방법은 [pipeline/narration/README.md](pipeline/narration/README.md)와 [pipeline/README.md](pipeline/README.md)에 있습니다.
 
-음성 기준은 **Supertonic 3 남성 M3, speed 0.95 + 문장 끝 억양 보정**입니다.
-단순 M3 원음과 최종 후처리 음성을 구분하세요. [기준값 스냅샷](config/voice-reference.json)은 실행 설정이 아닌 재현을 위한 참조 자료입니다.
+## 확정된 기준
+
+- **음성**: Supertonic 3 남성 M3 ×0.95 + MMS 강제 정렬 + `니다` 문장 끝 억양 보정. `doroper98/osint_generator`의 최종 음성과 같은 코드·설정·모델 파일입니다. 내레이션은 합니다체.
+- **자막**: 실제 음성의 글자 시각에 맞춘 큐. 화면의 핵심 현상을 가리지 않도록 장면별 위치 조정.
+- **화면**: 하나의 무대, 전체 단면 → 번호 붙인 확대 → 측정값 그래프의 3단 계기판, 역할 색 고정, 시간 배율·단순화를 화면에 선언.
+- **소리**: 화면 사건과 같은 시간표에서 생성한 설명용 음향. 핵심 비교 구간에서 음악을 비움.
+- **글꼴·테마**: GmarketSans(제목)·Noto Sans KR(본문), 기본 테마 `noturno`. `agents_reviewer` 르포 템플릿 기준.
+- **길이**: 최대 180초, 권장 150~170초. 음성 가속 금지.
 
 ## 구조
 
 ```text
-AGENTS.md                         Codex 작업 안내
+AGENTS.md                         작업 안내
 HANDOFF.md                        현재 상태와 다음 작업
-docs/REFERENCE_ANALYSIS.md        영상별 분석과 관찰 한계
-docs/CREATIVE_DIRECTION.md        주제별 시각 설계 방향
+skills/science-short/SKILL.md     1시간 제작 절차
+docs/EPISODE_FLOW.md              구성·호흡·톤 기준
+docs/NETWORK_AND_ASSETS.md        허용 호스트와 자산 출처
+docs/NARRATION_AND_CAPTIONS.md    음성 근거·후처리·자막
 docs/ANIMATION_QUALITY.md         밀도·입체감·움직임과 결과 검토
 docs/SOUND_DESIGN.md              과학을 설명하는 음향 설계
-docs/NARRATION_AND_CAPTIONS.md    음성 근거·후처리·자막
+docs/CREATIVE_DIRECTION.md        주제별 시각 설계 방향
+docs/REFERENCE_ANALYSIS.md        참고 영상 13편 분석
 config/voice-reference.json       출처 커밋에 고정한 음성 기준값
-references/manifest.json          원본 파일명·영상 정보·SHA-256
-references/videos/               초기 MP4 7개와 추가 천둥 참고
-references/contact-sheets/       시간표시가 있는 장면 모음
-references/narration/            기존 최종 영상의 음성 참고 발췌
-references/SHA256SUMS             보관 자산의 무결성 확인값
-templates/episode-brief.md        필요에 맞게 바꾸는 기획 메모 양식
-samples/korea-power-day/          전력 하루 시제품·모형·자산·실행 안내
+pipeline/narration/               표준 음성 합성·정렬·억양 보정·자막 큐
+pipeline/render/                  세로 무대·그리기·자막·인코딩 (Node)
+pipeline/audio/                   설명용 음향·믹스·마감
+pipeline/validate.py              완성본 검증
+pipeline/new_episode.py           에피소드 스캐폴드
+episodes/_template/               에피소드 양식(brief, script, scenes, sound, run.sh)
+assets/fonts/                     글꼴 해시 목록(바이너리는 받아서 사용)
+references/                       참고 영상 13편·장면 모음·음성 발췌·무결성 확인값
+previews/, samples/               이전 시제품(석영·전력·태양)과 그 제작 코드
+templates/episode-brief.md        기획 메모 양식
 ```
 
 자산 확인은 저장소 루트에서 `sha256sum -c references/SHA256SUMS`로 할 수 있습니다.
-3번 영상은 원본 말미에 디코딩 경고가 있습니다. 원본을 수정하지 않고 보존했으며 상세는 manifest와 분석 문서에 기록했습니다.
-
-이 저장소의 참고 영상은 스타일·설명 방식 연구용입니다. 파일 포함 자체가 원본 영상·음악·로고의 재배포나 완성작 재사용 권리를 새로 부여하지는 않습니다.
+모델 가중치·글꼴 바이너리·가상환경·출력물은 Git에 넣지 않습니다. 참고 영상은 스타일·설명 방식 연구용이며 재배포 권리를 부여하지 않습니다.
