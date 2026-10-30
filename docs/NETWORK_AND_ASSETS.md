@@ -19,10 +19,13 @@ Codex 환경은 정책이 다를 수 있으므로 새 환경에서는 아래 표
 
 | 호스트 | 용도 | 이 세션 상태 | 필수 여부 |
 |---|---|---|---|
-| `dl.fbaipublicfiles.com` | MMS_FA `model.pt` (1,262,047,414 B, SHA-1 `0300fd9a…`) | 403 차단 | **필수** |
-| `download.pytorch.org` | `torch==2.8.0+cpu`, `torchaudio==2.8.0+cpu` 휠 | 403 차단 | **필수**에 가깝다. PyPI 기본 휠은 CUDA 포함으로 수 GB |
-| `huggingface.co`, `cdn-lfs.huggingface.co` | Supertonic 3 원본(revision `3cadd1ee…`) | 403 차단 | 선택. 아래 GitHub 미러로 대체 가능 |
-| `cdn.jsdelivr.net` | 르포 템플릿이 쓰는 GmarketSans woff | 403 차단 | 선택. `raw.githubusercontent.com`의 원 저장소로 대체 |
+| `dl.fbaipublicfiles.com` | MMS_FA `model.pt` (1,262,047,414 B, SHA-1 `0300fd9a…`) | 2026-10-30 허용됨. 다운로드 47초 | **필수** |
+| `download.pytorch.org` | `torch==2.8.0+cpu`, `torchaudio==2.8.0+cpu` 휠 인덱스 | 2026-10-30 허용됨 | **필수**. PyPI 기본 휠은 CUDA 포함으로 수 GB |
+| `download-r2.pytorch.org` | 위 인덱스가 실제 휠 파일을 가리키는 호스트 | 403 차단 | **필수에 가깝다.** 막혀 있으면 `download.pytorch.org`의 같은 경로를 curl로 받아 로컬 설치(`pipeline/narration/README.md`) |
+| `huggingface.co`, `us.aws.cdn.hf.co` | Supertonic 3 원본(revision `3cadd1ee…`). 대용량 파일은 `us.aws.cdn.hf.co`로 리디렉션 | 전자 허용, 후자 403 | 선택. GitHub 미러로 대체 가능 |
+| `cdn.jsdelivr.net` | 르포 템플릿이 쓰는 GmarketSans woff | 2026-10-30 허용됨 | 선택. `raw.githubusercontent.com`의 원 저장소로도 가능 |
+
+사용자가 2026-10-30에 `dl.fbaipublicfiles.com`, `download.pytorch.org`, `huggingface.co`, `cdn.jsdelivr.net`을 허용했고 같은 날 접속을 확인했습니다. 추가로 `download-r2.pytorch.org`를 허용하면 pip 한 줄로 torch를 설치할 수 있습니다.
 
 ## 이미 허용되어 쓰고 있는 호스트
 
