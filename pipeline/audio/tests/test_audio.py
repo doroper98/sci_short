@@ -130,3 +130,32 @@ def test_mix_levels_with_real_fixture_narration(tmp_path, tl):
     assert rep["narration_peak"] == pytest.approx(0.8, abs=1e-3)
     assert rep["master_peak"] <= 0.97 + 1e-6
     assert rep["duration"] == pytest.approx(tl["duration"], abs=1 / 48000)
+
+
+def test_loop_to_and_load_music(tmp_path):
+    import numpy as np, soundfile as sf
+    from pipeline.audio import mix as M
+    sr = M.SR
+    x = np.stack([np.sin(2 * np.pi * 220 * np.arange(sr * 3) / sr)] * 2, 1) * 0.5   # 3 s stereo tone
+    y = M.loop_to(x.copy(), sr * 10, 1.0)
+    assert y.shape == (sr * 10, 2) and np.isfinite(y).all()
+    p = tmp_path / "m.wav"; sf.write(p, x, sr)
+    z = M.load_music(p, sr * 8, 0.0, 1.0, 2.0, 1.0)
+    assert z.shape == (sr * 8, 2) and abs(float(np.max(np.abs(z))) - 1.0) < 1e-6
+    assert abs(z[0]).max() < 1e-3 and abs(z[-1]).max() < 1e-3        # faded in and out
+
+
+def test_music_sits_under_narration(tmp_path):
+    import json, numpy as np, soundfile as sf
+    from pipeline.audio import mix as M
+    sr = M.SR; n = sr * 6
+    t = np.arange(n) / sr
+    voice = np.where((t > 1) & (t < 3), np.sin(2 * np.pi * 180 * t) * 0.6, 0.0)
+    sf.write(tmp_path / "n.wav", voice, sr)
+    sf.write(tmp_path / "m.wav", np.stack([np.sin(2 * np.pi * 330 * t)] * 2, 1) * 0.9, sr)
+    tl = {"duration": 6.0, "sentences": [{"start": 1.0, "end": 3.0}]}
+    (tmp_path / "tl.json").write_text(json.dumps(tl))
+    rep = M.mix(tmp_path / "n.wav", None, tmp_path / "tl.json", tmp_path / "mix.wav", music=tmp_path / "m.wav",
+                music_credit="test", music_under_db=12.0, music_duck_db=6.0, quiet=True)
+    assert abs(rep["music"]["measured_under_narration_db"] + 12.0) < 0.3
+    assert rep["music"]["credit"] == "test"

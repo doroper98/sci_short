@@ -4,11 +4,25 @@
  "lead_sec": 1.0,
  "tail_sec": 0.8,
  "scene_lead_sec": 0.4,
- "default_gap_sec": 0.6,
+ "default_gap_sec": 0.9,
  "notes": "파이프라인 확인용 3문장. 과학 내용 검수 대상 아님.",
  "sentences": [
-  {"id": "s01", "scene": "hook", "text": "전자레인지는 음식을 안쪽부터 데우는 걸까요?", "gap": 0.8},
-  {"id": "s02", "scene": "mechanism", "text": "전자레인지 전파는 2.45 GHz로, 1초에 약 24억 번 진동합니다."},
-  {"id": "s03", "scene": "close", "text": "물 분자가 그 흔들림을 따라가며 열이 생깁니다.", "tts": "물 분자가 그 흔들림을 따라가며 열이 생깁니다."}
+  {
+   "id": "s01",
+   "scene": "hook",
+   "text": "전자레인지는 음식을 안쪽부터 데우는 걸까요?",
+   "gap": 0.8
+  },
+  {
+   "id": "s02",
+   "scene": "mechanism",
+   "text": "전자레인지 전파는 2.45 GHz로, 1초에 약 24억 번 진동합니다."
+  },
+  {
+   "id": "s03",
+   "scene": "close",
+   "text": "물 분자가 그 흔들림을 따라가며 열이 생깁니다.",
+   "tts": "물 분자가 그 흔들림을 따라가며 열이 생깁니다."
+  }
  ]
 }

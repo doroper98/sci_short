@@ -61,6 +61,7 @@ python pipeline/new_episode.py <slug> --title "제목"
 - 숫자·단위·알파벳이 있는 문장은 `tts`를 직접 쓴다. 예: `"text":"2.45 GHz", "tts":"이 쩜 사오 기가헤르츠"`.
 - 비트가 바뀌는 문장의 `gap`은 1.2~2.0, 메커니즘 핵심 단계 뒤는 1.5~2.5.
 - 음절 수를 센다. 900을 넘으면 사례나 오해 비트부터 줄인다.
+- 문장은 30~45음절로 쓰고 쉼표를 둔다. 같은 목소리라도 **짧은 문장은 더 빠르게 읽힌다**(실측: 15~25음절 문장 7.8음절/초, osint 35~50음절 문장 6.3음절/초). 속도를 낮추고 싶으면 `speed`를 바꾸지 말고 문장을 길게, `gap`을 0.9~1.2초로 둔다.
 
 ### 3. 음성
 
@@ -92,6 +93,7 @@ node episodes/<slug>/render.mjs --stills     # 장면 시작·중간·사건 시
 ### 5. 소리와 렌더
 
 `sound.json`에 사건을 문장 id 기준 시각으로 적는다. 발생 시각과 도착 시각이 다르면 모형에서 계산한다.
+배경음악은 `sound.json`의 `music` 블록으로 지정한다(`assets/music/registry.json`의 id, 기본 `zabriskie_patriarch`, CC BY 4.0). 핵심 비교 구간에서 비우려면 `enabled: false`로 끄거나 그 구간만 음악 없는 버전을 쓴다. 표기 문구는 엔드카드·설명란에 넣는다.
 
 ```bash
 node episodes/<slug>/render.mjs --video

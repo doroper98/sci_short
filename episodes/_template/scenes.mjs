@@ -181,21 +181,49 @@ export const scenes = {
   },
 
   phenomenon(stage, t, p, ctx) {
-    const {ctx: c} = stage, T = stage.theme, boxes = [[80, '물 · 0 °C', 24, false], [510, '얼음', 22, true]];
+    // Same molecule size in both boxes; what differs is the arrangement. Water: packed, jittered, drifting.
+    // Ice: an open honeycomb with visibly empty ring centres (one layer of ice Ih, simplified), held by dashed H-bonds.
+    const {ctx: c} = stage, T = stage.theme, w = 380, h = 470, y0 = 590, R = 14;
     line(c, [[495, 560], [495, 1180]], rgba(T.border, 1), 2);
+    const boxes = [[80, '물 · 0 °C', 24, false], [510, '얼음', 22, true]];
     for (const [x0, name, n, solid] of boxes) {
-      const w = 380, h = 470, y0 = 590;
       stage.text(name, x0 + w / 2, 545, {role: 'display', weight: 700, size: 40, align: 'center', color: solid ? ICE : '#8fd0ef'});
       rect(c, x0, y0, w, h, 14, rgba(solid ? '#0f3343' : '#0c2b3b', 0.9), rgba(T.border, 1), 2);
       clipRect(c, x0, y0, w, h, 14, () => {
-        for (let i = 0; i < n; i++) {
-          let x, y, dirs;
-          if (solid) { const col = i % 4, row = Math.floor(i / 4); x = x0 + 62 + col * 86 + (row % 2) * 43; y = y0 + 50 + row * 70 + (col % 2) * 16; dirs = [[0.5, 0.87], [-0.5, 0.87]]; }
-          else { const cell = i + (i >= 12 ? 1 : 0), cw = (w - 40) / 5, ch = (h - 40) / 5; x = x0 + 20 + cw * (cell % 5 + 0.5) + (rand(i) - 0.5) * 30 + 10 * Math.sin(t * 1.9 + i); y = y0 + 20 + ch * (Math.floor(cell / 5) + 0.5) + (rand(i + 30) - 0.5) * 36 + 10 * Math.cos(t * 1.6 + i * 2); const a = t * 1.5 + i; dirs = [[Math.cos(a), Math.sin(a)], [Math.cos(a + 1.82), Math.sin(a + 1.82)]]; }
-          molecule(c, x, y, 15, dirs);
+        if (!solid) {
+          // 24 molecules on a tight 5×5 grid (one cell empty), small jitter + slow drift: dense but disordered
+          const cw = (w - 24) / 5, chh = (h - 24) / 5;
+          for (let i = 0; i < n; i++) {
+            const cell = i + (i >= 12 ? 1 : 0);
+            const x = x0 + 12 + cw * (cell % 5 + 0.5) + (rand(i) - 0.5) * 18 + 6 * Math.sin(t * 1.9 + i);
+            const y = y0 + 12 + chh * (Math.floor(cell / 5) + 0.5) + (rand(i + 30) - 0.5) * 22 + 6 * Math.cos(t * 1.6 + i * 2);
+            const a = t * 1.2 + i * 1.7;
+            molecule(c, x, y, R, [[Math.cos(a), Math.sin(a)], [Math.cos(a + 1.82), Math.sin(a + 1.82)]]);
+          }
+        } else {
+          // honeycomb vertices (edge L) nearest the box centre → 22 molecules; bonds = pairs at distance L
+          const L = 66, cx = x0 + w / 2, cy = y0 + h / 2 + 6, pts = [];
+          for (let i = -4; i <= 4; i++) for (let j = -4; j <= 4; j++) {
+            const bx = cx + (i * Math.sqrt(3) + j * Math.sqrt(3) / 2) * L, by = cy + j * 1.5 * L;
+            pts.push([bx, by - L / 2], [bx, by + L / 2]);
+          }
+          pts.sort((u, v) => Math.hypot(u[0] - cx, u[1] - cy) - Math.hypot(v[0] - cx, v[1] - cy));
+          const v = pts.slice(0, n), bonds = [];
+          for (let i = 0; i < v.length; i++) for (let j = i + 1; j < v.length; j++) if (Math.abs(Math.hypot(v[i][0] - v[j][0], v[i][1] - v[j][1]) - L) < 2) bonds.push([i, j]);
+          for (const [i, j] of bonds) line(c, [v[i], v[j]], rgba('#9fd9c8', 0.55), 2, {dash: [6, 7]});
+          for (let i = 0; i < v.length; i++) {
+            const nb = bonds.filter(([a, b]) => a === i || b === i).map(([a, b]) => v[a === i ? b : a]).slice(0, 2);
+            const dirs = nb.map(q => { const d = Math.hypot(q[0] - v[i][0], q[1] - v[i][1]); return [(q[0] - v[i][0]) / d, (q[1] - v[i][1]) / d]; });
+            while (dirs.length < 2) dirs.push([Math.cos(i), Math.sin(i)]);
+            molecule(c, v[i][0] + 1.5 * Math.sin(t * 6 + i), v[i][1] + 1.5 * Math.cos(t * 5 + i), R, dirs);   // only a slight vibration
+          }
+          // one empty ring centre, pointed out
+          const hole = [cx + Math.sqrt(3) / 2 * L, cy + 0.0];
+          ring(c, hole[0], hole[1], L * 0.55, rgba(T.accent, 0.85), 2);
+          stage.text('빈 공간', hole[0], hole[1], {size: 20, weight: 500, align: 'center', color: T.accent});
         }
       });
-      stage.text(`분자 ${n}개`, x0 + w / 2, y0 + h + 40, {size: 32, weight: 500, align: 'center', color: T.ink});
+      stage.text(`분자 ${n}개 · 같은 부피`, x0 + w / 2, y0 + h + 40, {size: 30, weight: 500, align: 'center', color: T.ink});
     }
     // density bars: an observation of the same two boxes
     const show = smooth((p - 0.35) / 0.2);
@@ -206,7 +234,7 @@ export const scenes = {
       rect(c, 170, y - 14, 600 * rho * show, 28, 6, col);
       stage.text(`${rho.toFixed(3)} g/cm³`, 790, y, {role: 'display', weight: 500, size: 28, color: T.ink, alpha: show});
     }
-    sourceLine(stage, '분자 개수는 밀도 비(0.92)를 반영한 설명용 모형');
+    sourceLine(stage, '분자 개수는 밀도 비(0.92)를 반영한 설명용 모형 · 얼음은 한 층만 그림');
   },
 
   close(stage, t, p, ctx) {

@@ -35,8 +35,13 @@ step_stills()   { SCISHORT_ROOT="$ROOT" "$NODE" "$EP/render.mjs" --stills --out 
 step_render()   { SCISHORT_ROOT="$ROOT" "$NODE" "$EP/render.mjs" --video  --out "$OUT" --timeline "$NAR/timeline.json"; }
 step_sfx()      { "$PY" pipeline/audio/sfx.py --sound "$EP/sound.json" --timeline "$NAR/timeline.json" \
                     --out "$OUT/sfx.wav" --ambient-out "$OUT/ambient.wav" --events-check "$OUT/events.json" ${NO_MUSIC:+--no-music}; }
-step_mix()      { local amb=(); [[ -f "$OUT/ambient.wav" && -z "${NO_MUSIC:-}" ]] && amb=(--ambient "$OUT/ambient.wav")
-                  "$PY" pipeline/audio/mix.py --narration "$NAR/narration.wav" --sfx "$OUT/sfx.wav" "${amb[@]}" \
+step_mix()      { local amb=() mus=(); [[ -f "$OUT/ambient.wav" && -z "${NO_MUSIC:-}" ]] && amb=(--ambient "$OUT/ambient.wav")
+                  if [[ -z "${NO_MUSIC:-}" ]]; then
+                    local resolved; resolved="$("$PY" pipeline/audio/resolve_music.py "$EP/sound.json" --root "$ROOT")" || exit 3
+                    if [[ -n "$resolved" ]]; then eval "$resolved"
+                      mus=(--music "$MUSIC_FILE" --music-credit "$MUSIC_CREDIT" --music-under-db "$MUSIC_UNDER_DB" --music-duck-db "$MUSIC_DUCK_DB" --music-start-sec "$MUSIC_START"); fi
+                  fi
+                  "$PY" pipeline/audio/mix.py --narration "$NAR/narration.wav" --sfx "$OUT/sfx.wav" "${amb[@]}" "${mus[@]}" \
                     --timeline "$NAR/timeline.json" --out "$OUT/mix.wav"; }
 step_finish()   { local deg=(); [[ "$ALLOW_DEGRADED" == 1 ]] && deg=(--allow-degraded)
                   "$PY" pipeline/audio/finish.py --visual "$OUT/visual.mp4" --mix "$OUT/mix.wav" --timeline "$NAR/timeline.json" \

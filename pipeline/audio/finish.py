@@ -2,7 +2,7 @@
 
   python pipeline/audio/finish.py --visual outputs/<slug>/visual.mp4 --mix outputs/<slug>/mix.wav \
       --timeline outputs/<slug>/narration/timeline.json --captions-srt outputs/<slug>/narration/captions.srt \
-      --out outputs/<slug>/final/<slug>.mp4 --title "…" [--max-sec 180] [--allow-degraded] [--lufs -16 --tp -1.5 --lra 9]
+      --out outputs/<slug>/final/<slug>.mp4 --title "…" [--max-sec 180] [--allow-degraded] [--lufs -14 --tp -1.5 --lra 11]  (defaults follow osint_generator final mixes)
 
 Refuses (exit 2) when the timeline is longer than --max-sec, or marked degraded without --allow-degraded.
 Captions are burned into the picture by the renderer; the SRT is copied next to the MP4 as <stem>.srt
@@ -46,9 +46,9 @@ def main() -> int:
     ap.add_argument("--title", required=True)
     ap.add_argument("--max-sec", type=float, default=180.0)
     ap.add_argument("--allow-degraded", action="store_true")
-    ap.add_argument("--lufs", type=float, default=-16.0)
+    ap.add_argument("--lufs", type=float, default=-14.0)
     ap.add_argument("--tp", type=float, default=-1.5)
-    ap.add_argument("--lra", type=float, default=9.0)
+    ap.add_argument("--lra", type=float, default=11.0)
     a = ap.parse_args()
 
     tl = json.loads(Path(a.timeline).read_text())
@@ -87,6 +87,8 @@ def main() -> int:
     srt_out = out.with_suffix(".srt")
     shutil.copyfile(a.captions_srt, srt_out)
     sents = tl.get("sentences", [])
+    mix_report = Path(a.mix).with_name("mix-report.json")
+    music = json.loads(mix_report.read_text()).get("music") if mix_report.exists() else None
     report = {
         "file": out.name, "bytes": out.stat().st_size, "sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
         "created": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -97,6 +99,7 @@ def main() -> int:
         "voice": tl.get("voice"), "degraded": bool(tl.get("degraded")), "allow_degraded_used": bool(a.allow_degraded and tl.get("degraded")),
         "alignment_sources": sorted({(s.get("alignment") or {}).get("source") or "unknown" for s in sents}),
         "final_fall_applied": sum(1 for s in sents if (s.get("final_fall") or {}).get("applied")),
+        "music": music, "music_credit_required": bool(music) and not (music or {}).get("credit"),
         "captions_srt": srt_out.name, "captions_delivery": "burned into picture; sidecar SRT; no subtitle track",
         "verification": {
             "full_decode": "passed",
@@ -107,6 +110,8 @@ def main() -> int:
     }
     out.with_name("validation.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
     print(f"final: {out}  ({report['bytes']} bytes)")
+    if music:
+        print(f"  music: {Path(music['file']).name} — credit: {music.get('credit') or 'MISSING: add attribution to the description/end card'}")
     print(f"  audio in  I {stats['input_i']} LUFS TP {stats['input_tp']}  →  encoded I {encoded.get('input_i')} TP {encoded.get('input_tp')}")
     print(f"  validation: {out.with_name('validation.json')}")
     return 0

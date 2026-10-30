@@ -33,6 +33,15 @@
 - `docs/NETWORK_AND_ASSETS.md`: 허용 호스트와 확인 결과. 추가로 `download-r2.pytorch.org`를 열면 pip 한 줄로 torch 설치 가능.
 - `docs/REFERENCE_ANALYSIS.md` 말미: 장치 해부도 계열(9~13번) 공통 문법과 편별 관찰.
 
+### 2026-10-30 추가: 사용자 청취 피드백 반영
+
+사용자가 통합 테스트 영상을 보고 세 가지를 지적했다. (1) 비교 패널에서 얼음이 더 촘촘해 보임, (2) 나레이션이 빠름, (3) 배경음악 지정 방법, (4) 톤·끝 내림이 osint와 미묘하게 다름.
+
+- **동일성 검증**: osint 최종 영상의 실제 문장 2개를 같은 텍스트로 합성해 파형 상관 r = 0.985/0.988을 확인했다. 음성 자체는 같다. osint SRT가 0.15초 긴 것은 `SRT_TAIL_SEC`. 끝 억양 구간도 보정 적용본이 원음보다 osint에 가깝다. 차이의 원인은 믹스 맥락(음악 베드, −14 LUFS)과 문장 길이다. 상세는 `docs/NARRATION_AND_CAPTIONS.md` "동일성 검증".
+- **속도**: 같은 설정이라도 짧은 문장이 빠르게 읽힌다(7.8 vs 6.3 음절/초). 기준을 문장 30~45음절·간격 0.9초로 바꿨다. speed 0.95는 유지. 사용자가 들어 보도록 0.95/0.90/0.85 원음 샘플을 채팅으로 전달했다. speed 변경은 사용자 결정 사항이며 아직 바꾸지 않았다.
+- **배경음악**: `sound.json`의 `music` 블록 → `pipeline/audio/resolve_music.py`(레지스트리·sha1 대조) → `mix.py --music`(루프·페이드·덕킹·내레이션 대비 −12 dB 자동 스케일) → `finish.py`가 표기 문구를 `validation.json`에 기록. 기본 트랙은 osint와 같은 Chris Zabriskie "Patriarch"(CC BY 4.0), 파일은 osint 커밋 `bd37b58`에서 복원해 sha1 일치 확인. osint 걸프 영상의 "Mario Bava" 트랙은 archive.org 차단으로 미수령(허용 시 `assets/music/registry.json`의 URL). 기본 loudness를 osint와 같은 −14 LUFS/LRA 11로 변경.
+- **비교 패널**: 템플릿의 얼음 상자를 빈 고리가 보이는 육각 격자(점선 수소 결합, "빈 공간" 표식)로 교체. 음악 포함 재실행 검증 19/19 PASS, 사용자에게 재전달.
+
 ### 남은 한계와 다음 작업
 
 1. 청취 검증 0건. 끝 억양(특히 f0가 60Hz 하한 아래로 내려간 문장), 숫자·단위 발음("이 점 사오", "기가헤르츠")을 사람이 들어야 한다.

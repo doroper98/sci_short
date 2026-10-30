@@ -24,3 +24,9 @@ node_modules/
 # Test fixtures generated on demand
 /pipeline/render/tests/fixtures/*.wav
 .pytest_cache/
+
+# Music files are licensed assets fetched per assets/music/README.md
+/assets/music/*.mp3
+/assets/music/*.wav
+/assets/music/*.m4a
+/assets/music/*.flac
