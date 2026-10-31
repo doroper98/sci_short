@@ -52,10 +52,10 @@
   },
   "music": {
     "id": "zabriskie_patriarch",
-    "enabled": true,
+    "enabled": false,
     "under_db": 12,
     "duck_db": 6,
     "start_sec": 0,
-    "note": "assets/music/registry.json 의 id. 직접 지정은 {\"file\":\"assets/music/x.mp3\",\"credit\":\"...\"}. NO_MUSIC=1 이면 생략"
+    "note": "기본 꺼짐(2026-10-31 사용자 결정). 켜려면 enabled true. assets/music/registry.json 의 id. NO_MUSIC=1 이면 생략"
   }
 }

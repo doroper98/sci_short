@@ -67,7 +67,7 @@ export function createStage({width = 1080, height = 1920, fps = 30, fonts = {}, 
   const canvas = createCanvas(width, height), ctx = canvas.getContext('2d');
   const k = height / 1920;
   const safe = {top: SAFE_ZONES.top * k, bottom: SAFE_ZONES.bottom * k, right: SAFE_ZONES.right * k, left: SAFE_ZONES.left * k};
-  Object.assign(safe, {x0: safe.left, x1: width - safe.right, y0: safe.top, y1: height - safe.bottom, cx: (safe.left + width - safe.right) / 2});
+  Object.assign(safe, {x0: safe.left, x1: width - safe.right, y0: safe.top, y1: height - safe.bottom, cx: width / 2});   // centre of the frame: a left-shifted stage reads as off-centre on phones; the right margin only limits text width
   // Top of a default 2-line caption plate (captions.mjs defaults). Keep key content above captionTop - 20.
   safe.captionTop = safe.y1 - 140 * k;
 

@@ -54,7 +54,23 @@ def _break_cost(word: str) -> float:
     return NON_CLAUSE_BREAK
 
 
+SENTENCE_END = re.compile(r"(?<=[.!?])\s+")
+ORPHAN_CHARS = 1          # a cue must not end with a 1-글자 word that belongs to the next clause ("… 두" | "블랙홀의 …")
+ORPHAN = 50.0
+
+
 def split_cues(text: str, max_chars: int = MAX_CHARS) -> list[str]:
+    """Split at sentence-final punctuation first (a cue never crosses '. ' / '? ' / '! '), then by length."""
+    segs = [t for t in SENTENCE_END.split(text.strip()) if t]
+    if len(segs) > 1:
+        out: list[str] = []
+        for seg in segs:
+            out.extend(_split_segment(seg, max_chars))
+        return out
+    return _split_segment(text, max_chars)
+
+
+def _split_segment(text: str, max_chars: int) -> list[str]:
     words = text.split()
     n = len(words)
     if n == 0:
@@ -72,6 +88,8 @@ def split_cues(text: str, max_chars: int = MAX_CHARS) -> list[str]:
             c = best[j][0] + CUE_COST
             if i < n:
                 c += _break_cost(words[i - 1])
+                if nchars(words[i - 1]) <= ORPHAN_CHARS:
+                    c += ORPHAN
             if size < SHORT_CUE_CHARS:
                 c += SHORT_CUE
             if c < best[i][0]:
