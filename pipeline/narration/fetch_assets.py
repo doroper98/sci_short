@@ -195,18 +195,52 @@ def check(mdir: Path) -> list[str]:
     return out
 
 
+STYLE_SHA1 = {   # Supertonic 3 revision 3cadd1ee… voice_styles/<name>.json (huggingface.co 직접 응답, LFS 아님) — 2026-10-31 실측
+    "F1": "a56a61958ce0ddf3ed9bffb3cf4f2d513759b468", "F2": "6a1243c8e37196f9bd3427cd20a318a78395f404",
+    "F3": "52702aec0ec05b498173032255692031777f47a1", "F4": "04bc1921ad20c73a5a4ede8a20e2a7a57454ca08",
+    "F5": "967551ca7f5fc11c3f031fa51b453b8a5c80a353", "M1": "fa181eacca43b343617f69bc20b90b7aa37b28ff",
+    "M2": "e94da73cf00738222bf7b9348b74242e16348526", "M3": "7764333982bc4d4d27b3872ead13dfe4b0400d81",
+    "M4": "b27339c6a7b0fb6affca2756a817d873cc2c8bb0", "M5": "3bdabbe5645ed15079bc893e5968b36c1991b917",
+}
+
+
+def fetch_styles(mdir: Path) -> list[str]:
+    """나머지 음성 프리셋 9개(F1~F5, M1, M2, M4, M5)를 Hugging Face 고정 revision 에서 받아 sha1 대조. M3 는 기본 자산에 포함."""
+    import hashlib, subprocess, json as _json
+    from pipeline.narration.voice_config import VOICE_REFERENCE
+    ref = _json.loads(VOICE_REFERENCE.read_text())["synthesis"]
+    base = supertonic_dir(mdir) / "voice_styles"; base.mkdir(parents=True, exist_ok=True)
+    bad = []
+    for name, want in STYLE_SHA1.items():
+        dest = base / f"{name}.json"
+        if dest.is_file() and hashlib.sha1(dest.read_bytes()).hexdigest() == want:
+            continue
+        url = f"https://huggingface.co/{ref['repo']}/resolve/{ref['revision']}/voice_styles/{name}.json"
+        part = dest.with_suffix(".part")
+        r = subprocess.run(["curl", "-sSL", "--fail", "--max-time", "120", url, "-o", str(part)])
+        if r.returncode != 0 or not part.is_file() or hashlib.sha1(part.read_bytes()).hexdigest() != want:
+            bad.append(f"{name}: 받기 실패 또는 sha1 불일치 (huggingface.co 허용 여부 확인)")
+            part.unlink(missing_ok=True)
+            continue
+        part.replace(dest)
+    if bad:
+        raise FetchError('; '.join(bad))
+    return bad
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="표준 음성 자산 받기·대조")
     ap.add_argument("--supertonic", action="store_true")
     ap.add_argument("--mms", action="store_true")
+    ap.add_argument("--styles", action="store_true", help="음성 프리셋 F1~F5·M1~M5 전부(huggingface.co)")
     ap.add_argument("--all", action="store_true")
     ap.add_argument("--check", action="store_true", help="받지 않고 대조만")
     ap.add_argument("--source", choices=["github", "hf"], default="github")
     ap.add_argument("--models-dir", default=None, help="기본 <repo>/models, 환경변수 SCISHORT_MODELS")
     ap.add_argument("--keep-zip", action="store_true")
     a = ap.parse_args(argv)
-    if not (a.supertonic or a.mms or a.all or a.check):
-        ap.error("--supertonic, --mms, --all, --check 중 하나")
+    if not (a.supertonic or a.mms or a.styles or a.all or a.check):
+        ap.error("--supertonic, --mms, --styles, --all, --check 중 하나")
     mdir = models_dir(a.models_dir)
     try:
         vc = load_voice_config()
@@ -218,6 +252,9 @@ def main(argv: list[str] | None = None) -> int:
             lines += fetch_supertonic(mdir, a.source, a.keep_zip)
         if a.mms or a.all:
             lines += fetch_mms(mdir)
+        if a.styles or a.all:
+            bad = fetch_styles(mdir)
+            lines += [f"styles: {'10종 일치' if not bad else '문제 ' + str(bad)} ({supertonic_dir(mdir) / 'voice_styles'})"]
     except FetchError as ex:
         print(f"fetch_assets 실패: {ex}", file=sys.stderr)
         return 2

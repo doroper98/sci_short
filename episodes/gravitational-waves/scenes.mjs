@@ -432,7 +432,7 @@ export const scenes = {
   essence(stage, t, p, ctx) {
     const {ctx: c} = stage, T = stage.theme, tl = ctx.tl, base = mapOf(ctx);
     const map = shiftedMap(base, tl.at('essence'), TAU0 - 0.25);
-    const sp = easeInOut((t - tl.at('s08') + 0.2) / 1.2);           // 0: one big stage, 1: split comparison
+    const sp = easeInOut((t - (tl.at('s07') + 5.0)) / 1.2);   // s08 was cut for length: split comparison opens in the second half of s07 (no narration)           // 0: one big stage, 1: split comparison
     const camR = {...camM, scale: lerp(300, 165, sp), cx: lerp(540, 780, sp), cy: lerp(760, 790, sp)};
     // left: symmetric spinning sphere — static well, no ripples
     if (sp > 0) withAlpha(c, sp, () => {
