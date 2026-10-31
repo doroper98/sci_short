@@ -2,6 +2,18 @@
 
 ## 2026-10-30 구현 상태와 결정
 
+### 2026-10-31 사용자 결정: 이 프로젝트의 표준값
+
+osint_generator 기준값(`config/voice-reference.json`)은 그대로 두고, 바꾸기로 한 값만 `config/voice-overrides.json`에 둡니다. 로더가 허용된 키(`supertonic.speed`, `final_fall.semitones`, `final_fall.span_chars`, `final_fall.curve`)만 덮어씁니다.
+
+| 항목 | osint 기준 | sci_short 표준 | 근거 |
+|---|---|---|---|
+| 속도 | 0.95 | **0.85** | 사용자 청취(0.95/0.90/0.85 샘플) |
+| 문장 끝 하강 | 4반음 직선 | **6반음 직선** | 사용자 요청 "~했습니다/~입니다 끝을 더 낮게". 8반음·끝 급강하(`ease_in`) 샘플도 전달했으며 선택에 따라 값만 바꾼다 |
+
+그 외(모델 파일, 시드, 16단계, MMS 정렬, 옥타브 정리, 원음 기준 트림)는 동일합니다. `timeline.json`의 `voice` 라벨에 속도와 반음이 함께 기록됩니다(예: `supertonic-3 M3 ×0.85 + final_fall 6st`).
+속도를 낮추면 M3의 끝 음이 60~65 Hz까지 내려가는 문장이 생깁니다. 거친 소리가 들리면 반음을 줄이거나 `curve: ease_in`으로 바꿉니다.
+
 표준 음성은 이제 `pipeline/narration/`에서 직접 재현합니다. 실행 방법은 [pipeline/README.md](../pipeline/README.md), 절차는 [스킬](../skills/science-short/SKILL.md)에 있습니다.
 
 이전 세션에서 "osint_generator와 같은 목소리가 안 나온다"고 느낀 원인은 셋이었습니다.

@@ -21,6 +21,9 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 VOICE_REFERENCE = REPO / "config" / "voice-reference.json"
+VOICE_OVERRIDES = REPO / "config" / "voice-overrides.json"   # 사용자 결정으로 바꾼 값만. 없으면 osint 기준 그대로
+OVERRIDABLE = {"supertonic": {"speed"}, "final_fall": {"semitones", "span_chars", "curve"}}
+VALID_CURVES = ("linear", "ease_in")
 SOURCE_COMMIT = "131db0097a547a3fd0742488540eedc229017073"
 
 # rules/video_rules.yaml tts_rules.forced_align (source commit 위) — 근거: 맞는 원고 최저 0.679 · 틀린 원고 최고 0.569 → 0.62
@@ -99,6 +102,7 @@ class FinalFallRules:
     f0_ceil_hz: float
     frame_ms: float
     octave_clean: OctaveCleanRules
+    curve: str = "linear"      # sci_short 확장(2026-10-31): "linear"(원 저장소) | "ease_in"(끝으로 갈수록 가파르게)
 
     def __post_init__(self) -> None:   # schemas/rules_models.py FinalFallRules 의 Field 제약
         _req(len(self.suffix) >= 1, "final_fall.suffix 비어 있음")
@@ -136,9 +140,11 @@ class VoiceConfig:
     alignment: AlignmentConfig
     source_path: str
     source_sha256: str
+    overrides: dict = field(default_factory=dict)   # config/voice-overrides.json 에서 적용된 값(사용자 결정)
+    overrides_path: str | None = None
 
 
-def load_voice_config(path: Path | None = None) -> VoiceConfig:
+def load_voice_config(path: Path | None = None, overrides_path: Path | None = None) -> VoiceConfig:
     p = Path(path) if path else VOICE_REFERENCE
     raw = p.read_bytes()
     d = json.loads(raw.decode("utf-8"))
@@ -164,7 +170,37 @@ def load_voice_config(path: Path | None = None) -> VoiceConfig:
     _req(a.get("engine") == "mms_fa", "alignment_reference.engine ≠ mms_fa")
     al = AlignmentConfig(engine=a["engine"], url=a["url"], assets=dict(a["assets"]), threads=int(a.get("threads", 4)))
     _req(set(al.assets) == {"model.pt"}, "alignment_reference.assets 는 model.pt 하나")
-    return VoiceConfig(st, rules, al, str(p), hashlib.sha256(raw).hexdigest())
+    vc = VoiceConfig(st, rules, al, str(p), hashlib.sha256(raw).hexdigest())
+    return apply_overrides(vc, overrides_path)
+
+
+def apply_overrides(vc: VoiceConfig, path: Path | None = None) -> VoiceConfig:
+    """config/voice-overrides.json(또는 env SCISHORT_VOICE_OVERRIDES)의 허용된 키만 덮어쓴다. 파일이 없으면 그대로."""
+    import dataclasses
+    import os
+    op = Path(path) if path else Path(os.environ.get("SCISHORT_VOICE_OVERRIDES") or VOICE_OVERRIDES)
+    if not op.is_file():
+        return vc
+    d = json.loads(op.read_text(encoding="utf-8"))
+    applied: dict = {}
+    st, ff = vc.supertonic, vc.final_fall
+    for sec, keys in OVERRIDABLE.items():
+        for k, v in (d.get(sec) or {}).items():
+            _req(k in keys, f"voice-overrides {sec}.{k} 는 바꿀 수 없는 값(허용: {sorted(keys)})")
+            if sec == "supertonic":
+                _req(isinstance(v, (int, float)) and 0.5 <= float(v) <= 1.5, "supertonic.speed 는 0.5~1.5")
+                st = dataclasses.replace(st, speed=float(v))
+            elif k == "curve":
+                _req(v in VALID_CURVES, f"final_fall.curve 는 {VALID_CURVES} 중 하나")
+                ff = dataclasses.replace(ff, curve=v)
+            elif k == "span_chars":
+                _req(isinstance(v, int) and 1 <= v <= 8, "final_fall.span_chars 는 1~8")
+                ff = dataclasses.replace(ff, span_chars=v)
+            else:
+                _req(isinstance(v, (int, float)) and 0 < float(v) <= 12, "final_fall.semitones 는 0~12")
+                ff = dataclasses.replace(ff, semitones=float(v))
+            applied[f"{sec}.{k}"] = v
+    return dataclasses.replace(vc, supertonic=st, final_fall=ff, overrides=applied, overrides_path=str(op))
 
 
 def models_dir(arg: str | Path | None = None) -> Path:

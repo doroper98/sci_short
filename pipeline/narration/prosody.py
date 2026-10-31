@@ -150,7 +150,10 @@ def final_fall(audio: np.ndarray, align: dict, pron_text: str, cfg: FinalFallRul
     span = max(e - s0, 1)
     for k in range(s0, e + 1):
         if f0[k] > 0:
-            f0n[k] = f0[k] * 2.0 ** (-cfg.semitones * ((k - s0) / span) / 12.0)
+            frac = (k - s0) / span
+            if getattr(cfg, "curve", "linear") == "ease_in":   # sci_short 확장: 끝으로 갈수록 가파르게(frac²)
+                frac = frac * frac
+            f0n[k] = f0[k] * 2.0 ** (-cfg.semitones * frac / 12.0)
     y = pw.synthesize(f0n, sp, ap, SR, fp)
     y = np.pad(y, (0, max(0, len(x) - len(y))))[: len(x)]
     cs = int(round(t[s0] * SR))

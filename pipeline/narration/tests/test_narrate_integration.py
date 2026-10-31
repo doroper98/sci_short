@@ -21,7 +21,7 @@ def test_too_long_fails_but_writes_timeline(tmp_path, capsys):
     assert rc == 3
     assert "대본을 줄이세요. 음성을 가속하지 않습니다." in capsys.readouterr().err
     t = json.loads((out / "timeline.json").read_text(encoding="utf-8"))
-    assert t["degraded"] is True and t["voice"] == "supertonic-3 M3 ×0.95 (UNALIGNED, final_fall not applied)"
+    assert t["degraded"] is True and t["voice"] == f"supertonic-3 M3 ×{load_voice_config().supertonic.speed} (UNALIGNED, final_fall not applied)"
     assert all(s["chars"] == [] and s["alignment"] is None and s["final_fall"]["applied"] is False for s in t["sentences"])
     assert not (out / "narration.wav").exists()
     # 같은 출력 폴더로 다시: 합성 캐시 재사용, 이번엔 통과

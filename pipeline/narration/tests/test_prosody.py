@@ -7,7 +7,8 @@ from pipeline.narration import prosody
 from pipeline.narration.prosody import SR, final_fall, span_start_index
 from pipeline.narration.voice_config import load_voice_config
 
-FF = load_voice_config().final_fall
+from pathlib import Path as _P
+FF = load_voice_config(overrides_path=_P("/nonexistent-overrides")).final_fall   # osint 기준값(4반음)으로 이식 검증
 
 
 @pytest.mark.parametrize("text,want", [

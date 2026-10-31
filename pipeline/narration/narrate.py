@@ -274,7 +274,9 @@ def build(args: argparse.Namespace) -> int:
         log("경고: " + w)
     timeline = {"schema_version": 1, "title": script.title, "language": script.language,
                 "voice": (f"{synth.voice_label(vc.supertonic)} (UNALIGNED, final_fall not applied)" if degraded
-                          else f"{synth.voice_label(vc.supertonic)} + final_fall"),
+                          else f"{synth.voice_label(vc.supertonic)} + final_fall {vc.final_fall.semitones:g}st"
+                               + ("" if vc.final_fall.curve == "linear" else f"/{vc.final_fall.curve}")),
+                "voice_overrides": vc.overrides,
                 "degraded": degraded, "sample_rate": SR, "duration": round(duration, 3),
                 "lead_sec": script.lead_sec, "tail_sec": script.tail_sec,
                 "scenes": [{**sc, "start": round(sc["start"], 3), "end": round(sc["end"], 3)} for sc in scenes],

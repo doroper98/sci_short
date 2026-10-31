@@ -3,11 +3,12 @@ import hashlib
 import pytest
 
 from pipeline.narration import synth
+from pathlib import Path as _P
 from pipeline.narration.voice_config import FinalFallRules, OctaveCleanRules, VoiceConfigError, load_voice_config
 
 
 def test_loads_reference_values():
-    vc = load_voice_config()
+    vc = load_voice_config(overrides_path=_P("/nonexistent-overrides"))
     st = vc.supertonic
     assert (st.voice_style, st.speed, st.total_step, st.silence_sec, st.max_chunk_len, st.seed_salt) == ("M3", 0.95, 16, 0.3, 120, "v1")
     assert st.revision == "3cadd1ee6394adea1bd021217a0e650ede09a323"
@@ -23,7 +24,7 @@ def test_loads_reference_values():
 
 
 def test_cache_salt_and_seed_formula_match_source():
-    st = load_voice_config().supertonic
+    st = load_voice_config(overrides_path=_P("/nonexistent-overrides")).supertonic
     assert synth.cache_salt(st) == "|st|M3|0.95|16|0.3|120|v1|3cadd1ee"
     tts = "물 분자가 흔들립니다."
     h = hashlib.sha1(f"{tts}|M3|0.95|16|v1".encode()).digest()

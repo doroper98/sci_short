@@ -14,7 +14,7 @@
 
 ## 유지할 기준과 자유롭게 설계할 부분
 
-- **음성**: `config/voice-reference.json`의 Supertonic 3 M3 ×0.95 + MMS 정렬 + `니다` 문장 끝 억양 보정이 표준입니다. 구현은 `pipeline/narration/`입니다. 다른 목소리·다른 모델 변환본·speaker id 추정·글자 수 비례 시각으로 조용히 대체하지 마세요. 정렬 모델을 받을 수 없으면 `--skip-alignment`의 결과가 표준이 아님을 알리고 전달합니다.
+- **음성**: Supertonic 3 M3 + MMS 정렬 + `니다` 문장 끝 억양 보정. osint 기준값은 `config/voice-reference.json`, 이 프로젝트가 바꾼 값(속도 0.85, 하강 6반음, 2026-10-31 사용자 결정)은 `config/voice-overrides.json`에만 둡니다. 두 파일 외의 방법으로 목소리 값을 바꾸지 마세요. 구현은 `pipeline/narration/`입니다. 다른 목소리·다른 모델 변환본·speaker id 추정·글자 수 비례 시각으로 조용히 대체하지 마세요. 정렬 모델을 받을 수 없으면 `--skip-alignment`의 결과가 표준이 아님을 알리고 전달합니다.
 - 이전 석영 영상(`samples/quartz/`)의 Sherpa-ONNX INT8 경로는 **호스트 차단 시의 임시 우회 기록**입니다. 표준이 아니며 새 에피소드에 재사용하지 않습니다. 필요한 호스트는 `docs/NETWORK_AND_ASSETS.md`에 있습니다.
 - **문체**: 내레이션은 합니다체입니다. 억양 보정이 `니다`에만 적용되므로 문체와 음성 기준이 함께 갑니다. 감탄사·마스코트·의성어 자막을 쓰지 않습니다.
 - **글꼴·톤**: `doroper98/agents_reviewer` 르포 템플릿 기준(GmarketSans 제목, Noto Sans KR 본문, `noturno` 테마 기본). 글꼴 파일은 `pipeline/render/fetch_fonts.py`로 받고 Git에 넣지 않습니다.
