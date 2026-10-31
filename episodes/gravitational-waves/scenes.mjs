@@ -25,7 +25,7 @@
 // Re-run it whenever the narration timeline changes (the mechanism scene warns once if the table is stale).
 import fs from 'node:fs'; import path from 'node:path'; import {fileURLToPath, pathToFileURL} from 'node:url';
 import {
-  header, progressBar, sourceLine, endCard, drawLabel, leader,
+  header, progressBar, endCard, drawLabel, leader,
   project, DrawQueue, rgba, mix, clamp, lerp, smooth, easeOut, easeInOut, poly, line, circle, ring, glow, sphere, arrow,
   withAlpha, clipEllipse, clipRect, rect, TAU, loadTimeline,
 } from '../../pipeline/render/index.mjs';
@@ -127,7 +127,7 @@ function ringsAt(t, map, {tauStop = RD_LEN} = {}) {
 // =====================================================================================================
 const GRID = '#6F98A5', CREST = '#B9F0D2', WAVE = '#8AC0A0', LIGHT = '#FFE2C4', TRACK = '#FF4103';
 const WELL_D = 0.0085, wellSigma = m => 0.11 + 0.0021 * m;
-const camM = {angle: 0, tilt: 55 * Math.PI / 180, scale: 287, cx: 500, cy: 560, distance: 9};
+const camM = {angle: 0, tilt: 55 * Math.PI / 180, scale: 287, cx: 540, cy: 560, distance: 9};
 
 function sheetHeight(x, z, S) {
   let h = 0;
@@ -235,7 +235,7 @@ const fmt = (x, d = 0) => x.toLocaleString('en-US', {minimumFractionDigits: d, m
 
 /** middle strip: magnifier on the tracked hole + radial cross-section of wavefront heights */
 function zoomStrip(stage, t, map, cam, st, y0 = 872, h = 178) {
-  const {ctx} = stage, T = stage.theme, x0 = 60, x1 = 940;
+  const {ctx} = stage, T = stage.theme, x0 = 60, x1 = 1020;
   rect(ctx, x0, y0, x1 - x0, h, 10, rgba(T.plate, 0.9), rgba(T.border, 1), 1.5);
   // magnifier
   const mx = 158, my = y0 + h / 2 - 6, mr = 74, Z = 1.7, [tx, ty] = st.track;
@@ -256,7 +256,7 @@ function zoomStrip(stage, t, map, cam, st, y0 = 872, h = 178) {
   ring(ctx, mx, my, mr, rgba(TRACK, 0.95), 2.5);
   stage.text('확대 ×1.7', mx, y0 + h - 9, {size: 24, color: T.muted, align: 'center'});
   // cross-section of ring heights along the ray through the tracked hole
-  const px0 = 262, px1 = 925, base = y0 + 96, dMax = 1.55, toX = d => px0 + (px1 - px0) * d / dMax;
+  const px0 = 262, px1 = 1000, base = y0 + 96, dMax = 1.55, toX = d => px0 + (px1 - px0) * d / dMax;
   stage.text('단면: 추적한 블랙홀 쪽 파면 높이', px0, y0 + 22, {size: 24, color: T.muted});
   line(ctx, [[px0, base], [px1, base]], rgba(T.border, 1), 1.5);
   const pts = [];
@@ -283,8 +283,8 @@ function zoomStrip(stage, t, map, cam, st, y0 = 872, h = 178) {
 
 /** bottom readouts: r, f_gw, v/c + scrolling waveform + power bar (all from the model at τ) */
 function readouts(stage, t, map, st, o = {}) {
-  const {ctx} = stage, T = stage.theme, y0 = o.y0 ?? 1060, h = 206, B = st.B, tau = st.tau, hi = o.hi || {};
-  rect(ctx, 60, y0, 880, h, 10, rgba(T.plate, 0.9), rgba(T.border, 1), 1.5);
+  const {ctx} = stage, T = stage.theme, y0 = o.y0 ?? 1062, h = 274, B = st.B, tau = st.tau, hi = o.hi || {};
+  rect(ctx, 60, y0, 960, h, 10, rgba(T.plate, 0.9), rgba(T.border, 1), 1.5);
   const merged = tau > 0;
   const rows = [
     ['r', '궤도 거리 r', merged ? '병합' : `${fmt(B.rKm)} km`],
@@ -292,40 +292,42 @@ function readouts(stage, t, map, st, o = {}) {
     merged ? ['v', '최종 질량', `${MFIN} M☉`] : ['v', '상대 속도 v/c', fmt(B.v, 2)],
   ];
   rows.forEach(([key, lab, val, sub], i) => {
-    const y = y0 + 32 + i * 56, on = hi[key] ?? 0;
-    if (on > 0) rect(ctx, 66, y - 26, 300, 54, 6, rgba(T.accent, 0.16 * on));
-    stage.text(lab, 78, sub ? y - 14 : y, {size: 24, color: on > 0.5 ? T.ink : T.muted});
-    stage.text(val, 356, y, {role: 'display', weight: 500, size: 36, color: on > 0.5 ? T.light : T.ink, align: 'right'});
-    if (sub) stage.text(sub, 78, y + 15, {size: 24, color: T.muted, alpha: 0.9});
+    const y = y0 + 50 + i * 86, on = hi[key] ?? 0;
+    if (on > 0) rect(ctx, 68, y - 38, 392, 76, 6, rgba(T.accent, 0.16 * on));
+    stage.text(lab, 84, sub ? y - 15 : y, {size: 26, color: on > 0.5 ? T.ink : T.muted});
+    if (sub) stage.text(sub, 84, y + 17, {size: 24, color: T.muted, alpha: 0.9});
+    stage.text(val, 450, y, {role: 'display', weight: 500, size: 44, color: on > 0.5 ? T.light : T.ink, align: 'right'});
   });
+  line(ctx, [[474, y0 + 16], [474, y0 + h - 16]], rgba(T.border, 1), 1.5);
   // waveform
-  const wx0 = 384, wx1 = 924, wy = y0 + 76, wa = 36, win = 0.12;
+  const wx0 = 494, wx1 = 996, wy = y0 + 104, wa = 44, win = 0.12;
   const tauNow = Math.min(tau, RD_LEN + 0.035), frozen = tau > RD_LEN + 0.035;
-  stage.text('h(t) · 최근 0.12초 (실제 시간)', wx0, y0 + 20, {size: 24, color: T.muted});
+  stage.text('h(t) · 최근 0.12초 (실제 시간)', wx0, y0 + 26, {size: 24, color: T.muted});
   line(ctx, [[wx0, wy], [wx1, wy]], rgba(T.border, 1), 1);
   const pts = [];
   for (let i = 0; i <= 360; i++) { const tt = tauNow - win + win * i / 360; pts.push([wx0 + (wx1 - wx0) * i / 360, wy - wa * hAt(tt)]); }
-  line(ctx, pts, rgba(WAVE, 1), 2.2);
-  if (tauNow - win < 0 && tauNow > 0) { const x = wx0 + (wx1 - wx0) * (0 - (tauNow - win)) / win; line(ctx, [[x, wy - wa - 8], [x, wy + wa + 4]], rgba(T.ink, 0.6), 1.5, {dash: [4, 4]}); stage.text('병합 τ = 0', x - 8, y0 + 20, {size: 24, color: T.ink, align: 'right'}); }
-  if (!frozen) { line(ctx, [[wx1, wy - wa - 6], [wx1, wy + wa + 6]], TRACK, 2.5); stage.text('지금', wx1 - 6, wy + wa + 2, {size: 24, color: TRACK, align: 'right'}); }
+  line(ctx, pts, rgba(WAVE, 1), 2.4);
+  if (!frozen) { line(ctx, [[wx1, wy - wa - 8], [wx1, wy + wa + 8]], TRACK, 2.5); stage.text('지금', wx1, y0 + 26, {size: 24, color: TRACK, align: 'right'}); }
+  if (tauNow - win < 0 && tauNow > 0) {      // merger marker: dashed line, its own label line under the waveform
+    const x = wx0 + (wx1 - wx0) * (0 - (tauNow - win)) / win;
+    line(ctx, [[x, wy - wa - 8], [x, wy + wa + 22]], rgba(T.ink, 0.7), 1.5, {dash: [4, 4]});
+    stage.text('병합 τ = 0', Math.max(wx0 + 130, Math.min(x + 6, wx1)), wy + wa + 34, {size: 24, color: T.ink, align: 'right'});
+  }
   // power bar
-  const pw = powerAt(tau), py = y0 + 140, on = hi.p ?? 0;
+  const pw = powerAt(tau), py = y0 + 222, on = hi.p ?? 0;
   stage.text('방출 출력(상대값)', wx0, py, {size: 24, color: on > 0.5 ? T.ink : T.muted});
-  const bx0 = 590, bw = wx1 - bx0;
-  rect(ctx, bx0, py - 8, bw, 16, 4, rgba(T.border, 1));
-  rect(ctx, bx0, py - 8, Math.max(3, bw * clamp(pw)), 16, 4, on > 0.5 ? T.accent : T.light);
+  const bx0 = 700, bw = wx1 - bx0;
+  rect(ctx, bx0, py - 9, bw, 18, 4, rgba(T.border, 1));
+  rect(ctx, bx0, py - 9, Math.max(3, bw * clamp(pw)), 18, 4, on > 0.5 ? T.accent : T.light);
   const ratio = pw / powerAt(TAU0);
-  if (tau < 0) stage.text(`처음의 ${ratio < 10 ? fmt(ratio, 1) : fmt(ratio)}배`, wx1, y0 + h - 22, {size: 24, color: T.muted, align: 'right'});
-  stage.text('소리 = 모형의 중력파 진동수(설명용) · 우주의 소리 아님', 78, y0 + h - 22, {size: 24, color: T.accent2});
+  if (tau < 0) stage.text(`처음의 ${ratio < 10 ? fmt(ratio, 1) : fmt(ratio)}배`, wx1, py + 30, {size: 24, color: T.muted, align: 'right'});
 }
 
-const footExag = '격자·파면 높이는 설명용 과장';
 /** text with a manually raised exponent (the fallback font's superscript zero looks like 'º') */
 function textSup(stage, parts, x, y, o = {}) {
   let xx = x; const size = o.size || 24;
   for (const [str, sup] of parts) xx += stage.text(str, xx, sup ? y - size * 0.35 : y, {...o, size: sup ? Math.round(size * 0.68) : size, align: 'left'});
 }
-function foot2(stage, a, b) { sourceLine(stage, a, {y: stage.safe.captionTop - 64, size: 24}); sourceLine(stage, b, {size: 24}); }
 
 let staleWarned = false;
 function checkChirpTable(ctx, map) {
@@ -339,6 +341,13 @@ function checkChirpTable(ctx, map) {
   void last;
 }
 
+// rough contiguous-US outline (lon, lat) for the detect inset; schematic
+const US = [[-124.7, 48.4], [-123.9, 46], [-124.2, 42], [-120.5, 34.5], [-117.1, 32.5], [-114.7, 32.7], [-111, 31.3], [-108.2, 31.3], [-106.5, 31.8],
+  [-103, 29], [-101.4, 29.8], [-99.5, 27.5], [-97.2, 25.9], [-97.4, 27.8], [-94.7, 29.4], [-89.6, 29.9], [-89.2, 30.3], [-85.4, 29.7], [-83, 29],
+  [-82.7, 27.5], [-81.8, 26], [-80.4, 25.2], [-80, 26.9], [-81.2, 29.9], [-81.4, 31], [-79.2, 33.2], [-75.6, 35.2], [-76.3, 37], [-75.2, 38.5],
+  [-74, 40.5], [-70, 41.5], [-70.6, 43], [-67, 44.8], [-67.8, 47.1], [-69.2, 47.4], [-71.5, 45], [-75, 45], [-76.8, 43.6], [-79.2, 43.4],
+  [-79, 42.8], [-83, 41.8], [-82.4, 43], [-83.9, 46], [-88, 48.3], [-89.6, 48], [-95.2, 49], [-123, 49]];
+
 // =====================================================================================================
 // Scenes
 // =====================================================================================================
@@ -351,9 +360,8 @@ export const scenes = {
     const cam = {...camM, scale: 330, cy: 860};
     const st = binaryStage(stage, t, map, cam, {track: false, sheet: {fadeX: 1.5, fadeZ: 1.15}});
     const a = smooth((p - 0.08) / 0.1), mid = [(st.scr.P1[0] + st.scr.P2[0]) / 2, (st.scr.P1[1] + st.scr.P2[1]) / 2];
-    leader(stage, '두 블랙홀', [st.scr.P1[0], st.scr.P1[1] - st.scr.r1 - 6], [720, 520], {alpha: a, sub: `태양의 ${M1}배 · ${M2}배`});
+    leader(stage, '두 블랙홀', [st.scr.P1[0], st.scr.P1[1] - st.scr.r1 - 6], [770, 500], {alpha: a, sub: `태양의 ${M1}배 · ${M2}배`});
     void mid;
-    sourceLine(stage, `${footExag} · 실제 시간의 약 ${base.label}배 느리게`, {size: 24});
   },
 
   origin(stage, t, p, ctx) {
@@ -362,21 +370,23 @@ export const scenes = {
     // 1) 重力波 — glyph split
     const ety = cur === 's03' ? 1 : 0.55, glyphs = [['重', '무거울 중'], ['力', '힘 력'], ['波', '물결 파']];
     glyphs.forEach(([g, r], i) => {
-      const x = 200 + i * 300, y = 360, a = smooth((t - tl.at('s03') - i * 0.5) / 0.4);
+      const x = 240 + i * 300, y = 360, a = smooth((t - tl.at('s03') - i * 0.5) / 0.4);
       withAlpha(c, a, () => {
         rect(c, x - 110, y - 82, 220, 200, 8, rgba(T.plate, 0.85), rgba(i === 2 && cur === 's03' ? WAVE : T.border, 1), 1.5);
         stage.text(g, x, y - 6, {size: 104, weight: 700, color: rgba(T.ink, ety + 0.2), align: 'center'});
         stage.text(r, x, y + 84, {size: 30, weight: 500, color: i === 2 ? WAVE : T.muted, align: 'center'});
       });
     });
-    stage.text('영어 gravitational wave · 수면의 중력파(gravity wave)와 다른 말', 500, 552, {size: 24, color: T.muted, align: 'center', alpha: smooth((t - tl.at('s03') - 2) / 0.6)});
+    stage.text('영어 gravitational wave · 수면의 중력파(gravity wave)와 다른 말', 540, 552, {size: 24, color: T.muted, align: 'center', alpha: smooth((t - tl.at('s03') - 2) / 0.6), maxWidth: 940});
     // 2) timeline strip
     const nodes = [[1915, '일반상대성', '이론', 's04'], [1916, '중력파', '예측', 's04'], [1936, '아인슈타인의', '의심', 's04'],
-      [1974, '헐스·테일러', '쌍성 펄서', 's05'], [1993, '노벨', '물리학상', 's06'], [2015, 'LIGO', '첫 검출', 's06']];
-    const order = ['s03', 's04', 's05', 's06'], ci = order.indexOf(cur), ly = 690;
-    line(c, [[80, ly], [920, ly]], rgba(T.border, 1), 3);
+      [1974, '헐스·테일러', '쌍성 펄서', 's05'], [1993, '노벨', '물리학상', 's05+'], [2015, 'LIGO', '첫 검출', 's05+']];
+    // activation groups (s06 was cut: 1993/2015 light up late in s05, without narration)
+    const tGroup = {s03: tl.at('s03'), s04: tl.at('s04'), s05: tl.at('s05'), 's05+': tl.at('s05:end', -1.5)};
+    const order = ['s03', 's04', 's05', 's05+'], ci = order.reduce((k, g, i) => (t >= tGroup[g] - 0.2 ? i : k), 0), ly = 690;
+    line(c, [[100, ly], [980, ly]], rgba(T.border, 1), 3);
     nodes.forEach(([yr, l1, l2, sid], i) => {
-      const x = 120 + i * 152, si = order.indexOf(sid), on = si === ci ? 1 : 0, past = si < ci;
+      const x = 160 + i * 152, si = order.indexOf(sid), on = si === ci ? 1 : 0, past = si < ci;
       const a = si <= ci ? 1 : 0.35, col = on ? T.accent : past ? T.ink : T.muted;
       withAlpha(c, a, () => {
         circle(c, x, ly, on ? 11 : 8, col); if (on) ring(c, x, ly, 18, rgba(T.accent, 0.6), 2);
@@ -385,17 +395,17 @@ export const scenes = {
         stage.text(l2, x, ly + 70, {size: 24, color: on ? T.ink : T.muted, align: 'center', weight: on ? 500 : 400});
       });
     });
-    // 41-year bracket (s06)
-    const b41 = smooth((t - tl.at('s06') - 3.5) / 0.6);
+    // 41-year bracket (late in s05)
+    const b41 = smooth((t - tGroup['s05+'] - 0.3) / 0.6);
     withAlpha(c, b41, () => {
-      const xa = 120 + 3 * 152, xb = 120 + 5 * 152, yb = ly + 108;
+      const xa = 160 + 3 * 152, xb = 160 + 5 * 152, yb = ly + 108;
       line(c, [[xa, yb - 8], [xa, yb], [xb, yb], [xb, yb - 8]], rgba(T.accent, 0.9), 2);
       stage.text('간접 증거 → 직접 검출 41년', (xa + xb) / 2, yb + 26, {size: 24, color: T.accent, align: 'center'});
     });
     // 3) binary-pulsar plot (shape only)
     const pa = smooth((t - tl.at('s05') - 0.5) / 0.8) * 0.85 + 0.15;
     withAlpha(c, pa, () => {
-      const X0 = 190, X1 = 900, Y0 = 960, Y1 = 1250;
+      const X0 = 200, X1 = 970, Y0 = 960, Y1 = 1250;
       stage.text('쌍성 펄서 공전 주기 변화 — 예측 곡선 위의 관측점', 80, 900, {size: 28, weight: 500, color: T.ink});
       line(c, [[X0, Y0 - 10], [X0, Y1], [X1, Y1]], rgba(T.muted, 0.9), 2);
       stage.text('누적 변화', X0 - 14, Y0 + 10, {size: 24, color: T.muted, align: 'right'});
@@ -403,7 +413,7 @@ export const scenes = {
       const fx = u => [X0 + (X1 - X0) * u, Y0 + 20 + (Y1 - Y0 - 40) * u * u];
       const curve = []; for (let i = 0; i <= 60; i++) curve.push(fx(i / 60));
       line(c, curve, rgba(T.accent2, 0.9), 3);
-      stage.text('일반상대성이론 예측', X1 - 10, fx(0.78)[1] - 70, {size: 24, color: T.accent2, align: 'right'});
+      stage.text('일반상대성이론 예측 (모양만)', X1 - 10, fx(0.78)[1] - 70, {size: 24, color: T.accent2, align: 'right'});
       const ns = 16, show = clamp((t - tl.at('s05') - 1.5) / 5);
       for (let i = 0; i < ns; i++) {
         if (i / ns > show) break;
@@ -411,23 +421,22 @@ export const scenes = {
         circle(c, x, y + dy, 7, T.ink); ring(c, x, y + dy, 7, rgba(T.bg, 1), 1.5);
       }
       // the pulsar pair (two neutron stars), inset
-      const ix = 330, iy = 1110, ph = t * 1.4;
+      const ix = 370, iy = 1110, ph = t * 1.4;
       ring(c, ix, iy, 46, rgba(T.border, 1), 1.5);
       circle(c, ix + 46 * Math.cos(ph), iy + 18 * Math.sin(ph), 7, LIGHT); circle(c, ix - 46 * Math.cos(ph), iy - 18 * Math.sin(ph), 7, LIGHT);
       stage.text('PSR B1913+16 · 중성자별 둘', ix, iy + 52, {size: 24, color: T.muted, align: 'center'});
       stage.text('주기 감소 ≈ 연 76 μs', ix, iy + 82, {size: 24, color: T.muted, align: 'center'});
     });
-    sourceLine(stage, '아래 그래프: 모양만 보여주는 그림 · 축 값 생략 (Weisberg & Huang 2016)', {size: 24});
   },
 
   essence(stage, t, p, ctx) {
     const {ctx: c} = stage, T = stage.theme, tl = ctx.tl, base = mapOf(ctx);
     const map = shiftedMap(base, tl.at('essence'), TAU0 - 0.25);
     const sp = easeInOut((t - tl.at('s08') + 0.2) / 1.2);           // 0: one big stage, 1: split comparison
-    const camR = {...camM, scale: lerp(300, 165, sp), cx: lerp(500, 728, sp), cy: lerp(760, 790, sp)};
+    const camR = {...camM, scale: lerp(300, 165, sp), cx: lerp(540, 780, sp), cy: lerp(760, 790, sp)};
     // left: symmetric spinning sphere — static well, no ripples
     if (sp > 0) withAlpha(c, sp, () => {
-      const camL = {...camR, cx: 272};
+      const camL = {...camR, cx: 300};
       const R = 0.30, Sx = {wells: [{x: 0, z: 0, D: WELL_D * MTOT, s: wellSigma(MTOT)}], rings: []};
       const [h0] = sheetHeight(0, 0, Sx), P = project([0, h0 + R * 0.7, 0], camL), rp = R * camL.scale * P[3];
       drawSheet(stage, camL, Sx, {fadeX: 1.35, fadeZ: 1.0, ext: 1.5, n: 18, bodies: [{depth: P[2], draw: () => {
@@ -438,14 +447,14 @@ export const scenes = {
           c.beginPath(); c.ellipse(P[0], P[1], Math.abs(w) * rp, rp, 0, 0, TAU); c.strokeStyle = rgba('#2a2620', 0.45); c.lineWidth = 1.5; c.stroke();
         }
       }}]});
-      drawLabel(stage, '대칭 회전 — 파동 없음', 272, 1110, {size: 30, align: 'center'});
-      stage.text('모양이 그대로인 공', 272, 1150, {size: 24, color: T.muted, align: 'center'});
+      drawLabel(stage, '대칭 회전 — 파동 없음', 300, 1110, {size: 30, align: 'center'});
+      stage.text('모양이 그대로인 공', 300, 1150, {size: 24, color: T.muted, align: 'center'});
     });
     const st = binaryStage(stage, t, map, camR, {track: false, sheet: sp > 0 ? {fadeX: lerp(1.55, 1.35, sp), fadeZ: lerp(1.15, 1.0, sp), ext: 1.5, n: 22} : {fadeX: 1.55, fadeZ: 1.15}});
     if (sp > 0) withAlpha(c, sp, () => {
-      drawLabel(stage, '모양이 바뀌는 질량 — 파동', 728, 1110, {size: 30, align: 'center', key: WAVE});
-      stage.text('서로 도는 두 덩어리', 728, 1150, {size: 24, color: T.muted, align: 'center'});
-      line(c, [[500, 560], [500, 1170]], rgba(T.border, 1), 2);
+      drawLabel(stage, '모양이 바뀌는 질량 — 파동', 780, 1110, {size: 30, align: 'center', key: WAVE});
+      stage.text('서로 도는 두 덩어리', 780, 1150, {size: 24, color: T.muted, align: 'center'});
+      line(c, [[540, 560], [540, 1170]], rgba(T.border, 1), 2);
     });
     // s07: one wavefront, followed by a marker "빛의 속도 c"
     const mk = 1 - sp;
@@ -457,12 +466,11 @@ export const scenes = {
       const a = mk * smooth((t - tl.at('s07') - 1.5) / 0.6) * (1 - smooth((r.R - 1.25) / 0.2));
       withAlpha(c, a, () => {
         arrow(c, P, Q, T.accent, 3.5);
-        const lx = Math.min(Q[0] - 20, 620), ly = Q[1] + 40;
+        const lx = Math.min(Q[0] - 20, 680), ly = Q[1] + 40;
         stage.text('빛의 속도 c', lx, ly, {role: 'display', weight: 700, size: 34, color: T.accent});
         stage.text('휘어짐의 변화가 퍼져 나감', lx, ly + 38, {size: 24, color: T.ink});
       });
     }
-    sourceLine(stage, `${footExag} · 파면 속도는 화면용 · 실제는 빛의 속도`, {size: 24});
   },
 
   mechanism(stage, t, p, ctx) {
@@ -472,8 +480,8 @@ export const scenes = {
     // stage labels
     const n2 = Math.floor((phiAt(st.tau) - phiAt(TAU0)) / Math.PI), nOrb = Math.floor(n2 / 2);
     const s9 = sentOn(ctx, t, 's09');
-    drawLabel(stage, '파면: 한 바퀴에 두 번', 932, 300, {size: 28, align: 'right', key: WAVE, color: s9 > 0.5 ? T.light : T.ink});
-    stage.text(`공전 ${nOrb}바퀴 · 파면 ${n2}개`, 932, 340, {size: 24, color: s9 > 0.5 ? T.ink : T.muted, align: 'right'});
+    drawLabel(stage, '파면: 한 바퀴에 두 번', 1012, 300, {size: 28, align: 'right', key: WAVE, color: s9 > 0.5 ? T.light : T.ink});
+    stage.text(`공전 ${nOrb}바퀴 · 파면 ${n2}개`, 1012, 340, {size: 24, color: s9 > 0.5 ? T.ink : T.muted, align: 'right'});
     const la = smooth((t - map.tA - 0.8) / 0.5) * (1 - smooth((t - tl.at('s09:end')) / 0.6));
     const [tx, ty, tr] = st.track;
     leader(stage, '추적 표식', [tx - tr - 12, ty - 6], [150, 300], {alpha: la, color: TRACK, size: 28, sub: `작은 블랙홀 ${M2} M☉`});
@@ -483,7 +491,6 @@ export const scenes = {
     });
     zoomStrip(stage, t, map, camM, st);
     readouts(stage, t, map, st, {hi: {f: s9, r: sentOn(ctx, t, 's10'), p: sentOn(ctx, t, 's11'), v: sentOn(ctx, t, 's12')}});
-    foot2(stage, `${footExag} · 파면 간격·속도는 화면용(실제 파장 1,200~12,500 km)`, `모형: Peters(1964) 점질량 원궤도 · Mc ${MC} M☉ · 블랙홀 크기 = 슈바르츠실트 반지름(같은 축척)`);
   },
 
   merger(stage, t, p, ctx) {
@@ -492,97 +499,191 @@ export const scenes = {
     const ar = smooth((st.tau - 0.0005) / 0.004);
     // hard switch (no simultaneous cross-fade at the same position → no ghosted double text)
     if (ar < 0.5) {
-      withAlpha(c, 1 - 2 * ar, () => drawLabel(stage, '처프 — 진동수와 세기가 함께 상승', 500, 300, {size: 30, align: 'center', key: WAVE}));
+      withAlpha(c, 1 - 2 * ar, () => drawLabel(stage, '처프 — 진동수와 세기가 함께 상승', 540, 300, {size: 30, align: 'center', key: WAVE}));
     } else {
       withAlpha(c, 2 * ar - 1, () => {
-        drawLabel(stage, '링다운 — 약 250 Hz, 수 ms 만에 감쇠', 500, 300, {size: 30, align: 'center', key: WAVE});
-        stage.text(`하나가 된 블랙홀 ${MFIN} M☉ · 반지름 ${fmt(RSF)} km`, 500, 340, {size: 24, color: T.muted, align: 'center'});
+        drawLabel(stage, '링다운 — 약 250 Hz, 수 ms 만에 감쇠', 540, 300, {size: 30, align: 'center', key: WAVE});
+        stage.text(`하나가 된 블랙홀 ${MFIN} M☉ · 반지름 ${fmt(RSF)} km`, 540, 340, {size: 24, color: T.muted, align: 'center'});
       });
     }
     zoomStrip(stage, t, map, camM, st);
     readouts(stage, t, map, st, {hi: {f: 1 - ar, p: 1 - ar}});
-    foot2(stage, `${footExag} · 병합 순간(±수 ms)은 점질량 모형 밖 — 그림은 보간`, `링다운: h = e^(−τ/4 ms) · cos(2π·250 Hz·τ) · 모형: Peters(1964), Mc ${MC} M☉`);
   },
 
   detect(stage, t, p, ctx) {
     const {ctx: c} = stage, T = stage.theme, tl = ctx.tl, base = mapOf(ctx);
-    // replay of the same model chirp, same slow-motion factor; peak lands on "흔들었고" in s17
-    let tPeak; try { tPeak = tl.at({sentence: 's17', word: '흔들었고'}); } catch { tPeak = tl.at('s17:mid'); }
-    const map = shiftedMap(base, tPeak, 0), tau = map.tau(t), hd = 0.10 * hAt(Math.max(tau, TAU_MIN));
-    const cx = 200, cy = 820, L = 500;
-    const Lx = L * (1 + hd), Ly = L * (1 - hd);
-    const tube = (x0, y0, x1, y1) => { line(c, [[x0, y0], [x1, y1]], rgba(T.border, 1), 26, {cap: 'butt'}); line(c, [[x0, y0], [x1, y1]], rgba(T.plate, 1), 20, {cap: 'butt'}); };
-    tube(cx, cy, cx + L * 1.12, cy); tube(cx, cy, cx, cy - L * 1.12);
-    // nominal end positions
-    line(c, [[cx + L, cy - 30], [cx + L, cy + 30]], rgba(T.muted, 0.7), 1.5, {dash: [4, 4]});
-    line(c, [[cx - 30, cy - L], [cx + 30, cy - L]], rgba(T.muted, 0.7), 1.5, {dash: [4, 4]});
-    // laser beams
-    const beam = rgba('#FF6B4A', 0.9);
-    line(c, [[70, cy], [cx, cy]], beam, 3); line(c, [[cx, cy], [cx + Lx, cy]], beam, 3); line(c, [[cx, cy], [cx, cy - Ly]], beam, 3);
-    line(c, [[cx, cy], [cx, cy + 120]], rgba('#FF6B4A', 0.5 + 2 * Math.abs(hd)), 3, {dash: [6, 5]});
-    // mirrors (test masses)
-    rect(c, cx + Lx - 4, cy - 26, 14, 52, 3, LIGHT); rect(c, cx - 26, cy - Ly - 10, 52, 14, 3, LIGHT);
-    // beam splitter
-    c.save(); c.translate(cx, cy); c.rotate(-Math.PI / 4); rect(c, -24, -4, 48, 8, 2, rgba('#CFE6EE', 0.95)); c.restore();
-    rect(c, 40, cy - 16, 30, 32, 4, '#3a2a28', rgba('#FF6B4A', 1), 2);
-    rect(c, cx - 18, cy + 120, 36, 26, 4, '#22343b', rgba(T.ink, 0.9), 2);
-    stage.text('레이저', 55, cy + 42, {size: 24, color: T.muted, align: 'center'});
-    stage.text('빔 분할기', cx + 30, cy + 44, {size: 24, color: T.muted});
-    stage.text('광검출기', cx + 30, cy + 134, {size: 24, color: T.muted});
-    stage.text('거울', cx + Lx + 14, cy - 40, {size: 24, color: T.muted, align: 'center'});
-    stage.text('거울', cx + 44, cy - Ly - 4, {size: 24, color: T.muted});
-    stage.text('팔 4 km', cx + L / 2, cy + 40, {size: 26, weight: 500, color: T.ink, align: 'center'});
-    c.save(); c.translate(cx - 40, cy - L / 2); c.rotate(-Math.PI / 2); stage.text('팔 4 km', 0, 0, {size: 26, weight: 500, color: T.ink, align: 'center'}); c.restore();
-    // stretch indicators
-    const sx = hd > 0 ? '늘어남' : '줄어듦', sy = hd > 0 ? '줄어듦' : '늘어남', ia = clamp(Math.abs(hd) / 0.02);
-    stage.text(sx, cx + L + 4, cy + 44, {size: 24, color: hd > 0 ? T.up : T.down, alpha: ia, align: 'center'});
-    stage.text(sy, cx - 30, cy - L + 24, {size: 24, color: hd > 0 ? T.down : T.up, alpha: ia, align: 'right'});
-    // detector output inside the L
-    const gx0 = 290, gx1 = 900, gy = 540, ga = 52, win = 0.14, tauN = Math.min(tau, RD_LEN + 0.04);
-    rect(c, gx0 - 16, gy - 108, gx1 - gx0 + 32, 196, 10, rgba(T.plate, 0.85), rgba(T.border, 1), 1.5);
-    stage.text('광검출기 출력 ∝ h(t) · 같은 모형 재생', gx0, gy - 84, {size: 24, color: T.muted});
-    line(c, [[gx0, gy], [gx1, gy]], rgba(T.border, 1), 1);
-    const pts = []; for (let i = 0; i <= 300; i++) { const tt = tauN - win + win * i / 300; pts.push([gx0 + (gx1 - gx0) * i / 300, gy - ga * (tt < TAU_MIN ? 0 : hAt(tt))]); }
-    line(c, pts, WAVE, 2.2);
-    if (tau < RD_LEN + 0.04) line(c, [[gx1, gy - ga - 4], [gx1, gy + ga + 4]], TRACK, 2.5);
-    stage.text('h 최대 ≈ 1.0×10⁻²¹', gx1, gy + 72, {size: 24, color: T.ink, align: 'right'});
-    // fact cards (appear by sentence)
-    const cards = [
-      ['s15', '13억 광년', '약 410 Mpc · 신호가 온 거리'],
-      ['s15b', '36 + 29 → 62 M☉', '합쳐진 블랙홀 (태양 질량 기준)'],
-      ['s16', '3 M☉ → 중력파', '0.2초 동안 · 최대 출력 3.6×10⁴⁹ W'],
-      ['s17', '≈ 4×10⁻¹⁸ m', '4 km 팔 길이 변화 · 양성자 지름의 약 1/400'],
-    ];
-    cards.forEach(([sid, big, small], i) => {
-      const x = 60 + (i % 2) * 446, y = 1010 + Math.floor(i / 2) * 124, s = tl.sentence(sid);
-      const a = smooth((t - s.start + 0.1) / 0.4), on = t >= s.start - 0.1 && t < s.end + 0.8;
+    const wordAt = (sid, w, frac) => { try { return tl.at({sentence: sid, word: w}); } catch { const s = tl.sentence(sid); return s.start + frac * (s.end - s.start); } };
+    const tB = tl.at('s17') - 0.3, pA = 1 - smooth((t - tB) / 0.6), pB = smooth((t - tB - 0.3) / 0.6);
+    // ---------- phase A (s15, s15b, s16): fact cards + the signal travelling to Earth ----------
+    if (pA > 0) withAlpha(c, pA, () => {
+      const cards = [
+        ['s15', '13억 광년', '약 410 Mpc · 신호가 출발한 거리'],
+        ['s15b', '36 + 29 → 62 M☉', '두 블랙홀이 합쳐진 질량 (태양 = 1)'],
+        ['s16', '3 M☉ → 중력파', '0.2초 동안 · 최대 출력 3.6×10⁴⁹ W'],
+      ];
+      cards.forEach(([sid, big, small], i) => {
+        const x = 100, y = 300 + i * 132, s = tl.sentence(sid);
+        const a = smooth((t - s.start + 0.1) / 0.4), on = t >= s.start - 0.1 && t < s.end + 0.8;
+        withAlpha(c, a, () => {
+          rect(c, x, y, 880, 116, 8, rgba(T.plate, 0.92), on ? T.accent : rgba(T.border, 1), on ? 2.5 : 1.5);
+          stage.text(big, x + 28, y + 42, {role: 'display', weight: 700, size: 44, color: on ? T.light : T.ink});
+          stage.text(small, x + 28, y + 88, {size: 26, color: T.muted});
+        });
+      });
+      // travel strip: merged hole → Earth, wavefronts moving right
+      const y = 860, xa = 150, xb = 930, a = smooth((t - tl.at('s15') - 1.2) / 0.6);
       withAlpha(c, a, () => {
-        rect(c, x, y, 434, 112, 8, rgba(T.plate, 0.92), on ? T.accent : rgba(T.border, 1), on ? 2.5 : 1.5);
-        stage.text(big, x + 20, y + 40, {role: 'display', weight: 700, size: 38, color: on ? T.light : T.ink, maxWidth: 400});
-        stage.text(small, x + 20, y + 82, {size: 24, color: T.muted, maxWidth: 400});
+        line(c, [[xa, y], [xb, y]], rgba(T.border, 1), 2, {dash: [6, 8]});
+        for (let k = 0; k < 5; k++) {
+          const u = ((t * 0.12 + k / 5) % 1), x = lerp(xa + 40, xb - 40, u), al = Math.sin(Math.PI * u);
+          ring(c, x - 70, y, 70, rgba(CREST, 0.85 * al), 4, -0.6, 0.6);
+        }
+        drawBH(c, xa, y, 26);
+        sphere(c, xb, y, 26, '#3E7FB0', {shade: '#0b1e26'});
+        stage.text('62 M☉ 블랙홀', xa, y + 58, {size: 26, color: T.ink, align: 'center'});
+        stage.text('지구', xb, y + 58, {size: 26, color: T.ink, align: 'center'});
+        stage.text('빛의 속도로 13억 년을 온 물결', 540, y - 70, {size: 28, weight: 500, color: CREST, align: 'center'});
+      });
+      // s16: peak power vs all the starlight of the observable universe (≈ 50×; LIGO fact sheet)
+      const ap = smooth((t - wordAt('s16', '출력', 0.6) + 0.2) / 0.6);
+      withAlpha(c, ap, () => {
+        const x0 = 100, W = 880, yb = 1100;
+        stage.text('그 순간의 출력 비교', x0, yb - 50, {size: 26, weight: 500, color: T.ink});
+        stage.text('우주의 모든 별빛', x0, yb, {size: 24, color: T.muted});
+        rect(c, x0 + 230, yb - 12, Math.max(6, W - 230) / 50, 24, 4, LIGHT);
+        stage.text('1', x0 + 230 + (W - 230) / 50 + 12, yb, {size: 24, color: T.muted});
+        stage.text('중력파 (최대)', x0, yb + 50, {size: 24, color: T.ink});
+        rect(c, x0 + 230, yb + 38, (W - 230) * smooth((t - wordAt('s16', '출력', 0.6)) / 1.5), 24, 4, CREST);
+        stage.text('약 50배', x0 + W, yb + 88, {role: 'display', weight: 700, size: 30, color: CREST, align: 'right'});
       });
     });
-    textSup(stage, [['팔 늘고 줄기는 약 10', false], ['20', true], ['배 과장 · 신호는 같은 모형을 같은 배율로 다시 재생', false]], stage.safe.left + 6, stage.safe.captionTop - 64, {size: 24, color: T.muted, alpha: 0.9});
-    sourceLine(stage, '자료: LIGO Scientific Collaboration, PRL 116, 061102 (2016)', {size: 24});
+    if (pB <= 0) return;
+    // ---------- phase B (s17, s17b, s17c): how LIGO measures ----------
+    c.save(); c.globalAlpha *= pB;
+    const N = base.N, tArr = tl.at('s17c', 0.2), tPeak = Math.max(tArr + 2.5, wordAt('s17c', '변합니다', 0.55));
+    const hAtT = ts => (ts < tArr ? 0 : hAt(Math.max((ts - tPeak) / N, TAU_MIN)) * smooth((ts - tArr) / 0.8));
+    const h = hAtT(t), hd = 0.10 * h, Bright = Math.sin(Math.PI / 2 * clamp(Math.abs(h))) ** 2;
+    // step times: ① continuous laser, ② split into two arms and back, ③ recombine → detector, ④ brightness changes
+    const tS = [tl.at('s17b'), wordAt('s17b', '직각인', 0.35), wordAt('s17b', '되돌아온', 0.65), tl.at('s17c')];
+    const lit = tS.map(x => smooth((t - x + 0.1) / 0.5)), cur = tS.reduce((k, x, i) => (t >= x - 0.1 ? i : k), -1);
+    // 4th fact: the size of the change
+    {
+      const s = tl.sentence('s17'), a = smooth((t - s.start + 0.1) / 0.4), on = t < s.end + 0.6;
+      withAlpha(c, a, () => {
+        rect(c, 60, 284, 620, 150, 8, rgba(T.plate, 0.92), on ? T.accent : rgba(T.border, 1), on ? 2.5 : 1.5);
+        stage.text('팔 길이 변화', 84, 318, {size: 26, color: T.muted});
+        textSup(stage, [['≈ 4×10', false], ['−18', true], [' m', false]], 84, 366, {role: 'display', weight: 700, size: 46, color: on ? T.light : T.ink});
+        stage.text('양성자 지름의 수백분의 1', 84, 410, {size: 26, color: T.muted});
+      });
+    }
+    // inset: two observatories, same signal 7 ms apart → direction
+    {
+      const a = smooth((t - tl.at('s17') - 1.0) / 0.6), X0 = 704, Y0 = 290, W = 300, Hh = 128;
+      const P = (lon, lat) => [X0 + (lon + 125) / 58 * W, Y0 + (49.5 - lat) / 25 * Hh];
+      withAlpha(c, a, () => {
+        rect(c, X0 - 12, Y0 - 10, W + 24, 186, 8, rgba(T.plate, 0.92), rgba(T.border, 1), 1.5);
+        poly(c, US.map(([lo, la]) => P(lo, la)), rgba(T.muted, 0.12), rgba(T.muted, 0.7), 1.5);
+        const H1 = P(-119.41, 46.45), L1 = P(-90.77, 30.56);
+        const fl = [tPeak, tPeak + 0.0069 * N].map(x => (t >= x && t < x + 0.6 ? 1 - (t - x) / 0.6 : 0));
+        for (const [pt, f, name, dx, al] of [[L1, fl[0], '리빙스턴', 0, 'center'], [H1, fl[1], '핸퍼드', 0, 'left']]) {
+          if (f > 0) ring(c, pt[0], pt[1], 8 + 22 * (1 - f), rgba(CREST, f), 2.5);
+          circle(c, pt[0], pt[1], 7, T.accent);
+          stage.text(name, al === 'left' ? pt[0] + 14 : pt[0] + dx, al === 'left' ? pt[1] : pt[1] + 24, {size: 24, color: T.ink, align: al});
+        }
+        stage.text('같은 신호, 7 ms 차이 → 방향', X0 + W / 2, Y0 + 158, {size: 24, weight: 500, color: CREST, align: 'center', maxWidth: W + 10});
+      });
+    }
+    // interferometer, seen from above (arms 4 km; changes exaggerated)
+    const bx = 400, by = 940, L = 420, Lx = L * (1 + hd), Ly = L * (1 - hd), LASER = '#FF5A36';
+    const tube = (x0, y0, x1, y1) => { line(c, [[x0, y0], [x1, y1]], rgba(T.border, 1), 30, {cap: 'butt'}); line(c, [[x0, y0], [x1, y1]], rgba(T.deep, 1), 24, {cap: 'butt'}); };
+    tube(bx, by, bx + L * 1.16, by); tube(bx, by, bx, by - L * 1.16);
+    line(c, [[bx + L, by - 34], [bx + L, by + 34]], rgba(T.muted, 0.6), 1.5, {dash: [4, 4]});
+    line(c, [[bx - 34, by - L], [bx + 34, by - L]], rgba(T.muted, 0.6), 1.5, {dash: [4, 4]});
+    // passing gravitational wave (s17c): faint diagonal fronts sweeping across
+    const wv = smooth((t - tArr) / 0.6) * (1 - smooth((t - tPeak - 2.5) / 1.0));
+    if (wv > 0) clipRect(c, 0, 450, 1080, 560, 0, () => { for (let k = 0; k < 4; k++) {
+      const u = ((t - tArr) * 0.35 + k / 4) % 1, d = lerp(-300, 900, u);
+      withAlpha(c, wv * Math.sin(Math.PI * u) * 0.5, () => line(c, [[bx + d, by - 560], [bx + d - 560, by]], CREST, 3));
+    } });
+    if (wv > 0) stage.text('중력파가 지나감', 84, 476, {size: 24, color: CREST, alpha: wv});
+    // beams: one steady (continuous) laser — no pulses
+    const grow = (t0, d) => smooth((t - t0) / d);
+    const beam = (a, b, q, w = 4, al = 0.95) => { if (q <= 0) return; const e = [lerp(a[0], b[0], q), lerp(a[1], b[1], q)]; line(c, [a, e], rgba(LASER, 0.25 * al), w * 3); line(c, [a, e], rgba(LASER, al), w); };
+    const g1 = grow(tS[0], 0.6), g2 = grow(tS[1], 0.8), g2b = grow(tS[1] + 0.8, 0.8), g3 = grow(tS[2], 0.6);
+    beam([150, by], [bx, by], g1);
+    beam([bx, by - 4], [bx + Lx - 6, by - 4], g2, 3.5); beam([bx + 4, by], [bx + 4, by - Ly + 6], g2, 3.5);
+    beam([bx + Lx - 6, by + 4], [bx, by + 4], g2b, 3.5, 0.75); beam([bx - 4, by - Ly + 6], [bx - 4, by], g2b, 3.5, 0.75);
+    // recombined light → detector: dark when the arms are equal
+    beam([bx, by], [bx, by + 136], g3, 4, 0.25 + 0.75 * Bright);
+    if (g2 > 0.5) { arrow(c, [bx + 160, by - 4], [bx + 200, by - 4], LASER, 2.5, {head: 12}); arrow(c, [bx + 4, by - 150], [bx + 4, by - 190], LASER, 2.5, {head: 12}); }
+    if (g2b > 0.5) { arrow(c, [bx + 290, by + 4], [bx + 250, by + 4], rgba(LASER, 0.8), 2.5, {head: 12}); arrow(c, [bx - 4, by - 290], [bx - 4, by - 250], rgba(LASER, 0.8), 2.5, {head: 12}); }
+    // parts
+    rect(c, 110, by - 18, 40, 36, 4, '#3a2a28', LASER, 2);
+    rect(c, bx + Lx - 2, by - 28, 14, 56, 3, LIGHT); rect(c, bx - 28, by - Ly - 12, 56, 14, 3, LIGHT);
+    c.save(); c.translate(bx, by); c.rotate(-Math.PI / 4); rect(c, -26, -4, 52, 8, 2, rgba('#CFE6EE', 0.95)); c.restore();
+    const pdy = by + 150;
+    glow(c, bx, pdy, 70, LASER, 0.6 * Bright * g3);
+    rect(c, bx - 20, pdy - 14, 40, 28, 4, mix('#22343b', '#ffb199', Bright * g3), rgba(T.ink, 0.9), 2);
+    stage.text('레이저', 130, by - 42, {size: 24, color: T.muted, align: 'center'});
+    stage.text('빔 분할기', bx + 22, by + 42, {size: 24, color: T.muted});
+    stage.text('거울', bx + Lx + 20, by - 48, {size: 24, color: T.muted, align: 'center'});
+    stage.text('거울', bx - 40, by - Ly, {size: 24, color: T.muted, align: 'right'});
+    stage.text('광검출기', bx - 34, pdy, {size: 24, color: T.muted, align: 'right'});
+    stage.text('팔 4 km', bx + L / 2 + 40, by - 38, {size: 26, weight: 500, color: T.ink, align: 'center'});
+    c.save(); c.translate(bx - 44, by - L / 2 - 40); c.rotate(-Math.PI / 2); stage.text('팔 4 km', 0, 0, {size: 26, weight: 500, color: T.ink, align: 'center'}); c.restore();
+    const ia = clamp(Math.abs(hd) / 0.015);
+    stage.text(hd > 0 ? '늘어남' : '줄어듦', bx + L + 14, by - 80, {size: 24, color: hd > 0 ? T.up : T.down, alpha: ia, align: 'center'});
+    stage.text(hd > 0 ? '줄어듦' : '늘어남', bx - 40, by - L + 84, {size: 24, color: hd > 0 ? T.down : T.up, alpha: ia, align: 'right'});
+    // numbered steps (≤ 12 chars), lit as s17b (①②③) and s17c (④) are spoken
+    const steps = [['① 끊김 없는 레이저', 84, by + 44, 'left'], ['② 둘로 나눠 두 팔 왕복', bx + L / 2 + 130, by + 46, 'center'],
+      ['③ 되돌아와 다시 겹침', bx - 24, by + 92, 'right'], ['④ 길이 차 → 밝기 변화', 470, pdy + 50, 'left']];
+    steps.forEach(([txt, x, y, al], i) => {
+      if (lit[i] <= 0) return;
+      stage.text(txt, x, y, {size: 28, weight: 700, color: i === cur ? T.accent : T.ink, align: al, alpha: lit[i]});
+    });
+    // brightness meter
+    const my = pdy;
+    rect(c, 470, my - 13, 530, 26, 6, rgba(T.border, 1));
+    rect(c, 470, my - 13, Math.max(4, 530 * Bright * g3), 26, 6, mix('#5a3a32', '#FFD2B8', Bright));
+    stage.text('밝기', 470, my - 38, {size: 26, weight: 500, color: T.ink});
+    stage.text(Bright < 0.03 ? '어두움 = 두 팔 길이 같음' : '밝아짐 = 두 팔 길이 다름', 1000, my - 38, {size: 24, color: Bright < 0.03 ? T.muted : T.light, align: 'right', alpha: g3});
+    // traces: h(t) replay and the brightness it produces, with a "지금" marker
+    const gx0 = 500, gx1 = 994, win = 0.14 * N, gy = 600, gb = 786;
+    rect(c, gx0 - 16, 494, gx1 - gx0 + 36, 346, 10, rgba(T.plate, 0.88), rgba(T.border, 1), 1.5);
+    stage.text('중력파 h(t) · 같은 모형 재생', gx0, 522, {size: 24, color: T.muted});
+    stage.text('지금', gx1 + 4, 522, {size: 24, color: TRACK, align: 'right'});
+    line(c, [[gx0, gy], [gx1, gy]], rgba(T.border, 1), 1);
+    const hp = [], bp = [];
+    for (let i = 0; i <= 300; i++) {
+      const ts = t - win + win * i / 300, hv = hAtT(ts), x = gx0 + (gx1 - gx0) * i / 300;
+      hp.push([x, gy - 50 * hv]); bp.push([x, gb - 70 * Math.sin(Math.PI / 2 * clamp(Math.abs(hv))) ** 2]);
+    }
+    line(c, hp, WAVE, 2.4);
+    stage.text('검출기 밝기', gx0, gb - 90, {size: 24, color: T.muted});
+    line(c, [[gx0, gb], [gx1, gb]], rgba(T.border, 1), 1);
+    line(c, bp, '#FFD2B8', 2.4);
+    line(c, [[gx1, 544], [gx1, gb + 14]], TRACK, 2.5);
+    stage.text('팔 길이 변화는 크게 과장해서 그림', gx1, gb + 34, {size: 24, color: T.muted, align: 'right', alpha: Math.max(wv, 0.6)});
+    c.restore();
   },
 
   myth(stage, t, p, ctx) {
     const {ctx: c} = stage, T = stage.theme, base = mapOf(ctx), tl = ctx.tl;
     const s = tl.sentence('s18'), q = clamp((t - s.start) / (s.end - s.start));
     // 1) space: binary + rings, a speaker crossed out
-    rect(c, 60, 300, 880, 270, 10, rgba(T.deep, 0.9), rgba(T.border, 1), 1.5);
+    rect(c, 60, 300, 960, 270, 10, rgba(T.deep, 0.9), rgba(T.border, 1), 1.5);
     stage.text('우주 공간 (진공)', 84, 330, {size: 26, weight: 500, color: T.muted});
     const map = shiftedMap(base, s.end + 2, TAU0 * 0.3);
-    const camS = {...camM, scale: 120, cx: 330, cy: 450};
-    clipRect(c, 61, 301, 878, 268, 10, () => binaryStage(stage, t, map, camS, {track: false, sheet: {n: 18, fadeX: 1.6, fadeZ: 1.2, ext: 1.7, width: 1.2}}));
+    const camS = {...camM, scale: 120, cx: 320, cy: 450};
+    clipRect(c, 61, 301, 958, 268, 10, () => binaryStage(stage, t, map, camS, {track: false, sheet: {n: 18, fadeX: 1.6, fadeZ: 1.2, ext: 1.7, width: 1.2}}));
     const spk = (x, y, sc, col) => {
       rect(c, x - 24 * sc, y - 13 * sc, 16 * sc, 26 * sc, 2, rgba(col, 0.25), col, 3);
       poly(c, [[x - 8 * sc, y - 13 * sc], [x + 16 * sc, y - 32 * sc], [x + 16 * sc, y + 32 * sc], [x - 8 * sc, y + 13 * sc]], rgba(col, 0.25), col, 3);
     };
-    const sx = 720, sy = 440;
+    const sx = 780, sy = 430;
     spk(sx, sy, 1.3, T.muted);
     line(c, [[sx - 50, sy - 50], [sx + 50, sy + 50]], T.accent, 4); line(c, [[sx + 50, sy - 50], [sx - 50, sy + 50]], T.accent, 4);
-    stage.text('진공에서는 소리가 전달되지 않습니다', 720, 528, {size: 24, color: T.ink, align: 'center'});
+    stage.text('진공에서는 소리가 전달되지 않습니다', 780, 528, {size: 24, color: T.ink, align: 'center'});
     // 2) flow: space stretches → measured with light → numbers → converted to sound
     const step = (i, x, y, title, sub) => {
       const a = smooth((q - 0.12 - i * 0.14) / 0.06);
@@ -598,7 +699,7 @@ export const scenes = {
     withAlpha(c, a2, () => arrow(c, [90, 720], [90, 820], T.muted, 3));
     const a3 = step(2, 120, 880, '③ 빛으로 잰 숫자 h(t)', '');
     withAlpha(c, a3, () => {
-      const y = 940, x0 = 120, x1 = 900, pts = [];
+      const y = 940, x0 = 120, x1 = 960, pts = [];
       rect(c, x0 - 10, y - 30, x1 - x0 + 20, 60, 6, rgba(T.plate, 0.9), rgba(T.border, 1), 1);
       for (let i = 0; i <= 260; i++) { const tt = -0.12 + 0.13 * i / 260; pts.push([x0 + (x1 - x0) * i / 260, y - 22 * hAt(tt)]); }
       line(c, pts, WAVE, 2);
@@ -607,40 +708,25 @@ export const scenes = {
     const a4 = step(3, 120, 1070, '④ 사람이 듣기 좋게 소리로 변환', '');
     withAlpha(c, a4, () => {
       arrow(c, [90, 980], [90, 1050], T.muted, 3);
-      drawLabel(stage, '소리로 변환', 640, 1070, {size: 28, key: T.accent});
-      spk(700, 1160, 1.0, T.ink);
-      for (let k = 0; k < 3; k++) ring(c, 700, 1160, 40 + 18 * k + 6 * Math.sin(t * 4 - k), rgba(T.ink, 0.5 - 0.12 * k), 2, -0.7, 0.7);
-      stage.text('지구 위 스피커', 700, 1230, {size: 24, color: T.muted, align: 'center'});
+      drawLabel(stage, '소리로 변환', 700, 1070, {size: 28, key: T.accent});
+      spk(780, 1160, 1.0, T.ink);
+      for (let k = 0; k < 3; k++) ring(c, 780, 1160, 40 + 18 * k + 6 * Math.sin(t * 4 - k), rgba(T.ink, 0.5 - 0.12 * k), 2, -0.7, 0.7);
+      stage.text('지구 위 스피커', 780, 1230, {size: 24, color: T.muted, align: 'center'});
       stage.text('빛으로 잰 숫자를 소리로 바꾼 것', 120, 1150, {size: 28, weight: 500, color: T.light});
     });
-    sourceLine(stage, '진공에서는 소리가 전달되지 않습니다 · 들은 것은 빛으로 잰 숫자를 바꾼 소리', {size: 24});
   },
 
   close(stage, t, p, ctx) {
     const T = stage.theme, {ctx: c} = stage;
-    stage.text('정리', 500, 400, {role: 'display', weight: 500, size: 26, color: T.accent, align: 'center', tracking: 3, alpha: smooth(p / 0.15)});
-    endCard(stage, {kicker: '', takeaway: '“질량이 흔들리면 공간이 출렁이고, 그 출렁임은 빛의 속도로 퍼져 나간다”', lines: [], p, y: 560});
-    const a = smooth((p - 0.15) / 0.15);
-    withAlpha(c, a, () => {
-      stage.text('자료: LIGO/Virgo, GW150914 · Phys. Rev. Lett. 116, 061102 (2016)', 500, 900, {size: 26, color: T.muted, align: 'center', maxWidth: 860});
-      stage.text('모형: Peters(1964) 점질량 원궤도 근사 · 격자·파면은 설명용 과장', 500, 945, {size: 24, color: T.muted, align: 'center', maxWidth: 860});
-      const lines = stage.wrap('음악: ' + MUSIC_CREDIT, {size: 24, maxWidth: 840});
-      lines.forEach((l, i) => stage.text(l, 500, 1180 + i * 34, {size: 24, color: rgba(T.muted, 1), align: 'center', alpha: 0.85}));
-    });
+    stage.text('정리', 540, 430, {role: 'display', weight: 500, size: 26, color: T.accent, align: 'center', tracking: 3, alpha: smooth(p / 0.15)});
+    endCard(stage, {kicker: '', takeaway: '“질량이 흔들리면 공간이 출렁이고, 그 출렁임은 빛의 속도로 퍼져 나간다”', lines: [], p, y: 600});
     // the merged black hole, quiet
-    const camC = {...camM, scale: 150, cy: 1060};
+    const a = smooth((p - 0.1) / 0.15);
+    const camC = {...camM, scale: 200, cy: 1000};
     const map = shiftedMap(mapOf(ctx), ctx.tl.at('close'), RD_LEN + 2);
-    withAlpha(c, 0.7 * a, () => binaryStage(stage, t, map, camC, {track: false, rings: false, sheet: {n: 18, fadeX: 1.4, fadeZ: 0.55, ext: 1.5, width: 1.1, alpha: 0.4}}));
+    withAlpha(c, 0.8 * a, () => binaryStage(stage, t, map, camC, {track: false, rings: false, sheet: {n: 20, fadeX: 1.4, fadeZ: 0.7, ext: 1.5, width: 1.2, alpha: 0.5}}));
   },
 };
-
-const MUSIC_CREDIT = (() => {
-  try {
-    const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-    const reg = JSON.parse(fs.readFileSync(path.join(process.env.SCISHORT_ROOT || root, 'assets/music/registry.json'), 'utf8'));
-    return reg.tracks.zabriskie_patriarch.attribution;
-  } catch { return '"The Life and Death of a Certain K. Zabriskie, Patriarch" by Chris Zabriskie (CC BY 4.0)'; }
-})();
 
 /** Drawn after the scene, before captions. */
 export function overlays(stage, t, ctx) {
@@ -650,7 +736,8 @@ export function overlays(stage, t, ctx) {
     header(stage, {kicker: id === 'mechanism' ? `메커니즘 · 실제 0.5초를 ${N}× 느리게` : `병합 · 같은 배율 ${N}× 느리게`,
       title: id === 'mechanism' ? '에너지를 잃으며 조여드는 궤도' : '처프, 그리고 링다운', size: 50, p: ctx.scene.p});
   } else {
-    const [kicker, title, subtitle] = titles[id] || ['', '', ''];
+    let [kicker, title, subtitle] = titles[id] || ['', '', ''];
+    if (id === 'detect' && t >= ctx.tl.at('s17') - 0.3) [kicker, title] = ['관측 · LIGO', '빛으로 길이 차이를 잰다'];
     if (title || kicker) header(stage, {kicker, title, subtitle, p: ctx.scene.p, size: title.includes('\n') ? 64 : 58});
   }
   progressBar(stage, t, ctx.tl.duration);

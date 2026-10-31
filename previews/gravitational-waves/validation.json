@@ -1,10 +1,10 @@
 {
   "file": "gravitational-waves.mp4",
-  "bytes": 33193866,
-  "sha256": "524746715e60da7174e3aa6d13692770dff03343aae19dd5f4e8e7d0590da4ad",
-  "created": "2026-10-31T01:17:04+00:00",
+  "bytes": 32298801,
+  "sha256": "0aa52bc4c2cd3ebd79f66c838f6c19169cb2f2bf5a62c30905c2644c5acedaae",
+  "created": "2026-10-31T03:38:38+00:00",
   "title": "두 블랙홀의 마지막 춤, 중력파",
-  "timeline_duration": 176.395,
+  "timeline_duration": 178.806,
   "max_sec": 180.0,
   "probe": {
     "streams": [
@@ -40,11 +40,11 @@
         "time_base": "1/15360",
         "start_pts": 0,
         "start_time": "0.000000",
-        "duration_ts": 2709504,
-        "duration": "176.400000",
-        "bit_rate": "1294335",
+        "duration_ts": 2746368,
+        "duration": "178.800000",
+        "bit_rate": "1265118",
         "bits_per_raw_sample": "8",
-        "nb_frames": "5292",
+        "nb_frames": "5364",
         "extradata_size": 50,
         "disposition": {
           "default": 1,
@@ -93,10 +93,10 @@
         "time_base": "1/48000",
         "start_pts": 0,
         "start_time": "0.000000",
-        "duration_ts": 8466960,
-        "duration": "176.395000",
-        "bit_rate": "202199",
-        "nb_frames": "8270",
+        "duration_ts": 8582688,
+        "duration": "178.806000",
+        "bit_rate": "171164",
+        "nb_frames": "8379",
         "extradata_size": 5,
         "disposition": {
           "default": 1,
@@ -132,9 +132,9 @@
       "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
-      "duration": "176.400000",
-      "size": "33193866",
-      "bit_rate": "1505390",
+      "duration": "178.806000",
+      "size": "32298801",
+      "bit_rate": "1445088",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -146,20 +146,20 @@
     }
   },
   "audio_mastering_input": {
-    "input_i": "-18.81",
-    "input_tp": "-2.03",
-    "input_lra": "3.70",
-    "input_thresh": "-29.24",
-    "output_i": "-14.09",
+    "input_i": "-16.61",
+    "input_tp": "-1.80",
+    "input_lra": "3.80",
+    "input_thresh": "-26.97",
+    "output_i": "-13.91",
     "output_tp": "-1.50",
-    "output_lra": "3.50",
-    "output_thresh": "-24.48",
+    "output_lra": "3.60",
+    "output_thresh": "-24.29",
     "normalization_type": "dynamic",
-    "target_offset": "0.09"
+    "target_offset": "-0.09"
   },
   "encoded_audio": {
-    "input_i": "-14.06",
-    "input_tp": "-1.33",
+    "input_i": "-14.05",
+    "input_tp": "-1.34",
     "input_lra": "3.60"
   },
   "targets": {
@@ -173,20 +173,8 @@
   "alignment_sources": [
     "mms_forced_alignment"
   ],
-  "final_fall_applied": 18,
-  "music": {
-    "file": "/home/user/sci_short/assets/music/zabriskie-patriarch.mp3",
-    "sha1": "c0ddb7b38ee7866c32d2510a84125cf611a54e93",
-    "credit": "\"The Life and Death of a Certain K. Zabriskie, Patriarch\" by Chris Zabriskie / From the album Vendaface / Licensed under Creative Commons Attribution 4.0 / creativecommons.org/licenses/by/4.0/ / chriszabriskie.com",
-    "gain_applied": 0.14825629227490483,
-    "under_db_target": 14.0,
-    "duck_db": 6.0,
-    "start_sec": 0.0,
-    "fade_in": 1.2,
-    "fade_out": 4.0,
-    "measured_under_narration_db": -14.000000000000002,
-    "rms_outside_speech": 0.03753475629622485
-  },
+  "final_fall_applied": 19,
+  "music": null,
   "music_credit_required": false,
   "captions_srt": "gravitational-waves.srt",
   "captions_delivery": "burned into picture; sidecar SRT; no subtitle track",
