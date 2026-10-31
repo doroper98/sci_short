@@ -1,0 +1,23 @@
+{
+  "generator": "image_gen",
+  "date": "2026-10-17",
+  "asset": "assets/power-atlas.png",
+  "sha256": "f0448efebaa0998d793069107a034095e60349863aa946e811e025aa0c7ed154",
+  "format": "RGBA PNG, 4 columns by 3 rows",
+  "tiles": [
+    "nuclear",
+    "coal",
+    "gas",
+    "solar",
+    "wind",
+    "hydro",
+    "oil",
+    "biomass",
+    "pumped storage",
+    "battery storage",
+    "Korean city",
+    "substation"
+  ],
+  "style": "Original isometric architectural miniatures; second generation increased atlas spacing",
+  "rendering": "Transparent sprite regions are fitted with preserved aspect ratio. All text, flows, graphs and figures are programmatic."
+}

@@ -235,6 +235,227 @@
       ],
       "source": "user attachment",
       "issues": []
+    },
+    {
+      "id": "ref-08",
+      "title_ko": "천둥의 거리별 도착 시간과 이어지는 소리",
+      "recorded_date": "2026-10-20",
+      "path": "references/videos/08-thunder.mp4",
+      "original_filename": "1-ClipDown.app_AQPDj6x_ofWGMgLS0nj91p4uPdUKVyNqI78ZSsp-xRjkofTNXJ5q-qOD7VVV4dqpznw-2t-mdYeGruO1U9F81HXkI1R7ZaCaXcUldM8.mp4",
+      "bytes": 710301,
+      "sha256": "0d063dd1f9a258dc5b8b50160ce0d75660dbbb02cf67f596dc2d32c3fa3252f8",
+      "duration_seconds": 14.325306,
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 720,
+          "height": 1280,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null,
+          "duration": "14.200000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "44100",
+          "channels": 2,
+          "duration": "14.325306"
+        }
+      ],
+      "source": "user attachment",
+      "issues": [],
+      "analysis": "docs/SOUND_DESIGN.md",
+      "validation_notes": "프레임 및 오디오 신호 분석. 직접 청취와 사건별 A/V 동기 정밀 검증은 미실시."
+    },
+    {
+      "id": "ref-09",
+      "title_ko": "4행정 엔진: 점화 순간의 압력 변화",
+      "recorded_date": "2026-10-30",
+      "path": "references/videos/09-four-stroke-engine.mp4",
+      "original_filename": "ClipDown.app_AQORKcux-zMZ7ZKE2J09i-BPY8ICMGsqZS30Xwsh4Lnb8JtQzIh9XZ6PQXhd1fhFmVZy-eluf8lfZhEP60G1t_3s-z7c0mmmc5jN2Vc.mp4",
+      "upload_name": "01e35f4a-ClipDown.app_AQORKcux-zMZ7ZKE2J09i-BPY8ICMGsqZS30Xwsh4Lnb8JtQzIh9XZ6PQXhd1fhFmVZy-eluf8lfZhEP60G1t_3s-z7c0mmmc5jN2Vc",
+      "bytes": 1644909,
+      "sha256": "41fdfd9abf8554f9a574702b743b400effc1105be46166c421be0e60f964e5c1",
+      "duration_seconds": 12.116042,
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 720,
+          "height": 1280,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null,
+          "duration": "12.000000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "48000",
+          "channels": 2,
+          "duration": "12.116042"
+        }
+      ],
+      "source": "user attachment (2026-10-30)",
+      "issues": [],
+      "analysis": "docs/REFERENCE_ANALYSIS.md#장치-해부도-계열-chiong-lab-9-13번",
+      "style_family": "device-cutaway (Chiong Lab)"
+    },
+    {
+      "id": "ref-10",
+      "title_ko": "레이저 프린터: 토너가 붙는 자리",
+      "recorded_date": "2026-10-30",
+      "path": "references/videos/10-laser-printer.mp4",
+      "original_filename": "ClipDown.app_AQM8jTsA6MrbzdQFlidDijKYYiRW0h4iZwip3QkwIKbhJSJ7cRNQog-empdqYXKb6_K67IpSzpkQETxncai_HhblokvPu3zY5lwLqc4.mp4",
+      "upload_name": "3ba9d82d-ClipDown.app_AQM8jTsA6MrbzdQFlidDijKYYiRW0h4iZwip3QkwIKbhJSJ7cRNQog-empdqYXKb6_K67IpSzpkQETxncai_HhblokvPu3zY5lwLqc4",
+      "bytes": 1024090,
+      "sha256": "740c8bc76a37a67caca287044796025d54e578d39c3154bced1727dc07943c3e",
+      "duration_seconds": 12.116042,
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 720,
+          "height": 1280,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null,
+          "duration": "12.000000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "48000",
+          "channels": 2,
+          "duration": "12.116042"
+        }
+      ],
+      "source": "user attachment (2026-10-30)",
+      "issues": [],
+      "analysis": "docs/REFERENCE_ANALYSIS.md#장치-해부도-계열-chiong-lab-9-13번",
+      "style_family": "device-cutaway (Chiong Lab)"
+    },
+    {
+      "id": "ref-11",
+      "title_ko": "전자레인지 마그네트론: 전자의 회전 방향",
+      "recorded_date": "2026-10-30",
+      "path": "references/videos/11-magnetron.mp4",
+      "original_filename": "ClipDown.app_AQMmZfFx13q-vWQdtXHOZTCvLhFN8GL6Dkd9p9h3A6CLqw6s0smqRjo2Kh68O0ha7AJLq6v4xndswsmtlTMevOmF0-PfOaJlbczEOdE.mp4",
+      "upload_name": "7fcd3871-ClipDown.app_AQMmZfFx13q-vWQdtXHOZTCvLhFN8GL6Dkd9p9h3A6CLqw6s0smqRjo2Kh68O0ha7AJLq6v4xndswsmtlTMevOmF0-PfOaJlbczEOdE",
+      "bytes": 1500308,
+      "sha256": "67ea6eddf810a4d3f136b5a90e42982d98e2a24520ed0bc0de0ea2282ccf1d3b",
+      "duration_seconds": 12.116042,
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 720,
+          "height": 1280,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null,
+          "duration": "12.000000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "48000",
+          "channels": 2,
+          "duration": "12.116042"
+        }
+      ],
+      "source": "user attachment (2026-10-30)",
+      "issues": [],
+      "analysis": "docs/REFERENCE_ANALYSIS.md#장치-해부도-계열-chiong-lab-9-13번",
+      "style_family": "device-cutaway (Chiong Lab)"
+    },
+    {
+      "id": "ref-12",
+      "title_ko": "DLP 프로젝터: 거울 각도와 빛의 편향각",
+      "recorded_date": "2026-10-30",
+      "path": "references/videos/12-dlp-projector.mp4",
+      "original_filename": "ClipDown.app_AQM-xUzJLcOdR2jHNZeX9rN1hTkGYqROx0aB4UWiezUEgWlbsc1eKzYbQ0CgAqdm46vjM95jcPruOV3tnx_jQy4V6c2XWxKN9lhCoL8.mp4",
+      "upload_name": "c8dba5bd-ClipDown.app_AQM-xUzJLcOdR2jHNZeX9rN1hTkGYqROx0aB4UWiezUEgWlbsc1eKzYbQ0CgAqdm46vjM95jcPruOV3tnx_jQy4V6c2XWxKN9lhCoL8",
+      "bytes": 1001770,
+      "sha256": "b24e74f69a61a8d65a563fe103ca55a5c0a9ca4ed1b9f995eaeb1b7a826c5e88",
+      "duration_seconds": 12.116042,
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 720,
+          "height": 1280,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null,
+          "duration": "12.000000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "48000",
+          "channels": 2,
+          "duration": "12.116042"
+        }
+      ],
+      "source": "user attachment (2026-10-30)",
+      "issues": [],
+      "analysis": "docs/REFERENCE_ANALYSIS.md#장치-해부도-계열-chiong-lab-9-13번",
+      "style_family": "device-cutaway (Chiong Lab)"
+    },
+    {
+      "id": "ref-13",
+      "title_ko": "LIGO 간섭계: 같은 거리를 간 두 빛의 밝고 어두움",
+      "recorded_date": "2026-10-30",
+      "path": "references/videos/13-ligo-interferometer.mp4",
+      "original_filename": "ClipDown.app_AQO3iYNyZtkdUM-pRzrpJZRh_3_6ItnVXq00Y9JP30Pa99pPgaBxe8wNEQ9Nz9izLeOFj6FKNW0REih1Y1hE4n4huMoVbmo3dsQCA1Q.mp4",
+      "upload_name": "b5aecc37-ClipDown.app_AQO3iYNyZtkdUM-pRzrpJZRh_3_6ItnVXq00Y9JP30Pa99pPgaBxe8wNEQ9Nz9izLeOFj6FKNW0REih1Y1hE4n4huMoVbmo3dsQCA1Q",
+      "bytes": 1724622,
+      "sha256": "42a86be615b4771434c975aa7ec2a3713b9e3182c3d037016f3d83b977aa4bb4",
+      "duration_seconds": 14.121375,
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 720,
+          "height": 1280,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null,
+          "duration": "14.000000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "48000",
+          "channels": 2,
+          "duration": "14.121375"
+        }
+      ],
+      "source": "user attachment (2026-10-30)",
+      "issues": [],
+      "analysis": "docs/REFERENCE_ANALYSIS.md#장치-해부도-계열-chiong-lab-9-13번",
+      "style_family": "device-cutaway (Chiong Lab)"
     }
   ],
   "contact_sheets": [
@@ -246,6 +467,11 @@
     "references/contact-sheets/06-microwave-heating.jpg",
     "references/contact-sheets/07-flat-universe-part-1.jpg",
     "references/contact-sheets/07-flat-universe-part-2.jpg",
-    "references/contact-sheets/overview.jpg"
+    "references/contact-sheets/overview.jpg",
+    "references/contact-sheets/09-four-stroke-engine.jpg",
+    "references/contact-sheets/10-laser-printer.jpg",
+    "references/contact-sheets/11-magnetron.jpg",
+    "references/contact-sheets/12-dlp-projector.jpg",
+    "references/contact-sheets/13-ligo-interferometer.jpg"
   ]
 }

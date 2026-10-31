@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "note": "배경음악 권리 기록. 파일은 Git에 넣지 않고 assets/music/에 둔다. sha1이 다르면 쓰지 않는다. 사용 시 attribution을 엔드카드 또는 설명란에 넣는다.",
+  "tracks": {
+    "zabriskie_patriarch": {
+      "file": "zabriskie-patriarch.mp3",
+      "name": "The Life and Death of a Certain K. Zabriskie, Patriarch",
+      "author": "Chris Zabriskie",
+      "license": "CC BY 4.0",
+      "attribution": "\"The Life and Death of a Certain K. Zabriskie, Patriarch\" by Chris Zabriskie / From the album Vendaface / Licensed under Creative Commons Attribution 4.0 / creativecommons.org/licenses/by/4.0/ / chriszabriskie.com",
+      "sha1": "c0ddb7b38ee7866c32d2510a84125cf611a54e93",
+      "sha256": "0c9333c4906e60fe8e741011013bf8c05faae79ff246e388da50572e2d394068",
+      "duration_sec": 931.814,
+      "source": "doroper98/osint_generator 커밋 bd37b582bfd78859df89a893670cc191b4072718 의 assets/audio/bgm/ (osint BGM 레지스트리 music.zabriskie_patriarch 와 동일 파일). 원 출처 YouTube 오디오 보관함, 작가 페이지 https://chriszabriskie.com/use/",
+      "used_by_osint": "S-1 영상 기본 BGM; 걸프 최종 영상은 같은 작가의 Mario Bava 트랙 사용",
+      "available_here": true
+    },
+    "zabriskie_mario_bava": {
+      "file": "zabriskie-mario-bava.mp3",
+      "name": "Mario Bava Sleeps In a Little Later Than He Expected To",
+      "author": "Chris Zabriskie",
+      "license": "CC BY 4.0",
+      "attribution": "\"Mario Bava Sleeps In a Little Later Than He Expected To\" by Chris Zabriskie / From the album Vendaface / Licensed under Creative Commons Attribution 4.0 / creativecommons.org/licenses/by/4.0/ / chriszabriskie.com",
+      "sha1": "02ceb4e748b003fb7447ccd74b0ccf4fad64d3fb",
+      "duration_sec": 511.269,
+      "source_url": "https://archive.org/download/chris-zabriskie-complete-discography/Chris%20Zabriskie%20-%20Vendaface/Chris%20Zabriskie%20-%20Vendaface%20-%2002%20Mario%20Bava%20Sleeps%20In%20a%20Little%20Later%20Than%20He%20Expected%20To.mp3",
+      "note": "osint_generator 걸프 최종 영상(v7.2.0)의 BGM. archive.org 가 이 환경에서 차단되어 아직 받지 못함. 허용되면 위 URL로 받아 sha1 대조",
+      "available_here": false
+    }
+  }
+}

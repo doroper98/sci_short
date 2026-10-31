@@ -15,3 +15,18 @@ node_modules/
 /renders/
 /models/
 *.log
+
+# Render toolkit: downloaded fonts are not committed (see assets/fonts/README.md)
+/assets/fonts/*.ttf
+/assets/fonts/*.otf
+/assets/fonts/*.woff
+/assets/fonts/*.woff2
+# Test fixtures generated on demand
+/pipeline/render/tests/fixtures/*.wav
+.pytest_cache/
+
+# Music files are licensed assets fetched per assets/music/README.md
+/assets/music/*.mp3
+/assets/music/*.wav
+/assets/music/*.m4a
+/assets/music/*.flac

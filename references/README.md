@@ -14,6 +14,15 @@
 | 5 | [블랙홀 병합](videos/05-black-hole-merger.mp4) | [장면 모음](contact-sheets/05-black-hole-merger.jpg) |
 | 6 | [전자레인지](videos/06-microwave-heating.mp4) | [장면 모음](contact-sheets/06-microwave-heating.jpg) |
 | 7 | [우주 평탄성](videos/07-flat-universe.mp4) | [전반](contact-sheets/07-flat-universe-part-1.jpg) · [후반](contact-sheets/07-flat-universe-part-2.jpg) |
+| 8 | [천둥의 도착 시간 차이](videos/08-thunder.mp4) | [화면·음향 분석과 한계](../docs/SOUND_DESIGN.md#첨부-천둥-영상에서-확인한-것) |
+| 9 | [4행정 엔진](videos/09-four-stroke-engine.mp4) | [장면 모음](contact-sheets/09-four-stroke-engine.jpg) |
+| 10 | [레이저 프린터](videos/10-laser-printer.mp4) | [장면 모음](contact-sheets/10-laser-printer.jpg) |
+| 11 | [마그네트론](videos/11-magnetron.mp4) | [장면 모음](contact-sheets/11-magnetron.jpg) |
+| 12 | [DLP 프로젝터](videos/12-dlp-projector.mp4) | [장면 모음](contact-sheets/12-dlp-projector.jpg) |
+| 13 | [LIGO 간섭계](videos/13-ligo-interferometer.mp4) | [장면 모음](contact-sheets/13-ligo-interferometer.jpg) |
+
+8번은 2026-10-20 추가 첨부이며 원본 바이트를 그대로 보존했습니다.
+9~13번은 2026-10-30 추가 첨부한 장치 해부도 계열(Chiong Lab)이며 역시 바이트 그대로 보존했습니다. 분석은 [참고 영상 분석](../docs/REFERENCE_ANALYSIS.md#장치-해부도-계열-chiong-lab-9-13번)에 있습니다. 함께 첨부된 석영 영상은 `previews/quartz/quartz-growth-ko.mp4`와 SHA-256이 같아 따로 보관하지 않았습니다. 설명 원리의 적용 제안은 [애니메이션 품질 기준](../docs/ANIMATION_QUALITY.md)에 있습니다.
 
 [전체 비교 이미지](contact-sheets/overview.jpg)는 각 영상의 초반·중반·후반을 세로로 놓았습니다.
 장면 모음은 프레임 추출 결과이며 원본 MP4를 대체하지 않습니다.
