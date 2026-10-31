@@ -121,3 +121,7 @@ episodes/$S/run.sh                                   # 위 전체를 순서대�
 
 자동 검사 PASS는 기능 검증입니다. 시청·청취를 대신했다고 기록하지 마세요.
 `validation.json`의 `direct_listening`, `physical_phone_playback`은 기본값 `not performed`이며 직접 한 경우에만 바꿉니다.
+
+## 생성 영상 클립 (선택) — `pipeline/genvideo/`
+
+`higgsfield.py estimate|generate|status`로 Higgsfield 공식 API에서 9:16 클립을 받습니다(Kling 3.0, LTX-2.5, Hailuo 2.3 등). 제출 전 견적(USD)을 출력하고, 완료되면 `assets/generated/<slug>/<name>.mp4`와 provenance JSON을 씁니다. 자격 증명은 환경 secret. 생성 클립은 훅·분위기용이며 메커니즘 장면은 계속 모형으로 그립니다. 클립을 장면에 넣을 때는 ffmpeg로 프레임을 풀어 `drawImage`로 깝니다(에피소드에서 처음 쓸 때 공통 도우미로 올립니다).

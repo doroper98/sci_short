@@ -30,3 +30,8 @@ node_modules/
 /assets/music/*.wav
 /assets/music/*.m4a
 /assets/music/*.flac
+
+# Generated (AI) clips: binaries fetched via pipeline/genvideo, provenance JSON is tracked
+/assets/generated/**/*.mp4
+/assets/generated/**/*.png
+/assets/generated/**/*.jpg

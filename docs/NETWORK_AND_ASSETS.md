@@ -27,6 +27,12 @@ Codex 환경은 정책이 다를 수 있으므로 새 환경에서는 아래 표
 
 사용자가 2026-10-30에 `dl.fbaipublicfiles.com`, `download.pytorch.org`, `huggingface.co`, `cdn.jsdelivr.net`을 허용했고 같은 날 접속을 확인했습니다. 추가로 `download-r2.pytorch.org`를 허용하면 pip 한 줄로 torch를 설치할 수 있습니다.
 
+## Higgsfield (AI 생성 클립, 선택)
+
+2026-10-31 사용자가 `*.higgsfield.ai`를 허용했고 접속을 확인했습니다. 공식 API 문서는 `docs.higgsfield.ai/docs`(마크다운은 각 경로 뒤에 `.md`), 키 발급은 `console.higgsfield.ai`, 호출은 `api.higgsfield.ai`입니다.
+자격 증명은 키 ID와 시크릿 한 쌍이며 환경 secret `HF_API_KEY_ID`, `HF_API_KEY_SECRET`으로만 둡니다. 클라이언트는 `pipeline/genvideo/higgsfield.py`, 결과 보관 원칙은 `assets/generated/README.md`.
+공식 호스팅 MCP(`mcp.higgsfield.ai`, OAuth 메타데이터 확인)도 있으나 문서에 안내가 없어 API 경로를 기본으로 합니다. 결과 파일 URL의 호스트는 받아 봐야 압니다. 막히면 그 호스트를 추가합니다.
+
 ## 이미 허용되어 쓰고 있는 호스트
 
 | 호스트 | 용도 |
