@@ -102,6 +102,9 @@ def _engine(asset_dir: str, style_name: str):  # noqa: ANN202 — (TextToSpeech,
 def engine(cfg: SupertonicConfig, mdir: Path):  # noqa: ANN201
     """ONNX 세션은 프로세스당 한 번. 자산 대조를 먼저 한다."""
     base = require_assets(cfg, mdir)
+    style_file = base / "voice_styles" / f"{cfg.voice_style}.json"
+    if not style_file.is_file():
+        raise SupertonicAssetError(f"음성 프리셋 파일 없음: {style_file}\n받기: python pipeline/narration/fetch_assets.py --styles --models-dir {mdir}")
     return _engine(str(base), cfg.voice_style)
 
 

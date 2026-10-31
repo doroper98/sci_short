@@ -22,7 +22,8 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 VOICE_REFERENCE = REPO / "config" / "voice-reference.json"
 VOICE_OVERRIDES = REPO / "config" / "voice-overrides.json"   # 사용자 결정으로 바꾼 값만. 없으면 osint 기준 그대로
-OVERRIDABLE = {"supertonic": {"speed"}, "final_fall": {"semitones", "span_chars", "curve"}}
+OVERRIDABLE = {"supertonic": {"speed", "voice_style"}, "final_fall": {"semitones", "span_chars", "curve"}}
+VALID_STYLES = ("F1", "F2", "F3", "F4", "F5", "M1", "M2", "M3", "M4", "M5")   # Supertonic 3 프리셋(voice_styles/<name>.json)
 VALID_CURVES = ("linear", "ease_in")
 SOURCE_COMMIT = "131db0097a547a3fd0742488540eedc229017073"
 
@@ -187,7 +188,10 @@ def apply_overrides(vc: VoiceConfig, path: Path | None = None) -> VoiceConfig:
     for sec, keys in OVERRIDABLE.items():
         for k, v in (d.get(sec) or {}).items():
             _req(k in keys, f"voice-overrides {sec}.{k} 는 바꿀 수 없는 값(허용: {sorted(keys)})")
-            if sec == "supertonic":
+            if sec == "supertonic" and k == "voice_style":
+                _req(v in VALID_STYLES, f"supertonic.voice_style 은 {VALID_STYLES} 중 하나")
+                st = dataclasses.replace(st, voice_style=v)   # 파일은 models/supertonic-3/voice_styles/<v>.json (fetch_assets.py --styles)
+            elif sec == "supertonic":
                 _req(isinstance(v, (int, float)) and 0.5 <= float(v) <= 1.5, "supertonic.speed 는 0.5~1.5")
                 st = dataclasses.replace(st, speed=float(v))
             elif k == "curve":

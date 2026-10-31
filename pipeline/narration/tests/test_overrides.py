@@ -16,7 +16,7 @@ def test_overrides_apply_and_whitelist(tmp_path):
     assert c.supertonic.speed == 0.85 and c.final_fall.semitones == 6.0 and c.final_fall.curve == "ease_in"
     assert c.overrides == {"supertonic.speed": 0.85, "final_fall.semitones": 6, "final_fall.curve": "ease_in"}
     bad = tmp_path / "bad.json"
-    bad.write_text(json.dumps({"supertonic": {"voice_style": "F1"}}))
+    bad.write_text(json.dumps({"supertonic": {"total_step": 8}}))
     with pytest.raises(vc.VoiceConfigError):
         vc.load_voice_config(overrides_path=bad)
 
@@ -46,3 +46,13 @@ def test_ease_in_curve_falls_more_at_the_end():
     # both end about 6 semitones down; the ease_in record keeps the same end but its mid-region is higher
     assert abs(12 * np.log2(r1.f0_end_hz / r1.f0_start_hz) + 6) < 1.5
     assert abs(12 * np.log2(r2.f0_end_hz / r2.f0_start_hz) + 6) < 1.5
+
+
+def test_voice_style_override_is_validated(tmp_path):
+    o = tmp_path / "o.json"
+    o.write_text(json.dumps({"supertonic": {"voice_style": "F2"}}))
+    assert vc.load_voice_config(overrides_path=o).supertonic.voice_style == "F2"
+    bad = tmp_path / "bad.json"
+    bad.write_text(json.dumps({"supertonic": {"voice_style": "X9"}}))
+    with pytest.raises(vc.VoiceConfigError):
+        vc.load_voice_config(overrides_path=bad)
