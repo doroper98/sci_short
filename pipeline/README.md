@@ -101,6 +101,7 @@ episodes/$S/run.sh                                   # 위 전체를 순서대�
 
 - `sfx.py` 사건 종류: `tick tone noise whoosh swell custom silent`. 공통 `gain_db pan repeat interval delay offset`. 문법·파라미터는 파일 머리말.
 - 모두 **합성한 설명용 소리**이며 현상의 녹음이 아닙니다. 필요하면 화면이나 메모에 밝힙니다. ambient는 시드 고정 절차 생성 패드이며 물리와 무관합니다(기본 꺼짐).
+- `sfx.py` 이벤트 종류에 `chirp`가 있습니다: `points: [[t_rel, f_hz, amp], …]`로 진동수·진폭이 조각별 선형, 위상 연속인 음. 물리 모형의 진동수 표를 그대로 소리로 바꿀 때 씁니다(중력파 에피소드의 처프). 표는 장면 코드에서 내보내므로 대본이 바뀌면 다시 내보낸 뒤 `sfx`를 돌립니다.
 - 자막 배경판은 기본적으로 **없음**(글자 그림자만). 배경이 복잡한 장면에서만 `captionLayout`에 `{plate: true}`(각진 판) 또는 `{plate: 'round'}`를 준다.
 - `mix.py`: 내레이션 피크 0.8, 문장 구간(앞 0.25 s 하강, 뒤 0.3 s 회복)에 ambient −12 dB·sfx −6 dB 덕킹, 마스터 피크 ≤ 0.97, 48 kHz 스테레오 float. loudnorm 측정값을 출력.
 - **배경음악**: `sound.json`의 `music` 블록(`{"id": "zabriskie_patriarch", "under_db": 12, "duck_db": 6}`)을 `run.sh`가 `pipeline/audio/resolve_music.py`로 `assets/music/registry.json`과 대조(해시 불일치·파일 없음이면 중단)한 뒤 `mix.py --music … --music-credit …`에 넘깁니다. 음악은 4 s 크로스페이드 루프, 1.2 s 페이드인·4 s 페이드아웃, 말할 때 `duck_db`만큼 더 내리고, **말하는 동안 음악 RMS가 내레이션 RMS보다 `under_db` 아래**가 되도록 자동 스케일합니다(osint_generator 최종 영상 실측 약 −12 dB). 표기 문구는 `mix-report.json` → `validation.json`에 기록되며 엔드카드·설명란에 넣어야 합니다. `NO_MUSIC=1`로 생략. 파일 받기와 권리는 [assets/music/README.md](../assets/music/README.md).

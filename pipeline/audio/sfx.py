@@ -24,6 +24,9 @@ delay {"time","feedback","mix"}, offset):
   noise   dur=0.3 low=300 high=4000 attack=0.005 release=0.2  filtered noise burst
   whoosh  dur=0.6 f_start=300 f_end=3000 q=2.0            band-pass noise sweep (motion / transfer)
   swell   freqs=[220,330] dur=1.5 attack=0.45 detune=0.15  soft chord pad (arrival / resolution)
+  chirp   points=[[t_rel, f_hz, amp], ...] harmonics=[1] fade=0.005
+                                                          tone whose frequency and amplitude follow a table
+                                                          (piecewise-linear, phase-continuous); amp 1 → peak ≈ 1
   custom  layers=[{kind, params, offset}]                  stack of the above
   silent  (no sound; visual-only event kept in the shared list)
 
@@ -216,7 +219,31 @@ def v_swell(p, seed):
     return norm_peak(lowpass(x * env, p.get("cutoff", 3000)))
 
 
-VOICES = {"tick": v_tick, "tone": v_tone, "noise": v_noise, "whoosh": v_whoosh, "swell": v_swell}
+def v_chirp(p, seed):
+    """Tone following a [t_rel, f_hz, amp] table (piecewise-linear f and amp, phase-continuous).
+    harmonics multiply the fundamental (k+1)·f; partials above Nyquist are dropped. amp is NOT re-normalised,
+    so the table keeps its relative loudness; amp 1 with all harmonics in phase gives a peak ≤ 1."""
+    pts = np.asarray(p.get("points") or [], dtype=float)
+    if pts.ndim != 2 or pts.shape[0] < 2 or pts.shape[1] < 3:
+        raise ValueError("chirp needs points=[[t_rel, f_hz, amp], ...] with at least 2 rows")
+    if np.any(np.diff(pts[:, 0]) < 0) or pts[0, 0] < 0:
+        raise ValueError("chirp points must start at t_rel >= 0 and be sorted by time")
+    t = t_axis(pts[-1, 0])
+    f = np.interp(t, pts[:, 0], pts[:, 1])
+    a = np.interp(t, pts[:, 0], pts[:, 2])
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    harm = p.get("harmonics", [1.0])
+    x = np.zeros_like(t)
+    for k, h in enumerate(harm):
+        x += h * np.sin((k + 1) * ph) * ((k + 1) * f < SR / 2 - 200)
+    x = x / max(1e-9, sum(abs(h) for h in harm)) * a
+    fade = float(p.get("fade", 0.005))
+    if fade > 0:
+        x *= np.clip(t / fade, 0, 1) * np.clip((t[-1] - t) / fade, 0, 1)
+    return x
+
+
+VOICES = {"chirp": v_chirp, "tick": v_tick, "tone": v_tone, "noise": v_noise, "whoosh": v_whoosh, "swell": v_swell}
 
 
 def event_voice(kind: str, p: dict, seed: int) -> np.ndarray:

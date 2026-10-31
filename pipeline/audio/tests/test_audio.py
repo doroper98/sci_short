@@ -159,3 +159,31 @@ def test_music_sits_under_narration(tmp_path):
                 music_credit="test", music_under_db=12.0, music_duck_db=6.0, quiet=True)
     assert abs(rep["music"]["measured_under_narration_db"] + 12.0) < 0.3
     assert rep["music"]["credit"] == "test"
+
+
+def test_chirp_follows_frequency_table(tmp_path, tl):
+    """kind 'chirp': piecewise-linear f and amp from a points table, phase-continuous, placed at the event time."""
+    pts = [[0.0, 100.0, 0.5], [0.5, 200.0, 1.0], [1.0, 200.0, 1.0], [1.2, 200.0, 0.0]]
+    x = sfx.v_chirp({"points": pts}, 0)
+    assert len(x) == round(1.2 * sfx.SR)
+    assert np.abs(x).max() <= 1.0 + 1e-9
+    seg = lambda a, b: x[round(a * sfx.SR): round(b * sfx.SR)]
+    crossings = lambda y: int(np.sum(np.signbit(y[1:]) != np.signbit(y[:-1])))
+    assert abs(crossings(seg(0.6, 0.9)) - 2 * 200 * 0.3) <= 2           # 200 Hz plateau
+    # rising glide 100→200 Hz over 0.5 s: mean 150 Hz → about 150 cycles·2 crossings·0.5 s
+    assert abs(crossings(seg(0.0, 0.5)) - 2 * 150 * 0.5) <= 3
+    # phase continuity: no sample-to-sample jump larger than the max slope of a 200 Hz sine at amp 1
+    assert np.abs(np.diff(x)).max() <= 2 * np.pi * 200 / sfx.SR * 1.05
+    # amplitude follows the table (0.5 at start → 1.0 on the plateau)
+    assert np.abs(seg(0.02, 0.06)).max() == pytest.approx(0.52, abs=0.04)
+    assert np.abs(seg(0.7, 0.8)).max() == pytest.approx(1.0, abs=0.02)
+    # placed at the resolved time like every other kind
+    sound = tmp_path / "chirp.json"
+    sound.write_text(json.dumps({"events": [{"id": "c", "at": ["s03", 0.2], "kind": "chirp",
+                                             "params": {"points": pts, "harmonics": [1, 0.5], "gain_db": -6}}]}))
+    sfx.render_sfx(sound, FIXTURE, tmp_path / "c.wav")
+    y, _ = sf.read(tmp_path / "c.wav")
+    expect = sfx.resolve_at(["s03", 0.2], tl)
+    assert expect - 1 / sfx.SR <= onset(y) <= expect + 0.002
+    with pytest.raises(ValueError):
+        sfx.v_chirp({"points": [[0, 100, 1]]}, 0)
