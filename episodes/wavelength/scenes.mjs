@@ -609,6 +609,56 @@ function checkSoundTable(ctx) {
 }
 
 // =====================================================================================================
+// Herschel prism optics — Snell's law through an equilateral glass prism (screen coords, y down).
+// Dispersion is exaggerated (n 1.45 @700 nm → 1.64 @400 nm, Cauchy n = A + B/λ²; real crown glass spans ~0.02)
+// so the fan is visible at phone size; the geometry itself (refraction at both faces, red deviated least) is real.
+// Sunlight enters from the window slit at the top right, bends toward the base inside the glass, bends again on
+// exit and lands on the table below left. Inside the glass each wave is slower (c/n) and shorter (λ/n).
+// =====================================================================================================
+const OPT = (() => {
+  const sub = (a, b) => [a[0] - b[0], a[1] - b[1]], add = (a, b) => [a[0] + b[0], a[1] + b[1]], mul = (a, k) => [a[0] * k, a[1] * k];
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1], unit = a => { const l = Math.hypot(a[0], a[1]); return [a[0] / l, a[1] / l]; };
+  const segHit = (P, d, A, B) => {
+    const e = sub(B, A), den = d[0] * e[1] - d[1] * e[0]; if (Math.abs(den) < 1e-9) return null;
+    const w = sub(A, P), t = (w[0] * e[1] - w[1] * e[0]) / den, u = (w[0] * d[1] - w[1] * d[0]) / den;
+    return t > 1e-6 && u >= 0 && u <= 1 ? {t, pt: add(P, mul(d, t))} : null;
+  };
+  const refract = (d, n, eta) => { const ci = -dot(d, n), k = 1 - eta * eta * (1 - ci * ci); return k < 0 ? null : unit(add(mul(d, eta), mul(n, eta * ci - Math.sqrt(k)))); };
+  // prism: side 250, centre (740, 390), rotated 34° counter-clockwise so the window beam meets it near minimum deviation
+  const Cp = [740, 414], R = 250 / Math.sqrt(3), rot = -34 * Math.PI / 180;
+  const V = [-90, 30, 150].map(a => { const th = a * Math.PI / 180 + rot; return [Cp[0] + R * Math.cos(th), Cp[1] + R * Math.sin(th)]; });
+  const faces = [[V[0], V[1]], [V[1], V[2]], [V[2], V[0]]];
+  const S = [975, 324], Y_TABLE = 884;
+  const cen = [(V[0][0] + V[1][0] + V[2][0]) / 3, (V[0][1] + V[1][1] + V[2][1]) / 3];
+  const d0 = unit(sub([cen[0], cen[1] - 0.15 * 250], S));
+  const B = 0.19 / (1 / 400 ** 2 - 1 / 700 ** 2), A = 1.45 - B / 700 ** 2, nOf = nm => A + B / nm ** 2;
+  const cache = new Map();
+  const ray = nm => {
+    const key = Math.round(nm); if (cache.has(key)) return cache.get(key);
+    const n = nOf(key);
+    const h1 = faces.map((f, i) => ({i, h: segHit(S, d0, f[0], f[1])})).filter(x => x.h).sort((a, b) => a.h.t - b.h.t)[0];
+    const f1 = faces[h1.i], Pin = h1.h.pt;
+    let n1 = unit([-(f1[1][1] - f1[0][1]), f1[1][0] - f1[0][0]]); if (dot(n1, d0) > 0) n1 = mul(n1, -1);
+    const d1 = refract(d0, n1, 1 / n);
+    const h2 = faces.map((f, i) => ({i, h: segHit(Pin, d1, f[0], f[1])})).filter(x => x.h && x.i !== h1.i).sort((a, b) => a.h.t - b.h.t)[0];
+    const f2 = faces[h2.i], Pout = h2.h.pt;
+    let n2 = unit([-(f2[1][1] - f2[0][1]), f2[1][0] - f2[0][0]]); if (dot(n2, d1) > 0) n2 = mul(n2, -1);
+    const d2 = refract(d1, n2, n);                       // null would be total internal reflection (not reached for 330–1200 nm)
+    const land = d2 && d2[1] > 0 ? add(Pout, mul(d2, (Y_TABLE - Pout[1]) / d2[1])) : null;
+    const r = {nm: key, n, Pin, Pout, d1, d2, land, lenIn: Math.hypot(...sub(Pout, Pin)), lenOut: land ? Math.hypot(...sub(land, Pout)) : 0};
+    cache.set(key, r); return r;
+  };
+  return {V, S, d0, Y_TABLE, nOf, ray, sub, add, mul, unit};
+})();
+/** travelling sine wave along segment P→Q (fraction `frac` drawn), wavelength L px, phase in cycles */
+function waveAlong(c, P, Q, L, amp, ph, col, w, frac = 1, step = 3) {
+  const len = Math.hypot(Q[0] - P[0], Q[1] - P[1]) * clamp(frac); if (len < 2) return;
+  const ux = (Q[0] - P[0]) / Math.hypot(Q[0] - P[0], Q[1] - P[1]), uy = (Q[1] - P[1]) / Math.hypot(Q[0] - P[0], Q[1] - P[1]);
+  const pts = []; for (let s = 0; s <= len; s += step) { const o = amp * Math.sin(TAU * (s / L - ph)); pts.push([P[0] + ux * s - uy * o, P[1] + uy * s + ux * o]); }
+  line(c, pts, rgba('#000', 0.35), w + 2.5); line(c, pts, col, w);
+}
+
+// =====================================================================================================
 // Scenes
 // =====================================================================================================
 export const scenes = {
@@ -617,66 +667,86 @@ export const scenes = {
     const {ctx: c} = stage, T = stage.theme, tl = ctx.tl;
     checkSoundTable(ctx);
     const tAns = evT(ctx, 'answer', A.answer), tRit = evT(ctx, 'ritter', A.ritter);
-    const a0 = fadeIn(t, 0.2, 0.8), rise = easeInOut((t - tAns) / 3.2), dark = smooth((t - tRit + 0.3) / 3);
-    const PIN = [671, 452], POUT = [563, 488], ySc = 800;
-    const landing = nm => lerp(330, 640, (700 - nm) / 300);   // visible 700 → 400
+    const a0 = fadeIn(t, 0.1, 0.5), rise = easeInOut((t - tAns) / 3.2), dark = smooth((t - tRit + 0.3) / 3);
+    const {V, S, Y_TABLE: ySc, ray} = OPT;
+    const NM_IR = 1000, NM_UV = 340;                           // representative invisible rays beyond red / beyond violet
+    const xIR = ray(NM_IR).land[0], xR = ray(700).land[0], xV = ray(400).land[0], xUV = ray(NM_UV).land[0];
+    // beam travels in: window → prism (0.2–0.7 s), through the glass (0.7–1.1 s), out to the table (1.1–1.9 s)
+    const t0 = tl.scene('hook').start, fIn = smooth((t - t0 - 0.2) / 0.5), fGl = smooth((t - t0 - 0.7) / 0.4), fOut = smooth((t - t0 - 1.1) / 0.8);
+    const VPX = 150;                                           // wave speed in px/s (same for every colour in air; c/n in glass)
+    const Lpx = nm => 12 + 26 * (nm - 400) / 300;              // drawn wavelength: red 38 px … violet 12 px (exaggerated ratio)
     withAlpha(c, a0, () => {
-      // white beam from the window slit (top right)
-      rect(c, 940, 316, 70, 22, 3, rgba(T.deep, 1), rgba(T.muted, 0.9), 1.5);
-      stage.text('햇빛', 975, 360, {size: 24, color: T.muted, align: 'center'});
-      line(c, [[975, 338], PIN], rgba('#FFFFFF', 0.25), 16); line(c, [[975, 338], PIN], '#FFFDF6', 5);
-      line(c, [PIN, POUT], rgba('#FFFDF6', 0.7), 4);
-      // fan: visible rays + (after the answer) invisible dashed rays beyond red and violet
-      for (let nm = 700; nm >= 400; nm -= 6) {
-        const x = landing(nm);
-        poly(c, [POUT, [x - 3.5, ySc], [x + 3.5, ySc]], specCol(nm, 0.5));
+      // window slit (top right) and the white beam
+      rect(c, S[0] - 36, S[1] - 11, 72, 22, 3, rgba(T.deep, 1), rgba(T.muted, 0.9), 1.5);
+      stage.text('햇빛', S[0], S[1] - 28, {size: 24, color: T.muted, align: 'center'});
+      const rin = ray(550), Pin = rin.Pin, bEnd = [S[0] + (Pin[0] - S[0]) * fIn, S[1] + (Pin[1] - S[1]) * fIn];
+      if (fIn > 0) { line(c, [S, bEnd], rgba('#FFFFFF', 0.22), 18); line(c, [S, bEnd], '#FFFDF6', 5); }
+      // inside the glass: the colours part — shorter waves bend more; every wave is slower and shorter (λ/n)
+      if (fGl > 0) {
+        const r7 = ray(700), r4 = ray(400);
+        poly(c, [Pin, r7.Pout, r4.Pout], rgba('#FFFFFF', 0.10 * fGl));
+        for (let nm = 700; nm >= 400; nm -= 30) {
+          const r = ray(nm); waveAlong(c, r.Pin, r.Pout, Lpx(nm) / r.n, 2.2, t * VPX / r.n / (Lpx(nm) / r.n), specCol(nm, 0.9), 2.2, fGl);
+        }
       }
-      const ir = 230, uv = 735;
-      withAlpha(c, 0.25 + 0.75 * rise, () => {
-        line(c, [POUT, [ir, ySc]], rgba(GREYW, 0.8), 2.5, {dash: [9, 8]});
-        line(c, [POUT, [uv, ySc]], rgba(GREYW, 0.8 * (0.3 + 0.7 * dark)), 2.5, {dash: [9, 8]});
-      });
-      // glass prism (apex up)
-      const P = [[628, 380], [520, 560], [736, 560]];
-      const g = c.createLinearGradient(520, 380, 736, 560); g.addColorStop(0, 'rgba(180,215,230,0.38)'); g.addColorStop(1, 'rgba(90,140,165,0.22)');
-      poly(c, P, g, rgba('#D8EEF6', 0.9), 2.2);
-      line(c, [[628, 384], [560, 500]], rgba('#FFFFFF', 0.45), 2);
-      stage.text('프리즘', 760, 560, {size: 24, color: T.muted});
+      // glass prism (drawn over the internal rays so they read as "inside")
+      const g = c.createLinearGradient(V[0][0], V[0][1], V[2][0], V[2][1]); g.addColorStop(0, 'rgba(180,215,230,0.34)'); g.addColorStop(1, 'rgba(90,140,165,0.20)');
+      poly(c, V, g, rgba('#D8EEF6', 0.9), 2.2);
+      line(c, [[V[0][0] + 8, V[0][1] + 12], [V[2][0] + 10, V[2][1] - 18]], rgba('#FFFFFF', 0.35), 2);
+      stage.text('프리즘', V[1][0] + 18, V[1][1] + 24, {size: 24, color: T.muted});
+      // out of the glass: the fan opens (translucent fill), coloured travelling waves on top
+      if (fOut > 0) {
+        for (let nm = 700; nm > 400; nm -= 4) {
+          const a = ray(nm), b = ray(nm - 4), ea = OPT.add(a.Pout, OPT.mul(OPT.sub(a.land, a.Pout), fOut)), eb = OPT.add(b.Pout, OPT.mul(OPT.sub(b.land, b.Pout), fOut));
+          poly(c, [a.Pout, ea, eb, b.Pout], specCol(nm - 2, 0.30));
+        }
+        for (let nm = 700; nm >= 400; nm -= 50) {
+          const r = ray(nm); waveAlong(c, r.Pout, r.land, Lpx(nm), 3.2, t * VPX / Lpx(nm), specCol(nm, 0.95), 2.6, fOut);
+        }
+        // invisible rays beyond red and beyond violet: grey dashed, strengthened as the narration reveals them
+        const dashRay = (nm, a) => { const r = ray(nm), e = OPT.add(r.Pout, OPT.mul(OPT.sub(r.land, r.Pout), fOut)); withAlpha(c, a, () => line(c, [r.Pout, e], rgba(GREYW, 0.85), 2.5, {dash: [9, 8]})); };
+        dashRay(NM_IR, 0.25 + 0.75 * rise);
+        dashRay(NM_UV, 0.25 + 0.75 * dark);
+      }
       // table / screen
-      rect(c, 150, ySc, 780, 14, 3, rgba('#3B4E55', 1), rgba(T.muted, 0.8), 1.2);
-      hatch(c, 160, ySc - 26, 160, 26, {col: rgba(HATCH_LN, 0.7)});
-      hatch(c, 650, ySc - 26, 150, 26, {col: rgba(HATCH_LN, 0.7)});
-      for (let x = 330; x < 640; x++) { c.fillStyle = specCol(700 - 300 * (x - 330) / 310, 0.95); c.fillRect(x, ySc - 26, 1.4, 26); }
-      stage.text('무지개', 485, ySc - 50, {size: 24, weight: 700, color: T.ink, align: 'center', shadow: '#000'});
-      withAlpha(c, 1 - fadeIn(t, evT(ctx, 'ir_word', A.irWord), 0.4), () => {
-        stage.text('빨강 바깥', 240, ySc - 50, {size: 24, color: GREYW, align: 'center', shadow: '#000'});
-        stage.text('보라 너머', 725, ySc - 50, {size: 24, color: GREYW, align: 'center', shadow: '#000'});
+      rect(c, 120, ySc, 820, 14, 3, rgba('#3B4E55', 1), rgba(T.muted, 0.8), 1.2);
+      withAlpha(c, smooth((fOut - 0.8) / 0.2), () => {
+        hatch(c, xIR - 46, ySc - 26, xR - (xIR - 46), 26, {col: rgba(HATCH_LN, 0.7)});
+        hatch(c, xV, ySc - 26, xUV + 46 - xV, 26, {col: rgba(HATCH_LN, 0.7)});
+        for (let nm = 700; nm > 400; nm -= 2) { const a = ray(nm).land[0], b = ray(nm - 2).land[0]; c.fillStyle = specCol(nm - 1, 0.95); c.fillRect(a, ySc - 26, (b - a) + 0.8, 26); }
       });
-      withAlpha(c, fadeIn(t, evT(ctx, 'ir_word', A.irWord), 0.4), () => stage.text('적외선 · 안 보임', 240, ySc - 50, {size: 24, weight: 700, color: T.light, align: 'center', shadow: '#000'}));
-      withAlpha(c, fadeIn(t, evT(ctx, 'uv_word', A.uvWord), 0.4), () => stage.text('자외선 · 안 보임', 725, ySc - 50, {size: 24, weight: 700, color: T.light, align: 'center', shadow: '#000'}));
+      const xMid = (xR + xV) / 2;
+      stage.text('무지개', xMid, ySc - 50, {size: 24, weight: 700, color: T.ink, align: 'center', shadow: '#000'});
+      withAlpha(c, 1 - fadeIn(t, evT(ctx, 'ir_word', A.irWord), 0.4), () => {
+        stage.text('빨강 바깥', xIR, ySc - 50, {size: 24, color: GREYW, align: 'center', shadow: '#000'});
+        stage.text('보라 너머', xUV, ySc - 50, {size: 24, color: GREYW, align: 'center', shadow: '#000'});
+      });
+      withAlpha(c, fadeIn(t, evT(ctx, 'ir_word', A.irWord), 0.4), () => stage.text('적외선 · 안 보임', Math.max(xIR, 150), ySc - 50, {size: 24, weight: 700, color: T.light, align: 'center', shadow: '#000'}));
+      withAlpha(c, fadeIn(t, evT(ctx, 'uv_word', A.uvWord), 0.4), () => stage.text('자외선 · 안 보임', xUV, ySc - 50, {size: 24, weight: 700, color: T.light, align: 'center', shadow: '#000'}));
     });
-    // thermometers: beyond red highest (Herschel 1800); qualitative heights
-    const TH = [[230, 0.95, true], [355, 0.74], [440, 0.6], [520, 0.5], [600, 0.42]];
+    // thermometers: one beyond red (Herschel 1800) + four in the colours; qualitative heights
+    const yTh = ySc + 36, hTh = 130;
+    const TH = [[xIR, 0.95, true], [ray(650).land[0], 0.74], [ray(570).land[0], 0.6], [ray(500).land[0], 0.5], [ray(430).land[0], 0.42]];
     TH.forEach(([x, lv, beyond], i) => {
       const la = fadeIn(t, tl.at({sentence: 's01', word: '온도계를'}) - 0.2 + i * 0.12, 0.4);
-      thermo(stage, x, 846, 150, 0.22 + (lv - 0.22) * rise, la, beyond && rise > 0.6);
+      thermo(stage, x, yTh, hTh, 0.22 + (lv - 0.22) * rise, la, beyond && rise > 0.6);
     });
+    const xH = Math.max(xIR, 190), yL = yTh + hTh + 62;
     const hA = fadeIn(t, evT(ctx, 'herschel', A.herschel) - 0.1, 0.4);
     withAlpha(c, hA, () => {
-      stage.text('빨강 바깥 · 가장 뜨거움', 230, 1060, {size: 26, weight: 700, color: T.light, align: 'center', shadow: '#000'});
-      stage.text('1800 허셜', 230, 1096, {role: 'display', size: 28, weight: 500, color: T.accent, align: 'center'});
+      stage.text('빨강 바깥 · 가장 뜨거움', xH, yL, {size: 26, weight: 700, color: T.light, align: 'center', shadow: '#000'});
+      stage.text('1800 허셜', xH, yL + 36, {role: 'display', size: 28, weight: 500, color: T.accent, align: 'center'});
     });
     // silver chloride card beyond violet (Ritter 1801)
     withAlpha(c, a0, () => {
-      rect(c, 690, 850, 80, 150, 4, mix('#E9E6DE', '#2A2622', 0.85 * dark), rgba(T.muted, 0.9), 1.5);
-      rect(c, 690, 850, 80, 150, 4, null, rgba(T.muted, 0.9), 1.5);
-      stage.text('염화은', 730, 836 - 14, {size: 24, color: T.muted, align: 'center', alpha: 1 - dark * 0.0});
+      rect(c, xUV - 40, yTh - 10, 80, 150, 4, mix('#E9E6DE', '#2A2622', 0.85 * dark), rgba(T.muted, 0.9), 1.5);
+      stage.text('염화은', xUV + 52, yTh + 70, {size: 24, color: T.muted});
     });
     const rA = fadeIn(t, tRit - 0.1, 0.4);
     withAlpha(c, rA, () => {
-      stage.text('보라 너머', 730, 1036, {size: 26, weight: 700, color: T.light, align: 'center', shadow: '#000'});
-      stage.text('염화은이 검게', 730, 1066, {size: 26, weight: 700, color: T.light, align: 'center', shadow: '#000'});
-      stage.text('1801 리터', 730, 1100, {role: 'display', size: 28, weight: 500, color: T.accent, align: 'center'});
+      stage.text('보라 너머', xUV, yL - 24, {size: 26, weight: 700, color: T.light, align: 'center', shadow: '#000'});
+      stage.text('염화은이 검게', xUV, yL + 6, {size: 26, weight: 700, color: T.light, align: 'center', shadow: '#000'});
+      stage.text('1801 리터', xUV, yL + 40, {role: 'display', size: 28, weight: 500, color: T.accent, align: 'center'});
     });
     // prediction boxes
     const qa = fadeIn(t, tl.at({sentence: 's01', word: '오를까요,'}) - 0.3, 0.5), ans = fadeIn(t, tAns - 0.05, 0.3);
@@ -685,13 +755,13 @@ export const scenes = {
       for (const [x, txt, right] of boxes) {
         const on = right && ans > 0.5, off = !right && ans > 0.5;
         withAlpha(c, off ? 0.4 : 1, () => {
-          rect(c, x - 200, 1170, 400, 130, 10, rgba(T.plate, 0.92), on ? T.light : rgba(T.border, 1), on ? 3 : 1.5);
-          stage.text(txt, x, 1218, {role: 'display', size: 40, weight: 700, color: on ? T.light : T.ink, align: 'center'});
-          stage.text(on ? '보이지 않는 빛이 데움' : '?', x, 1266, {size: 26, weight: 500, color: on ? T.ink : T.muted, align: 'center'});
+          rect(c, x - 200, 1200, 400, 130, 10, rgba(T.plate, 0.92), on ? T.light : rgba(T.border, 1), on ? 3 : 1.5);
+          stage.text(txt, x, 1248, {role: 'display', size: 40, weight: 700, color: on ? T.light : T.ink, align: 'center'});
+          stage.text(on ? '보이지 않는 빛이 데움' : '?', x, 1296, {size: 26, weight: 500, color: on ? T.ink : T.muted, align: 'center'});
         });
-        if (on) checkMark(c, x + 160, 1200, 1.1, T.light);
+        if (on) checkMark(c, x + 160, 1230, 1.1, T.light);
       }
-      if (ctx.events.has('answer')) { const f = ctx.events.pulse('answer', t, 0.8); if (f > 0) ring(c, 300, 1235, 70 + 110 * (1 - f), rgba(T.light, f * 0.8), 3); }
+      if (ctx.events.has('answer')) { const f = ctx.events.pulse('answer', t, 0.8); if (f > 0) ring(c, 300, 1265, 70 + 110 * (1 - f), rgba(T.light, f * 0.8), 3); }
     });
   },
 
