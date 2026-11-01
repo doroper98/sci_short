@@ -92,7 +92,7 @@ export const RATIO_BR = (700 / 450) ** 4;
 // ---- time anchors (words are from the `tts` text; shared with sound.json through --emit-sound) ----
 const W = (sentence, word, offset = 0) => ({sentence, word, offset});
 export const A = {
-  answer: W('s02', '오릅니다.'), herschel: W('s02', '천팔백년'), irWord: W('s02', '적외선을'), ritter: W('s02', '보라'), uvWord: W('s02', '자외선을'),
+  answer: W('s02b', '올랐습니다.'), herschel: W('s02', '천팔백년'), irWord: W('s02b', '적외선이었고,'), ritter: W('s02b', '보라'), uvWord: W('s02b', '자외선을'),
   crest1: W('s03', '마루에서'), crest2: W('s03', '마루까지의'), maxwell: W('s04', '천팔백육십오년'), narrow: W('s04', '좁은'),
   b1: W('s05', '전파,'), b2: W('s05', '적외선,'), b3: W('s05', '가시광선,'), b4: W('s05', '자외선,'), b5: W('s05', '엑스선은'), all: W('s05', '모두'),
   diff: W('s05', '다른'), speed: W('s06', '초속'), often: W('s06', '자주'), energy: W('s06', '에너지도'),
@@ -524,9 +524,9 @@ function wavePanel(stage, t, ctx, a = 1) {
     line(c, [[xg, yc - amp - 34], [xg, yc + amp + 22]], rgba(MARK, 0.5 + 0.5 * flash), 2 + 2 * flash, {dash: [6, 6]});
     if (flash > 0.05) glow(c, xg, yc - amp, 40, MARK, 0.5 * flash);
     stage.text('관측점', xg, yc + amp + 42, {size: 24, color: T.muted, align: 'center'});
-    // ruler between the two crests around the gate (crest k at x = xg + L·(k − φ))
-    const k0 = Math.ceil(ph - (900 - xg) / L), xs = [];
-    for (let k = k0; k < k0 + 40; k++) { const x = xg + L * (k - ph); if (x > 110 && x < 970) xs.push(x); }
+    // ruler between two crests left of the gate (crest k at x = xg + L·(k + φ), moving right with the wave like waveLine)
+    const k0 = Math.ceil((110 - xg) / L - ph), xs = [];
+    for (let k = k0; k < k0 + 60; k++) { const x = xg + L * (k + ph); if (x > 110 && x < 970) xs.push(x); }
     let best = null; for (let i = 0; i + 1 < xs.length; i++) { const mid = (xs[i] + xs[i + 1]) / 2; if (!best || Math.abs(mid - 380) < Math.abs(best[0] + L / 2 - 380)) best = [xs[i], xs[i + 1]]; }
     if (best && L > 20) {
       const [xa, xb] = best, yr = yc - amp - 18;
@@ -588,7 +588,7 @@ function head(stage, kicker, title, p) {
   });
 }
 export const titles = {
-  hook: ['예측 질문', '빨강 바깥, 온도가 오를까?'],
+  hook: ['오늘의 주제 · 파장', '무지개 바깥에도 빛이 있을까?'],
   origin: ['기원 · 이름과 발견', '波長 — 물결의 길이'],
   essence: ['본질 · 제1원리', '모두 같은 파동, 다른 것은 파장'],
   visible: ['메커니즘 ① 가시광선', '눈과 맞는 좁은 창'],
@@ -728,7 +728,7 @@ export const scenes = {
     const yTh = ySc + 36, hTh = 130;
     const TH = [[xIR, 0.95, true], [ray(650).land[0], 0.74], [ray(570).land[0], 0.6], [ray(500).land[0], 0.5], [ray(430).land[0], 0.42]];
     TH.forEach(([x, lv, beyond], i) => {
-      const la = fadeIn(t, tl.at({sentence: 's01', word: '온도계를'}) - 0.2 + i * 0.12, 0.4);
+      const la = fadeIn(t, tl.at({sentence: 's02', word: '온도계를'}) - 0.2 + i * 0.12, 0.4);
       thermo(stage, x, yTh, hTh, 0.22 + (lv - 0.22) * rise, la, beyond && rise > 0.6);
     });
     const xH = Math.max(xIR, 190), yL = yTh + hTh + 62;
@@ -748,20 +748,14 @@ export const scenes = {
       stage.text('염화은이 검게', xUV, yL + 6, {size: 26, weight: 700, color: T.light, align: 'center', shadow: '#000'});
       stage.text('1801 리터', xUV, yL + 40, {role: 'display', size: 28, weight: 500, color: T.accent, align: 'center'});
     });
-    // prediction boxes
-    const qa = fadeIn(t, tl.at({sentence: 's01', word: '오를까요,'}) - 0.3, 0.5), ans = fadeIn(t, tAns - 0.05, 0.3);
-    withAlpha(c, qa, () => {
-      const boxes = [[300, '오른다', true], [780, '그대로', false]];
-      for (const [x, txt, right] of boxes) {
-        const on = right && ans > 0.5, off = !right && ans > 0.5;
-        withAlpha(c, off ? 0.4 : 1, () => {
-          rect(c, x - 200, 1200, 400, 130, 10, rgba(T.plate, 0.92), on ? T.light : rgba(T.border, 1), on ? 3 : 1.5);
-          stage.text(txt, x, 1248, {role: 'display', size: 40, weight: 700, color: on ? T.light : T.ink, align: 'center'});
-          stage.text(on ? '보이지 않는 빛이 데움' : '?', x, 1296, {size: 26, weight: 500, color: on ? T.ink : T.muted, align: 'center'});
-        });
-        if (on) checkMark(c, x + 160, 1230, 1.1, T.light);
-      }
-      if (ctx.events.has('answer')) { const f = ctx.events.pulse('answer', t, 0.8); if (f > 0) ring(c, 300, 1265, 70 + 110 * (1 - f), rgba(T.light, f * 0.8), 3); }
+    // result card: appears when the narration says the thermometer rose
+    const ans = fadeIn(t, tAns - 0.05, 0.4);
+    withAlpha(c, ans, () => {
+      rect(c, 300, 1200, 480, 130, 10, rgba(T.plate, 0.92), T.light, 3);
+      stage.text('온도가 올랐다', 540, 1248, {role: 'display', size: 40, weight: 700, color: T.light, align: 'center'});
+      stage.text('보이지 않는 빛이 데움', 540, 1296, {size: 26, weight: 500, color: T.ink, align: 'center'});
+      checkMark(c, 740, 1230, 1.1, T.light);
+      if (ctx.events.has('answer')) { const f = ctx.events.pulse('answer', t, 0.8); if (f > 0) ring(c, 540, 1265, 70 + 110 * (1 - f), rgba(T.light, f * 0.8), 3); }
     });
   },
 

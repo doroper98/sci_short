@@ -1,10 +1,10 @@
 {
   "file": "wavelength.mp4",
-  "bytes": 21287520,
-  "sha256": "2af125ede16c505dacd1e6382af295c28f2a0b009f559cb578a0fdd72727305a",
-  "created": "2026-11-01T12:50:27+00:00",
+  "bytes": 21555129,
+  "sha256": "18285060e0da283716d95ea715fb58fa194c4c2ee45ca0a89582fbb533822c3d",
+  "created": "2026-11-01T14:21:22+00:00",
   "title": "파장 — 전파에서 감마선까지, 다른 것은 길이 하나",
-  "timeline_duration": 174.518,
+  "timeline_duration": 176.589,
   "max_sec": 180.0,
   "probe": {
     "streams": [
@@ -40,11 +40,11 @@
         "time_base": "1/15360",
         "start_pts": 0,
         "start_time": "0.000000",
-        "duration_ts": 2680832,
-        "duration": "174.533333",
-        "bit_rate": "792038",
+        "duration_ts": 2712576,
+        "duration": "176.600000",
+        "bit_rate": "793349",
         "bits_per_raw_sample": "8",
-        "nb_frames": "5236",
+        "nb_frames": "5298",
         "extradata_size": 50,
         "disposition": {
           "default": 1,
@@ -93,10 +93,10 @@
         "time_base": "1/48000",
         "start_pts": 0,
         "start_time": "0.000000",
-        "duration_ts": 8376864,
-        "duration": "174.518000",
-        "bit_rate": "174904",
-        "nb_frames": "8178",
+        "duration_ts": 8476272,
+        "duration": "176.589000",
+        "bit_rate": "174296",
+        "nb_frames": "8279",
         "extradata_size": 5,
         "disposition": {
           "default": 1,
@@ -132,9 +132,9 @@
       "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
-      "duration": "174.533333",
-      "size": "21287520",
-      "bit_rate": "975745",
+      "duration": "176.600000",
+      "size": "21555129",
+      "bit_rate": "976449",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -146,21 +146,21 @@
     }
   },
   "audio_mastering_input": {
-    "input_i": "-16.87",
-    "input_tp": "-1.90",
+    "input_i": "-16.88",
+    "input_tp": "-1.93",
     "input_lra": "3.40",
-    "input_thresh": "-27.25",
-    "output_i": "-14.14",
+    "input_thresh": "-27.28",
+    "output_i": "-14.20",
     "output_tp": "-1.50",
-    "output_lra": "3.40",
-    "output_thresh": "-24.53",
+    "output_lra": "3.30",
+    "output_thresh": "-24.61",
     "normalization_type": "dynamic",
-    "target_offset": "0.14"
+    "target_offset": "0.20"
   },
   "encoded_audio": {
-    "input_i": "-14.03",
-    "input_tp": "-1.38",
-    "input_lra": "3.50"
+    "input_i": "-14.02",
+    "input_tp": "-1.41",
+    "input_lra": "3.30"
   },
   "targets": {
     "lufs": -14.0,
@@ -173,7 +173,7 @@
   "alignment_sources": [
     "mms_forced_alignment"
   ],
-  "final_fall_applied": 15,
+  "final_fall_applied": 16,
   "music": null,
   "music_credit_required": false,
   "captions_srt": "wavelength.srt",
