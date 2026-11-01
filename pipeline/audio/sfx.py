@@ -27,6 +27,9 @@ delay {"time","feedback","mix"}, offset):
   chirp   points=[[t_rel, f_hz, amp], ...] harmonics=[1] fade=0.005
                                                           tone whose frequency and amplitude follow a table
                                                           (piecewise-linear, phase-continuous); amp 1 → peak ≈ 1
+  env_noise points=[[t_rel, amp], ...] low=200 high=1500 fade=0.05
+                                                          band-pass noise whose amplitude follows a table
+                                                          (piecewise-linear; wind strength, flow); RMS ≈ 0.25·amp
   custom  layers=[{kind, params, offset}]                  stack of the above
   silent  (no sound; visual-only event kept in the shared list)
 
@@ -243,7 +246,25 @@ def v_chirp(p, seed):
     return x
 
 
-VOICES = {"chirp": v_chirp, "tick": v_tick, "tone": v_tone, "noise": v_noise, "whoosh": v_whoosh, "swell": v_swell}
+def v_env_noise(p, seed):
+    """Band-passed noise whose amplitude follows a [t_rel, amp] table (piecewise-linear). The band-passed noise is
+    scaled to RMS 0.25 before the table is applied, so amp keeps its relative meaning across the whole table."""
+    pts = np.asarray(p.get("points") or [], dtype=float)
+    if pts.ndim != 2 or pts.shape[0] < 2 or pts.shape[1] < 2:
+        raise ValueError("env_noise needs points=[[t_rel, amp], ...] with at least 2 rows")
+    if np.any(np.diff(pts[:, 0]) < 0) or pts[0, 0] < 0:
+        raise ValueError("env_noise points must start at t_rel >= 0 and be sorted by time")
+    t = t_axis(pts[-1, 0])
+    x = bandpass(noise(pts[-1, 0], seed), p.get("low", 200), p.get("high", 1500))[: len(t)]
+    x = x / max(1e-12, float(np.sqrt(np.mean(x ** 2)))) * 0.25
+    x = x * np.interp(t, pts[:, 0], pts[:, 1])
+    fade = float(p.get("fade", 0.05))
+    if fade > 0:
+        x *= np.clip(t / fade, 0, 1) * np.clip((t[-1] - t) / fade, 0, 1)
+    return x
+
+
+VOICES = {"env_noise": v_env_noise, "chirp": v_chirp, "tick": v_tick, "tone": v_tone, "noise": v_noise, "whoosh": v_whoosh, "swell": v_swell}
 
 
 def event_voice(kind: str, p: dict, seed: int) -> np.ndarray:

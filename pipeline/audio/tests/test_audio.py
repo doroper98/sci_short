@@ -187,3 +187,22 @@ def test_chirp_follows_frequency_table(tmp_path, tl):
     assert expect - 1 / sfx.SR <= onset(y) <= expect + 0.002
     with pytest.raises(ValueError):
         sfx.v_chirp({"points": [[0, 100, 1]]}, 0)
+
+
+def test_env_noise_follows_amplitude_table(tmp_path, tl):
+    """kind 'env_noise': band-passed noise whose RMS follows a [t_rel, amp] table, placed at the event time."""
+    pts = [[0.0, 1.0], [1.0, 1.0], [1.5, 0.25], [2.5, 0.25]]
+    x = sfx.v_env_noise({"points": pts, "low": 200, "high": 1500, "fade": 0.01}, 3)
+    assert len(x) == round(2.5 * sfx.SR)
+    rms = lambda a, b: float(np.sqrt(np.mean(x[round(a * sfx.SR): round(b * sfx.SR)] ** 2)))
+    assert rms(0.2, 0.9) == pytest.approx(0.25, rel=0.15)
+    assert rms(1.7, 2.4) / rms(0.2, 0.9) == pytest.approx(0.25, rel=0.2)
+    sound = tmp_path / "wind.json"
+    sound.write_text(json.dumps({"events": [{"id": "w", "at": ["s03", 0.2], "kind": "env_noise",
+                                             "params": {"points": pts, "fade": 0.0, "gain_db": -6}}]}))
+    sfx.render_sfx(sound, FIXTURE, tmp_path / "w.wav")
+    y, _ = sf.read(tmp_path / "w.wav")
+    expect = sfx.resolve_at(["s03", 0.2], tl)
+    assert expect - 1 / sfx.SR <= onset(y) <= expect + 0.002
+    with pytest.raises(ValueError):
+        sfx.v_env_noise({"points": [[0, 1]]}, 0)
