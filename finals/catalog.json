@@ -12,7 +12,7 @@
       "height": 1920,
       "bytes": 31188484,
       "sha256": "51986be1b79d9ef29dc5ffdfe3048548e938fc00956bc83a5c83195282450628",
-      "last_committed": "uncommitted",
+      "video_date": "2026-10-31",
       "episode_code": "episodes/gravitational-waves",
       "upload_info": "finals/01-gravitational-waves/upload.md",
       "thumbnail": "약 100초(처프·링다운 장면)"
@@ -29,7 +29,7 @@
       "height": 1920,
       "bytes": 12430665,
       "sha256": "009bc688ddfdd81503ce7c04350be7e6cc3ccb8370460ca093fc74b6e62a0d4f",
-      "last_committed": "uncommitted",
+      "video_date": "2026-10-16",
       "episode_code": "episodes/ligo-how-it-works",
       "upload_info": "finals/02-ligo-how-it-works/upload.md",
       "thumbnail": "약 95초(한 팔은 늘고 한 팔은 주는 장면)"
@@ -46,7 +46,7 @@
       "height": 1920,
       "bytes": 14847600,
       "sha256": "a992db7eb04dda85fba3c4e3c4dc76a262871086e3e510154a09a632a93f0d62",
-      "last_committed": "uncommitted",
+      "video_date": "2026-10-16",
       "episode_code": "episodes/el-nino-la-nina",
       "upload_info": "finals/03-el-nino-la-nina/upload.md",
       "thumbnail": "약 80초(엘니뇨 되먹임 장면)"
@@ -63,7 +63,7 @@
       "height": 1920,
       "bytes": 21555129,
       "sha256": "18285060e0da283716d95ea715fb58fa194c4c2ee45ca0a89582fbb533822c3d",
-      "last_committed": "uncommitted",
+      "video_date": "2026-11-01",
       "episode_code": "episodes/wavelength",
       "upload_info": "finals/04-wavelength/upload.md",
       "thumbnail": "약 47초(전자기파 스펙트럼 계기판)"
@@ -80,7 +80,7 @@
       "height": 1920,
       "bytes": 31243512,
       "sha256": "cac18c04b265a353bf3aa32587f9ed3c2779801b0034e0154df1fc3a4383bd11",
-      "last_committed": "uncommitted",
+      "video_date": "2026-10-31",
       "episode_code": "episodes/global-winds",
       "upload_info": "finals/05-global-winds/upload.md",
       "thumbnail": "약 125초(지구본·무역풍·속도 그래프)"
@@ -97,7 +97,7 @@
       "height": 1920,
       "bytes": 14340349,
       "sha256": "0059413734f755f1b0cb115ed502e2df6ad476a8b5c59a8a1e025f12fb66847a",
-      "last_committed": "uncommitted",
+      "video_date": "2026-10-16",
       "episode_code": "episodes/seasons",
       "upload_info": "finals/06-seasons/upload.md",
       "thumbnail": "약 75초(해 높이·그림자·햇빛 다발 장면)"
@@ -114,7 +114,7 @@
       "height": 1920,
       "bytes": 32822855,
       "sha256": "1ddbb5f7c4f4291a4cdfa3e73b475ee617768b202638e5202e74bc31251da218",
-      "last_committed": "uncommitted",
+      "video_date": "2026-11-03",
       "episode_code": "episodes/precession",
       "upload_info": "finals/07-precession/upload.md",
       "thumbnail": "약 95초(빛 받는 지구와 자전축이 그리는 원뿔, 3D 개편 후)"
@@ -131,7 +131,7 @@
       "height": 1920,
       "bytes": 8906466,
       "sha256": "42eb09ef3b518bb317816a369880f8b174c83303e419d8389c09853582372083",
-      "last_committed": "uncommitted",
+      "video_date": "2026-11-03",
       "episode_code": "episodes/log-scale",
       "upload_info": "finals/08-log-scale/upload.md",
       "thumbnail": "약 42초(곱하기 자와 수모형 1·10·100·1000, 수정본 기준)"
@@ -148,7 +148,7 @@
       "height": 1920,
       "bytes": 40121619,
       "sha256": "b0b51e7867cc2884de4d811ab64e735ce2b95348db037d9e68b6bdf3889eb630",
-      "last_committed": "uncommitted",
+      "video_date": "2026-11-03",
       "episode_code": "episodes/twinkle",
       "upload_info": "finals/09-twinkle/upload.md",
       "thumbnail": "0초는 검은 화면(새 규칙 이전 제작)이라 약 4초(반짝이는 별과 고요한 달) 또는 약 64초(땅 위의 밝고 어두운 무늬와 7 mm 눈동자)를 고릅니다"
@@ -165,7 +165,7 @@
       "height": 1920,
       "bytes": 29801820,
       "sha256": "a549a03de67c7e43f3f7e56ddceb286c7cde53c14eb2f0daf25a1c6667cfd3e1",
-      "last_committed": "uncommitted",
+      "video_date": "2026-10-31",
       "episode_code": "episodes/aurora",
       "upload_info": "finals/10-aurora/upload.md",
       "thumbnail": "0초는 검은 화면(새 규칙 이전 제작)이라 약 3초(고위도 하늘의 초록 커튼과 호수 반영) 또는 약 99초(자기극을 둘러싼 오로라 고리)를 고릅니다"
@@ -184,7 +184,7 @@
       "height": 1350,
       "bytes": 8416674,
       "sha256": "30c1f6563480f52c60034bbc67c0387019deae9fc298876e3ce6608762fbc4e6",
-      "last_committed": "uncommitted",
+      "video_date": "2026-10-17",
       "episode_code": null,
       "upload_info": null,
       "thumbnail": ""
@@ -201,7 +201,7 @@
       "height": 1920,
       "bytes": 9752406,
       "sha256": "d182e7e4b4e513d8dfdc7b5cccb78892bc00089164a325274acd12704cacf6c0",
-      "last_committed": "uncommitted",
+      "video_date": "2026-10-16",
       "episode_code": null,
       "upload_info": null,
       "thumbnail": ""
@@ -218,7 +218,7 @@
       "height": 1920,
       "bytes": 10274636,
       "sha256": "83c79ae5d0940fa0d86d0bc3e0ece7491f777d9226c4e57a7cd3469049470f53",
-      "last_committed": "uncommitted",
+      "video_date": "2026-10-16",
       "episode_code": null,
       "upload_info": null,
       "thumbnail": ""
