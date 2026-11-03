@@ -198,7 +198,7 @@
 - 고정 댓글: 피라미드를 쌓던 사람들은 어느 별을 보고 북쪽을 찾았을까요?
 - 관련 동영상: 계절 편
 
-## 8. 한 칸에 열 배(로그) — `previews/log-scale/log-scale.mp4` (163.6초)
+## 8. 한 칸에 열 배(로그) — `previews/log-scale/log-scale.mp4` (165.8초)
 
 제목
 ```text

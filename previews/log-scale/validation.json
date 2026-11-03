@@ -1,10 +1,10 @@
 {
   "file": "log-scale.mp4",
-  "bytes": 9060014,
-  "sha256": "dc08f72c8c2493e34353e9e88b494831781e727ad1a752782572aa3686cae00f",
-  "created": "2026-11-03T06:50:03+00:00",
+  "bytes": 8906466,
+  "sha256": "42eb09ef3b518bb317816a369880f8b174c83303e419d8389c09853582372083",
+  "created": "2026-11-03T07:31:23+00:00",
   "title": "한 칸에 열 배 — 지진 규모·데시벨·pH와 로그",
-  "timeline_duration": 163.601,
+  "timeline_duration": 165.801,
   "max_sec": 180.0,
   "probe": {
     "streams": [
@@ -40,11 +40,11 @@
         "time_base": "1/15360",
         "start_pts": 0,
         "start_time": "0.000000",
-        "duration_ts": 2512896,
-        "duration": "163.600000",
-        "bit_rate": "269929",
+        "duration_ts": 2546688,
+        "duration": "165.800000",
+        "bit_rate": "258863",
         "bits_per_raw_sample": "8",
-        "nb_frames": "4908",
+        "nb_frames": "4974",
         "extradata_size": 50,
         "disposition": {
           "default": 1,
@@ -93,10 +93,10 @@
         "time_base": "1/48000",
         "start_pts": 0,
         "start_time": "0.000000",
-        "duration_ts": 7852848,
-        "duration": "163.601000",
-        "bit_rate": "164239",
-        "nb_frames": "7666",
+        "duration_ts": 7958448,
+        "duration": "165.801000",
+        "bit_rate": "162020",
+        "nb_frames": "7769",
         "extradata_size": 5,
         "disposition": {
           "default": 1,
@@ -132,9 +132,9 @@
       "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
-      "duration": "163.601000",
-      "size": "9060014",
-      "bit_rate": "443029",
+      "duration": "165.801000",
+      "size": "8906466",
+      "bit_rate": "429742",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -147,19 +147,19 @@
   },
   "audio_mastering_input": {
     "input_i": "-17.09",
-    "input_tp": "-1.92",
-    "input_lra": "5.60",
-    "input_thresh": "-27.39",
-    "output_i": "-14.04",
+    "input_tp": "-1.95",
+    "input_lra": "5.70",
+    "input_thresh": "-27.37",
+    "output_i": "-14.03",
     "output_tp": "-1.50",
-    "output_lra": "5.40",
-    "output_thresh": "-24.32",
+    "output_lra": "5.50",
+    "output_thresh": "-24.30",
     "normalization_type": "dynamic",
-    "target_offset": "0.04"
+    "target_offset": "0.03"
   },
   "encoded_audio": {
     "input_i": "-14.03",
-    "input_tp": "-1.19",
+    "input_tp": "-1.34",
     "input_lra": "5.50"
   },
   "targets": {
