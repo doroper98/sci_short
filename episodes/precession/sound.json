@@ -577,6 +577,58 @@
       "means": "자전축 방향이 돈 각도 → 음높이 (2026년 = 220 Hz, 한 바퀴 = 한 옥타브 위, 과거로 가면 내려감)"
     },
     {
+      "id": "cam_tilt_hook",
+      "at": 9.836,
+      "kind": "whoosh",
+      "params": {
+        "dur": 2.6,
+        "f_start": 240,
+        "f_end": 720,
+        "q": 0.9,
+        "gain_db": -38
+      },
+      "means": "카메라 큐: 지구에서 자전축을 따라 하늘로 올려다봄 (물리 소리 아님)"
+    },
+    {
+      "id": "cam_rise_cone",
+      "at": 87.818,
+      "kind": "whoosh",
+      "params": {
+        "dur": 3.4,
+        "f_start": 240,
+        "f_end": 720,
+        "q": 0.9,
+        "gain_db": -38
+      },
+      "means": "카메라 큐: 옆에서 본 지구 위로 떠오르며 돌아감 (물리 소리 아님)"
+    },
+    {
+      "id": "cam_tilt_cone",
+      "at": 98.059,
+      "kind": "whoosh",
+      "params": {
+        "dur": 2.4,
+        "f_start": 240,
+        "f_end": 720,
+        "q": 0.9,
+        "gain_db": -38
+      },
+      "means": "카메라 큐: 자전축을 따라 하늘로 (물리 소리 아님)"
+    },
+    {
+      "id": "cam_tilt_close",
+      "at": 170.369,
+      "kind": "whoosh",
+      "params": {
+        "dur": 2.3,
+        "f_start": 240,
+        "f_end": 720,
+        "q": 0.9,
+        "gain_db": -38
+      },
+      "means": "카메라 큐: 자전축을 따라 하늘로 (물리 소리 아님)"
+    },
+    {
       "id": "lab_axis",
       "at": {
         "sentence": "s01",
@@ -584,7 +636,7 @@
         "offset": 0
       },
       "kind": "silent",
-      "means": "하늘의 북극 표식"
+      "means": "자전축이 지구의 두 극을 지나 길게 나타남"
     },
     {
       "id": "lab_circle",
@@ -594,7 +646,7 @@
         "offset": 0
       },
       "kind": "silent",
-      "means": "세차의 원이 그려짐"
+      "means": "자전축 끝이 그리는 원(원뿔)이 그려짐"
     },
     {
       "id": "lab_nod",
@@ -604,7 +656,7 @@
         "offset": 0
       },
       "kind": "silent",
-      "means": "북극 표식이 살짝 끄덕임"
+      "means": "자전축이 살짝 끄덕임 (상징)"
     },
     {
       "id": "lab_polaris",
@@ -910,7 +962,7 @@
         "offset": 0
       },
       "kind": "silent",
-      "means": "하늘 원반 다시"
+      "means": "자전축을 따라 올려다본 하늘"
     },
     {
       "id": "chime_thuban",

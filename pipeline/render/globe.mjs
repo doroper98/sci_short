@@ -263,3 +263,251 @@ export function obliqueCam({cx, cy, k = 1, alpha = 30, yaw = 0}) {
   const vec = v => { const [x, y] = rot(v[0], v[1]); return [y, -sa * x + ca * v[2], ca * x + sa * v[2]]; };
   return {cx, cy, k, alpha, yaw, sa, ca, P, vec};
 }
+
+// =====================================================================================================
+// 3D space scenes (added for episodes/precession, 2026-11-03 revision): a perspective camera, a per-pixel lit
+// Earth (soft terminator, ocean glint, ice, clouds, atmosphere) and a star field on the celestial sphere.
+// World frame is the caller's (precession uses X, Y = ecliptic plane, Z = ecliptic north). Everything above
+// this section is unchanged and still used by the earlier API.
+//
+//   lookCam({pos, target | dir, up, F, cx, cy})   perspective camera: P(p) → [x, y, z (distance along view)],
+//                     dirP(s) → screen point of a direction at infinity (null behind), hidden(p, c, R) → is p
+//                     behind the sphere (c, R) seen from pos, ray(x, y). Right = f × up (right-handed world).
+//   earthTextures(land, {W, H, seed})   equirectangular albedo + ocean mask + clouds from Natural Earth rings
+//                     (built once, ~1 s). Land colours are a muted latitude/noise palette (NOT satellite data).
+//   drawEarthLit(stage, cam, tex, {axis, spin, sun, flat, center, R, clouds, cloudA, night, spec, atmo,
+//                     plane: {n, p, col, a}, scale, alpha})   ray-traced oblate Earth; spin (deg) turns it
+//                     west → east about `axis` (counter-clockwise seen from above the north pole).
+//   makeStars(n, seed, {band})  →  [{v, m}]   random faint stars on the sphere (v unit vector, m 0..1 bright)
+// =====================================================================================================
+import {createCanvas} from '@napi-rs/canvas';
+
+export function lookCam({pos, target = null, dir = null, up = [0, 0, 1], F = 900, cx = 540, cy = 960, ortho = 0}) {
+  const f = unit(dir || sub(target, pos));
+  let r = cross(f, up); if (Math.hypot(r[0], r[1], r[2]) < 1e-6) r = cross(f, [1, 0, 0]); r = unit(r);
+  const u = cross(r, f);
+  const P = ortho ? p => { const d = sub(p, pos); return [cx + ortho * dot(d, r), cy - ortho * dot(d, u), dot(d, f)]; }
+    : p => { const d = sub(p, pos), z = dot(d, f); return [cx + F * dot(d, r) / z, cy - F * dot(d, u) / z, z]; };
+  const dirP = s => { const z = dot(s, f); return ortho ? null : z > 1e-4 ? [cx + F * dot(s, r) / z, cy - F * dot(s, u) / z, z] : null; };
+  const ray = (x, y) => unit(add(f, add(mul(r, (x - cx) / F), mul(u, -(y - cy) / F))));
+  /** is world point p hidden behind the sphere (centre c, radius R) as seen from the camera? */
+  const hidden = (p, c = [0, 0, 0], R = 1) => {
+    if (ortho) { const d = sub(p, c), a = dot(d, r), b = dot(d, u), w = dot(d, f); return a * a + b * b < R * R && w > -Math.sqrt(R * R - a * a - b * b) + 1e-4; }
+    const d = sub(p, pos), L = Math.hypot(d[0], d[1], d[2]); if (L < 1e-9) return false;
+    const dn = [d[0] / L, d[1] / L, d[2] / L], oc = sub(pos, c), b = dot(oc, dn), disc = b * b - (dot(oc, oc) - R * R);
+    if (disc <= 0) return false; const t0 = -b - Math.sqrt(disc); return t0 > 1e-6 && t0 < L - 1e-4;
+  };
+  return {pos, f, r, u, F, cx, cy, ortho, P, dirP, ray, hidden};
+}
+
+// ---- value noise on the sphere (deterministic; for texture building only) ----
+function hash3(x, y, z, s) { let h = (x * 374761393 + y * 668265263 + z * 2147483647 + s * 1013904223) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); h ^= h >>> 16; return (h >>> 0) / 4294967296; }
+function vnoise(x, y, z, s) {
+  const xi = Math.floor(x), yi = Math.floor(y), zi = Math.floor(z), xf = x - xi, yf = y - yi, zf = z - zi;
+  const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf), w = zf * zf * (3 - 2 * zf);
+  const L = (a, b, q) => a + (b - a) * q;
+  return L(L(L(hash3(xi, yi, zi, s), hash3(xi + 1, yi, zi, s), u), L(hash3(xi, yi + 1, zi, s), hash3(xi + 1, yi + 1, zi, s), u), v),
+    L(L(hash3(xi, yi, zi + 1, s), hash3(xi + 1, yi, zi + 1, s), u), L(hash3(xi, yi + 1, zi + 1, s), hash3(xi + 1, yi + 1, zi + 1, s), u), v), w);
+}
+function fbm(x, y, z, s, oct = 5) { let a = 0, amp = 0.5, f = 1, n = 0; for (let i = 0; i < oct; i++) { a += amp * vnoise(x * f, y * f, z * f, s + i * 17); n += amp; amp *= 0.5; f *= 2.03; } return a / n; }
+
+const hexRGB = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+const EARTH_COL = {deep: '#0A2638', shallow: '#1A5470', forest: '#2E4A2B', savanna: '#6A6743', desert: '#A08A60', temperate: '#4B5F36',
+  boreal: '#36472F', tundra: '#6A6858', ice: '#E6ECEF', seaice: '#CBD8DE'};
+/** equirectangular textures (x: lon −180 → 180, y: lat 90 → −90) from Natural Earth rings (loadLand output or raw rings) */
+export function earthTextures(land, {W = 2048, H = 1024, seed = 3, CW = 1024, CH = 512} = {}) {
+  const rings = land.map(R => R.raw || R);
+  const cv = createCanvas(W, H), c = cv.getContext('2d');
+  c.fillStyle = '#000'; c.fillRect(0, 0, W, H); c.beginPath();
+  const X = lon => (lon + 180) / 360 * W, Y = lat => (90 - lat) / 180 * H;
+  for (const r of rings) {
+    const un = [[r[0][0], r[0][1]]];
+    for (let i = 1; i < r.length; i++) { let lo = r[i][0]; const pl = un[i - 1][0]; while (lo - pl > 180) lo -= 360; while (lo - pl < -180) lo += 360; un.push([lo, r[i][1]]); }
+    const net = un[un.length - 1][0] - un[0][0];
+    if (Math.abs(net) > 300) { const lat0 = un.reduce((m, p) => m + p[1], 0) < 0 ? -90 : 90; un.push([un[un.length - 1][0], lat0], [un[0][0], lat0]); }
+    for (const sh of [-360, 0, 360]) un.forEach(([lo, la], i) => (i ? c.lineTo(X(lo + sh), Y(la)) : c.moveTo(X(lo + sh), Y(la))));
+    c.closePath();
+  }
+  c.fillStyle = '#fff'; c.fill('evenodd');
+  const img = c.getImageData(0, 0, W, H).data, mask = new Float32Array(W * H);
+  for (let i = 0; i < W * H; i++) mask[i] = img[i * 4] / 255;
+  // coastal shallows: separable box blur of the land mask (wraps in longitude)
+  const blur = (src, rad) => {
+    const tmp = new Float32Array(W * H), out = new Float32Array(W * H);
+    for (let y = 0; y < H; y++) { let s = 0; for (let k = -rad; k <= rad; k++) s += src[y * W + ((k + W) % W)]; for (let x = 0; x < W; x++) { tmp[y * W + x] = s / (2 * rad + 1); s += src[y * W + ((x + rad + 1) % W)] - src[y * W + ((x - rad + W) % W)]; } }
+    for (let x = 0; x < W; x++) { let s = 0; for (let k = -rad; k <= rad; k++) s += tmp[Math.min(H - 1, Math.max(0, k)) * W + x]; for (let y = 0; y < H; y++) { out[y * W + x] = s / (2 * rad + 1); s += tmp[Math.min(H - 1, y + rad + 1) * W + x] - tmp[Math.max(0, y - rad) * W + x]; } }
+    return out;
+  };
+  const near = blur(blur(mask, 5), 5);
+  const C = Object.fromEntries(Object.entries(EARTH_COL).map(([k, v]) => [k, hexRGB(v)]));
+  const albedo = new Uint8Array(W * H * 3), ocean = new Uint8Array(W * H);
+  const mixc = (a, b, q) => [a[0] + (b[0] - a[0]) * q, a[1] + (b[1] - a[1]) * q, a[2] + (b[2] - a[2]) * q];
+  const sm = (a, b, x) => { const q = Math.min(1, Math.max(0, (x - a) / (b - a))); return q * q * (3 - 2 * q); };
+  for (let y = 0; y < H; y++) {
+    const lat = 90 - (y + 0.5) * 180 / H, cl = Math.cos(lat * D2R), sl = Math.sin(lat * D2R), al = Math.abs(lat);
+    for (let x = 0; x < W; x++) {
+      const i = y * W + x, lon = -180 + (x + 0.5) * 360 / W, px = cl * Math.cos(lon * D2R), py = cl * Math.sin(lon * D2R), pz = sl;
+      const m = mask[i]; let col;
+      // ocean: deep → shallow near coasts, sea ice near the poles
+      let oc = mixc(C.deep, C.shallow, sm(0.02, 0.5, near[i]) * 0.8);
+      const nIce = fbm(px * 6, py * 6, pz * 6, seed + 40, 3);
+      const seaIce = lat > 0 ? sm(74, 80, lat + (nIce - 0.5) * 9) : sm(64, 70, -lat + (nIce - 0.5) * 7);
+      oc = mixc(oc, C.seaice, seaIce * 0.92);
+      if (m > 0) {
+        const n1 = fbm(px * 3.2, py * 3.2, pz * 3.2, seed, 4), n2 = fbm(px * 9, py * 9, pz * 9, seed + 9, 3);
+        const dry = Math.exp(-(((al - 24) / 10) ** 2)) * sm(0.38, 0.62, n1 + 0.12) + 0.25 * sm(0.6, 0.8, n1) * sm(30, 45, al) * (1 - sm(50, 55, al));
+        let base = al < 14 ? mixc(C.forest, C.savanna, sm(8, 14, al) * 0.6) : al < 32 ? mixc(C.savanna, C.temperate, sm(26, 34, al)) : al < 52 ? C.temperate : al < 64 ? mixc(C.temperate, C.boreal, sm(52, 60, al)) : mixc(C.boreal, C.tundra, sm(64, 70, al));
+        base = mixc(base, C.desert, Math.min(1, dry));
+        const ice = lat < -60 ? 1 : (lat > 59 && lon > -74 && lon < -11) ? sm(0.15, 0.5, mask[i] - near[i] * 0.4 + 0.35) * sm(59, 62, lat) : sm(74, 80, lat);
+        base = mixc(base, C.ice, Math.min(1, ice));
+        const k = 0.86 + 0.28 * n2; base = [base[0] * k, base[1] * k, base[2] * k];
+        col = mixc(oc, base, m);
+      } else col = oc;
+      albedo[i * 3] = Math.min(255, col[0]); albedo[i * 3 + 1] = Math.min(255, col[1]); albedo[i * 3 + 2] = Math.min(255, col[2]);
+      ocean[i] = Math.round(255 * (1 - m) * (1 - seaIce));
+    }
+  }
+  // clouds: fbm with a latitude profile (ITCZ, storm tracks; clear subtropics), stretched along longitude
+  const cloud = new Uint8Array(CW * CH);
+  for (let y = 0; y < CH; y++) {
+    const lat = 90 - (y + 0.5) * 180 / CH, cl = Math.cos(lat * D2R), sl = Math.sin(lat * D2R), al = Math.abs(lat);
+    const prof = 0.55 * Math.exp(-(((al - 4) / 8) ** 2)) + 0.75 * Math.exp(-(((al - 55) / 14) ** 2)) + 0.18;
+    for (let x = 0; x < CW; x++) {
+      const lon = (-180 + (x + 0.5) * 360 / CW) * D2R, px = cl * Math.cos(lon), py = cl * Math.sin(lon), pz = sl;
+      const n = fbm(px * 4.5, py * 4.5, pz * 9, seed + 77, 5), d = fbm(px * 14, py * 14, pz * 22, seed + 91, 3);
+      const v = sm(0.62 - 0.22 * prof, 0.86 - 0.18 * prof, n + 0.12 * (d - 0.5));
+      cloud[y * CW + x] = Math.round(255 * v);
+    }
+  }
+  return {W, H, albedo, ocean, CW, CH, cloud};
+}
+
+let OFF = null, OFFC = null;
+const ATM = [0.45, 0.70, 0.98];
+/** Ray-traced Earth (perspective, oblate) drawn into the stage through an offscreen buffer (respects globalAlpha). */
+export function drawEarthLit(stage, cam, tex, o = {}) {
+  const {ctx} = stage, Wf = stage.W, Hf = stage.H;
+  const n = unit(o.axis || [0, 0, 1]), C0 = o.center || [0, 0, 0], Rr = o.R ?? 1, flat = o.flat || 0, sz = 1 / (1 - flat), sz2 = sz * sz;
+  let e1 = cross([0, 0, 1], n); if (Math.hypot(e1[0], e1[1], e1[2]) < 1e-6) e1 = [1, 0, 0]; e1 = unit(e1); const e2 = cross(n, e1);
+  const toB = v => [dot(v, e1), dot(v, e2), dot(v, n)];
+  const ortho = cam.ortho ? cam.ortho * Rr : 0;
+  const ow = mul(sub(cam.pos, C0), 1 / Rr), ob = toB(ow), obz = ob[2] * sz, O2c = ob[0] * ob[0] + ob[1] * ob[1] + obz * obz;
+  if (!ortho && O2c <= 1.0005) return;
+  const fB = toB(cam.f), rB = toB(cam.r), uB = toB(cam.u), sB = unit(toB(o.sun || [1, 0, 0]));
+  const F = cam.F, aW = o.atmo ?? 0.055, spin = (o.spin || 0) * D2R, cDrift = (o.cloudDrift || 0) * D2R;
+  const night = o.night ?? 0.05, cloudA = o.cloudA ?? 0.85, specA = o.spec ?? 0.55;
+  const plane = o.plane, pn = plane ? toB(plane.n) : null, pp = plane ? dot(sub(mul(plane.p || [0, 0, 0], 1), C0), plane.n) / Rr : 0;
+  const camSide = plane ? (ortho ? (dot(cam.f, plane.n) <= 0 ? 1 : -1) : (dot(ow, plane.n) - pp >= 0 ? 1 : -1)) : 0, pCol = plane ? hexRGB(plane.col) : null, pA = plane?.a ?? 0;
+  const band = o.band, bLat = band ? band.lat * D2R : 0, bCol = band ? hexRGB(band.col) : null, bA = band?.a ?? 0, eqA = o.eqLine ?? 0, eqCol = band ? bCol : [158, 198, 210];
+  // screen bbox of the (atmosphere-padded) sphere
+  const Ra = 1 + aW;
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity, behind = false;
+  if (ortho) { const c0 = cam.P(C0), rr = Ra * ortho; x0 = c0[0] - rr; x1 = c0[0] + rr; y0 = c0[1] - rr; y1 = c0[1] + rr; }
+  else {
+    // frustum cull: the padded sphere entirely outside one of the five planes → nothing to draw
+    const rel = sub(C0, cam.pos), Rw = Ra * Rr;
+    if (dot(rel, cam.f) < -Rw) return;
+    const cn = [[0, 0], [Wf, 0], [Wf, Hf], [0, Hf]].map(([x, y]) => cam.ray(x, y));
+    for (let k = 0; k < 4; k++) if (dot(unit(cross(cn[k], cn[(k + 1) % 4])), rel) < -Rw) return;   // (r, u, f) is left-handed in world
+    const cc = mul(ow, Ra * Ra / O2c), rho = Ra * Math.sqrt(Math.max(0, 1 - Ra * Ra / O2c));
+    const w0 = unit(ow), a0 = unit(cross(w0, Math.abs(w0[2]) < 0.9 ? [0, 0, 1] : [1, 0, 0])), b0 = cross(w0, a0);
+    for (let k = 0; k < 48; k++) {
+      const q = k / 48 * TAU, p = add(C0, mul(add(cc, add(mul(a0, rho * Math.cos(q)), mul(b0, rho * Math.sin(q)))), Rr)), s = cam.P(p);
+      if (s[2] <= 0.01) { behind = true; break; }
+      x0 = Math.min(x0, s[0]); x1 = Math.max(x1, s[0]); y0 = Math.min(y0, s[1]); y1 = Math.max(y1, s[1]);
+    }
+  }
+  if (behind) { x0 = 0; y0 = 0; x1 = Wf; y1 = Hf; }
+  x0 = Math.max(0, Math.floor(x0) - 2); y0 = Math.max(0, Math.floor(y0) - 2); x1 = Math.min(Wf, Math.ceil(x1) + 2); y1 = Math.min(Hf, Math.ceil(y1) + 2);
+  if (x1 <= x0 || y1 <= y0) return;
+  const sc = o.scale ?? 1, bw = Math.ceil((x1 - x0) * sc), bh = Math.ceil((y1 - y0) * sc);
+  if (!OFF || OFF.width < bw || OFF.height < bh) { OFF = createCanvas(Math.max(bw, OFF?.width || 0), Math.max(bh, OFF?.height || 0)); OFFC = OFF.getContext('2d'); }
+  const id = OFFC.createImageData(bw, bh), px = new Uint8Array(id.data.buffer, id.data.byteOffset, id.data.length);
+  const {W: TW, H: TH, albedo, ocean, CW, CH, cloud} = tex;
+  const pw = ortho ? 1 / (ortho * sc) : Math.sqrt(Math.max(1e-6, O2c - 1)) / (F * sc);       // pixel footprint at the limb
+  const kx = ortho ? 1 / ortho : 1 / F, eqW = 1.3 * pw;
+  const shx = sB[0], shy = sB[1], shz = sB[2], cs = Math.cos(spin), ss = Math.sin(spin);
+  const INV_TAU = 1 / TAU, INV_PI = 1 / Math.PI;
+  // perspective: origin fixed, direction = f + a r + b u;  ortho: direction f, origin = pos + a r + b u
+  const pfx = ortho ? 0 : 1, pox = ortho ? 1 : 0;
+  for (let j = 0; j < bh; j++) {
+    const b = -((y0 + (j + 0.5) / sc) - cam.cy) * kx;
+    const dyx = fB[0] + pfx * b * uB[0], dyy = fB[1] + pfx * b * uB[1], dyz = fB[2] + pfx * b * uB[2];
+    const oyx = ob[0] + pox * b * uB[0], oyy = ob[1] + pox * b * uB[1], oyz = ob[2] + pox * b * uB[2];
+    let k4 = j * bw * 4;
+    for (let i = 0; i < bw; i++, k4 += 4) {
+      const a = ((x0 + (i + 0.5) / sc) - cam.cx) * kx;
+      const dx = dyx + pfx * a * rB[0], dy = dyy + pfx * a * rB[1], dzr = dyz + pfx * a * rB[2], dz = dzr * sz;
+      const Ox = oyx + pox * a * rB[0], Oy = oyy + pox * a * rB[1], Oz = (oyz + pox * a * rB[2]) * sz, O2 = Ox * Ox + Oy * Oy + Oz * Oz;
+      const A = dx * dx + dy * dy + dz * dz, B = Ox * dx + Oy * dy + Oz * dz;
+      if (B >= 0 && !ortho) continue;
+      const h2 = O2 - B * B / A; if (h2 > Ra * Ra * 1.0) continue;
+      const h = Math.sqrt(Math.max(0, h2)), cov = Math.min(1, Math.max(0, 0.5 + (1 - h) / pw));
+      let hr = 0, hg = 0, hb = 0, ha = 0;
+      if (h > 1 - pw) {                                                                          // atmosphere halo
+        const tc = -B / A, lx = Ox + tc * dx, ly = Oy + tc * dy, lz = (Oz + tc * dz) / sz, ll = Math.sqrt(lx * lx + ly * ly + lz * lz) || 1;
+        const lit = Math.min(1, Math.max(0, (lx * shx + ly * shy + lz * shz) / ll * 0.95 + 0.3));
+        const alt = Math.max(0, h - 1) / aW, I = alt >= 1 ? 0 : (1 - alt) * (1 - alt) * (1 - alt) * (0.25 + 0.75 * lit);
+        hr = ATM[0] * 255; hg = ATM[1] * 255; hb = ATM[2] * 255; ha = Math.min(1, I * 0.85);
+      }
+      let r = 0, g = 0, bl = 0;
+      if (cov > 0) {
+        const t = (-B - Math.sqrt(Math.max(0, B * B - A * (O2 - 1)))) / A;
+        let qx = Ox + t * dx, qy = Oy + t * dy, qz = Oz + t * dz; if (h > 1) { qx /= h; qy /= h; qz /= h; }
+        let nx = qx, ny = qy, nz = qz * sz; const nl = 1 / Math.sqrt(nx * nx + ny * ny + nz * nz); nx *= nl; ny *= nl; nz *= nl;
+        const lat = Math.asin(qz > 1 ? 1 : qz < -1 ? -1 : qz);
+        // body longitude: subtract the spin (west → east: the surface turns counter-clockwise about +axis)
+        const bx = qx * cs + qy * ss, by = -qx * ss + qy * cs, lon = Math.atan2(by, bx);
+        let u = lon * INV_TAU + 0.5; u -= Math.floor(u); const tx = (u * TW) | 0; let ty = ((0.5 - lat * INV_PI) * TH) | 0; if (ty >= TH) ty = TH - 1;
+        const ti = ty * TW + tx, ar = albedo[ti * 3], ag = albedo[ti * 3 + 1], ab = albedo[ti * 3 + 2], ocf = ocean[ti] / 255;
+        const mu = nx * shx + ny * shy + nz * shz;
+        const tq = Math.min(1, Math.max(0, (mu + 0.10) / 0.26)), sunL = tq * tq * (3 - 2 * tq) * (0.22 + 0.9 * (mu > 0 ? mu : 0));
+        const dl = 1 / Math.sqrt(dx * dx + dy * dy + dzr * dzr), vx = -dx * dl, vy = -dy * dl, vz = -dzr * dl;
+        const nv = Math.max(0, nx * vx + ny * vy + nz * vz);
+        const warm = Math.exp(-(mu / 0.13) * (mu / 0.13)) * tq;
+        r = ar * (sunL + 0.10 * warm) + 4 * night * 10; g = ag * (sunL - 0.02 * warm) + 9 * night * 10; bl = ab * (sunL - 0.06 * warm) + 16 * night * 10;
+        // ocean glint (Blinn) + broad sheen
+        if (ocf > 0.02 && mu > -0.05) {
+          let hx = shx + vx, hy = shy + vy, hz = shz + vz; const hl = 1 / Math.sqrt(hx * hx + hy * hy + hz * hz); const nh = (nx * hx + ny * hy + nz * hz) * hl;
+          if (nh > 0.82) { const lg = Math.log(nh), sp = ocf * specA * (Math.exp(90 * lg) * 1.1 + 0.12 * Math.exp(12 * lg)) * tq; r += 235 * sp; g += 228 * sp; bl += 205 * sp; }
+        }
+        // clouds (drift slowly east relative to the ground)
+        if (cloudA > 0) {
+          let cu = (lon - cDrift) * INV_TAU + 0.5; cu -= Math.floor(cu); const ci = (((0.5 - lat * INV_PI) * CH) | 0) * CW + ((cu * CW) | 0), cv = cloud[ci < CW * CH ? ci : CW * CH - 1] / 255 * cloudA;
+          if (cv > 0.004) { const cl = 236 * (night * 0.6 + sunL * 1.02); r += (cl - r) * cv; g += (cl - g) * cv; bl += (cl * 1.02 - bl) * cv; }
+        }
+        // atmosphere: limb brightening on the lit side
+        const fr = (1 - nv) * (1 - nv) * (1 - nv), al = Math.min(1, Math.max(0, mu + 0.3));
+        r += ATM[0] * 150 * fr * al; g += ATM[1] * 150 * fr * al; bl += ATM[2] * 170 * fr * al;
+        if (bA > 0 && (lat < bLat && lat > -bLat)) { r += (bCol[0] - r) * bA; g += (bCol[1] - g) * bA; bl += (bCol[2] - bl) * bA; }
+        if (eqA > 0 && lat < eqW && lat > -eqW) { const e = eqA * (1 - Math.abs(lat) / eqW); r += (eqCol[0] - r) * e; g += (eqCol[1] - g) * e; bl += (eqCol[2] - bl) * e; }
+        if (plane) {                                                                           // translucent plane in front of this point
+          const sd = (qx * pn[0] + qy * pn[1] + (qz / sz) * pn[2]) - pp;
+          if (sd * camSide < 0) { r += (pCol[0] - r) * pA; g += (pCol[1] - g) * pA; bl += (pCol[2] - bl) * pA; }
+        }
+      }
+      const al = cov + ha * (1 - cov);
+      if (al <= 0.003) continue;
+      const kk = cov / al, kh = 1 - kk;
+      const o0 = r * kk + hr * kh, o1 = g * kk + hg * kh, o2 = bl * kk + hb * kh;
+      px[k4] = o0 > 255 ? 255 : o0 < 0 ? 0 : o0; px[k4 + 1] = o1 > 255 ? 255 : o1 < 0 ? 0 : o1; px[k4 + 2] = o2 > 255 ? 255 : o2 < 0 ? 0 : o2; px[k4 + 3] = 255 * al;
+    }
+  }
+  OFFC.putImageData(id, 0, 0);
+  ctx.save(); ctx.globalAlpha *= o.alpha ?? 1; ctx.imageSmoothingEnabled = true;
+  ctx.drawImage(OFF, 0, 0, bw, bh, x0, y0, bw / sc, bh / sc);
+  ctx.restore();
+}
+
+/** random faint stars on the celestial sphere; band = {pole: unit vector, w (rad), k} concentrates some into a band (Milky Way) */
+export function makeStars(n, seed = 1, band = null) {
+  let s = seed >>> 0; const rnd = () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  const out = [];
+  while (out.length < n) {
+    const z = 2 * rnd() - 1, ph = rnd() * TAU, r = Math.sqrt(1 - z * z), v = [r * Math.cos(ph), r * Math.sin(ph), z];
+    if (band) { const d = Math.abs(dot(v, band.pole)); if (rnd() > (1 - band.k) + band.k * Math.exp(-((d / band.w) ** 2))) continue; }
+    const m = rnd() ** 3.2;                                                                     // mostly faint
+    out.push({v, m, tw: rnd() * TAU, hue: rnd()});
+  }
+  return out;
+}

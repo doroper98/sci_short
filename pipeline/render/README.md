@@ -135,4 +135,9 @@ drawGlobe(stage, V, {land: LAND, night: 0.5, grat: 0.1, band: {lat: 14, col: '#F
 | `obliqueCam({cx, cy, k, alpha, yaw})` | 평면을 고도 `alpha`(90 = 바로 위)에서 본 카메라. `P(X,Y,Z)` → 화면 + 깊이, `vec(v)` → `axisView`용 시점 벡터. 위에서 반시계 = 화면에서도 반시계 |
 | `dot cross unit add sub mul E3 D2R GLOBE_PAL` | 보조 |
 
+| `lookCam({pos, target, dir, up, F, cx, cy, ortho})` | 3D 원근(또는 `ortho` 배율의 정사영) 카메라. `P(p)` → `[x, y, 깊이]`, `dirP(v)` → 무한히 먼 방향(별·하늘의 극)의 화면 위치, `hidden(p)`는 지구 뒤에 가려진 점. 2026-11-03 세차운동 편 3D 개편에서 추가 |
+| `earthTextures(land, {W, H, seed})` | Natural Earth 윤곽에서 만든 등장방형 지구 질감(바다 깊이, 위도별 육지 색, 극지 얼음, 구름). 위성 사진이 아니라 생성한 색 |
+| `drawEarthLit(stage, cam, tex, {axis, center, R, flat, sun, spin, …})` | 픽셀마다 광선 추적한 빛 받는 지구: 낮·밤 경계, 대기 테두리 빛, 바다 반짝임, 편평 지구. 오프스크린 버퍼에 그려 `globalAlpha`를 따름 |
+| `makeStars(n, seed, band)` | 천구 위 희미한 무작위 별(`band`로 은하수 띠 밀도) |
+
 편평(`flat`)은 화면에서 축 방향으로 실루엣 비율 `k = √(n_c² + (1−f)²(1−n_c²))`만큼 줄이는 근사입니다. 외곽선은 정확하고 내부는 구 그림을 눌러 그립니다(f ≲ 0.15에서 사용).
