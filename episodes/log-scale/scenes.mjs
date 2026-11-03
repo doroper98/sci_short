@@ -66,7 +66,7 @@ export const burstEnv = u => (u < 0.1 ? smooth(u / 0.1) * 0.35 : u < 0.22 ? 0.35
 const W = (sentence, word, offset = 0) => ({sentence, word, offset});
 export const A = {
   quake: W('s01', '지진'), db: W('s01', '데시벨'), ph: W('s01', '피에이치가'), step: W('s01', '한 칸에'), ten: W('s01', '열 배씩'),
-  m6: W('s02', '규모 육'), m3: W('s02', '규모 삼'), guess: W('s02', '두 배'), no: W('s02', '아닙니다'), seis: W('s02', '지진계에'), thousand: W('s02', '천 배나'),
+  m6: W('s02', '규모 육'), m3: W('s02', '규모 삼'), guess: W('s02', '두 배'), no: W('s02', '아닙니다'), seis: W('s02', '지진계에'), wobble: W('s02', '흔들림은'), thousand: W('s02', '천 배나'),
   first: W('s03', '먼저'), oneStep: W('s03', '한 칸'), plus1: W('s03', '일씩'), addRuler: W('s03', '더하기 자'),
   thisRuler: W('s04', '이 자에'), ant: W('s04', '개미의'), eleph: W('s04', '코끼리의'), together: W('s04', '함께'), antW: W('s04', '개미는'), invisible: W('s04', '보이지'),
   tenx: W('s05', '열 배씩'), mult: W('s05', '곱해지는'), mulRuler: W('s05', '곱하기 자를'), n1: W('s05', '일,'), n10: W('s05', '십,'), n100: W('s05', '백,'), n1000: W('s05', '천이'), equal: W('s05', '같은 간격'),
@@ -98,8 +98,11 @@ export function plan(tl) {
   const st = at(A.step);
   P.hook = {badges: [at(A.quake), at(A.db), at(A.ph)], mini: [st, st + 0.45, st + 0.9, st + 1.35],
     stripsIn: at('s02') - 0.35, m3: [at(A.m3) + 0.05, at(A.m3) + 1.15], guess: [at(A.guess), at(A.guess) + 0.85], no: at(A.no),
-    m6: [at(A.seis) + 0.1, at(A.thousand) - 0.15], grow: [at(A.thousand) - 0.05, at(A.thousand) + 1.45], thousand: at(A.thousand)};
-  { const [g0, g1] = P.hook.grow; P.hook.growDec = [1, 2].map(k => { let lo = g0, hi = g1; for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (3 * easeInOut((m - g0) / (g1 - g0)) < k) lo = m; else hi = m; } return (lo + hi) / 2; }).concat([g1]); }
+    m6: [at(A.no) + 0.25, at(A.seis) + 0.45], thousand: at(A.thousand),
+    // three separate ×10 steps, each eased over GROW_STEP s with a short hold between (user: the ×1000 growth used to flash by in 1.5 s at the scene end)
+    growSteps: [at(A.seis) + 0.5, at(A.wobble) + 0.25, at(A.thousand) + 0.1]};
+  P.hook.grow = [P.hook.growSteps[0], P.hook.growSteps[2] + GROW_STEP];
+  P.hook.growDec = P.hook.growSteps.map(s => s + GROW_STEP);
   // ruler
   const h0 = at(A.oneStep);
   P.ruler = {hops: Array.from({length: 10}, (_, i) => h0 + i * 0.27), addLabel: at(A.addRuler),
@@ -129,11 +132,11 @@ export function plan(tl) {
     rulerIn: at('s11') - 0.5, demo: [at(A.tenDb), at(A.up)], demoX10: at(A.x10), whisper: at(A.whisper), w30: at(A.w30), talk: at(A.talk), t60: at(A.t60),
     // three ×10 hops spaced 0.8 s apart, landing just before "천 배" (user: the steps used to flash past in 1.2 s)
     steps: (b => [b - 0.6, b + 0.2, b + 1.0, b + 1.8])(at(A.t60) + 0.4), d1000: at(A.d1000),
-    feel: [at(A.eight) - 0.1, at(A.eight) + 0.2, at(A.eight) + 0.5, at(A.eight) + 0.8], loud: at(A.loud), ear: at(A.ear), twos: [at(A.mulLike), at(A.mulLike) + 0.3, at(A.mulLike) + 0.6]};
+    feel: [0, 1, 2, 3].map(i => at(A.eight) - 0.1 + 0.45 * i), loud: at(A.loud) + 0.3, ear: at(A.ear), twos: [0, 1, 2].map(i => at(A.mulLike) + 0.45 * i)};
   // pH
   const sm = at(A.smaller);
   P.ph = {acid: at(A.acid), seven: at(A.seven), boxes: [sm - 0.2, sm + 0.5, sm + 1.2], legend: at(A.grain), x10: [at(A.hx10), at(A.hx10) + 0.3],
-    water: at(A.water), vinegar: at(A.vinegar), arcs: [at(A.v3), at(A.v3) + 0.3, at(A.v3) + 0.6, at(A.v3) + 0.9], blocks: at(A.vinegar2), product: at(A.vinegar2) + 0.8, man: at(A.man)};
+    water: at(A.water), vinegar: at(A.vinegar), arcs: [0, 1, 2, 3].map(i => at(A.vinegar) + 0.2 + 0.45 * i), blocks: at(A.vinegar2) + 0.4, product: at(A.vinegar2) + 1.2, man: at(A.man)};
   // wide
   const w0 = at(A.thanks);
   P.wide = {ticks: Array.from({length: 13}, (_, i) => w0 + i * 0.3), quiet: at(A.quiet), thunder: at(A.thunder), trillion: at(A.trillion),
@@ -334,6 +337,18 @@ function trace(c, x0, x1, yc, A, uEnd, col, w = 2.4, n = 220) {
   if (pts.length > 1) line(c, pts, col, w);
   return pts[pts.length - 1];
 }
+// ---- hook growth: three separate ×10 steps ----
+const GROW_STEP = 0.5;
+const hookDecades = (t, P) => P.growSteps.reduce((v, s) => v + easeInOut((t - s) / GROW_STEP), 0);
+/** filled band covering the area the pen sweeps: |burst| envelope (running max over a short window) */
+function envelopeBand(c, x0, x1, yc, A, uEnd, col, n = 160, win = 4) {
+  const m = Math.round(n * clamp(uEnd)); if (m < 2) return;
+  const raw = []; for (let i = 0; i <= n; i++) raw.push(Math.abs(burstAt(i / n)));
+  const env = raw.map((_, i) => Math.max(...raw.slice(Math.max(0, i - win), Math.min(n, i + win) + 1)));
+  const top = [], bot = [];
+  for (let i = 0; i <= m; i++) { const x = lerp(x0, x1, i / n); top.push([x, yc - A * env[i]]); bot.push([x, yc + A * env[i]]); }
+  poly(c, [...top, ...bot.reverse()], col);
+}
 function penTip(c, p, a = 1) { if (p) withAlpha(c, a, () => { line(c, [[p[0], p[1]], [p[0] + 26, p[1] - 34]], rgba('#D9E3E6', 0.8), 3); circle(c, p[0], p[1], 5, PAL.mark); }); }
 function gridPaper(c, T, x, y, w, h, step = 40) {
   panel(c, T, x, y, w, h, 0.92);
@@ -480,8 +495,11 @@ export const scenes = {
         const ug = (t - P.guess[0]) / (P.guess[1] - P.guess[0]), ga = fadeOut(t, P.no + 0.35, 0.45);
         if (ga > 0) withAlpha(c, ga, () => { const tip = trace(c, X0, X1, c6, 2 * A3, ug, rgba(PAL.quake, 0.8)); if (ug > 0 && ug < 1) penTip(c, tip); });
         // the real one: drawn at the 규모 3 size, then multiplied ×10, ×10, ×10
-        const um = (t - P.m6[0]) / (P.m6[1] - P.m6[0]), g = 10 ** (3 * easeInOut((t - P.grow[0]) / (P.grow[1] - P.grow[0])));
-        if (um > 0) { const tip = trace(c, X0, X1, c6, A3 * g, um, rgba(PAL.quake, g > 30 ? 0.75 : 1), 2.4, g > 30 ? 120 : 220); if (um < 1) penTip(c, tip); }
+        const um = (t - P.m6[0]) / (P.m6[1] - P.m6[0]), dec = hookDecades(t, P), g = 10 ** dec, A6 = A3 * g;
+        // once the trace overflows the strip, draw the area the pen sweeps as a calm filled band instead of dense clipped strokes
+        const over = clamp((A6 * 0.9 - h6 / 2) / (h6 * 0.6));
+        if (um > 0 && over > 0) withAlpha(c, over, () => envelopeBand(c, X0, X1, c6, A6, um, rgba(PAL.quake, 0.34)));
+        if (um > 0) { const tip = trace(c, X0, X1, c6, A6, um, rgba(PAL.quake, 1 - over), 2.4, 220); if (um < 1 && over < 0.5) penTip(c, tip); }
       });
       plateText(stage, '규모 6', 162, y6 + 32, {size: 28, align: 'left', color: PAL.quake});
       // labels
@@ -490,14 +508,18 @@ export const scenes = {
         plateText(stage, '2배?', 905, y6 + 80, {size: 44, role: 'display', align: 'right', alpha: gA});
         const w = stage.measure('2배?', {size: 44, weight: 700, role: 'display'}); crossOut(c, 905 - w, 905, y6 + 80, (t - P.no) / 0.35);
       }
-      if (t > P.growDec[0]) {
-        const k = Math.min(3, Math.floor(3 * easeInOut((t - P.grow[0]) / (P.grow[1] - P.grow[0])) + 1e-6));
-        plateText(stage, ['×1', '×10', '×100', '×1000'][Math.max(1, k)], 905, y6 + 80, {size: 48, role: 'display', align: 'right', color: PAL.mark, border: PAL.mark});
-      }
-      const bA = fadeIn(t, P.grow[1] - 0.1, 0.5);
+      const k = P.growDec.filter(x => t >= x - 0.15).length;
+      if (k > 0) plateText(stage, ['×1', '×10', '×100', '×1000'][k], 905, y6 + 80, {size: 48, role: 'display', align: 'right', color: PAL.mark, border: PAL.mark});
+      // overflow arrows: the record keeps going past the top and bottom of the strip
+      const ovA = fadeIn(t, P.growDec[1] - 0.2, 0.4);
+      if (ovA > 0) withAlpha(c, ovA, () => {
+        arrow(c, [540, y6 + 70], [540, y6 - 40], rgba(PAL.mark, 0.95), 4, {head: 16});
+        arrow(c, [540, y6 + h6 - 70], [540, y6 + h6 + 40], rgba(PAL.mark, 0.95), 4, {head: 16});
+      });
+      const bA = fadeIn(t, P.growDec[2] - 0.1, 0.5);
       if (bA > 0) withAlpha(c, bA, () => {
         plateText(stage, '규모 3의 1,000배 — 칸을 훌쩍 넘음', 540, y6 + 160, {size: 30});
-        plateText(stage, '진짜 크기로 그리면 화면 10개 높이', 540, y6 + h6 - 50, {size: 30, color: PAL.mark});
+        plateText(stage, '진짜 크기로 그리면 화면 10개 높이', 540, y6 + h6 - 130, {size: 30, color: PAL.mark});
       });
     });
   },
