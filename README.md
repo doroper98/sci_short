@@ -60,7 +60,8 @@ pipeline/new_episode.py           에피소드 스캐폴드
 episodes/_template/               에피소드 양식(brief, script, scenes, sound, run.sh)
 assets/fonts/                     글꼴 해시 목록(바이너리는 받아서 사용)
 references/                       참고 영상 13편·장면 모음·음성 발췌·무결성 확인값
-previews/, samples/               이전 시제품(석영·전력·태양)과 그 제작 코드
+finals/                           최종본 보관함(번호-slug 폴더, 목록·해시는 pipeline/catalog.py)
+finals/legacy/, samples/          이전 시제품(석영·전력·태양)과 그 제작 코드
 templates/episode-brief.md        기획 메모 양식
 ```
 

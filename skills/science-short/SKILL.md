@@ -120,10 +120,12 @@ python pipeline/validate.py outputs/<slug>
 
 ### 7. 전달
 
-- 전달 브랜치 `preview/<slug>`에 `previews/<slug>/` (mp4, srt, poster, validation.json, README)를 둔다.
+- **전달본이 곧 최종본**이다(2026-11-03 사용자 결정). 사용자가 다시 만들라고 하지 않으면 바꾸지 않는다.
+- 다음 번호로 `finals/<번호>-<slug>/`를 만들고 넣는다. 들어갈 것은 mp4, srt, poster.jpg(0초 프레임), scenes.jpg, timeline.json, validation.json, README.md, upload.md다. 다시 만들 때는 같은 폴더를 덮어쓴다.
+- `python3 pipeline/catalog.py`로 `finals/README.md` 목록과 `finals/catalog.json`(길이·해상도·SHA-256)을 갱신한다.
 - README에는 길이, 음성 상태(`degraded` 여부), 검증 방법, 직접 청취·휴대전화 재생 여부를 사실대로 적는다.
 - `HANDOFF.md`에 날짜·주제·결과·남은 한계를 추가한다.
-- **업로드 정보 세 가지**(2026-11-03 사용자 결정)를 `docs/YOUTUBE_UPLOAD.md`에 적고 사용자에게 평문으로 준다(복사 버튼이 아니라 길게 눌러 복사하므로 코드 블록 없이).
+- **업로드 정보 세 가지**(2026-11-03 사용자 결정)를 `finals/<번호>-<slug>/upload.md`에 적고 사용자에게 평문으로 준다(복사 버튼이 아니라 길게 눌러 복사하므로 코드 블록 없이).
   - 제목: 해시태그 2~3개 포함, 100자 이내.
   - 설명: 본문 끝에 해시태그 줄.
   - 태그: 쉼표로 구분한 한 줄, 500자 이내.
