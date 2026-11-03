@@ -753,7 +753,7 @@ function rampEase(q, r = 0.15) { q = clamp(q); const v = 1 / (1 - r); if (q < r)
 let staleWarned = false;
 function checkSoundTable(ctx) {
   if (staleWarned) return; staleWarned = true;
-  const e = ctx.events.find(x => x.id === 'tone_hook_star'), sig = modelSignature(ctx.tl);
+  const e = ctx.events.find(x => x.model), sig = modelSignature(ctx.tl);
   if (!e?.model || e.model.sig !== sig) console.warn('warning: sound tables in sound.json are stale — run node episodes/twinkle/scenes.mjs --emit-sound');
 }
 /** a short fingerprint of the model + timeline (stored in sound.json; a mismatch means re-run --emit-sound) */
@@ -1529,13 +1529,41 @@ export function soundEvents(tl) {
     points: table(ao0, ao1, () => 784, tt => { const q = corrQ(tt), p = (q > 0 ? lerp(aoPSF(tt, 0).peak, aoPSF(tt, 1).peak, q) : aoPSF(tt, 0).peak); return 0.12 + 1.6 * p; }, 0.05)},
     means: '별 상의 가운데 밝기(선명함) → 음의 크기: 보정 전 작고 흔들림, 거울이 모양을 바꾸면 커지고 일정'});
   // myth
-  ev.push({id: 'myth_no', at: A.no, kind: 'tick', params: {freq: 520, decay: 0.1, gain_db: -23, repeat: 2, interval: 0.12}, means: '오해에 줄을 그음 → "아니다"'});
+  ev.push({id: 'myth_no', at: A.no, kind: 'tick', params: {freq: 330, decay: 0.1, gain_db: -23, repeat: 2, interval: 0.12}, means: '오해에 줄을 그음 → "아니다"'});
   tone('tone_space', at(A.spaceM) + 0.3, tl.scene('myth').end - 0.3, F_STAR, () => 1, -28, '우주에서 본 별 — 공기가 없어 일정 (같은 대응)');
   // close
   tone('tone_close_star', at('s18') - 0.1, at(A.moonC) - 0.1, F_STAR, SIG.hookStar, -29, '정리: 별(점) — 출렁');
   tone('tone_close_moon', at(A.moonC) - 0.1, at(A.avgC) + 0.8, F_MOON, SIG.hookMoon, -30, '정리: 달(넓은 원반) — 일정');
   ev.push({id: 'close_swell', at: {...A.airC2, offset: -0.1}, kind: 'swell', params: {freqs: [294, 440, 587], dur: 2.0, gain_db: -26}, means: '정리: "공기가 만듭니다"'});
-  return ev;
+  return lowBandOnly(ev, modelSignature(tl));
+}
+/**
+ * User decision (2026-11-03): no effects in the high band. Every tone whose pitch is at or above HIGH_CUT is
+ * dropped (the star at 1175 Hz, Sirius 880/1175/1568 Hz, the adaptive-optics 784 Hz tone, the 1320 Hz laser tick);
+ * what remains keeps its partials, noise bands and filters below HIGH_CUT. The stale-table signature moves to the
+ * first remaining event.
+ */
+const HIGH_CUT = 700;
+function lowBandOnly(ev, sig) {
+  const out = [];
+  for (const e of ev) {
+    const p = e.params || {};
+    if (e.kind === 'chirp') {
+      const f = Math.max(...p.points.map(q => q[1]));
+      if (f >= HIGH_CUT) continue;
+      p.harmonics = (p.harmonics || [1]).filter((a, k) => k === 0 || f * (k + 1) < HIGH_CUT);
+    } else if (e.kind === 'tick') {
+      if (p.freq * 2.01 >= HIGH_CUT) continue;          // v_tick always adds a 2.01× partial
+      p.click = 0;                                       // the click is a 0.8–4× noise burst
+    } else if (e.kind === 'whoosh') { p.f_start = Math.min(p.f_start, HIGH_CUT * 0.6); p.f_end = Math.min(p.f_end, HIGH_CUT * 0.85); }
+    else if (e.kind === 'env_noise') p.high = Math.min(p.high, HIGH_CUT);
+    else if (e.kind === 'swell') p.cutoff = HIGH_CUT;    // v_swell adds 2f overtones; low-pass them away
+    delete e.model;
+    out.push(e);
+  }
+  const first = out.find(e => e.kind !== 'silent');
+  if (first) first.model = {sig};
+  return out;
 }
 const isMain = process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
 if (isMain && process.argv.includes('--emit-sound')) {
