@@ -109,3 +109,30 @@ SCISHORT_ROOT=$PWD node episodes/<slug>/render.mjs --video         # outputs/<sl
 
 템플릿 장면 1080×1920: 렌더+libx264(medium, crf 18) 합쳐 약 23–24 fps → 180초 영상 ≈ 4분. 무거운 장면(수백 개 구·그라디언트)은 더 느립니다.
 `getImageData()`는 straight RGBA를 돌려주며(확인함) ffmpeg에 `-pix_fmt rgba`로 넘기고 BT.709 limited-range yuv420p로 변환합니다.
+
+## 지구본 엔진 `globe.mjs` (세 번째 재사용에서 승격)
+
+정사영 지구본: 가장자리에서 정확히 자르는 Natural Earth 육지, 경위선, 위도 띠, 낮·밤 경계, 화면 안 회전(roll)으로 기울어지는 축, 편평한(불룩한) 지구 그리기, 공전면을 비스듬히 보는 카메라.
+`episodes/global-winds`(처음) → `episodes/seasons`(roll 추가) → `episodes/precession`(세 번째)에서 반복되어 여기로 옮겼습니다.
+**`index.mjs`에서 다시 내보내지 않습니다.** 필요한 에피소드가 직접 가져옵니다. 앞의 두 에피소드는 전달본 재현을 위해 각자의 로컬 사본을 그대로 둡니다(고치지 않음).
+
+```js
+import {loadLand, axisView, drawGlobe, axisTip, obliqueCam} from '../../pipeline/render/globe.mjs';
+const LAND = loadLand(path.join(HERE, 'land.json'));        // 육지 경로는 인자 (에피소드가 자기 land.json을 넘김)
+const cam = obliqueCam({cx: 540, cy: 690, k: 150, alpha: 24}); // 공전면(X, Y) 위 Z = 법선. +Y → 오른쪽, +X → 시청자 쪽
+const V = axisView({cx: cam.cx, cy: cam.cy, R: 150}, cam.vec([sinε, 0, cosε]), {spin, sun: cam.vec(sunDir), flat: 0.12});
+drawGlobe(stage, V, {land: LAND, night: 0.5, grat: 0.1, band: {lat: 14, col: '#F2A65A', a: 0.3}});
+```
+
+| 함수 | 내용 |
+|---|---|
+| `loadLand(file)` | `{rings:[[[lon,lat],…],…]}` → 육지 객체 (2° 간격으로 촘촘히, 경계 상자) |
+| `makeView(lay, lam, tilt, roll)` / `toView` / `fromView` / `gmap` / `proj` / `tracePts` | 저수준 투영. `lam` 경도가 정면, `tilt`는 북극을 시청자 쪽으로, `roll`은 화면 안 반시계 회전. 뒤쪽 점은 원판 밖으로 거울상 → 클립하면 가장자리에서 정확히 잘림 |
+| `axisView(lay, n, {spin, sun, sunLon, flat})` | 북쪽 축이 시점 벡터 `n`을 향하는 지구본. `sun`+`sunLon`이면 그 경도가 태양 아래. 자전은 서 → 동(시간에 따라 `spin` 감소) |
+| `drawGlobe(stage, V, {land, sun, night, grat, lats, equator, band, pal, inside, halo})` | 바다 음영 → 경위선 → 육지 → 띠 → 적도 → 밤(태양이 있으면 실제 경계) 순서. 태양이 없으면 부드러운 가장자리 어둡게 |
+| `globeWithAxis(stage, V, o)`, `axisEnds`, `axisTip(V, len, sg)` | 축 그리기. 먼 쪽 끝은 지구본 앞에 그려 가려짐. `len ≤ 1`은 지구본과 함께 찌그러짐(편평한 극), `len > 1`은 방향 표시라 찌그러지지 않음 → `obliqueCam.P(len·R·n)`과 같은 원 위 |
+| `surfacePoint(V, lat, lon)`, `latitudePts(V, lat)`, `latLine`, `latBand`, `graticule`, `nightShade`, `squash` | 표면 위 점·선·띠(편평 보정 포함) |
+| `obliqueCam({cx, cy, k, alpha, yaw})` | 평면을 고도 `alpha`(90 = 바로 위)에서 본 카메라. `P(X,Y,Z)` → 화면 + 깊이, `vec(v)` → `axisView`용 시점 벡터. 위에서 반시계 = 화면에서도 반시계 |
+| `dot cross unit add sub mul E3 D2R GLOBE_PAL` | 보조 |
+
+편평(`flat`)은 화면에서 축 방향으로 실루엣 비율 `k = √(n_c² + (1−f)²(1−n_c²))`만큼 줄이는 근사입니다. 외곽선은 정확하고 내부는 구 그림을 눌러 그립니다(f ≲ 0.15에서 사용).
