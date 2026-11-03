@@ -127,12 +127,21 @@ export function createStage({width = 1080, height = 1920, fps = 30, fonts = {}, 
       out.push(line);
     }
     if (o.balance && out.length === 2 && !String(s).includes('\n')) {
+      // Even out the two lines, but never strand a one-syllable word (e.g. "수백 / 번", "그 / 까닭")
+      // at a line edge: such a split costs a quarter of the column width extra (user rule, 2026-11).
       const words = out.join(' ').split(' ');
-      let best = out, bestW = Math.max(w(out[0]), w(out[1]));
+      // Dangling = a bound noun/counter opening line 2 ("수백 / 번", "극 / 쪽으로") or a determiner
+      // closing line 1 ("그 / 까닭", "한 / 칸에", "두 / 블랙홀은", "첫 / 신호를").
+      const BOUND = /^(번|개|수|것|때|등|중|쪽|년|배|초|분|명|곳|줄|채|뿐|듯|칸|쯤)(에|은|는|이|가|을|를|의|으로|로|도|씩|째|에서|까지|부터)?[.,!?]?$/;
+      const DET = /^(그|이|저|한|두|세|네|첫|각|몇|온|약|극|빔|찬|큰|새)$/;
+      const dangling = i => BOUND.test(words[i]) || DET.test(words[i - 1]);
+      const cost = (a, b, i) => Math.max(w(a), w(b)) + (dangling(i) ? 0.25 * maxWidth : 0);
+      let best = out, bestC = Infinity;
       for (let i = 1; i < words.length; i++) {
         const a = words.slice(0, i).join(' '), b = words.slice(i).join(' ');
-        const m = Math.max(w(a), w(b));
-        if (m <= maxWidth && m < bestW - 0.5) { best = [a, b]; bestW = m; }
+        if (Math.max(w(a), w(b)) > maxWidth) continue;
+        const c = cost(a, b, i);
+        if (c < bestC - 0.5) { best = [a, b]; bestC = c; }
       }
       return best;
     }
