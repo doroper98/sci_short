@@ -55,7 +55,11 @@ def entry(folder, number=None):
     slug = re.sub(r"^\d+-", "", folder.name)
     dur, w, h = probe(mp4)
     rel = lambda p: p.relative_to(ROOT).as_posix()
-    committed = sh("git", "log", "-1", "--follow", "--diff-filter=AM", "--format=%cs", "--", rel(mp4))  # content change, not the move
+    # date this exact video content first entered the repository (blob lookup; moves do not count,
+    # and --follow is avoided because it can pair similar-sized videos by mistake)
+    blob = sh("git", "hash-object", str(mp4))
+    dates = sh("git", "log", "--all", "--reverse", "--format=%cs", f"--find-object={blob}").splitlines()
+    committed = dates[0] if dates else ""
     return {
         "number": number, "slug": slug, "title": title, "status": "final" if number else "legacy",
         "folder": rel(folder), "video": rel(mp4), "duration_sec": dur, "width": w, "height": h,

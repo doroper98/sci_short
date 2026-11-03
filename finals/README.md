@@ -29,15 +29,15 @@
 | 번호 | 제목 | 길이 | 폴더 | 업로드 정보 | 영상 확정일 |
 |---|---|---|---|---|---|
 | 01 | 두 블랙홀의 마지막 춤, 중력파 | 177.3초 | [01-gravitational-waves/](01-gravitational-waves/) | [upload.md](01-gravitational-waves/upload.md) | 2026-10-31 |
-| 02 | LIGO는 어떻게 잴까 — 어둠 속의 작은 밝아짐 | 175.5초 | [02-ligo-how-it-works/](02-ligo-how-it-works/) | [upload.md](02-ligo-how-it-works/upload.md) | 2026-10-16 |
-| 03 | 엘니뇨와 라니냐 — 바람이 물을 밀고, 물이 바람을 만든다 | 178.0초 | [03-el-nino-la-nina/](03-el-nino-la-nina/) | [upload.md](03-el-nino-la-nina/upload.md) | 2026-10-16 |
+| 02 | LIGO는 어떻게 잴까 — 어둠 속의 작은 밝아짐 | 175.5초 | [02-ligo-how-it-works/](02-ligo-how-it-works/) | [upload.md](02-ligo-how-it-works/upload.md) | 2026-11-01 |
+| 03 | 엘니뇨와 라니냐 — 바람이 물을 밀고, 물이 바람을 만든다 | 178.0초 | [03-el-nino-la-nina/](03-el-nino-la-nina/) | [upload.md](03-el-nino-la-nina/upload.md) | 2026-11-01 |
 | 04 | 파장 — 전파에서 감마선까지, 다른 것은 길이 하나 | 176.6초 | [04-wavelength/](04-wavelength/) | [upload.md](04-wavelength/upload.md) | 2026-11-01 |
-| 05 | 지구를 두른 바람의 띠 — 무역풍·무풍대·편서풍 | 179.0초 | [05-global-winds/](05-global-winds/) | [upload.md](05-global-winds/upload.md) | 2026-10-31 |
-| 06 | 계절은 왜 생길까 — 거리가 아니라 기울기 | 160.0초 | [06-seasons/](06-seasons/) | [upload.md](06-seasons/upload.md) | 2026-10-16 |
+| 05 | 지구를 두른 바람의 띠 — 무역풍·무풍대·편서풍 | 179.0초 | [05-global-winds/](05-global-winds/) | [upload.md](05-global-winds/upload.md) | 2026-11-02 |
+| 06 | 계절은 왜 생길까 — 거리가 아니라 기울기 | 160.0초 | [06-seasons/](06-seasons/) | [upload.md](06-seasons/upload.md) | 2026-11-02 |
 | 07 | 지구 자전축의 느린 원 — 세차운동과 장동 | 173.9초 | [07-precession/](07-precession/) | [upload.md](07-precession/upload.md) | 2026-11-03 |
 | 08 | 한 칸에 열 배 — 지진 규모·데시벨·pH와 로그 | 165.8초 | [08-log-scale/](08-log-scale/) | [upload.md](08-log-scale/upload.md) | 2026-11-03 |
 | 09 | 별은 왜 반짝일까 — 반짝임은 공기가 만든다 | 175.7초 | [09-twinkle/](09-twinkle/) | [upload.md](09-twinkle/upload.md) | 2026-11-03 |
-| 10 | 오로라는 왜 극지방에서만 보일까 | 161.3초 | [10-aurora/](10-aurora/) | [upload.md](10-aurora/upload.md) | 2026-10-31 |
+| 10 | 오로라는 왜 극지방에서만 보일까 | 161.3초 | [10-aurora/](10-aurora/) | [upload.md](10-aurora/upload.md) | 2026-11-03 |
 
 합계 10편, 28.7분, 237 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
 <!-- catalog:end -->
