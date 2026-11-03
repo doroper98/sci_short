@@ -127,7 +127,8 @@ export function plan(tl) {
   const d2 = at(A.talk2);
   P.sound = {bel: at(A.bel), phone: at(A.phone), deci: at(A.deci), tenth: at(A.tenth), came: at(A.came),
     rulerIn: at('s11') - 0.5, demo: [at(A.tenDb), at(A.up)], demoX10: at(A.x10), whisper: at(A.whisper), w30: at(A.w30), talk: at(A.talk), t60: at(A.t60),
-    steps: [d2, d2 + 0.4, d2 + 0.8, d2 + 1.2], d1000: at(A.d1000),
+    // three ×10 hops spaced 0.8 s apart, landing just before "천 배" (user: the steps used to flash past in 1.2 s)
+    steps: (b => [b - 0.6, b + 0.2, b + 1.0, b + 1.8])(at(A.t60) + 0.4), d1000: at(A.d1000),
     feel: [at(A.eight) - 0.1, at(A.eight) + 0.2, at(A.eight) + 0.5, at(A.eight) + 0.8], loud: at(A.loud), ear: at(A.ear), twos: [at(A.mulLike), at(A.mulLike) + 0.3, at(A.mulLike) + 0.6]};
   // pH
   const sm = at(A.smaller);
@@ -702,10 +703,10 @@ export const scenes = {
       withAlpha(c, tA, () => { bubbleIcon(c, X(60) - 8, 556, 48, 3, 1); txt(stage, '대화 약 60', X(60) - 14, 474, {size: 30, weight: 700, color: T.ink, alpha: fadeIn(t, P.t60 - 0.1, 0.4)}); });
       const by = 990;
       stage.text('소리의 세기', 160, 940, {size: 30, weight: 700, color: T.muted, alpha: wA});
-      [[30, 1, wA], [40, 10, fadeIn(t, P.steps[1] - 0.05, 0.3)], [50, 100, fadeIn(t, P.steps[2] - 0.05, 0.3)], [60, 1000, fadeIn(t, P.steps[3] - 0.05, 0.3)]].forEach(([d, n, a], i) => {
-        blocks(c, n, X(d), by, 9, {a});
+      [[30, 1, wA], [40, 10, fadeIn(t, P.steps[1] - 0.05, 0.45)], [50, 100, fadeIn(t, P.steps[2] - 0.05, 0.45)], [60, 1000, fadeIn(t, P.steps[3] - 0.05, 0.45)]].forEach(([d, n, a], i) => {
+        blocks(c, n, X(d), by, 9 * (i ? 0.55 + 0.45 * easeOut(a) : 1), {a});   // each block grows into place as its hop lands
         txt(stage, `×${fmtInt(n)}`, X(d), by + 38, {role: 'display', size: 30, weight: 700, color: PAL.sound, alpha: a});
-        if (i) hop(stage, X(d - 10) + 10, X(d) - 10, SY - 22, 22, PAL.mark, (t - P.steps[i] + 0.2) / 0.35, '×10', {size: 24, labelGap: 14});
+        if (i) hop(stage, X(d - 10) + 10, X(d) - 10, SY - 22, 22, PAL.mark, (t - P.steps[i] + 0.4) / 0.5, '×10', {size: 24, labelGap: 14});
       });
       const res = fadeIn(t, P.d1000 - 0.05, 0.5) * fadeOut(t, tl.at('s12') - 0.5, 0.4);
       big(stage, '30 → 60 dB : 세 칸 = 세기 1,000배', 540, 1088, 42, T.ink, {alpha: res, maxWidth: 820});
