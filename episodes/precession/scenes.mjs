@@ -1299,7 +1299,9 @@ function nodScene(stage, t, ctx) {
   });
   // the lens: the path of the pole near the tip, unrolled along the precession direction (both directions exaggerated)
   if (tip && lensA > 0) withAlpha(c, lensA, () => {
-    const L = LENS, v = cam.P(mul(axisN(y + 300), Ln)), sg = v[0] >= tip[0] ? 1 : -1;
+    // fixed direction: now at the right, the past scrolling off to the left (it used to follow the on-screen tip direction,
+    // which flips with the exaggerated nod → the wave mirrored and the pole mark jumped sides every few seconds)
+    const L = LENS, sg = 1;
     ring(c, tip[0], tip[1], 16, rgba(T.light, 0.75), 1.6);
     for (const k of [-1, 1]) line(c, [[tip[0] + k * 15, tip[1] - 6], [L.x + k * L.r * 0.72, L.y + L.r * 0.69]], rgba(T.light, 0.35), 1.2);
     nodLens(stage, t, ctx, y, sg);
@@ -1334,10 +1336,10 @@ function nodLens(stage, t, ctx, y, sg) {
   line(c, [[L.x - L.r, L.y], [L.x + L.r, L.y]], rgba(T.muted, 0.6), 1.5, {dash: [6, 6]});
   const pts = []; for (let yy = Math.max(2026, y - 2 * L.r / KA - 1); yy <= y + 1e-6; yy += 0.2) pts.push([X(yy), Y(yy)]); pts.push([X(y), Y(y)]);
   if (pts.length > 1) line(c, pts, PAL.nod, 3.5);
-  // crest-to-crest bracket (18.6 yr) once a full cycle is visible
-  const cr = []; for (let yy = 2026; yy <= y; yy += 0.05) if (dEps(yy) > dEps(yy - 0.05) && dEps(yy) >= dEps(yy + 0.05)) cr.push(yy);
-  if (cr.length > 1) { const ya = cr[cr.length - 2], yb = cr[cr.length - 1], xa = X(ya), xb = X(yb), by = L.y - KC - 18;
-    withAlpha(c, smooth((y - yb) / 1.5), () => { line(c, [[xa, by + 8], [xa, by], [xb, by], [xb, by + 8]], rgba(T.light, 0.85), 2); stage.text('18.6년', (xa + xb) / 2, by - 18, {size: 24, weight: 700, color: T.light, align: 'center'}); }); }
+  // a fixed 18.6-yr scale bar (one period wide) above the wave; it fades in once and stays while the wave scrolls under it
+  // (it used to hop from crest pair to crest pair and re-fade each cycle)
+  { const wP = P_NODE * KA, xa = x0 - sg * 0.5 * L.r - wP / 2, xb = xa + wP, by = L.y - KC - 18;
+    withAlpha(c, smooth((y - 2026 - P_NODE - 2) / 4), () => { line(c, [[xa, by + 8], [xa, by], [xb, by], [xb, by + 8]], rgba(T.light, 0.85), 2); stage.text('18.6년', (xa + xb) / 2, by - 18, {size: 24, weight: 700, color: T.light, align: 'center'}); }); }
   poleMark(c, X(y), Y(y), 1);
   c.restore();
   ring(c, L.x, L.y, L.r, rgba(T.light, 0.55), 2);
