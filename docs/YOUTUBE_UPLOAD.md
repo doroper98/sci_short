@@ -34,6 +34,7 @@
 | 8 | 한 칸에 열 배(로그) | [finals/08-log-scale/upload.md](../finals/08-log-scale/upload.md) |
 | 9 | 별의 반짝임 | [finals/09-twinkle/upload.md](../finals/09-twinkle/upload.md) |
 | 10 | 오로라 | [finals/10-aurora/upload.md](../finals/10-aurora/upload.md) |
+| 11 | 에딩턴 한계 | [finals/11-eddington-limit/upload.md](../finals/11-eddington-limit/upload.md) |
 
 ## 이전 작품
 
