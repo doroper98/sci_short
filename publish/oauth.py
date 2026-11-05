@@ -114,7 +114,7 @@ def exchange_code(send, client_id: str, client_secret: str, code: str, redirect_
 
 
 TESTING_MSG = ("OAuth 앱 게시 상태가 '프로덕션'이어야 장기 토큰이 나옵니다. '테스트 중'이면 7일 뒤 만료됩니다. "
-               "Google Cloud 콘솔 > Google 인증 플랫폼 > 대상 > '앱 게시' 뒤 다시 실행하십시오(docs/YOUTUBE_UPLOAD.md §장기 토큰). "
+               "Google Cloud 콘솔 > Google 인증 플랫폼 > 대상 > '앱 게시' 뒤 다시 실행하십시오(docs/YOUTUBE_AUTO_UPLOAD.md '장기 토큰 원칙'). "
                "알고도 7일 토큰을 받으려면 --allow-testing")
 
 

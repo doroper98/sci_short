@@ -1,0 +1,159 @@
+{
+  "sample_rate": 48000,
+  "duration": 113.70006802721089,
+  "events": [
+    {
+      "type": "attach",
+      "time": 80.68666666666667,
+      "tetra": 0,
+      "note": 261.63
+    },
+    {
+      "type": "attach",
+      "time": 80.95487150415723,
+      "tetra": 1,
+      "note": 329.63
+    },
+    {
+      "type": "attach",
+      "time": 81.22307634164777,
+      "tetra": 2,
+      "note": 392
+    },
+    {
+      "type": "attach",
+      "time": 81.49128117913833,
+      "tetra": 3,
+      "note": 261.63
+    },
+    {
+      "type": "attach",
+      "time": 81.75948601662887,
+      "tetra": 4,
+      "note": 329.63
+    },
+    {
+      "type": "attach",
+      "time": 82.02769085411943,
+      "tetra": 5,
+      "note": 392
+    },
+    {
+      "type": "attach",
+      "time": 82.29589569160999,
+      "tetra": 6,
+      "note": 261.63
+    },
+    {
+      "type": "attach",
+      "time": 82.56410052910053,
+      "tetra": 7,
+      "note": 329.63
+    },
+    {
+      "type": "attach",
+      "time": 82.83230536659109,
+      "tetra": 8,
+      "note": 392
+    },
+    {
+      "type": "attach",
+      "time": 83.10051020408163,
+      "tetra": 9,
+      "note": 261.63
+    },
+    {
+      "type": "attach",
+      "time": 83.36871504157219,
+      "tetra": 10,
+      "note": 329.63
+    },
+    {
+      "type": "attach",
+      "time": 83.63691987906273,
+      "tetra": 11,
+      "note": 392
+    },
+    {
+      "type": "attach",
+      "time": 83.90512471655329,
+      "tetra": 12,
+      "note": 261.63
+    },
+    {
+      "type": "attach",
+      "time": 84.17332955404385,
+      "tetra": 13,
+      "note": 329.63
+    },
+    {
+      "type": "attach",
+      "time": 84.44153439153439,
+      "tetra": 14,
+      "note": 392
+    },
+    {
+      "type": "attach",
+      "time": 84.70973922902495,
+      "tetra": 15,
+      "note": 261.63
+    },
+    {
+      "type": "attach",
+      "time": 84.97794406651549,
+      "tetra": 16,
+      "note": 329.63
+    },
+    {
+      "type": "attach",
+      "time": 85.24614890400605,
+      "tetra": 17,
+      "note": 392
+    },
+    {
+      "type": "attach",
+      "time": 85.5143537414966,
+      "tetra": 18,
+      "note": 261.63
+    },
+    {
+      "type": "repeat",
+      "time": 64.49396825396826,
+      "note": 261.63
+    },
+    {
+      "type": "repeat",
+      "time": 66.96775132275133,
+      "note": 329.63
+    },
+    {
+      "type": "repeat",
+      "time": 69.4415343915344,
+      "note": 392
+    },
+    {
+      "type": "repeat",
+      "time": 71.91531746031747,
+      "note": 261.63
+    },
+    {
+      "type": "repeat",
+      "time": 74.38910052910053,
+      "note": 329.63
+    },
+    {
+      "type": "repeat",
+      "time": 76.86288359788361,
+      "note": 392
+    },
+    {
+      "type": "condense",
+      "time": 53.93314965986395,
+      "note": 523.25
+    }
+  ],
+  "mapping": "Each attach event drives the same visual highlight and a chime. A recurring three-note motif represents repetition, not literal sounds emitted by atoms.",
+  "original_music": true,
+  "narration": "Korean Supertonic 3 M3, upstream INT8 runtime, speed .95, 16 steps",
+  "pre_master_peak": 0.6812681555747986
+}

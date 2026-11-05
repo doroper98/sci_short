@@ -1,0 +1,87 @@
+1
+00:00:01,200 --> 00:00:04,974
+High in the sky, the Sun can look almost white.
+
+2
+00:00:05,424 --> 00:00:08,820
+But near sunset, it can glow orange or red.
+
+3
+00:00:09,270 --> 00:00:13,421
+The Sun has not changed. The journey of its light has.
+
+4
+00:00:14,121 --> 00:00:17,140
+Sunlight contains a broad mixture of visible colors.
+
+5
+00:00:17,440 --> 00:00:19,326
+Together, they can look white.
+
+6
+00:00:19,826 --> 00:00:22,468
+Now follow that light into Earth's atmosphere.
+
+7
+00:00:23,118 --> 00:00:26,892
+Air molecules scatter some light away from its original direction.
+
+8
+00:00:27,292 --> 00:00:32,197
+Shorter wavelengths, like blue, scatter much more strongly than longer wavelengths, like red.
+
+9
+00:00:32,697 --> 00:00:34,584
+This is called Rayleigh scattering.
+
+10
+00:00:35,234 --> 00:00:38,630
+Blue light is redirected, not turned into red light.
+
+11
+00:00:39,130 --> 00:00:45,545
+Some scattered light reaches us from across the sky. That is why the daytime sky looks blue.
+
+12
+00:00:46,245 --> 00:00:51,906
+When the Sun is high, its light takes a relatively short path through the atmosphere.
+
+13
+00:00:52,256 --> 00:00:57,161
+Enough of the color mixture remains for the Sun to appear nearly white.
+
+14
+00:00:57,861 --> 00:01:03,144
+As the Sun sinks toward the horizon, the path through air grows much longer.
+
+15
+00:01:03,544 --> 00:01:07,318
+More blue light is scattered out of the direct beam.
+
+16
+00:01:07,768 --> 00:01:11,164
+The remaining light is richer in reds and oranges.
+
+17
+00:01:11,914 --> 00:01:17,575
+Listen to the same idea. These tones represent colors; light itself is not making sound.
+
+18
+00:01:18,025 --> 00:01:20,666
+A short path keeps a fuller mix.
+
+19
+00:01:22,166 --> 00:01:25,940
+A long path leaves much less of the blue component.
+
+20
+00:01:27,640 --> 00:01:31,791
+Dust, haze, and clouds can change the exact colors you see.
+
+21
+00:01:32,141 --> 00:01:34,782
+But the central idea stays the same.
+
+22
+00:01:35,182 --> 00:01:40,842
+One Sun. A longer path through air. A different mix of light reaching your eyes.

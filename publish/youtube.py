@@ -3,17 +3,19 @@
 공개 전환은 사용자가 YouTube Studio 에서 직접 한다. 이 도구는 어떤 설정으로도 public·unlisted 로 올리지 않는다.
 
 사용법
-    python -m publish.youtube outbox/<episode> --dry-run   # 입력·메타데이터·영상 규격 검증만 (비밀값 불필요)
-    python -m publish.youtube outbox/<episode>             # 실제 업로드 (항상 비공개)
-    python -m publish.youtube --all                         # outbox/ 아래 미업로드 에피소드 전부
-    python -m publish.youtube --whoami                      # 토큰이 가리키는 채널 이름·ID 확인
-    python -m publish.youtube --list                        # outbox 상태표
+    python -m publish.youtube finals/<NN>-<slug> --dry-run   # 입력·메타데이터·영상 규격 검증만 (비밀값 불필요)
+    python -m publish.youtube finals/<NN>-<slug>             # 실제 업로드 (항상 비공개)
+    python -m publish.youtube --all                           # finals/ 아래 미업로드 에피소드 전부
+    python -m publish.youtube --whoami                        # 토큰이 가리키는 채널 이름·ID 확인
+    python -m publish.youtube --list                          # finals 상태표
+    python -m publish.youtube finals/<ep> --mark-uploaded <video id>   # 이미 손으로 올린 편을 기록해 건너뛰게 함
 
-에피소드 폴더 규약 (outbox/README.md)
-    final.mp4            세로 쇼츠 원본. 없으면 폴더 안의 유일한 .mp4 를 쓴다.
-    description.txt      첫 줄 = 제목(100자 이하), 빈 줄, 그 뒤 = 설명(UTF-8 5000바이트 이하). '<' '>' 금지.
-    final.srt            (선택) 한국어 자막 → captions.insert
-    meta.json            (선택) 편별 덧씌움: tags, made_for_kids, contains_synthetic_media, category_id, caption, video
+입력은 최종본 보관함 규약(finals/README.md)을 그대로 쓴다.
+    <slug>.mp4           폴더 안의 유일한 .mp4 (pipeline/catalog.py 와 같은 규칙)
+    upload.md            제목 / 설명 / 태그 (skills/science-short/SKILL.md 7단계, 2026-11-03 사용자 결정 형식)
+    thumbnail.jpg        있으면 썸네일로 올림. 없으면 poster.jpg(0초 프레임). 채널이 맞춤 썸네일을 못 쓰면 경고로 남김
+    <slug>.srt           기본 올리지 않음(화면에 자막이 새겨져 있음, docs/YOUTUBE_UPLOAD.md). --caption 으로 올릴 수 있음
+    meta.json            (선택) 편별 덧씌움: tags, made_for_kids, contains_synthetic_media, category_id, caption, thumbnail, video
     youtube_upload.json  업로드 기록(도구가 씀). 같은 영상(md5)은 다시 올리지 않는다.
 
 비밀값은 환경 변수 YT_CLIENT_ID · YT_CLIENT_SECRET · YT_REFRESH_TOKEN 만 읽는다(--env-file 로 .env 를 읽을 수 있다).
@@ -28,6 +30,7 @@ import datetime as dt
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -42,16 +45,20 @@ from typing import Any, Callable
 
 REPO = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = REPO / "config" / "youtube.json"
-DEFAULT_OUTBOX = REPO / "outbox"
+DEFAULT_FINALS = REPO / "finals"
 RECORD_NAME = "youtube_upload.json"
-DESCRIPTION_NAME = "description.txt"
+UPLOAD_MD_NAME = "upload.md"
 META_NAME = "meta.json"
+EPISODE_DIR_RE = re.compile(r"^(\d{2,})-(.+)$")       # finals/<번호>-<slug>/ (legacy/ 등은 제외)
+SECTION_RE = re.compile(r"^#{0,3}\s*(제목|설명|태그)\s*:?\s*$")
+TAG_LINE_RE = re.compile(r"^-\s*태그\s*:\s*(.+)$")
 SECRET_ENV: tuple[str, str, str] = ("YT_CLIENT_ID", "YT_CLIENT_SECRET", "YT_REFRESH_TOKEN")
 
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 UPLOAD_URL = "https://www.googleapis.com/upload/youtube/v3/videos"
 CAPTIONS_URL = "https://www.googleapis.com/upload/youtube/v3/captions"
 CHANNELS_URL = "https://www.googleapis.com/youtube/v3/channels"
+THUMBNAILS_URL = "https://www.googleapis.com/upload/youtube/v3/thumbnails/set"
 WATCH_URL_PREFIX = "https://youtu.be/"
 STUDIO_URL = "https://studio.youtube.com/video/{video_id}/edit"
 
@@ -62,9 +69,9 @@ FORBIDDEN_CHARS: tuple[str, str] = ("<", ">")
 CHUNK_UNIT = 256 * 1024        # 재개 가능 업로드 조각은 256 KiB 배수(API 규약)
 MB = 1024 * 1024
 RETRY_STATUS: frozenset[int] = frozenset({500, 502, 503, 504})
-META_KEYS: frozenset[str] = frozenset({"tags", "made_for_kids", "contains_synthetic_media", "category_id", "caption", "video"})
+META_KEYS: frozenset[str] = frozenset({"tags", "made_for_kids", "contains_synthetic_media", "category_id", "caption", "thumbnail", "video"})
 TOKEN_EXPIRED_HINT = ("리프레시 토큰이 만료되거나 철회되었습니다(invalid_grant). OAuth 앱이 '테스트 중'이면 7일마다 만료됩니다. "
-                      "앱을 프로덕션으로 게시한 뒤 `python -m publish.oauth` 로 새 토큰을 받아 YT_REFRESH_TOKEN 을 바꾸십시오.")
+                      "앱을 프로덕션으로 게시한 뒤 `python -m publish.oauth` 로 새 토큰을 받아 YT_REFRESH_TOKEN 을 바꾸십시오(docs/YOUTUBE_AUTO_UPLOAD.md).")
 
 
 class UploadError(RuntimeError):
@@ -130,6 +137,9 @@ class Config:
     made_for_kids: bool | None = None
     channel_id: str | None = None
     tags: list[str] = field(default_factory=list)
+    upload_captions: bool = False      # 2026-11-03 사용자 결정: 자막은 화면에 새겨져 있어 SRT 를 올리지 않는 것이 기본
+    upload_thumbnail: bool = True      # thumbnail.jpg(없으면 poster.jpg) 를 thumbnails.set 으로 시도. 실패는 경고
+    thumbnail_max_bytes: int = 2 * 1024 * 1024
     shorts_max_sec: float = 180
     chunk_mb: int = 8
     timeout_sec: float = 120
@@ -164,10 +174,18 @@ def load_config(path: Path = DEFAULT_CONFIG) -> Config:
 @dataclass
 class Episode:
     dir: Path
+    number: int | None
+    slug: str
     video: Path
-    description: Path
+    upload_md: Path
     srt: Path | None
+    thumbnail: Path | None
     meta: dict[str, Any]
+
+
+def parse_dir_name(dir_: Path) -> tuple[int | None, str]:
+    m = EPISODE_DIR_RE.match(dir_.name)
+    return (int(m.group(1)), m.group(2)) if m else (None, dir_.name)
 
 
 def load_meta(dir_: Path) -> dict[str, Any]:
@@ -184,7 +202,7 @@ def load_meta(dir_: Path) -> dict[str, Any]:
     unknown = set(meta) - META_KEYS
     if unknown:
         raise UploadError(f"{p}: 모르는 키 {', '.join(sorted(unknown))} — 허용: {', '.join(sorted(META_KEYS))}")
-    for key in ("made_for_kids", "contains_synthetic_media", "caption"):
+    for key in ("made_for_kids", "contains_synthetic_media", "caption", "thumbnail"):
         if key in meta and not isinstance(meta[key], bool):
             raise UploadError(f"{p}: {key} 는 true/false 여야 합니다")
     if "tags" in meta and not (isinstance(meta["tags"], list) and all(isinstance(t, str) for t in meta["tags"])):
@@ -192,38 +210,100 @@ def load_meta(dir_: Path) -> dict[str, Any]:
     return meta
 
 
-def load_episode(dir_: Path, caption: bool = True) -> Episode:
+def _single(dir_: Path, pattern: str) -> Path | None:
+    files = sorted(p for p in dir_.glob(pattern) if p.is_file())
+    return files[0] if len(files) == 1 else None
+
+
+def load_episode(dir_: Path, *, caption: bool = False, thumbnail: bool = True) -> Episode:
+    """finals/<NN>-<slug>/ 를 읽는다. 영상은 폴더 안의 유일한 .mp4(meta.json 의 video 로 지정 가능)."""
     if not dir_.is_dir():
         raise UploadError(f"에피소드 폴더 없음: {dir_}")
+    number, slug = parse_dir_name(dir_)
     meta = load_meta(dir_)
     if "video" in meta:
         video = dir_ / str(meta["video"])
-    elif (dir_ / "final.mp4").is_file():
-        video = dir_ / "final.mp4"
     else:
         mp4s = sorted(p for p in dir_.glob("*.mp4") if p.is_file())
         if len(mp4s) != 1:
-            raise UploadError(f"{dir_}: final.mp4 가 없고 .mp4 가 {len(mp4s)}개입니다 — final.mp4 로 두거나 meta.json 의 video 로 지정")
+            raise UploadError(f"{dir_}: .mp4 가 {len(mp4s)}개입니다 — 폴더에 최종 영상 하나만 두거나 meta.json 의 video 로 지정")
         video = mp4s[0]
     if not video.is_file():
         raise UploadError(f"영상 파일 없음: {video}")
-    desc = dir_ / DESCRIPTION_NAME
-    if not desc.is_file():
-        raise UploadError(f"{DESCRIPTION_NAME} 없음: {desc} (첫 줄 제목, 빈 줄, 설명)")
+    upload_md = dir_ / UPLOAD_MD_NAME
+    if not upload_md.is_file():
+        raise UploadError(f"{UPLOAD_MD_NAME} 없음: {upload_md} (제목 / 설명 / 태그 — skills/science-short/SKILL.md 7단계)")
     srt: Path | None = None
-    if caption and meta.get("caption", True):
-        cand = dir_ / "final.srt"
-        srt = cand if cand.is_file() else None
-    return Episode(dir=dir_, video=video, description=desc, srt=srt, meta=meta)
+    if meta.get("caption", caption):
+        srt = (video.with_suffix(".srt") if video.with_suffix(".srt").is_file() else _single(dir_, "*.srt"))
+        if srt is None:
+            raise UploadError(f"{dir_}: 자막을 올리라고 했는데 .srt 가 없습니다")
+    thumb: Path | None = None
+    if meta.get("thumbnail", thumbnail):
+        for name in ("thumbnail.jpg", "thumbnail.png", "poster.jpg", "poster.png"):
+            if (dir_ / name).is_file():
+                thumb = dir_ / name
+                break
+    return Episode(dir=dir_, number=number, slug=slug, video=video, upload_md=upload_md, srt=srt, thumbnail=thumb, meta=meta)
 
 
-def parse_description(text: str) -> tuple[str, str]:
-    """description.txt → (제목, 설명). 첫 줄이 제목이다."""
-    lines = text.strip("\n").split("\n")
-    title = lines[0].strip()
+def parse_upload_md(text: str) -> dict[str, Any]:
+    """upload.md → {'title', 'description', 'tags'}.
+
+    두 형식을 모두 읽는다(2026-11-03 사용자 결정 형식, 01~08 과 09~ 편의 차이).
+      제목 / 설명 / 태그 머리말 다음의 ```text 블록, 또는 블록 없이 다음 머리말 전까지의 줄.
+      태그는 '- 태그: a, b, c' 한 줄도 허용한다.
+    """
+    lines = text.splitlines()
+    sections: dict[str, str] = {}
+    tag_line: str | None = None
+    i = 0
+    while i < len(lines):
+        ln = lines[i]
+        m_tag = TAG_LINE_RE.match(ln.strip())
+        if m_tag:
+            tag_line = m_tag.group(1).strip()
+            i += 1
+            continue
+        m = SECTION_RE.match(ln.strip())
+        if not m:
+            i += 1
+            continue
+        key = m.group(1)
+        i += 1
+        while i < len(lines) and not lines[i].strip():
+            i += 1
+        body: list[str] = []
+        if i < len(lines) and lines[i].strip().startswith("```"):
+            i += 1
+            while i < len(lines) and not lines[i].strip().startswith("```"):
+                body.append(lines[i])
+                i += 1
+            i += 1   # 닫는 ```
+        else:
+            while i < len(lines):
+                s = lines[i].strip()
+                if SECTION_RE.match(s) or TAG_LINE_RE.match(s) or s.startswith("- ") or s.startswith("#"):
+                    break
+                body.append(lines[i])
+                i += 1
+        if key not in sections:   # 같은 머리말이 두 번 나오면 처음 것
+            sections[key] = "\n".join(body).strip("\n")
+    title = sections.get("제목", "").strip()
     if not title:
-        raise UploadError(f"{DESCRIPTION_NAME} 첫 줄(제목)이 비어 있습니다")
-    return title, "\n".join(lines[1:]).strip("\n")
+        raise UploadError(f"{UPLOAD_MD_NAME}: '제목' 블록이 없거나 비어 있습니다")
+    if "\n" in title:
+        raise UploadError(f"{UPLOAD_MD_NAME}: 제목은 한 줄이어야 합니다")
+    description = sections.get("설명", "").strip("\n")
+    if not description.strip():
+        raise UploadError(f"{UPLOAD_MD_NAME}: '설명' 블록이 없거나 비어 있습니다")
+    raw_tags = sections.get("태그") or tag_line or ""
+    tags: list[str] = []
+    for tg in raw_tags.replace("\n", ",").split(","):
+        tg = tg.strip()
+        if tg and tg not in tags:
+            tags.append(tg)
+    return {"title": title, "description": description, "tags": tags}
 
 
 # ───────────────────────────── 메타데이터 ─────────────────────────────
@@ -256,8 +336,8 @@ def _nbytes(s: str) -> int:
 
 def build_metadata(ep: Episode, cfg: Config, *, synthetic: bool | None = None,
                    made_for_kids: bool | None = None) -> Metadata:
-    """설정 < meta.json < 명령행 순서로 덧씌운다."""
-    title, body = parse_description(ep.description.read_text(encoding="utf-8"))
+    """upload.md 의 제목·설명·태그에 설정 < meta.json < 명령행 순서로 덧씌운다."""
+    info = parse_upload_md(ep.upload_md.read_text(encoding="utf-8"))
     syn = cfg.contains_synthetic_media
     if "contains_synthetic_media" in ep.meta:
         syn = bool(ep.meta["contains_synthetic_media"])
@@ -270,13 +350,13 @@ def build_metadata(ep: Episode, cfg: Config, *, synthetic: bool | None = None,
         kids = made_for_kids
     if kids is None:
         raise UploadError("made_for_kids(아동용 자가 선언)가 정해지지 않았습니다 — config/youtube.json 의 made_for_kids 를 true/false 로 "
-                          "정하거나 meta.json·--made-for-kids 로 지정하십시오. 자세한 설명은 docs/YOUTUBE_UPLOAD.md")
+                          "정하거나 meta.json·--made-for-kids 로 지정하십시오. 설명은 docs/YOUTUBE_UPLOAD.md '아동용 여부'")
     tags: list[str] = []
-    for t in [*cfg.tags, *ep.meta.get("tags", [])]:
-        t = t.strip()
-        if t and t not in tags:
-            tags.append(t)
-    return Metadata(title=title, description=body, tags=tags,
+    for tg in [*info["tags"], *cfg.tags, *ep.meta.get("tags", [])]:
+        tg = tg.strip()
+        if tg and tg not in tags:
+            tags.append(tg)
+    return Metadata(title=info["title"], description=info["description"], tags=tags,
                     category_id=str(ep.meta.get("category_id", cfg.category_id)),
                     default_language=cfg.default_language, contains_synthetic_media=syn, made_for_kids=kids)
 
@@ -490,6 +570,15 @@ def upload_caption(send: Transport, cfg: Config, token: str, video_id: str, srt:
     return str(cid)
 
 
+def upload_thumbnail(send: Transport, token: str, video_id: str, image: Path) -> None:
+    """thumbnails.set — 채널이 맞춤 썸네일을 쓸 수 있어야 한다(전화 인증). 할당량 50단위."""
+    ctype = "image/png" if image.suffix.lower() == ".png" else "image/jpeg"
+    url = THUMBNAILS_URL + "?" + urllib.parse.urlencode({"videoId": video_id, "uploadType": "media"})
+    r = send("POST", url, {"Authorization": f"Bearer {token}", "Content-Type": ctype}, image.read_bytes())
+    if r.status != 200:
+        raise _api_error(r, "썸네일 설정")
+
+
 # ───────────────────────────── 기록 ─────────────────────────────
 
 @dataclass
@@ -513,6 +602,11 @@ class Record:
     height: int | None = None
     caption_id: str | None = None
     caption_error: str | None = None
+    thumbnail_file: str | None = None
+    thumbnail_error: str | None = None
+    number: int | None = None
+    slug: str = ""
+    source: str = "api"                   # api(이 도구가 올림) · manual(손으로 올린 것을 --mark-uploaded 로 기록)
     schema_version: int = 1
 
 
@@ -547,13 +641,15 @@ def _log(msg: str) -> None:
 
 
 def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport | None = None,
-                    env: dict[str, str] | None = None, caption: bool = True, synthetic: bool | None = None,
-                    made_for_kids: bool | None = None, not_shorts: bool = False, allow_reupload: bool = False,
-                    sleep: Callable[[float], None] = time.sleep) -> dict[str, Any]:
+                    env: dict[str, str] | None = None, caption: bool | None = None, thumbnail: bool | None = None,
+                    synthetic: bool | None = None, made_for_kids: bool | None = None, not_shorts: bool = False,
+                    allow_reupload: bool = False, sleep: Callable[[float], None] = time.sleep) -> dict[str, Any]:
     """에피소드 하나. 결과 dict 의 status: uploaded · skipped · dry-run · error."""
     res: dict[str, Any] = {"dir": _rel(dir_), "status": "error", "warnings": []}
     try:
-        ep = load_episode(dir_, caption=caption)
+        ep = load_episode(dir_, caption=cfg.upload_captions if caption is None else caption,
+                          thumbnail=cfg.upload_thumbnail if thumbnail is None else thumbnail)
+        res.update(number=ep.number, slug=ep.slug)
         meta = build_metadata(ep, cfg, synthetic=synthetic, made_for_kids=made_for_kids)
         res["title"] = meta.title
         errs = validate_metadata(meta)
@@ -561,22 +657,26 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
         verrs, vwarns = check_video(probe, cfg, not_shorts=not_shorts)
         errs += verrs
         res["warnings"] += vwarns
+        if ep.thumbnail is not None and ep.thumbnail.stat().st_size > cfg.thumbnail_max_bytes:
+            res["warnings"].append(f"썸네일 {ep.thumbnail.name} 이 {cfg.thumbnail_max_bytes // MB}MB 를 넘어 올리지 않습니다")
+            ep.thumbnail = None
         if errs:
             raise UploadError("검증 실패: " + " · ".join(errs))
         size, md5 = ep.video.stat().st_size, md5_file(ep.video)
-        _log(f"{_rel(dir_)}: 제목 「{meta.title}」 · 설명 {_nbytes(meta.description)}B · 영상 {size / MB:.1f}MB"
+        _log(f"{_rel(dir_)}: 제목 「{meta.title}」 · 설명 {_nbytes(meta.description)}B · 태그 {len(meta.tags)}개 · 영상 {size / MB:.1f}MB"
              + (f" · {probe['width']}×{probe['height']} {probe['duration_sec']:.1f}s" if probe else "")
-             + f" · 자막 {'있음' if ep.srt else '없음'} · 비공개 · 합성표시={meta.contains_synthetic_media} · 아동용={meta.made_for_kids}")
+             + f" · 자막 {'올림' if ep.srt else '안 올림'} · 썸네일 {ep.thumbnail.name if ep.thumbnail else '없음'}"
+             + f" · 비공개 · 합성표시={meta.contains_synthetic_media} · 아동용={meta.made_for_kids}")
         prev = read_record(dir_)
         if prev is not None:
             if prev.video_md5 == md5:
                 res.update(status="skipped", video_id=prev.video_id, url=prev.url, studio_url=prev.studio_url)
-                res["warnings"].append(f"이미 올린 영상(md5 {md5[:8]}) — {prev.url} · 다시 올리지 않음")
+                res["warnings"].append(f"이미 올린 영상(md5 {md5[:8]}, {prev.source}) — {prev.url} · 다시 올리지 않음")
                 _log(res["warnings"][-1])
                 return res
             if not allow_reupload:
                 raise UploadError(f"기록({RECORD_NAME})이 있는데 영상 파일이 바뀌었습니다(md5 {prev.video_md5[:8]}→{md5[:8]}). "
-                                  "새 편이면 새 폴더에 두고, 교체 업로드가 맞으면 --allow-reupload (기존 영상은 유튜브에 그대로 남습니다)")
+                                  "다시 만든 편을 새 영상으로 올리는 것이 맞으면 --allow-reupload (기존 영상은 유튜브에 그대로 남습니다)")
             res["warnings"].append(f"기록을 덮어씁니다 — 이전 영상 {prev.url} 은 유튜브에 그대로 남아 있습니다")
         if dry_run:
             res["status"] = "dry-run"
@@ -596,9 +696,19 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
                      title=meta.title, description_bytes=_nbytes(meta.description),
                      contains_synthetic_media=meta.contains_synthetic_media, made_for_kids=meta.made_for_kids,
                      duration_sec=probe["duration_sec"] if probe else None, width=probe["width"] if probe else None,
-                     height=probe["height"] if probe else None)
-        write_record(dir_, rec)   # 자막이 실패해도 영상 기록은 남는다
+                     height=probe["height"] if probe else None, number=ep.number, slug=ep.slug, source="api")
+        write_record(dir_, rec)   # 자막·썸네일이 실패해도 영상 기록은 남는다
         _log(f"영상 업로드 완료(비공개) {rec.url} · Studio {rec.studio_url}")
+        if ep.thumbnail is not None:
+            try:
+                upload_thumbnail(tx, token, vid, ep.thumbnail)
+                rec.thumbnail_file = ep.thumbnail.name
+                _log(f"썸네일 설정 완료 {ep.thumbnail.name}")
+            except (UploadError, TransportError) as ex:
+                rec.thumbnail_error = str(ex)
+                res["warnings"].append(f"썸네일 설정 실패(영상은 올라감 — Studio 에서 직접 고르십시오): {ex}")
+                _log(res["warnings"][-1])
+            write_record(dir_, rec)
         if ep.srt is not None:
             try:
                 rec.caption_id = upload_caption(tx, cfg, token, vid, ep.srt)
@@ -616,19 +726,45 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
         return res
 
 
-def episode_dirs(outbox: Path) -> list[Path]:
-    """outbox/ 바로 아래 폴더. '_'·'.' 로 시작하는 폴더(예시·임시)는 제외."""
-    if not outbox.is_dir():
+def mark_uploaded(dir_: Path, video_id: str, *, note: str = "") -> Record:
+    """이미 손으로 올린 편을 기록해 자동 업로드가 건너뛰게 한다. 영상 md5 를 지금 파일로 계산한다."""
+    ep = load_episode(dir_, caption=False, thumbnail=False)
+    if read_record(dir_) is not None:
+        raise UploadError(f"{_rel(dir_)}: 이미 {RECORD_NAME} 이 있습니다 — 바꾸려면 파일을 지우고 다시")
+    vid = video_id.strip()
+    if not re.fullmatch(r"[A-Za-z0-9_-]{6,}", vid):
+        raise UploadError(f"video id 형식이 아닙니다: {vid!r} (예: dQw4w9WgXcQ)")
+    info = parse_upload_md(ep.upload_md.read_text(encoding="utf-8"))
+    probe = probe_video(ep.video)
+    rec = Record(video_id=vid, url=WATCH_URL_PREFIX + vid, studio_url=STUDIO_URL.format(video_id=vid),
+                 uploaded_at=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), privacy_status="unknown",
+                 channel_id="", channel_title=note, video_file=ep.video.name, video_bytes=ep.video.stat().st_size,
+                 video_md5=md5_file(ep.video), title=info["title"], description_bytes=_nbytes(info["description"]),
+                 contains_synthetic_media=False, made_for_kids=False,
+                 duration_sec=probe["duration_sec"] if probe else None, width=probe["width"] if probe else None,
+                 height=probe["height"] if probe else None, number=ep.number, slug=ep.slug, source="manual")
+    write_record(dir_, rec)
+    return rec
+
+
+def episode_dirs(root: Path) -> list[Path]:
+    """finals/ 바로 아래의 <번호>-<slug> 폴더. legacy/·'_'·'.' 폴더는 제외."""
+    if not root.is_dir():
         return []
-    return sorted(p for p in outbox.iterdir() if p.is_dir() and not p.name.startswith(("_", ".")))
+    return sorted(p for p in root.iterdir() if p.is_dir() and EPISODE_DIR_RE.match(p.name))
 
 
-def list_status(outbox: Path) -> list[dict[str, Any]]:
+def list_status(root: Path) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
-    for d in episode_dirs(outbox):
-        row: dict[str, Any] = {"dir": _rel(d)}
-        desc = d / DESCRIPTION_NAME
-        row["title"] = parse_description(desc.read_text(encoding="utf-8"))[0] if desc.is_file() else None
+    for d in episode_dirs(root):
+        number, slug = parse_dir_name(d)
+        row: dict[str, Any] = {"dir": _rel(d), "number": number, "slug": slug, "title": None}
+        up = d / UPLOAD_MD_NAME
+        if up.is_file():
+            try:
+                row["title"] = parse_upload_md(up.read_text(encoding="utf-8"))["title"]
+            except UploadError as ex:
+                row["error"] = str(ex)
         try:
             rec = read_record(d)
         except UploadError as ex:
@@ -636,8 +772,9 @@ def list_status(outbox: Path) -> list[dict[str, Any]]:
             rows.append(row)
             continue
         if rec is not None:
-            row.update(state="업로드됨(비공개)", url=rec.url, uploaded_at=rec.uploaded_at, caption=bool(rec.caption_id))
-        elif desc.is_file() and (any(d.glob("*.mp4"))):
+            row.update(state="업로드됨(비공개)" if rec.source == "api" else "업로드됨(수동 기록)", url=rec.url,
+                       uploaded_at=rec.uploaded_at, source=rec.source)
+        elif up.is_file() and row["title"] and any(d.glob("*.mp4")):
             row["state"] = "대기"
         else:
             row["state"] = "입력 불완전"
@@ -653,15 +790,19 @@ def whoami(cfg: Config, env: dict[str, str] | None = None, send: Transport | Non
 
 
 def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(prog="python -m publish.youtube", description="완성된 쇼츠를 유튜브에 비공개로 올린다")
-    ap.add_argument("episodes", nargs="*", type=Path, help="outbox/<episode> 폴더(여러 개 가능)")
-    ap.add_argument("--all", action="store_true", help="outbox/ 아래 모든 에피소드(이미 올린 것은 건너뜀)")
-    ap.add_argument("--outbox", type=Path, default=DEFAULT_OUTBOX, help=f"기본 {DEFAULT_OUTBOX}")
+    ap = argparse.ArgumentParser(prog="python -m publish.youtube", description="완성된 쇼츠(finals/)를 유튜브에 비공개로 올린다")
+    ap.add_argument("episodes", nargs="*", type=Path, help="finals/<NN>-<slug> 폴더(여러 개 가능)")
+    ap.add_argument("--all", action="store_true", help="finals/ 아래 모든 에피소드(이미 올린 것은 건너뜀)")
+    ap.add_argument("--finals", type=Path, default=DEFAULT_FINALS, help=f"기본 {DEFAULT_FINALS}")
     ap.add_argument("--config", type=Path, default=DEFAULT_CONFIG, help=f"기본 {DEFAULT_CONFIG}")
     ap.add_argument("--dry-run", action="store_true", help="검증만 하고 올리지 않는다(비밀값 불필요)")
-    ap.add_argument("--list", action="store_true", help="outbox 상태표를 출력한다")
+    ap.add_argument("--list", action="store_true", help="finals 상태표를 출력한다")
     ap.add_argument("--whoami", action="store_true", help="토큰이 가리키는 채널을 확인한다(할당량 1단위)")
-    ap.add_argument("--no-caption", action="store_true", help="final.srt 가 있어도 자막을 올리지 않는다")
+    ap.add_argument("--mark-uploaded", metavar="VIDEO_ID", help="이미 손으로 올린 편의 기록을 만든다(에피소드 하나와 함께)")
+    cap = ap.add_mutually_exclusive_group()
+    cap.add_argument("--caption", action="store_true", help=".srt 를 자막으로 올린다(기본 config upload_captions)")
+    cap.add_argument("--no-caption", action="store_true", help="자막을 올리지 않는다")
+    ap.add_argument("--no-thumbnail", action="store_true", help="썸네일을 설정하지 않는다")
     ap.add_argument("--synthetic-media", choices=("yes", "no"), help="합성 미디어 표시(기본 config/meta.json)")
     ap.add_argument("--made-for-kids", choices=("yes", "no"), help="아동용 자가 선언(기본 config/meta.json)")
     ap.add_argument("--not-shorts", action="store_true", help="쇼츠 규격(세로·길이)에 어긋나도 일반 영상으로 올린다")
@@ -677,7 +818,7 @@ def main(argv: list[str] | None = None) -> int:
             load_env_file(a.env_file, env)
         cfg = load_config(a.config)
         if a.list:
-            rows = list_status(a.outbox)
+            rows = list_status(a.finals)
             for r in rows:
                 _log(f"{r['dir']}: {r['state']}" + (f" · 「{r['title']}」" if r.get("title") else "") + (f" · {r['url']}" if r.get("url") else ""))
             out = {"ok": True, "episodes": rows}
@@ -686,22 +827,29 @@ def main(argv: list[str] | None = None) -> int:
             _log(f"채널: {info['channel_title']} ({info['channel_id']})" +
                  ("" if info["matches_config"] is None else (" · 설정과 일치" if info["matches_config"] else " · 설정 channel_id 와 다름!")))
             out = {"ok": True, **info}
+        elif a.mark_uploaded:
+            if len(a.episodes) != 1:
+                raise UploadError("--mark-uploaded 는 에피소드 폴더 하나와 함께 씁니다")
+            rec = mark_uploaded(a.episodes[0].resolve(), a.mark_uploaded)
+            _log(f"{_rel(a.episodes[0])}: 수동 업로드 기록 작성 {rec.url}")
+            out = {"ok": True, "record": asdict(rec)}
         else:
             dirs = [d.resolve() for d in a.episodes]
             if a.all:
-                dirs += [d for d in episode_dirs(a.outbox) if d.resolve() not in dirs]
+                dirs += [d for d in episode_dirs(a.finals) if d.resolve() not in dirs]
             elif not dirs:
-                raise UploadError("대상이 없습니다 — outbox/<episode> 폴더를 주거나 --all 을 쓰십시오")
+                raise UploadError("대상이 없습니다 — finals/<NN>-<slug> 폴더를 주거나 --all 을 쓰십시오")
             if not dirs:
-                _log(f"{_rel(a.outbox)}: 에피소드 폴더가 없습니다 — 할 일 없음")
-            results = [process_episode(d, cfg, dry_run=a.dry_run, caption=not a.no_caption,
+                _log(f"{_rel(a.finals)}: 에피소드 폴더가 없습니다 — 할 일 없음")
+            caption = True if a.caption else (False if a.no_caption else None)
+            results = [process_episode(d, cfg, dry_run=a.dry_run, caption=caption, thumbnail=False if a.no_thumbnail else None,
                                        synthetic=None if a.synthetic_media is None else a.synthetic_media == "yes",
                                        made_for_kids=None if a.made_for_kids is None else a.made_for_kids == "yes",
                                        not_shorts=a.not_shorts, allow_reupload=a.allow_reupload, env=env) for d in dirs]
             counts = {s: sum(1 for r in results if r["status"] == s) for s in ("uploaded", "skipped", "dry-run", "error")}
             out = {"ok": counts["error"] == 0, "counts": counts, "results": results}
             if not dirs:
-                out["warnings"] = ["outbox 에 에피소드 폴더가 없습니다"]
+                out["warnings"] = ["finals 에 에피소드 폴더가 없습니다"]
     except (UploadError, TransportError, OSError, ValueError) as ex:
         out = {"ok": False, "error": str(ex)}
         _log(f"실패 — {ex}")

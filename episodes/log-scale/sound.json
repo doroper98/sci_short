@@ -1,0 +1,2040 @@
+{
+  "version": 1,
+  "notes": "설명용 합성음입니다(녹음 아님). 배경음악·배경음 없음(사용자 결정). 모든 사건은 `node episodes/log-scale/scenes.mjs --emit-sound`가 scenes.mjs의 같은 시간표 plan(tl)과 모형에서 써 넣습니다. 대응: 곱하기 자의 한 칸(×10) = 완전4도(×4/3) 위, 130.8 Hz에서 시작; 더하기 자 한 칸 = 똑같은 틱. 크기는 압축(지진계 긁힘 규모당 +2 dB, 데시벨 음 10 dB당 +2 dB). 타임라인이 바뀌면 다시 실행하세요. 패닝 없음(모노 안전).",
+  "events": [
+    {
+      "id": "hook_badges",
+      "at": 1.59,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 880,
+              "decay": 0.06,
+              "click": 0.15
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.343,
+            "params": {
+              "freq": 880,
+              "decay": 0.06,
+              "click": 0.15
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2.606,
+            "params": {
+              "freq": 880,
+              "decay": 0.06,
+              "click": 0.15
+            }
+          }
+        ]
+      },
+      "means": "세 주제 카드(지진 규모 · 데시벨 · pH)가 하나씩 나타남"
+    },
+    {
+      "id": "hook_steps",
+      "at": 5.599,
+      "kind": "custom",
+      "params": {
+        "gain_db": -28,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 130.81
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.45,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 174.41
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.9,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 232.55
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.35,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 310.07
+            }
+          }
+        ]
+      },
+      "means": "미리 보는 곱하기 자 1 · 10 · 100 · 1000: 한 칸(×10)마다 같은 음정(완전4도)만큼 위로 — 이 대응을 끝까지 유지"
+    },
+    {
+      "id": "m3_scratch",
+      "at": 10.672,
+      "kind": "env_noise",
+      "params": {
+        "low": 1400,
+        "high": 5200,
+        "gain_db": -29,
+        "fade": 0.03,
+        "points": [
+          [0, 0],
+          [0.04, 0.1052],
+          [0.08, 0.2861],
+          [0.12, 0.35],
+          [0.16, 0.35],
+          [0.2, 0.35],
+          [0.24, 0.35],
+          [0.28, 0.6089],
+          [0.32, 0.9767],
+          [0.36, 0.9114],
+          [0.4, 0.8054],
+          [0.44, 0.7118],
+          [0.48, 0.629],
+          [0.52, 0.5558],
+          [0.56, 0.4912],
+          [0.6, 0.4341],
+          [0.64, 0.3836],
+          [0.68, 0.339],
+          [0.72, 0.2996],
+          [0.76, 0.2647],
+          [0.8, 0.2339],
+          [0.84, 0.2067],
+          [0.88, 0.1827],
+          [0.92, 0.1614],
+          [0.96, 0.1427],
+          [1, 0.1261],
+          [1.04, 0.1114],
+          [1.08, 0.0985],
+          [1.22, 0]
+        ]
+      },
+      "means": "규모 3 기록을 그리는 펜 긁힘(합성 잡음) — 크기는 그림 속 흔들림의 모양을 따름"
+    },
+    {
+      "id": "guess_scratch",
+      "at": 11.985,
+      "kind": "env_noise",
+      "params": {
+        "low": 1400,
+        "high": 5200,
+        "gain_db": -28.4,
+        "fade": 0.03,
+        "points": [
+          [0, 0],
+          [0.04, 0.1596],
+          [0.08, 0.3465],
+          [0.12, 0.35],
+          [0.16, 0.35],
+          [0.2, 0.4122],
+          [0.24, 0.9191],
+          [0.28, 0.9048],
+          [0.32, 0.7711],
+          [0.36, 0.657],
+          [0.4, 0.5599],
+          [0.44, 0.4771],
+          [0.48, 0.4066],
+          [0.52, 0.3465],
+          [0.56, 0.2952],
+          [0.6, 0.2516],
+          [0.64, 0.2144],
+          [0.68, 0.1827],
+          [0.72, 0.1557],
+          [0.76, 0.1327],
+          [0.8, 0.113],
+          [0.84, 0.0963],
+          [0.97, 0]
+        ]
+      },
+      "means": "\"두 배?\" 추측 기록을 그리는 펜 긁힘 (2배 → +0.6 dB, 압축한 대응)"
+    },
+    {
+      "id": "guess_lab",
+      "at": 11.985,
+      "kind": "silent",
+      "means": "\"2배?\" 표시"
+    },
+    {
+      "id": "no_cross",
+      "at": 13.187,
+      "kind": "custom",
+      "params": {
+        "gain_db": -26,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 520,
+              "decay": 0.1,
+              "click": 0.2
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.12,
+            "params": {
+              "freq": 520,
+              "decay": 0.1,
+              "click": 0.2
+            }
+          }
+        ]
+      },
+      "means": "\"2배?\"에 줄을 그음 (낮은 틱 두 번)"
+    },
+    {
+      "id": "m6_scratch",
+      "at": 13.437,
+      "kind": "env_noise",
+      "params": {
+        "low": 1400,
+        "high": 5200,
+        "gain_db": -29,
+        "fade": 0.03,
+        "points": [
+          [0, 0],
+          [0.04, 0.1153],
+          [0.08, 0.3024],
+          [0.12, 0.35],
+          [0.16, 0.35],
+          [0.2, 0.35],
+          [0.24, 0.3809],
+          [0.28, 0.7825],
+          [0.32, 0.9752],
+          [0.36, 0.8557],
+          [0.4, 0.7509],
+          [0.44, 0.659],
+          [0.48, 0.5783],
+          [0.52, 0.5074],
+          [0.56, 0.4453],
+          [0.6, 0.3908],
+          [0.64, 0.3429],
+          [0.68, 0.3009],
+          [0.72, 0.2641],
+          [0.76, 0.2317],
+          [0.8, 0.2033],
+          [0.84, 0.1784],
+          [0.88, 0.1566],
+          [0.92, 0.1374],
+          [0.96, 0.1206],
+          [1, 0.1058],
+          [1.04, 0.0929],
+          [1.161, 0]
+        ]
+      },
+      "means": "규모 6 칸에 규모 3과 같은 크기로 먼저 그림(같은 긁힘)"
+    },
+    {
+      "id": "grow_steps",
+      "at": 14.528,
+      "kind": "custom",
+      "params": {
+        "gain_db": -27,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 130.81
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.5,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 174.41
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.232,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 232.55
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.924,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 310.07
+            }
+          }
+        ]
+      },
+      "means": "규모 6 기록이 ×10, ×10, ×10 커짐: 10배가 될 때마다 같은 음정 위로 (세 번 = 천 배)"
+    },
+    {
+      "id": "hook_1000",
+      "at": 16.352,
+      "kind": "silent",
+      "means": "\"규모 3의 1,000배 · 화면 10개 높이\" 표시"
+    },
+    {
+      "id": "add_ticks",
+      "at": 22.289,
+      "kind": "custom",
+      "params": {
+        "gain_db": -27,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 1100,
+              "decay": 0.045,
+              "click": 0.3
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.27,
+            "params": {
+              "freq": 1100,
+              "decay": 0.045,
+              "click": 0.3
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.54,
+            "params": {
+              "freq": 1100,
+              "decay": 0.045,
+              "click": 0.3
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.81,
+            "params": {
+              "freq": 1100,
+              "decay": 0.045,
+              "click": 0.3
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.08,
+            "params": {
+              "freq": 1100,
+              "decay": 0.045,
+              "click": 0.3
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.35,
+            "params": {
+              "freq": 1100,
+              "decay": 0.045,
+              "click": 0.3
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.62,
+            "params": {
+              "freq": 1100,
+              "decay": 0.045,
+              "click": 0.3
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.89,
+            "params": {
+              "freq": 1100,
+              "decay": 0.045,
+              "click": 0.3
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2.16,
+            "params": {
+              "freq": 1100,
+              "decay": 0.045,
+              "click": 0.3
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2.43,
+            "params": {
+              "freq": 1100,
+              "decay": 0.045,
+              "click": 0.3
+            }
+          }
+        ]
+      },
+      "means": "더하기 자: 한 칸(+1)마다 똑같은 높이·크기의 틱 10번 (같은 차이 = 같은 소리)"
+    },
+    {
+      "id": "add_lab",
+      "at": 24.678,
+      "kind": "silent",
+      "means": "\"더하기 자 · 한 칸 = +1\" 표시"
+    },
+    {
+      "id": "unit_chip",
+      "at": 26.908,
+      "kind": "silent",
+      "means": "\"한 칸 = 1 mg\" 표시"
+    },
+    {
+      "id": "ant_bar",
+      "at": 27.549,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 1500,
+              "decay": 0.05,
+              "click": 0.25
+            }
+          }
+        ]
+      },
+      "means": "개미 막대(3 mg)가 그려짐"
+    },
+    {
+      "id": "eleph_run",
+      "at": 28.71,
+      "kind": "whoosh",
+      "params": {
+        "dur": 1,
+        "f_start": 400,
+        "f_end": 2400,
+        "q": 2,
+        "gain_db": -29
+      },
+      "means": "코끼리 막대가 화면 밖으로 뻗어 나감"
+    },
+    {
+      "id": "zoom_decades",
+      "at": 30.3564,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "dur": 0.32,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 174.41
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.1496,
+            "params": {
+              "dur": 0.32,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 232.55
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.2545,
+            "params": {
+              "dur": 0.32,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 310.07
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.338,
+            "params": {
+              "dur": 0.32,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 413.42
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.4112,
+            "params": {
+              "dur": 0.32,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 551.23
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.4947,
+            "params": {
+              "dur": 0.32,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 734.98
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.5996,
+            "params": {
+              "dur": 0.32,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 979.97
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.7492,
+            "params": {
+              "dur": 0.32,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 1306.62
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.3246,
+            "params": {
+              "dur": 0.32,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 1742.17
+            }
+          }
+        ]
+      },
+      "means": "자를 줄여 보는 동안 \"한 칸\"이 10배씩 커질 때마다(9번: 1 mg → 1 t) 같은 음정 위로"
+    },
+    {
+      "id": "ant_gone",
+      "at": 31.132,
+      "kind": "silent",
+      "means": "\"0에 붙어서 보이지 않음\" 표시"
+    },
+    {
+      "id": "ratio_lab",
+      "at": 32.794,
+      "kind": "silent",
+      "means": "\"코끼리는 개미의 약 20억 배\" 표시"
+    },
+    {
+      "id": "fit",
+      "at": 38.419,
+      "kind": "custom",
+      "params": {
+        "gain_db": -27,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 990,
+              "decay": 0.07,
+              "click": 0.2
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.14,
+            "params": {
+              "freq": 990,
+              "decay": 0.07,
+              "click": 0.2
+            }
+          }
+        ]
+      },
+      "means": "곱하기 자로 바뀌자 개미와 코끼리가 한 자에 함께 들어옴 (두 점)"
+    },
+    {
+      "id": "mul_notes",
+      "at": 39.803,
+      "kind": "custom",
+      "params": {
+        "gain_db": -27,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 130.81
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.881,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 174.41
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.282,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 232.55
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.703,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 310.07
+            }
+          }
+        ]
+      },
+      "means": "곱하기 자 1 · 10 · 100 · 1000(수모형): 한 칸마다 같은 음정(완전4도) 위로 — 같은 비율 = 같은 간격"
+    },
+    {
+      "id": "equal_lab",
+      "at": 41.827,
+      "kind": "silent",
+      "means": "\"같은 간격\" 표시"
+    },
+    {
+      "id": "zero_drops",
+      "at": 48.23,
+      "kind": "custom",
+      "params": {
+        "gain_db": -28,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 1600,
+              "decay": 0.04,
+              "click": 0.4
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.965,
+            "params": {
+              "freq": 1600,
+              "decay": 0.04,
+              "click": 0.4
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2.265,
+            "params": {
+              "freq": 1600,
+              "decay": 0.04,
+              "click": 0.4
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 4.562,
+            "params": {
+              "freq": 1600,
+              "decay": 0.04,
+              "click": 0.4
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 4.782,
+            "params": {
+              "freq": 1600,
+              "decay": 0.04,
+              "click": 0.4
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 5.002,
+            "params": {
+              "freq": 1600,
+              "decay": 0.04,
+              "click": 0.4
+            }
+          }
+        ]
+      },
+      "means": "0이 쟁반에 떨어질 때마다 딸깍 (10은 한 번, 100은 두 번, 1000은 세 번)"
+    },
+    {
+      "id": "digits",
+      "at": 47.38,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "dur": 0.4,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 130.81
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.85,
+            "params": {
+              "dur": 0.4,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 174.41
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 3.588,
+            "params": {
+              "dur": 0.4,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 232.55
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 5.313,
+            "params": {
+              "dur": 0.4,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 310.07
+            }
+          }
+        ]
+      },
+      "means": "칸 번호 0 · 1 · 2 · 3이 나타날 때 같은 음정 계단"
+    },
+    {
+      "id": "tens",
+      "at": 55.929,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "dur": 0.4,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 174.41
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.35,
+            "params": {
+              "dur": 0.4,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 232.55
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.7,
+            "params": {
+              "dur": 0.4,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 310.07
+            }
+          }
+        ]
+      },
+      "means": "10을 한 번 곱할 때마다 한 칸 위의 음 (세 번 = 1000)"
+    },
+    {
+      "id": "log_lab",
+      "at": 58.235,
+      "kind": "silent",
+      "means": "\"log₁₀ 1000 = 3\" 작은 표시"
+    },
+    {
+      "id": "name_card",
+      "at": 59.999,
+      "kind": "silent",
+      "means": "logarithm 이름 카드"
+    },
+    {
+      "id": "q_scratch3",
+      "at": 66.506,
+      "kind": "env_noise",
+      "params": {
+        "low": 1400,
+        "high": 5200,
+        "gain_db": -29,
+        "fade": 0.03,
+        "points": [
+          [0, 0],
+          [0.04, 0.0614],
+          [0.08, 0.1925],
+          [0.12, 0.3136],
+          [0.16, 0.35],
+          [0.2, 0.35],
+          [0.24, 0.35],
+          [0.28, 0.35],
+          [0.32, 0.35],
+          [0.36, 0.4516],
+          [0.4, 0.7555],
+          [0.44, 0.9872],
+          [0.48, 0.9343],
+          [0.52, 0.8533],
+          [0.56, 0.7793],
+          [0.6, 0.7118],
+          [0.64, 0.6501],
+          [0.68, 0.5937],
+          [0.72, 0.5423],
+          [0.76, 0.4953],
+          [0.8, 0.4523],
+          [0.84, 0.4131],
+          [0.88, 0.3773],
+          [0.92, 0.3446],
+          [0.96, 0.3147],
+          [1, 0.2875],
+          [1.04, 0.2625],
+          [1.08, 0.2398],
+          [1.12, 0.219],
+          [1.16, 0.2],
+          [1.2, 0.1827],
+          [1.24, 0.1668],
+          [1.28, 0.1524],
+          [1.32, 0.1392],
+          [1.36, 0.1271],
+          [1.4, 0.1161],
+          [1.44, 0.106],
+          [1.48, 0.0968],
+          [1.62, 0]
+        ]
+      },
+      "means": "규모 3 기록을 그리는 펜 긁힘 — 진폭 ×1를 압축해 0 dB 더 크게(실제 ×10 크기 차를 그대로 재생하지 않음)"
+    },
+    {
+      "id": "q_scratch4",
+      "at": 71.047,
+      "kind": "env_noise",
+      "params": {
+        "low": 1400,
+        "high": 5200,
+        "gain_db": -27,
+        "fade": 0.03,
+        "points": [
+          [0, 0],
+          [0.04, 0.079],
+          [0.08, 0.2345],
+          [0.12, 0.3441],
+          [0.16, 0.35],
+          [0.2, 0.35],
+          [0.24, 0.35],
+          [0.28, 0.35],
+          [0.32, 0.513],
+          [0.36, 0.8689],
+          [0.4, 0.9742],
+          [0.44, 0.8774],
+          [0.48, 0.7903],
+          [0.52, 0.7118],
+          [0.56, 0.6411],
+          [0.6, 0.5774],
+          [0.64, 0.52],
+          [0.68, 0.4684],
+          [0.72, 0.4219],
+          [0.76, 0.38],
+          [0.8, 0.3422],
+          [0.84, 0.3082],
+          [0.88, 0.2776],
+          [0.92, 0.25],
+          [0.96, 0.2252],
+          [1, 0.2028],
+          [1.04, 0.1827],
+          [1.08, 0.1645],
+          [1.12, 0.1482],
+          [1.16, 0.1335],
+          [1.2, 0.1202],
+          [1.24, 0.1083],
+          [1.28, 0.0975],
+          [1.42, 0]
+        ]
+      },
+      "means": "규모 4 기록을 그리는 펜 긁힘 — 진폭 ×10를 압축해 2 dB 더 크게(실제 ×10 크기 차를 그대로 재생하지 않음)"
+    },
+    {
+      "id": "q_scratch5",
+      "at": 75.922,
+      "kind": "env_noise",
+      "params": {
+        "low": 1400,
+        "high": 5200,
+        "gain_db": -25,
+        "fade": 0.03,
+        "points": [
+          [0, 0],
+          [0.04, 0.146],
+          [0.08, 0.338],
+          [0.12, 0.35],
+          [0.16, 0.35],
+          [0.2, 0.3515],
+          [0.24, 0.7555],
+          [0.28, 0.9629],
+          [0.32, 0.8279],
+          [0.36, 0.7118],
+          [0.4, 0.6119],
+          [0.44, 0.5261],
+          [0.48, 0.4523],
+          [0.52, 0.3889],
+          [0.56, 0.3344],
+          [0.6, 0.2875],
+          [0.64, 0.2471],
+          [0.68, 0.2125],
+          [0.72, 0.1827],
+          [0.76, 0.1571],
+          [0.8, 0.135],
+          [0.84, 0.1161],
+          [0.88, 0.0998],
+          [1.02, 0]
+        ]
+      },
+      "means": "규모 5 기록을 그리는 펜 긁힘 — 진폭 ×100를 압축해 4 dB 더 크게(실제 ×10 크기 차를 그대로 재생하지 않음)"
+    },
+    {
+      "id": "q_scratch6",
+      "at": 77.294,
+      "kind": "env_noise",
+      "params": {
+        "low": 1400,
+        "high": 5200,
+        "gain_db": -23,
+        "fade": 0.03,
+        "points": [
+          [0, 0],
+          [0.04, 0.146],
+          [0.08, 0.338],
+          [0.12, 0.35],
+          [0.16, 0.35],
+          [0.2, 0.3515],
+          [0.24, 0.7555],
+          [0.28, 0.9629],
+          [0.32, 0.8279],
+          [0.36, 0.7118],
+          [0.4, 0.6119],
+          [0.44, 0.5261],
+          [0.48, 0.4523],
+          [0.52, 0.3889],
+          [0.56, 0.3344],
+          [0.6, 0.2875],
+          [0.64, 0.2471],
+          [0.68, 0.2125],
+          [0.72, 0.1827],
+          [0.76, 0.1571],
+          [0.8, 0.135],
+          [0.84, 0.1161],
+          [0.88, 0.0998],
+          [1.02, 0]
+        ]
+      },
+      "means": "규모 6 기록을 그리는 펜 긁힘 — 진폭 ×1,000를 압축해 6 dB 더 크게(실제 ×10 크기 차를 그대로 재생하지 않음)"
+    },
+    {
+      "id": "q_steps",
+      "at": 66.506,
+      "kind": "custom",
+      "params": {
+        "gain_db": -28,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 130.81
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 4.541,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 174.41
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 9.416,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 232.55
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 10.788,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 310.07
+            }
+          }
+        ]
+      },
+      "means": "규모가 한 칸 오를 때마다 같은 음정 위로 (흔들림 ×10)"
+    },
+    {
+      "id": "q_zooms",
+      "at": 72.471,
+      "kind": "custom",
+      "params": {
+        "gain_db": -31,
+        "layers": [
+          {
+            "kind": "whoosh",
+            "offset": 0,
+            "params": {
+              "dur": 0.9,
+              "f_start": 2600,
+              "f_end": 700,
+              "q": 2
+            }
+          },
+          {
+            "kind": "whoosh",
+            "offset": 4.201,
+            "params": {
+              "dur": 0.8,
+              "f_start": 2600,
+              "f_end": 700,
+              "q": 2
+            }
+          },
+          {
+            "kind": "whoosh",
+            "offset": 5.623,
+            "params": {
+              "dur": 0.8,
+              "f_start": 2600,
+              "f_end": 700,
+              "q": 2
+            }
+          }
+        ]
+      },
+      "means": "세로 눈금을 1/10로 줄여 보는 순간 (내려가는 바람 소리, 세 번)"
+    },
+    {
+      "id": "q_dial",
+      "at": 68.621,
+      "kind": "silent",
+      "means": "규모 곱하기 자 강조"
+    },
+    {
+      "id": "q_result",
+      "at": 78.697,
+      "kind": "custom",
+      "params": {
+        "gain_db": -27,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 880,
+              "decay": 0.08,
+              "click": 0.2
+            }
+          }
+        ]
+      },
+      "means": "\"10 × 10 × 10 = 1,000배\" 표시"
+    },
+    {
+      "id": "q_energy",
+      "at": 80.742,
+      "kind": "silent",
+      "means": "\"에너지는 한 칸에 약 32배\" 표시"
+    },
+    {
+      "id": "bel_card",
+      "at": 86.311,
+      "kind": "custom",
+      "params": {
+        "gain_db": -29,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 784,
+              "decay": 0.09,
+              "click": 0.15
+            }
+          }
+        ]
+      },
+      "means": "\"벨\" 카드 (알렉산더 그레이엄 벨)"
+    },
+    {
+      "id": "deci_card",
+      "at": 89.317,
+      "kind": "custom",
+      "params": {
+        "gain_db": -29,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 784,
+              "decay": 0.09,
+              "click": 0.15
+            }
+          }
+        ]
+      },
+      "means": "\"데시 = 10분의 1\" 카드"
+    },
+    {
+      "id": "one_bel",
+      "at": 91.441,
+      "kind": "silent",
+      "means": "\"1 벨 = 10 데시벨\" 표시"
+    },
+    {
+      "id": "db_demo",
+      "at": 93.662,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 392,
+              "dur": 0.36,
+              "harmonics": [1, 0.3],
+              "attack": 0.02,
+              "decay": 0.3,
+              "sustain": 0.6,
+              "release": 0.08,
+              "gain_db": -3
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.721,
+            "params": {
+              "freq": 392,
+              "dur": 0.36,
+              "harmonics": [1, 0.3],
+              "attack": 0.02,
+              "decay": 0.3,
+              "sustain": 0.6,
+              "release": 0.08,
+              "gain_db": -1
+            }
+          }
+        ]
+      },
+      "means": "같은 높이의 음: 30 dB → 40 dB (세기 ×10을 +2 dB로 압축해 들려줌)"
+    },
+    {
+      "id": "db_whisper",
+      "at": 97.845,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 392,
+              "dur": 0.36,
+              "harmonics": [1, 0.3],
+              "attack": 0.02,
+              "decay": 0.3,
+              "sustain": 0.6,
+              "release": 0.08,
+              "gain_db": -3
+            }
+          }
+        ]
+      },
+      "means": "속삭임 30 dB의 음 (압축 대응: 10 dB마다 +2 dB)"
+    },
+    {
+      "id": "db_talk",
+      "at": 99.325,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 392,
+              "dur": 0.36,
+              "harmonics": [1, 0.3],
+              "attack": 0.02,
+              "decay": 0.3,
+              "sustain": 0.6,
+              "release": 0.08,
+              "gain_db": 3
+            }
+          }
+        ]
+      },
+      "means": "대화 60 dB의 음 (압축 대응, 속삭임보다 +6 dB)"
+    },
+    {
+      "id": "db_steps",
+      "at": 99.125,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 392,
+              "dur": 0.36,
+              "harmonics": [1, 0.3],
+              "attack": 0.02,
+              "decay": 0.3,
+              "sustain": 0.6,
+              "release": 0.08,
+              "gain_db": -3
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.8,
+            "params": {
+              "freq": 392,
+              "dur": 0.36,
+              "harmonics": [1, 0.3],
+              "attack": 0.02,
+              "decay": 0.3,
+              "sustain": 0.6,
+              "release": 0.08,
+              "gain_db": -1
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.6,
+            "params": {
+              "freq": 392,
+              "dur": 0.36,
+              "harmonics": [1, 0.3],
+              "attack": 0.02,
+              "decay": 0.3,
+              "sustain": 0.6,
+              "release": 0.08,
+              "gain_db": 1
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 2.4,
+            "params": {
+              "freq": 392,
+              "dur": 0.36,
+              "harmonics": [1, 0.3],
+              "attack": 0.02,
+              "decay": 0.3,
+              "sustain": 0.6,
+              "release": 0.08,
+              "gain_db": 3
+            }
+          }
+        ]
+      },
+      "means": "30 → 40 → 50 → 60 dB 계단 — 한 칸마다 같은 만큼(+2 dB) 커짐; 실제 세기는 칸마다 ×10"
+    },
+    {
+      "id": "db_1000",
+      "at": 101.947,
+      "kind": "silent",
+      "means": "\"30 → 60 dB : 세기 1,000배\" 표시"
+    },
+    {
+      "id": "feel_bars",
+      "at": 106.385,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 660,
+              "decay": 0.06,
+              "click": 0.15
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.45,
+            "params": {
+              "freq": 660,
+              "decay": 0.06,
+              "click": 0.15
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.9,
+            "params": {
+              "freq": 660,
+              "decay": 0.06,
+              "click": 0.15
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.35,
+            "params": {
+              "freq": 660,
+              "decay": 0.06,
+              "click": 0.15
+            }
+          }
+        ]
+      },
+      "means": "\"귀에 들리는 크기\" 막대 ×1 · ×2 · ×4 · ×8이 하나씩 나타남"
+    },
+    {
+      "id": "feel_lab",
+      "at": 107.688,
+      "kind": "silent",
+      "means": "\"귀에는 약 8배\" 표시"
+    },
+    {
+      "id": "ph_mid",
+      "at": 117.262,
+      "kind": "custom",
+      "params": {
+        "gain_db": -28,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 880,
+              "decay": 0.08,
+              "click": 0.15
+            }
+          }
+        ]
+      },
+      "means": "\"7 = 중간\" 표시"
+    },
+    {
+      "id": "ph_boxes",
+      "at": 118.703,
+      "kind": "custom",
+      "params": {
+        "gain_db": -28,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 130.81
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.7,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 174.41
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.4,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 232.55
+            }
+          }
+        ]
+      },
+      "means": "pH 7 → 6 → 5 상자(알갱이 1 · 10 · 100): 산성 쪽으로 한 칸마다 같은 음정 위로"
+    },
+    {
+      "id": "ph_legend",
+      "at": 121.024,
+      "kind": "silent",
+      "means": "수소 이온 H⁺ 범례"
+    },
+    {
+      "id": "ph_arcs",
+      "at": 125.709,
+      "kind": "custom",
+      "params": {
+        "gain_db": -28,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 174.41
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.45,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 232.55
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.9,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 310.07
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.35,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 413.42
+            }
+          }
+        ]
+      },
+      "means": "물 7 → 식초 3: 네 칸, 칸마다 같은 음정 위로 (×10 네 번)"
+    },
+    {
+      "id": "ph_blocks",
+      "at": 127.37,
+      "kind": "custom",
+      "params": {
+        "gain_db": -29,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 990,
+              "decay": 0.07,
+              "click": 0.25
+            }
+          }
+        ]
+      },
+      "means": "천모형 10개와 낱개 1개 비교가 나타남"
+    },
+    {
+      "id": "ph_man",
+      "at": 129.373,
+      "kind": "swell",
+      "params": {
+        "freqs": [130.81, 232.55, 413.42],
+        "dur": 1.6,
+        "gain_db": -30
+      },
+      "means": "\"만 배\" — 첫 칸 · 둘째 칸 · 넷째 칸 음을 함께"
+    },
+    {
+      "id": "wide_ticks",
+      "at": 133.402,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "dur": 0.34,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 130.81
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.3,
+            "params": {
+              "dur": 0.34,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 174.41
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.6,
+            "params": {
+              "dur": 0.34,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 232.55
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.9,
+            "params": {
+              "dur": 0.34,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 310.07
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.2,
+            "params": {
+              "dur": 0.34,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 413.42
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.5,
+            "params": {
+              "dur": 0.34,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 551.23
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.8,
+            "params": {
+              "dur": 0.34,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 734.98
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 2.1,
+            "params": {
+              "dur": 0.34,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 979.97
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 2.4,
+            "params": {
+              "dur": 0.34,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 1306.62
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 2.7,
+            "params": {
+              "dur": 0.34,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 1742.17
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 3,
+            "params": {
+              "dur": 0.34,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 2322.89
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 3.3,
+            "params": {
+              "dur": 0.34,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 3097.18
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 3.6,
+            "params": {
+              "dur": 0.34,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.12,
+              "release": 0.08,
+              "freq": 4129.58
+            }
+          }
+        ]
+      },
+      "means": "0 → 120 dB 눈금 13개: 한 칸마다 같은 음정 위로 — 12칸이면 다섯 옥타브(처음 음의 약 32배 높이)"
+    },
+    {
+      "id": "wide_quiet",
+      "at": 138.387,
+      "kind": "custom",
+      "params": {
+        "gain_db": -36,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 2000,
+              "decay": 0.03,
+              "click": 0.1
+            }
+          }
+        ]
+      },
+      "means": "\"들릴락 말락\" 표시 (아주 작은 틱)"
+    },
+    {
+      "id": "wide_thunder",
+      "at": 140.029,
+      "kind": "noise",
+      "params": {
+        "dur": 1.1,
+        "low": 60,
+        "high": 420,
+        "attack": 0.04,
+        "release": 0.9,
+        "gain_db": -31
+      },
+      "means": "\"천둥\" 표시 — 합성한 낮은 잡음(녹음 아님, 크기는 안전하게 압축)"
+    },
+    {
+      "id": "wide_trillion",
+      "at": 141.69,
+      "kind": "custom",
+      "params": {
+        "gain_db": -27,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 880,
+              "decay": 0.08,
+              "click": 0.2
+            }
+          }
+        ]
+      },
+      "means": "\"세기 1조 배 = 10을 12번 곱함\" 표시"
+    },
+    {
+      "id": "wide_linear",
+      "at": 142.39,
+      "kind": "whoosh",
+      "params": {
+        "dur": 1.4,
+        "f_start": 500,
+        "f_end": 3200,
+        "q": 2,
+        "gain_db": -29
+      },
+      "means": "더하기 자의 화살표가 화면 밖으로 끝없이 뻗어 나감"
+    },
+    {
+      "id": "wide_ends",
+      "at": 143.352,
+      "kind": "silent",
+      "means": "\"데시벨로는 0 → 120, 열두 칸\" 표시"
+    },
+    {
+      "id": "myth_x",
+      "at": 151.771,
+      "kind": "custom",
+      "params": {
+        "gain_db": -25,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 520,
+              "decay": 0.1,
+              "click": 0.2
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.12,
+            "params": {
+              "freq": 520,
+              "decay": 0.1,
+              "click": 0.2
+            }
+          }
+        ]
+      },
+      "means": "\"3배?\"에 줄을 그음"
+    },
+    {
+      "id": "myth_steps",
+      "at": 152.472,
+      "kind": "custom",
+      "params": {
+        "gain_db": -28,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 174.41
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.401,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 232.55
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.802,
+            "params": {
+              "dur": 0.55,
+              "harmonics": [1, 0.45, 0.2],
+              "attack": 0.012,
+              "decay": 0.24,
+              "release": 0.08,
+              "freq": 310.07
+            }
+          }
+        ]
+      },
+      "means": "10을 한 번 곱할 때마다 같은 음정 위로 (세 번 = 천 배)"
+    },
+    {
+      "id": "myth_1000",
+      "at": 153.695,
+      "kind": "custom",
+      "params": {
+        "gain_db": -27,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 880,
+              "decay": 0.08,
+              "click": 0.2
+            }
+          }
+        ]
+      },
+      "means": "\"10 × 10 × 10 = 1,000배\" 표시"
+    },
+    {
+      "id": "close_row0",
+      "at": 159.942,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 880,
+              "decay": 0.07,
+              "click": 0.15
+            }
+          }
+        ]
+      },
+      "means": "지진 규모 자가 나타남"
+    },
+    {
+      "id": "close_row1",
+      "at": 160.623,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 880,
+              "decay": 0.07,
+              "click": 0.15
+            }
+          }
+        ]
+      },
+      "means": "데시벨 자가 나타남"
+    },
+    {
+      "id": "close_row2",
+      "at": 161.384,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 880,
+              "decay": 0.07,
+              "click": 0.15
+            }
+          }
+        ]
+      },
+      "means": "pH 자가 나타남"
+    },
+    {
+      "id": "close_swell",
+      "at": 163.488,
+      "kind": "swell",
+      "params": {
+        "freqs": [261.62, 348.83, 465.1],
+        "dur": 2,
+        "gain_db": -29
+      },
+      "means": "세 자의 같은 칸을 잇는 세로선 — 한 칸씩 올라간 음 셋을 함께 (정리)"
+    }
+  ],
+  "ambient": {
+    "enabled": false,
+    "kind": "pad",
+    "seed": 7,
+    "gain_db": -32,
+    "root_hz": 110,
+    "intervals": [
+      0,
+      7,
+      12,
+      16
+    ]
+  },
+  "music": {
+    "id": "zabriskie_patriarch",
+    "enabled": false,
+    "under_db": 12,
+    "duck_db": 6,
+    "start_sec": 0,
+    "note": "음악 없음(사용자 결정)."
+  }
+}

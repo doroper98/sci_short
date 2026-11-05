@@ -128,7 +128,7 @@ def cmd_token_check(path: str, outcome: str) -> int:
     err = data.get("error", "결과 파일 없음(비밀값 미설정?)")
     summary(f"## 토큰 점검\n실패: {err}\n\n{RUN_URL}")
     create_issue_once(title, f"오류: {err}\n\n`invalid_grant` 면 토큰이 만료·철회된 것입니다. 앱이 프로덕션 게시 상태인지 확인하고 "
-                      f"`python -m publish.oauth` 로 새 토큰을 받아 YT_REFRESH_TOKEN 비밀값을 바꾸십시오(docs/YOUTUBE_UPLOAD.md).\n\n실행: {RUN_URL}",
+                      f"`python -m publish.oauth` 로 새 토큰을 받아 YT_REFRESH_TOKEN 비밀값을 바꾸십시오(docs/YOUTUBE_AUTO_UPLOAD.md).\n\n실행: {RUN_URL}",
                       LABEL_ALERT, alerts)
     return 0
 

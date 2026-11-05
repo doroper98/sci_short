@@ -16,13 +16,20 @@
   "_contains_synthetic_media": "AI 합성 내레이션(Supertonic 3)을 쓰므로 status.containsSyntheticMedia 를 켠다. 편마다 meta.json 으로 바꿀 수 있다.",
 
   "made_for_kids": null,
-  "_made_for_kids": "반드시 true 또는 false 로 정한다(status.selfDeclaredMadeForKids, 아동용 콘텐츠 자가 선언). null 이면 업로드를 거부한다. 이 선언은 채널 운영자의 법적 책임이라 도구가 대신 정하지 않는다. docs/YOUTUBE_UPLOAD.md 참고.",
+  "_made_for_kids": "반드시 true 또는 false 로 정한다(status.selfDeclaredMadeForKids, 아동용 콘텐츠 자가 선언). null 이면 업로드를 거부한다. 이 선언은 채널 운영자의 법적 책임이라 도구가 대신 정하지 않는다. 판단 기준은 docs/YOUTUBE_UPLOAD.md '아동용 여부'.",
 
   "channel_id": null,
   "_channel_id": "python -m publish.youtube --whoami 로 확인한 채널 ID(UC...). 넣어 두면 토큰이 다른 채널을 가리킬 때 업로드를 막는다. null 이면 확인만 하고 기록에 남긴다.",
 
-  "tags": ["과학", "Shorts"],
-  "_tags": "모든 편에 붙는 공통 태그. 편별 태그는 meta.json 의 tags 와 합친다. 합계 500자 한도.",
+  "tags": [],
+  "_tags": "모든 편에 덧붙이는 공통 태그. 편별 태그는 finals/<ep>/upload.md 의 '태그'에서 읽는다(합계 500자 한도). 비워 두면 upload.md 그대로.",
+
+  "upload_captions": false,
+  "_upload_captions": "2026-11-03 사용자 결정: 자막은 화면에 새겨져 있어 SRT 를 올리지 않는다. 올리려면 true 또는 --caption.",
+
+  "upload_thumbnail": true,
+  "_upload_thumbnail": "thumbnail.jpg(없으면 poster.jpg = 0초 프레임)를 thumbnails.set 으로 설정한다. 채널이 맞춤 썸네일을 못 쓰면 경고로 남기고 영상은 그대로 둔다.",
+  "thumbnail_max_bytes": 2097152,
 
   "shorts_max_sec": 180,
   "_shorts_max_sec": "세로·정방형이고 이 길이 이하면 유튜브가 쇼츠로 분류한다(2024-10-15 이후 3분). 넘으면 --not-shorts 없이는 올리지 않는다.",

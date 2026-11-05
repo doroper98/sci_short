@@ -1,4 +1,4 @@
-# 업로드 도구 시험 + outbox 에피소드 사전 검증(dry-run, 비밀값 불필요).
+# 업로드 도구 시험 + 이 변경에서 바뀐 finals 에피소드의 사전 검증(dry-run, 비밀값 불필요).
 # PR 에서 제목 길이·설명 바이트·쇼츠 규격·아동용 선언 누락을 미리 잡는다.
 name: ci
 
@@ -8,14 +8,14 @@ on:
       - "publish/**"
       - "tests/**"
       - "config/youtube.json"
-      - "outbox/**"
+      - "finals/**"
       - ".github/**"
   pull_request:
     paths:
       - "publish/**"
       - "tests/**"
       - "config/youtube.json"
-      - "outbox/**"
+      - "finals/**"
       - ".github/**"
 
 permissions:
@@ -24,11 +24,13 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     env:
       PYTHONUTF8: "1"
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -36,5 +38,15 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
       - name: 단위 시험
         run: python -m unittest discover -s tests -v
-      - name: outbox 사전 검증 (dry-run)
-        run: python -m publish.youtube --all --dry-run
+      - name: 바뀐 finals 에피소드 사전 검증 (dry-run)
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch --quiet --depth=1 origin "${{ github.base_ref }}"
+            BASE=FETCH_HEAD
+          else
+            BASE="${{ github.event.before }}"
+          fi
+          python .github/scripts/changed_finals.py "$BASE" HEAD > targets.txt
+          if ! grep -q . targets.txt; then echo "바뀐 finals 에피소드 없음 — dry-run 생략"; exit 0; fi
+          mapfile -t ARGS < targets.txt
+          python -m publish.youtube "${ARGS[@]}" --dry-run

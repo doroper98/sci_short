@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "purpose": "Download sources for the standard narration voice assets. Hashes must equal config/voice-reference.json; fetch_assets.py checks both.",
+  "supertonic": {
+    "repo": "Supertone/supertonic-3",
+    "revision": "3cadd1ee6394adea1bd021217a0e650ede09a323",
+    "dest_subdir": "supertonic-3",
+    "sources": [
+      {
+        "kind": "github_release_zip",
+        "url": "https://github.com/doroper98/prismatic_nplm_git/releases/download/tts-assets-supertonic3-v1/supertonic-3-tts-assets.zip",
+        "hosts": ["github.com", "release-assets.githubusercontent.com"],
+        "size": 370277184,
+        "sha256": "842e9f83e974b3dcdf727814fea2af594a68f3d962798a53f7df93042d9765f3",
+        "note": "User's mirror of the same 8 files at the pinned HF revision; zip member names equal the relative paths below."
+      },
+      {
+        "kind": "huggingface_resolve",
+        "url_template": "https://huggingface.co/Supertone/supertonic-3/resolve/{revision}/{rel}",
+        "hosts": ["huggingface.co", "us.aws.cdn.hf.co", "cdn-lfs.huggingface.co"],
+        "note": "Original source used by osint_generator tools/fetch_data.py supertonic. On 2026-10-30 large files redirected to the Xet CDN us.aws.cdn.hf.co (blocked in the cloud sandbox); older setups used cdn-lfs.huggingface.co."
+      }
+    ],
+    "files": {
+      "onnx/duration_predictor.onnx": {"size": 3700147, "sha1": "7506c6781997d06c7e0f203e8c16555fe39ad115"},
+      "onnx/text_encoder.onnx": {"size": 36416150, "sha1": "bef43a4d0bd4889e08aaa2c2e107ecc5aebd6e00"},
+      "onnx/vector_estimator.onnx": {"size": 256534781, "sha1": "6460a27d6787bead8f0cc6973c28be6281930076"},
+      "onnx/vocoder.onnx": {"size": 101424195, "sha1": "5e94809905565e9bfbc54a130137c37e03bc2048"},
+      "onnx/tts.json": {"size": 8253, "sha1": "310fe80fdba5a36d03a4c0c85561be5c3e1c2da7"},
+      "onnx/unicode_indexer.json": {"size": 277676, "sha1": "c8133b892e49c85f47880f1ac0226f91579ea5ac"},
+      "voice_styles/M3.json": {"size": 290198, "sha1": "7764333982bc4d4d27b3872ead13dfe4b0400d81"},
+      "LICENSE": {"size": 15007, "sha1": "e6ab935ad6e8025ce4bf68e7382bd5332f4329ea"}
+    },
+    "license": "Code MIT (Supertone Inc.); model weights BigScience OpenRAIL-M (see LICENSE file in the asset folder)."
+  },
+  "mms_fa": {
+    "dest_subdir": "mms_fa",
+    "files": {
+      "model.pt": {
+        "url": "https://dl.fbaipublicfiles.com/mms/torchaudio/ctc_alignment_mling_uroman/model.pt",
+        "hosts": ["dl.fbaipublicfiles.com"],
+        "size": 1262047414,
+        "sha1": "0300fd9ae57a63e3bd239ae1337e32127a587214"
+      }
+    },
+    "license": "MMS weights recorded as CC-BY-NC 4.0 in osint_generator config.yaml/fetch_data.py — check before public/monetised use."
+  }
+}

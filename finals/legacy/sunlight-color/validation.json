@@ -1,0 +1,31 @@
+{
+  "filename": "one-sun-two-colors-preview.mp4",
+  "sha256": "83c79ae5d0940fa0d86d0bc3e0ece7491f777d9226c4e57a7cd3469049470f53",
+  "bytes": 10274636,
+  "duration_seconds": 103.166667,
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "video_codec": "h264",
+  "pixel_format": "yuv420p",
+  "color_space": "bt709",
+  "audio_codec": "aac",
+  "sample_rate": 48000,
+  "channels": 2,
+  "caption_language": "en",
+  "narration_present": false,
+  "caption_timing": "provisional, estimated reading time",
+  "loudness_lufs": -34.79,
+  "true_peak_dbtp": -4.14,
+  "checks": {
+    "full_video_audio_decode": "passed, no errors",
+    "representative_encoded_frame": "inspected at 68 seconds",
+    "chapter_preview_frames": "all 8 inspected",
+    "audio_visual_chord_condition_agreement": "passed for both comparison events",
+    "chord_narration_schedule_overlap": "none in provisional schedule",
+    "model_direction_checks": "passed",
+    "direct_listening": "not performed",
+    "physical_phone_playback": "not performed"
+  },
+  "remaining": "English narration requires model access or an explicitly authorized alternative voice; regenerate timeline, sound events, video and final mix after synthesis."
+}
