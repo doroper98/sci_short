@@ -1515,7 +1515,7 @@ function boatGauge(stage, t, ctx, alpha) {
   });
   tag(stage, '이온층 (높이 과장)', BE.x + Rr * 0.72 + 14, BE.y - Rr * 0.72 - 20, {size: 24, color: '#7FE3C8', a: eA * fadeIn(t, at(A.upper) - 0.3, 0.4), align: 'left'});
   tag(stage, `약 ${BOAT.ionoKm} km 높이`, BE.x + Rr * 0.72 + 14, BE.y - Rr * 0.72 + 18, {size: 24, color: T.muted, a: eA * fadeIn(t, at(A.upper) - 0.3, 0.4), align: 'left', plate: false});
-  const hA = fadeIn(t, at(A.shook) - 0.2, 0.4);
+  const hA = fadeIn(t, P.iono0 + 0.15, 0.3);
   tag(stage, `흔들림 ${P.hours(t).toFixed(0)}시간째`, BE.x, BE.y + Rr + 34, {size: 26, color: T.ink, a: hA * eA});
   tag(stage, '감마선', BE.x - Rr - 70, BE.y - Rr - 30, {size: 24, color: PAL.gamma, a: eA * fadeIn(t, P.iono0 - 0.9, 0.3) * fadeOut(t, P.iono0 + 0.8, 0.4)});
 }
