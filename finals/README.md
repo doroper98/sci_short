@@ -17,6 +17,7 @@
 | `<slug>.mp4` | 최종 영상, 1080×1920, 30 fps, H.264/AAC |
 | `<slug>.srt` | 자막(화면에 이미 새겨져 있음, 업로드하지 않는 것이 기본) |
 | `poster.jpg` | 대표 정지화면 |
+| `thumbnail.jpg` | 썸네일 이미지(01~08만, 2026-11-05). 첫 프레임이 썸네일이 아닌 편을 위해 `pipeline/render/thumbnail.mjs`로 만든 1080×1920 이미지. 09번부터는 0초 프레임(`poster.jpg`)이 썸네일 |
 | `scenes.jpg` | 장면별 정지화면 모음 |
 | `timeline.json` | 문장·낱말·자막 시각 |
 | `validation.json` | 자동 검증 기록 |

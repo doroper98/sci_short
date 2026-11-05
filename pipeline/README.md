@@ -80,6 +80,7 @@ S=<slug>; O=outputs/$S; PY=/home/user/.venv-scishort-render/bin/python
 /home/user/.venv-scishort/bin/python pipeline/narration/narrate.py --script episodes/$S/script.json --out $O/narration
 node episodes/$S/render.mjs --stills                 # → $O/stills/, $O/events.json   (--safe: 안전 영역 표시)
 node episodes/$S/render.mjs --video                  # → $O/visual.mp4 (무음, H.264 crf18 medium, BT.709)
+node pipeline/render/thumbnail.mjs $S --t 96.5 --main "제목" --sub "부제" [--crop x,y,w,h --cy 760 --y 1320 --hide-text-below 30] --out finals/NN-$S/thumbnail.jpg   # 썸네일 이미지(장면 하나 + 큰 제목)
 $PY pipeline/audio/sfx.py --sound episodes/$S/sound.json --timeline $O/narration/timeline.json --out $O/sfx.wav \
     --ambient-out $O/ambient.wav --events-check $O/events.json [--no-music]
 $PY pipeline/audio/mix.py --narration $O/narration/narration.wav --sfx $O/sfx.wav [--ambient $O/ambient.wav] \
