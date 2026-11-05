@@ -2233,7 +2233,7 @@
       "at": 70.133,
       "kind": "chirp",
       "params": {
-        "gain_db": -31,
+        "gain_db": -33,
         "harmonics": [
           1
         ],
@@ -2338,7 +2338,7 @@
       "at": 79.382,
       "kind": "chirp",
       "params": {
-        "gain_db": -27,
+        "gain_db": -31,
         "harmonics": [1, 0.4, 0.2],
         "fade": 0.03,
         "points": [
@@ -2599,7 +2599,7 @@
       "params": {
         "low": 50,
         "high": 220,
-        "gain_db": -31,
+        "gain_db": -33,
         "fade": 0.05,
         "points": [
           [0, 0],
@@ -2798,7 +2798,7 @@
       "at": 104.438,
       "kind": "chirp",
       "params": {
-        "gain_db": -31,
+        "gain_db": -33,
         "harmonics": [
           1
         ],
@@ -2934,7 +2934,7 @@
       "at": 104.438,
       "kind": "chirp",
       "params": {
-        "gain_db": -31,
+        "gain_db": -33,
         "harmonics": [1, 0.25],
         "fade": 0.03,
         "points": [
@@ -3102,7 +3102,7 @@
       "at": 104.438,
       "kind": "chirp",
       "params": {
-        "gain_db": -31,
+        "gain_db": -33,
         "harmonics": [1, 0.25],
         "fade": 0.03,
         "points": [
@@ -4053,7 +4053,7 @@
       "at": 139.717,
       "kind": "chirp",
       "params": {
-        "gain_db": -28,
+        "gain_db": -31,
         "harmonics": [1, 0.5, 0.25],
         "fade": 0.03,
         "points": [
@@ -4163,7 +4163,7 @@
       "params": {
         "freq": 220,
         "decay": 0.06,
-        "gain_db": -30,
+        "gain_db": -32,
         "click": 0,
         "repeat": 3,
         "interval": 0.11
@@ -4177,7 +4177,7 @@
       "params": {
         "low": 35,
         "high": 140,
-        "gain_db": -27,
+        "gain_db": -30,
         "fade": 0.05,
         "points": [
           [0, 0],

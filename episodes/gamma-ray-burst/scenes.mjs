@@ -1701,18 +1701,18 @@ export function soundEvents(tl) {
   swell('inset', P.inset, [110, 165], '비교 모형 "우리 은하 안에서 터졌다면" (띠에 몰림)', {dur: 1.4});
   const ag0 = P.s09 + 0.4;
   chirp('afterglow', ag0, ag0 + 3.0, () => 147, tt => clamp(0.15 * Math.max(0.02, (tt - ag0) * 1.5) ** -1.2, 0, 1.4) / 1.4, -30, 'GRB 970508의 잔광: 밝기(∝ 시간^−1.2) → 147 Hz 음의 크기, 서서히 사그라듦', {fi: 0.05, fo: 0.4});
-  chirp('line_shift', P.shift[0] - 0.3, P.shift[1] + 0.8, tt => lineHz(LINES_970508[2].lab * (1 + P.zNow(tt))), () => 0.4, -31, `Mg II 선: 진동수 ∝ 1/파장 → ${lineHz(279.6).toFixed(0)} Hz에서 정확히 1/1.835배 ${lineHz(279.6 * 1.835).toFixed(0)} Hz로 내려감`, {fi: 0.2, fo: 0.4});
+  chirp('line_shift', P.shift[0] - 0.3, P.shift[1] + 0.8, tt => lineHz(LINES_970508[2].lab * (1 + P.zNow(tt))), () => 0.4, -33, `Mg II 선: 진동수 ∝ 1/파장 → ${lineHz(279.6).toFixed(0)} Hz에서 정확히 1/1.835배 ${lineHz(279.6 * 1.835).toFixed(0)} Hz로 내려감`, {fi: 0.2, fo: 0.4});
   tone('distance', P.dist, 82, 1.6, '"빛이 온 거리 약 70억 광년" (낮은 음)', {h: [1, 0.5, 0.25], gain: -31});
   // jet ①②: beaming loudness; axis turn; the Earth inside the cone
   const b0 = P.knob[0] - 1.0, b1 = at('s11') - 0.5, dB = tt => Math.min(20, 10 * Math.log10(1 / fSky(P.theta(tt))));
-  chirp('beam', b0, b1, () => 131, tt => 0.1 * 10 ** (dB(tt) / 20), -27, '원뿔 반각 θ를 90° → 5°로 좁힘: 같은 에너지가 모여 소리 크기가 10·log10(1/f) dB만큼 커짐 (20 dB에서 멈춤)', {h: [1, 0.4, 0.2], fi: 0.4, fo: 0.4});
+  chirp('beam', b0, b1, () => 131, tt => 0.1 * 10 ** (dB(tt) / 20), -31, '원뿔 반각 θ를 90° → 5°로 좁힘: 같은 에너지가 모여 소리 크기가 10·log10(1/f) dB만큼 커짐 (20 dB에서 멈춤)', {h: [1, 0.4, 0.2], fi: 0.4, fo: 0.4});
   whoosh('axis_turn', P.turn[0], P.turn[1] - P.turn[0], 90, 220, '제트 방향을 지구 쪽으로 돌림', -33);
   thump('earth_sees', P.seenT, `지구가 원뿔(반각 ${TH_JET}°) 안에 들어온 순간 → 번쩍`, -27);
   // jet ③: shells, collisions (knock loudness from the dissipated energy), the head in the gas, afterglows
   ticks('shells', P.emitT, 110, -33, '엔진이 덩어리를 하나씩 내보냄 (5개)', {decay: 0.12});
   ev.push({id: 'knocks', at: r(P.coll[0], 4), kind: 'custom', params: {gain_db: -27, layers: SHOCK.col.map((cl, k) => ({kind: 'tone', offset: r(P.coll[k] - P.coll[0], 4), params: {freq: 73, dur: 0.45, harmonics: [1, 0.5, 0.3], attack: 0.004, decay: 0.12, release: 0.15, gain_db: r(20 * Math.log10(0.25 + 0.75 * cl.k), 1)}}))}, means: `빠른 덩어리가 느린 덩어리를 따라잡아 충돌: 계산한 충돌 시각 ${P.coll.map(x => x.toFixed(2)).join(' · ')} s, 크기 = 그래프의 봉우리(잃은 운동 에너지)`});
-  envNoise('plow', P.gas0, P.ag[1] + 0.6, tt => 0.6 * P.headV(tt) / P.headV0, 50, 220, -31, '앞머리가 주변 기체를 쓸어 모으며 느려짐: 빠르기 → 잡음 크기', {fi: 0.4, fo: 0.6});
-  AG.forEach((b, k) => chirp(`ag_${b.id}`, P.ag[0], P.ag[1] + 0.6, () => [392, 262, 131][k], tt => agFlux(10 ** P.agLog(tt), b.tp), -31, `${b.n} 잔광(모형 곡선) → ${[392, 262, 131][k]} Hz 음의 크기: 짧은 파장일수록 높은 음, 봉우리 순서 X선 → 가시광선 → 전파`, {fi: 0.05, fo: 0.4, h: [1, 0.25]}));
+  envNoise('plow', P.gas0, P.ag[1] + 0.6, tt => 0.6 * P.headV(tt) / P.headV0, 50, 220, -33, '앞머리가 주변 기체를 쓸어 모으며 느려짐: 빠르기 → 잡음 크기', {fi: 0.4, fo: 0.6});
+  AG.forEach((b, k) => chirp(`ag_${b.id}`, P.ag[0], P.ag[1] + 0.6, () => [392, 262, 131][k], tt => agFlux(10 ** P.agLog(tt), b.tp), -33, `${b.n} 잔광(모형 곡선) → ${[392, 262, 131][k]} Hz 음의 크기: 짧은 파장일수록 높은 음, 봉우리 순서 X선 → 가시광선 → 전파`, {fi: 0.05, fo: 0.4, h: [1, 0.25]}));
   // engine
   tone('long_lit', P.longLit, 98, 1.2, '"긴 폭발" 무리가 켜짐 (낮은 음)', {gain: -32});
   whoosh('collapse', P.coll14[0], P.coll14[1] - P.coll14[0] + 0.2, 260, 60, '별의 철 중심이 무너짐', -31);
@@ -1728,9 +1728,9 @@ export function soundEvents(tl) {
   swell('confirm', at(A.confirm) - 0.2, [131, 196, 262], '"짧은 폭발 = 중성자별 충돌, 확인"', {dur: 1.6});
   // boat
   tick('boat_card', P.boatCard, 147, -31, 'GRB 221009A 카드', {decay: 0.16});
-  chirp('gauge', P.g0, P.s18 - 0.2, () => 147, tt => Math.min(boatCurve(tt - P.g0), BOAT.full) / BOAT.full, -28, '검출기 계수율(모형) → 147 Hz 음의 크기: 눈금(보통 밝은 폭발의 10배)을 넘는 동안 크기가 잘려 평평해짐 = 포화', {h: [1, 0.5, 0.25], fi: 0.1, fo: 0.5, dt: 0.02});
-  tick('peg', P.pegT, 220, -30, '바늘이 눈금 끝에 붙음 (포화)', {repeat: 3, interval: 0.11, decay: 0.06});
-  envNoise('iono', P.iono0 - 0.05, P.s18 + 0.2, tt => P.ionoA(tt) * (0.65 + 0.35 * Math.sin(11 * tt)), 35, 140, -27, '이온층이 흔들림: 흔들림 크기(화면 고리와 같은 P.ionoA) → 낮은 울림', {fi: 0.05, fo: 0.4, dt: 0.02});
+  chirp('gauge', P.g0, P.s18 - 0.2, () => 147, tt => Math.min(boatCurve(tt - P.g0), BOAT.full) / BOAT.full, -31, '검출기 계수율(모형) → 147 Hz 음의 크기: 눈금(보통 밝은 폭발의 10배)을 넘는 동안 크기가 잘려 평평해짐 = 포화', {h: [1, 0.5, 0.25], fi: 0.1, fo: 0.5, dt: 0.02});
+  tick('peg', P.pegT, 220, -32, '바늘이 눈금 끝에 붙음 (포화)', {repeat: 3, interval: 0.11, decay: 0.06});
+  envNoise('iono', P.iono0 - 0.05, P.s18 + 0.2, tt => P.ionoA(tt) * (0.65 + 0.35 * Math.sin(11 * tt)), 35, 140, -30, '이온층이 흔들림: 흔들림 크기(화면 고리와 같은 P.ionoA) → 낮은 울림', {fi: 0.05, fo: 0.4, dt: 0.02});
   const yrT = []; for (let k = 1; k <= 9; k++) yrT.push(firstCross(tt => P.rulerY(tt) >= k * 1000, P.ruler[0], P.ruler[1] + 0.5, 1 / 120));
   ticks('years', yrT, 131, -34, '1만 년 눈금을 1천 년씩 지남', {decay: 0.06});
   thump('rare_mark', P.ruler[1], '1만 년 동안 단 한 번 (2022년)', -28, 70);
