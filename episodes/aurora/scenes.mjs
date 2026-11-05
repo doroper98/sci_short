@@ -147,7 +147,7 @@ function head(stage, kicker, title, aK, aT) {
   if (title) withAlpha(c, aT, () => stage.text(title, 540, 228, {role: 'display', weight: 700, size: 54, color: T.ink, align: 'center', maxWidth: 940}));
 }
 export const titles = {
-  hook: ['오늘의 주제 · 오로라', '오로라는 왜 극지방에서만'],
+  hook: ['오늘의 주제', '오로라'],
   origin: ['기원 · 이름', '새벽의 여신과 북풍'],
   essence: ['본질 · 제1원리', '오로라는 무엇인가'],
   wind: ['메커니즘 ① 태양풍', '자기장은 방패가 된다'],
@@ -1323,7 +1323,7 @@ export const scenes = {
     if (lA > 0) tag(stage, '2024년 5월 · 강원 화천', 540, 372, {size: 30, color: T.ink, a: lA, plateA: 0.6});
     if (rA > 0) { tag(stage, '북쪽 지평선 위의 붉은빛', 540, 600, {size: 26, color: HEX.red, a: rA, plateA: 0.5}); withAlpha(c, rA * 0.8, () => line(c, [[540, 622], [540, 690]], rgba(HEX.red, 0.7), 2, {dash: [4, 6]})); }
     if (kA > 0) withAlpha(c, kA * ef, () => tag(stage, '북 ↑', 540, 1004, {size: 24, color: T.muted, plateA: 0.4}));
-    blackFade(stage, Math.max(1 - ef, 1 - fadeIn(t, 0, 0.9)));
+    blackFade(stage, 1 - ef);                                            // no fade-in: frame 0 is the thumbnail
   },
   // ------------------------------------------------------------------ origin: the names; Birkeland's terrella
   origin(stage, t, p, ctx) {
@@ -1343,8 +1343,32 @@ export const scenes = {
   close(stage, t, p, ctx) { closeScene(stage, t, ctx); },
 };
 
+// ---- first frame = thumbnail (2026-11-03 rule, retrofitted 2026-11-05): the big two-line title in the central square
+//      shrinks into the hook header between MORPH[0] and MORPH[1]; no progress bar, captions or small labels before that.
+const MORPH = [0.9, 1.7], TITLE_Y = [1088, 1214];
+function posterTitle(stage, t, main, sub, q = easeInOut((t - MORPH[0]) / (MORPH[1] - MORPH[0])), a = 1) {
+  const c = stage.ctx, T = stage.theme;
+  const big = Math.min(168, 168 * 800 / stage.measure(main, {role: 'display', weight: 700, size: 168}));
+  const y1 = lerp(TITLE_Y[0], 228, q), s1 = lerp(big, 54, q), y2 = lerp(TITLE_Y[1], 290, q), s2 = lerp(64, 30, q);
+  if (q < 1) withAlpha(c, (1 - q) * a, () => {
+    const g = c.createLinearGradient(0, 960, 0, 1320); g.addColorStop(0, 'rgba(0,6,12,0)'); g.addColorStop(0.32, 'rgba(0,6,12,0.66)'); g.addColorStop(0.8, 'rgba(0,6,12,0.66)'); g.addColorStop(1, 'rgba(0,6,12,0)');
+    c.fillStyle = g; c.fillRect(0, 960, 1080, 360);
+  });
+  withAlpha(c, a, () => {
+    stage.text(main, 540, y1, {role: 'display', weight: 700, size: s1, color: T.ink, align: 'center', shadow: q < 0.5 ? 'rgba(0,0,0,0.85)' : null, shadowBlur: 20});
+    stage.text(sub, 540, y2, {role: 'display', weight: 500, size: s2, color: T.light, align: 'center', shadow: q < 0.5 ? 'rgba(0,0,0,0.85)' : null, shadowBlur: 14});
+  });
+}
+function hookOverlay(stage, t, ctx, kicker, main, sub) {
+  if (t < MORPH[1]) { posterTitle(stage, t, main, sub); return; }
+  const c = stage.ctx, ho = fadeOut(t, ctx.scene.end - 0.3, 0.28), kA = fadeIn(t, MORPH[1] - 0.05, 0.4) * ho;
+  head(stage, kicker, main, kA, ho);
+  withAlpha(c, ho, () => stage.text(sub, 540, 290, {role: 'display', weight: 500, size: 30, color: stage.theme.light, align: 'center'}));
+  withAlpha(c, fadeIn(t, MORPH[1], 0.4), () => progressBar(stage, t, ctx.tl.duration));
+}
 /** Drawn after the scene, before captions. */
 export function overlays(stage, t, ctx) {
+  if (ctx.scene.id === 'hook') { hookOverlay(stage, t, ctx, '오늘의 주제', '오로라', '왜 극지방에서만 보일까'); return; }
   const L = titleList(ctx.scene.id, ctx.tl), a = smooth(ctx.scene.p / 0.04);
   let k = 0; while (k + 1 < L.length && t >= L[k + 1][0]) k++;
   // sequential swap (old line fades out, then the new one fades in) so two titles never overlap

@@ -259,10 +259,10 @@ const treeBase = az => 0.25 + 0.5 * fbm1(az / 6 + 9.7, 17);
 const MWTEX = new Map();
 function mwTexture(stage, cam) {
   const key = `${cam.El}_${cam.F}_${cam.az0}`; let tex = MWTEX.get(key); if (tex) return tex;
-  const S = 2, W = 1080 / S, H = 1500 / S, cv = new stage.canvas.constructor(W, H), c = cv.getContext('2d'), img = c.createImageData(W, H), d = img.data;
+  const S = 2, M = 64, W = (1080 + 2 * M) / S, H = 1500 / S, cv = new stage.canvas.constructor(W, H), c = cv.getContext('2d'), img = c.createImageData(W, H), d = img.data;
   const warm = [222, 206, 178], cool = [150, 170, 214];
   for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
-    const [az, alt] = skyInv(cam, i * S + S / 2, j * S + S / 2); if (alt < -1) continue;
+    const [az, alt] = skyInv(cam, i * S + S / 2 - M, j * S + S / 2); if (alt < -1) continue;
     const [b, l] = bandCoord(dirOf(az, alt)), w = 9 + 4 * smooth(Math.abs(l) / 90);
     const n1 = fbm2(az / 7, alt / 7, 3, 5), n2 = fbm2(az / 2.2, alt / 2.2, 7, 4), n3 = vn2(i * 0.9, j * 0.9, 13);
     const g = Math.exp(-(((b + 4 * (n1 - 0.5)) / w) ** 2)), core = Math.exp(-((l / 38) ** 2)), along = 0.3 + 0.7 * Math.exp(-((l / 85) ** 2));
@@ -274,7 +274,7 @@ function mwTexture(stage, cam) {
     const k = (j * W + i) * 4, al = clamp(I * 0.36 * smooth((alt + 0.5) / 4));
     d[k] = col[0]; d[k + 1] = col[1]; d[k + 2] = col[2]; d[k + 3] = 255 * al;
   }
-  c.putImageData(img, 0, 0); tex = {cv, W, H, S}; MWTEX.set(key, tex); return tex;
+  c.putImageData(img, 0, 0); tex = {cv, W, H, S, M}; MWTEX.set(key, tex); return tex;
 }
 
 /** the whole night sky: gradient, airglow, Milky Way, twinkling stars, silhouettes. o: {cam, a, par (dolly px),
@@ -288,7 +288,7 @@ export function drawSky(stage, t, o = {}) {
     else { g.addColorStop(0, '#01050C'); g.addColorStop(0.55, '#04101D'); g.addColorStop(0.86, '#0B1C2D'); g.addColorStop(1, '#16283A'); }
     c.fillStyle = g; c.fillRect(0, 0, 1080, 1920);
     const tex = mwTexture(stage, cam0), sx = -(o.dAz || 0) * D2R * cam.F, sy = (o.dEl || 0) * D2R * cam.F;
-    c.save(); c.globalAlpha *= o.mw ?? 1; c.imageSmoothingEnabled = true; c.drawImage(tex.cv, sx, sy, tex.W * tex.S, tex.H * tex.S); c.restore();
+    c.save(); c.globalAlpha *= o.mw ?? 1; c.imageSmoothingEnabled = true; c.drawImage(tex.cv, sx - tex.M, sy, tex.W * tex.S, tex.H * tex.S); c.restore();
     if (!o.space) { const hg = c.createLinearGradient(0, hy - 360, 0, hy); hg.addColorStop(0, 'rgba(40,58,78,0)'); hg.addColorStop(1, 'rgba(48,66,84,0.55)'); c.fillStyle = hg; c.fillRect(0, hy - 360, 1080, 360); }
     // stars
     const gain = o.starGain ?? 1;
@@ -461,8 +461,32 @@ function titleList(id, tl) {
   if (id === 'use') return [[-Infinity, ...titles.use], [at('s16') - 0.5, '사례 · 적응광학', '거울로 흔들림을 지운다']];
   return [[-Infinity, ...(titles[id] || ['', ''])]];
 }
+// ---- first frame = thumbnail (2026-11-03 rule, retrofitted 2026-11-05): the big two-line title in the central square
+//      shrinks into the hook header between MORPH[0] and MORPH[1]; no progress bar, captions or small labels before that.
+const MORPH = [0.9, 1.7], TITLE_Y = [1088, 1214];
+function posterTitle(stage, t, main, sub, q = easeInOut((t - MORPH[0]) / (MORPH[1] - MORPH[0])), a = 1) {
+  const c = stage.ctx, T = stage.theme;
+  const big = Math.min(168, 168 * 800 / stage.measure(main, {role: 'display', weight: 700, size: 168}));
+  const y1 = lerp(TITLE_Y[0], 228, q), s1 = lerp(big, 54, q), y2 = lerp(TITLE_Y[1], 290, q), s2 = lerp(64, 30, q);
+  if (q < 1) withAlpha(c, (1 - q) * a, () => {
+    const g = c.createLinearGradient(0, 960, 0, 1320); g.addColorStop(0, 'rgba(0,6,12,0)'); g.addColorStop(0.32, 'rgba(0,6,12,0.66)'); g.addColorStop(0.8, 'rgba(0,6,12,0.66)'); g.addColorStop(1, 'rgba(0,6,12,0)');
+    c.fillStyle = g; c.fillRect(0, 960, 1080, 360);
+  });
+  withAlpha(c, a, () => {
+    stage.text(main, 540, y1, {role: 'display', weight: 700, size: s1, color: T.ink, align: 'center', shadow: q < 0.5 ? 'rgba(0,0,0,0.85)' : null, shadowBlur: 20});
+    // the subtitle fades during the shrink (the hook's sky labels sit just below the header here)
+    withAlpha(c, 1 - smooth((q - 0.35) / 0.55), () => stage.text(sub, 540, y2, {role: 'display', weight: 500, size: s2, color: T.light, align: 'center', shadow: q < 0.5 ? 'rgba(0,0,0,0.85)' : null, shadowBlur: 14}));
+  });
+}
+function hookOverlay(stage, t, ctx, kicker, main, sub) {
+  if (t < MORPH[1]) { posterTitle(stage, t, main, sub); return; }
+  const c = stage.ctx, ho = fadeOut(t, ctx.scene.end - 0.3, 0.28), kA = fadeIn(t, MORPH[1] - 0.05, 0.4) * ho;
+  head(stage, kicker, main, kA, ho);
+  withAlpha(c, fadeIn(t, MORPH[1], 0.4), () => progressBar(stage, t, ctx.tl.duration));
+}
 /** Drawn after the scene, before captions. */
 export function overlays(stage, t, ctx) {
+  if (ctx.scene.id === 'hook') { hookOverlay(stage, t, ctx, '오늘의 주제 · 별의 반짝임', '별은 왜 반짝일까', '반짝임은 공기가 만든다'); return; }
   const L = titleList(ctx.scene.id, ctx.tl), a = smooth(ctx.scene.p / 0.04);
   let k = 0; while (k + 1 < L.length && t >= L[k + 1][0]) k++;
   // sequential swap (old line fades out, then the new one fades in) so two titles never overlap
@@ -769,7 +793,7 @@ export const scenes = {
   hook(stage, t, p, ctx) {
     checkSoundTable(ctx);
     const j = journeyTimes(ctx.tl), ef = endFade(t, ctx), zq = clamp((t - j.dive0) / (j.dive1 - j.dive0));
-    const skyA = fadeIn(t, 0.0, 1.2) * (1 - smooth((zq - 0.45) / 0.55));
+    const skyA = 1 - smooth((zq - 0.45) / 0.55);                        // full sky at t = 0 (first frame = thumbnail)
     if (skyA > 0) hookSky(stage, t, ctx, skyA, zq);
     const bA = smooth((zq - 0.4) / 0.6) * ef;
     if (bA > 0) beamJourney(stage, t, ctx, bA);

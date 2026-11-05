@@ -146,12 +146,12 @@
       "duration_sec": 175.7,
       "width": 1080,
       "height": 1920,
-      "bytes": 40121619,
-      "sha256": "b0b51e7867cc2884de4d811ab64e735ce2b95348db037d9e68b6bdf3889eb630",
-      "video_date": "2026-11-03",
+      "bytes": 40110414,
+      "sha256": "17df58a0160640e0c4b6a39a559ca67d2c42cac7061c170a52b6bb8033652054",
+      "video_date": "uncommitted",
       "episode_code": "episodes/twinkle",
       "upload_info": "finals/09-twinkle/upload.md",
-      "thumbnail": "0초는 검은 화면(새 규칙 이전 제작)이라 약 4초(반짝이는 별과 고요한 달) 또는 약 64초(땅 위의 밝고 어두운 무늬와 7 mm 눈동자)를 고릅니다"
+      "thumbnail": "0초 프레임(은하수와 초승달이 뜬 밤하늘, 큰 제목 \"별은 왜 반짝일까 / 반짝임은 공기가 만든다\"). 2026-11-05 첫 프레임 = 썸네일 규칙으로 보완"
     },
     {
       "number": 10,
@@ -163,12 +163,12 @@
       "duration_sec": 161.3,
       "width": 1080,
       "height": 1920,
-      "bytes": 29801820,
-      "sha256": "a549a03de67c7e43f3f7e56ddceb286c7cde53c14eb2f0daf25a1c6667cfd3e1",
-      "video_date": "2026-11-03",
+      "bytes": 29808604,
+      "sha256": "7b41b372c64ab12df07c2e635f2459c4eabc88399f921c199bb2e8e180fc0ffc",
+      "video_date": "uncommitted",
       "episode_code": "episodes/aurora",
       "upload_info": "finals/10-aurora/upload.md",
-      "thumbnail": "0초는 검은 화면(새 규칙 이전 제작)이라 약 3초(고위도 하늘의 초록 커튼과 호수 반영) 또는 약 99초(자기극을 둘러싼 오로라 고리)를 고릅니다"
+      "thumbnail": "0초 프레임(호수에 비친 초록·분홍 오로라 커튼, 큰 제목 \"오로라 / 왜 극지방에서만 보일까\"). 2026-11-05 첫 프레임 = 썸네일 규칙으로 보완"
     },
     {
       "number": 11,
