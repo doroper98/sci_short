@@ -186,6 +186,23 @@
       "episode_code": "episodes/eddington-limit",
       "upload_info": "finals/11-eddington-limit/upload.md",
       "thumbnail": "0초 프레임(바깥층이 날아가는 청백색 별과 제목 \"에딩턴 한계 / 빛이 별을 밀어낸다\"). 첫 프레임 = 썸네일 규칙을 처음 적용한 편"
+    },
+    {
+      "number": 12,
+      "slug": "quasar",
+      "title": "퀘이사 — 별처럼 보인 블랙홀",
+      "status": "final",
+      "folder": "finals/12-quasar",
+      "video": "finals/12-quasar/quasar.mp4",
+      "duration_sec": 174.3,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 19424355,
+      "sha256": "5188fd29cee4b42f4984aad3999817e36a7e0eef9abffa201c0cf34ae3c86ffa",
+      "video_date": "uncommitted",
+      "episode_code": "episodes/quasar",
+      "upload_info": "finals/12-quasar/upload.md",
+      "thumbnail": "0초 프레임(비스듬한 강착 원반과 두 제트, 제목 \"퀘이사 / 별처럼 보인 블랙홀\")"
     }
   ],
   "legacy": [
