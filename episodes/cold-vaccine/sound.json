@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "notes": "설명용 합성음(녹음 아님). 기본음은 700 Hz 미만. scenes.mjs 의 ctx.events 와 같은 시각을 쓴다.",
+  "events": [
+    {"id": "open", "at": 0.25, "kind": "swell",
+     "params": {"freqs": [98, 147, 196], "dur": 1.8, "attack": 0.5, "gain_db": -26},
+     "means": "여는 화면 — 빛을 받은 한 종류"},
+
+    {"id": "reveal", "at": ["s02", 1.2], "kind": "whoosh",
+     "params": {"dur": 1.1, "f_start": 520, "f_end": 150, "q": 1.6, "gain_db": -24},
+     "means": "어두웠던 나머지 종류들이 드러남"},
+
+    {"id": "han1", "at": {"sentence": "s03", "word": "감과"}, "kind": "tick",
+     "params": {"freq": 520, "decay": 0.1, "gain_db": -26}, "means": "感 글자"},
+    {"id": "han2", "at": {"sentence": "s03", "word": "기를"}, "kind": "tick",
+     "params": {"freq": 440, "decay": 0.1, "gain_db": -26}, "means": "氣 글자"},
+
+    {"id": "inst", "at": ["s04", 1.2], "kind": "tone",
+     "params": {"freq": 165, "dur": 0.5, "wave": "tri", "gain_db": -27}, "means": "연구 기관 카드"},
+    {"id": "vols", "at": ["s05", 0.6], "kind": "tick",
+     "params": {"freq": 620, "decay": 0.045, "gain_db": -34, "repeat": 14, "interval": 0.085},
+     "means": "자원자 점이 쌓임"},
+    {"id": "isolate", "at": ["s06", 1.3], "kind": "tone",
+     "params": {"freq": 392, "dur": 0.6, "wave": "sine", "harmonics": [1, 0.25], "gain_db": -25},
+     "means": "바이러스가 처음 분리됨 — 현미경 원 안의 입자"},
+    {"id": "papers", "at": ["s07", 0.3], "kind": "tick",
+     "params": {"freq": 196, "decay": 0.08, "click": 0.45, "gain_db": -30, "repeat": 10, "interval": 0.16},
+     "means": "논문이 쌓임"},
+
+    {"id": "fit1", "at": ["s08", 2.4], "kind": "tick",
+     "params": {"freq": 330, "decay": 0.14, "click": 0.2, "gain_db": -22}, "means": "항체가 자리에 맞물림"},
+    {"id": "polio3", "at": ["s10", 1.6], "kind": "tick",
+     "params": {"freq": 294, "decay": 0.12, "gain_db": -25, "repeat": 3, "interval": 0.3},
+     "means": "소아마비 세 얼굴"},
+
+    {"id": "assemble", "at": ["s12", 0.6], "kind": "tick",
+     "params": {"freq": 466, "decay": 0.05, "gain_db": -33, "repeat": 16, "interval": 0.1},
+     "means": "단백질 예순 벌이 껍질을 이룸"},
+    {"id": "siteon", "at": ["s13", 0.9], "kind": "tick",
+     "params": {"freq": 587, "decay": 0.09, "gain_db": -26, "repeat": 4, "interval": 0.26},
+     "means": "결합 자리 네 군데"},
+    {"id": "missB", "at": {"sentence": "s14", "word": "못"}, "kind": "noise",
+     "params": {"dur": 0.3, "low": 120, "high": 420, "release": 0.22, "gain_db": -23},
+     "means": "다른 종류에서는 어긋남"},
+    {"id": "matrix", "at": ["s15", 0.2], "kind": "tick",
+     "params": {"freq": 523, "decay": 0.04, "gain_db": -32, "repeat": 18, "interval": 0.13},
+     "means": "대각선 칸만 밝아짐"},
+    {"id": "others", "at": ["s16", 1.3], "kind": "tick",
+     "params": {"freq": 247, "decay": 0.1, "gain_db": -27, "repeat": 4, "interval": 0.22},
+     "means": "다른 바이러스 가족들"},
+
+    {"id": "fill50", "at": ["s18", 1.2], "kind": "tick",
+     "params": {"freq": 440, "decay": 0.035, "gain_db": -34, "repeat": 25, "interval": 0.055},
+     "means": "50 종류가 한 병에 들어감"},
+    {"id": "ab49", "at": ["s19", 0.4], "kind": "custom",
+     "params": {"gain_db": -24, "layers": [
+       {"kind": "tick", "params": {"freq": 659, "decay": 0.04, "gain_db": -4, "repeat": 14, "interval": 0.075}},
+       {"kind": "noise", "params": {"dur": 0.26, "low": 110, "high": 360, "gain_db": -2}, "offset": 1.15}]},
+     "means": "항체 49 종류가 켜지고 1 종류는 안 생김"},
+    {"id": "third", "at": ["s20", 1.0], "kind": "tone",
+     "params": {"freq": 220, "dur": 0.7, "wave": "tri", "glide_to": 175, "gain_db": -25},
+     "means": "169 가운데 50 — 약 3분의 1"},
+
+    {"id": "drift", "at": ["s21", 1.4], "kind": "tone",
+     "params": {"freq": 262, "dur": 1.6, "wave": "sine", "glide_to": 294, "gain_db": -26},
+     "means": "독감 표면이 해마다 조금씩 바뀜"},
+    {"id": "cal", "at": ["s22", 0.8], "kind": "tick",
+     "params": {"freq": 392, "decay": 0.11, "gain_db": -25, "repeat": 2, "interval": 0.55},
+     "means": "2월·9월 조성 갱신"},
+
+    {"id": "nope", "at": ["s23", 1.2], "kind": "noise",
+     "params": {"dur": 0.42, "low": 100, "high": 330, "release": 0.3, "gain_db": -22},
+     "means": "독감 주사는 감기를 막지 못함"},
+
+    {"id": "end", "at": ["s24", 0.4], "kind": "swell",
+     "params": {"freqs": [131, 196, 262], "dur": 2.4, "attack": 0.6, "gain_db": -25},
+     "means": "정리"}
+  ],
+  "ambient": {"enabled": false, "kind": "pad", "seed": 11, "gain_db": -34, "root_hz": 98, "intervals": [0, 7, 12]},
+  "music": {"id": "zabriskie_patriarch", "enabled": false, "under_db": 12, "duck_db": 6, "start_sec": 0,
+            "note": "기본 꺼짐(2026-10-31 사용자 결정)"}
+}

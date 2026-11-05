@@ -220,6 +220,23 @@
       "episode_code": "episodes/gamma-ray-burst",
       "upload_info": "finals/13-gamma-ray-burst/upload.md",
       "thumbnail": "0초 프레임(무너지는 별을 뚫고 나오는 두 줄기 제트, 큰 제목 \"감마선 폭발 / 우주에서 가장 밝은 섬광\")"
+    },
+    {
+      "number": 14,
+      "slug": "cold-vaccine",
+      "title": "감기 예방 주사가 없는 이유",
+      "status": "final",
+      "folder": "finals/14-cold-vaccine",
+      "video": "finals/14-cold-vaccine/cold-vaccine.mp4",
+      "duration_sec": 161.8,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 23125193,
+      "sha256": "99a1c20938b34219b3af75305e5baff37d8becf3369b093ee337b0c4f2bc81a5",
+      "video_date": "uncommitted",
+      "episode_code": "episodes/cold-vaccine",
+      "upload_info": "finals/14-cold-vaccine/upload.md",
+      "thumbnail": "0초 프레임([poster.jpg](poster.jpg)) — 빛을 받은 리노바이러스 한 종류와 둘레의 다른 종류들, 큰 제목 \"감기 예방 주사 / 왜 없을까\""
     }
   ],
   "legacy": [
