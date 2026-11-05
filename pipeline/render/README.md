@@ -1,0 +1,143 @@
+# pipeline/render — 세로 과학 쇼츠 렌더 툴킷
+
+Node 22 + `@napi-rs/canvas` 1.0.11(정확히 고정) + ffmpeg. 1080×1920, 30 fps 화면을 프레임 단위로 그려 ffmpeg로 인코딩합니다.
+에피소드는 `episodes/<slug>/scenes.mjs` 하나만 쓰고, 나머지는 이 툴킷과 `episodes/_template/render.mjs`가 처리합니다.
+
+```bash
+cd pipeline/render && npm install          # node_modules는 Git에 넣지 않음 (플랫폼 바이너리 포함)
+npm test                                   # node --test tests/test_*.mjs
+~/.venv-scishort-render/bin/python fetch_fonts.py   # GmarketSans + Noto Sans KR → assets/fonts/ (Git 제외)
+```
+
+## 모듈
+
+| 파일 | 내용 |
+|---|---|
+| `stage.mjs` | `createStage({width,height,fps,theme})` → `{canvas, ctx, W, H, FPS, safe, theme, text(), wrap(), measure(), drawSafeZones(), draw}`. 글꼴 등록, `SAFE_ZONES`, `fontString(role,size,weight)` |
+| `draw.mjs` | `circle ring/arc line poly rect glow sphere contactShadow arrow curve withAlpha clipEllipse clipRect`(ctx 첫 인자 또는 `stage.draw.*`), `leader scaleBar`(stage 첫 인자), `rgba mix`, `clamp lerp invLerp remap smooth easeInOut easeOut easeIn bump`, `rand rng`, `project camera lambert`, `DrawQueue` |
+| `timeline.mjs` | `loadTimeline(file)` → `Timeline`: `sceneAt(t)`, `sentenceAt(t)`, `at(ref, offset)`, `wordStart(id, word)`, `progress(t, from, to)`, `captionAt(t)`, `events(spec)`, `isDegraded()` |
+| `captions.mjs` | `drawCaptions(stage, tl, t, opts)`(문장 역할), `drawLabel(stage, text, x, y, opts)`(이름 역할), `layoutCaption`, `parseMarked` |
+| `chrome.mjs` | `THEMES`(noturno 기본·slate·graphite·navy), `resolveTheme`, `background`, `header`, `progressBar`, `sourceLine`, `endCard`. 모두 선택 사항 |
+| `encode.mjs` | `renderVideo({stage, duration, frame, out})` → visual.mp4(무음), `renderStills({stage, times, frame, outDir})` → JPG + `contact-sheet.jpg` |
+| `fetch_fonts.py` | 글꼴 내려받기·변환, `assets/fonts/fonts-manifest.json`에 sha256 기록 |
+
+`index.mjs`가 전부 다시 내보냅니다: `import {createStage, …} from '../../pipeline/render/index.mjs'`.
+
+## 글꼴 역할
+
+| 역할 | 글꼴 | 쓰는 곳 |
+|---|---|---|
+| `display` 700 / 500 | GmarketSans Bold / Medium (자간 −0.011em) | 장면 제목, 헤드라인, 큰 숫자, kicker(500, 대문자·자간 넓힘, accent) |
+| `body` 400 / 500 / 700 | Noto Sans KR | 자막(500), 라벨(500), 출처 줄(400) |
+| 대체 | 시스템 Noto Sans CJK → DejaVu Sans | 빠진 글리프(GmarketSans의 공백, Noto Sans KR의 ₂ 등) |
+
+`stage.text(s, x, y, {role:'display', weight:700, size:70, color, align, maxWidth, tracking, upper})`. 기본 `textBaseline`은 `middle`.
+assets/fonts가 비면 경고 한 줄과 함께 시스템 Noto CJK로 그리고, 한국어 글꼴이 아예 없으면 오류로 멈춥니다.
+@napi-rs/canvas는 가변 글꼴의 기본 인스턴스(굵기 100)만 쓰므로 `fetch_fonts.py`가 400/500/700 고정 파일을 만듭니다.
+
+## 화면 영역 (1080×1920)
+
+| 상수 | 값 | 의미 |
+|---|---|---|
+| `safe.top` | 200 | 제목 영역. kicker·진행 막대는 여기, 제목은 ~200–420 |
+| `safe.bottom` | 420 | 플랫폼 UI(채널명·설명·음악). 핵심 내용 금지 → `safe.y1 = 1500` |
+| `safe.right` | 140 | 좋아요·댓글 버튼. 라벨·핵심 물체 금지 → `safe.x1 = 940` |
+| `safe.left` | 60 | 여백 |
+| `safe.captionTop` | 1360 | 기본 2줄 자막 판의 위쪽. 핵심 현상은 ~1340 위에 |
+
+`--safe` 옵션(또는 `stage.drawSafeZones()`)으로 스틸에 겹쳐 확인합니다. 실제 앱 화면에서의 확인은 별도입니다.
+
+## 자막
+
+- `timeline.captions` 큐를 `start`부터 `min(다음 큐 start, end + 0.15 s)`까지 그립니다. 0.08 s 페이드.
+- Noto Sans KR 500, 44 px, 최대 폭 840 px, **최대 2줄·한 줄 22자(공백 포함)**, 두 줄은 길이를 고르게 나눕니다. 넘치면 한 번만 0.92배로 줄이고 경고합니다(계속 줄이지 않음 — 대본에서 큐를 나누세요).
+- 기본 위치: 마지막 줄 baseline `y = H − safe.bottom − 20 ≈ 1480`, 가로 중심은 안전 열 중앙(500). 장면마다 `captionLayout = {scene: {y: 1300}}`로 옮길 수 있습니다(현상이 화면 아래쪽일 때).
+- 텍스트에 `**강조**`가 있으면 accent 색으로 그립니다(SRT와 validate는 표시를 지움).
+- `drawLabel`은 대상 이름용(작은 색 상자 + 500 굵기, 판 없음 기본). 자막과 역할을 섞지 마세요.
+
+## scenes.mjs 계약
+
+```js
+export const theme = 'noturno';                 // 또는 {base:'noturno', accent:'#…'}
+export const events = [{id: 'flash', at: ['s04', 0.2]}];   // 화면 전용 사건(소리 사건은 sound.json)
+export const captionLayout = {phenomenon: {y: 1300}};
+export const titles = {hook: ['KICKER', '제목\n두 줄', '부제'], …};   // 템플릿 overlays가 사용
+export const scenes = {
+  hook(stage, t, p, ctx) { … },                 // p: 장면 안 0..1, ctx: {tl, events, theme, scene, local, kit}
+  …                                             // 키 = script.json의 scene id (전부 있어야 함)
+};
+export function overlays(stage, t, ctx) { … }   // 선택: 장면 뒤·자막 앞
+export function background(stage, t, ctx) { … } // 선택: 기본은 chrome.background
+```
+
+`render.mjs`는 매 프레임: 배경 → `scenes[sceneAt(t).id]` → `overlays` → 자막(맨 마지막) 순서로 그립니다.
+`ctx.events`는 `sound.json`의 `events`와 `scenes.mjs`의 `events`를 같은 타임라인으로 계산한 **하나의 목록**입니다.
+`events.pulse(id, t, dur)`(번쩍임), `events.after(id, t, dur)`(이후 상태), `events.age(id, t)`.
+render는 `outputs/<slug>/events.json`을 쓰고, `sfx.py --events-check`가 소리 시각과 1 ms 단위로 대조합니다.
+
+### 시간 참조(`at`) 문법 — timeline.mjs와 audio/sfx.py가 같은 규칙
+
+| 형태 | 뜻 |
+|---|---|
+| `12.0` | 절대 초 |
+| `"s05"` / `"s05:end"` / `"s05:mid"` | 문장 시작/끝/중간 |
+| `"hook"` / `"hook:end"` | 장면 시작/끝 |
+| `["s05", 0.4]` | 참조 + 오프셋(음수 가능) |
+| `{"sentence":"s05","word":"결합","offset":0.1}` | 정렬된 `chars`에서 그 낱말의 첫 글자가 발음되는 시각 |
+| `{"scene":"hook","p":0.5}` | 장면 안 비율 |
+
+## 3D와 깊이
+
+`project([x,y,z], {angle, tilt, scale, cx, cy, distance})` → `[x, y, depth, s]`(depth가 클수록 가까움, s = 원근 배율).
+면·구·결합을 `DrawQueue.push(depth, fn)`에 넣고 `flush()`하면 먼 것부터 그립니다. 면 밝기는 `lambert(normal, light)`.
+비교 장면에서는 카메라를 고정하고(변수 하나만 바꾸기), 대상만 회전시키세요. 템플릿의 `tank()`가 예입니다.
+
+## 명령 순서 (에피소드 하나)
+
+```bash
+python pipeline/new_episode.py <slug> --title "…"                 # episodes/<slug>/ 생성
+# brief.md → script.json → scenes.mjs → sound.json 작성
+episodes/<slug>/run.sh                                             # 전체
+episodes/<slug>/run.sh stills                                      # 스틸만: outputs/<slug>/stills/contact-sheet.jpg
+SCISHORT_ROOT=$PWD node episodes/<slug>/render.mjs --stills --safe # 안전 영역 겹쳐 보기
+SCISHORT_ROOT=$PWD node episodes/<slug>/render.mjs --video         # outputs/<slug>/visual.mp4
+```
+
+`render.mjs` 인자: `--timeline F`(기본 `outputs/<slug>/narration/timeline.json`), `--out DIR`, `--scenes F`, `--sound F`, `--safe`.
+
+## 성능 (이 컨테이너, 4 vCPU 기준 실측)
+
+템플릿 장면 1080×1920: 렌더+libx264(medium, crf 18) 합쳐 약 23–24 fps → 180초 영상 ≈ 4분. 무거운 장면(수백 개 구·그라디언트)은 더 느립니다.
+`getImageData()`는 straight RGBA를 돌려주며(확인함) ffmpeg에 `-pix_fmt rgba`로 넘기고 BT.709 limited-range yuv420p로 변환합니다.
+
+## 지구본 엔진 `globe.mjs` (세 번째 재사용에서 승격)
+
+정사영 지구본: 가장자리에서 정확히 자르는 Natural Earth 육지, 경위선, 위도 띠, 낮·밤 경계, 화면 안 회전(roll)으로 기울어지는 축, 편평한(불룩한) 지구 그리기, 공전면을 비스듬히 보는 카메라.
+`episodes/global-winds`(처음) → `episodes/seasons`(roll 추가) → `episodes/precession`(세 번째)에서 반복되어 여기로 옮겼습니다.
+**`index.mjs`에서 다시 내보내지 않습니다.** 필요한 에피소드가 직접 가져옵니다. 앞의 두 에피소드는 전달본 재현을 위해 각자의 로컬 사본을 그대로 둡니다(고치지 않음).
+
+```js
+import {loadLand, axisView, drawGlobe, axisTip, obliqueCam} from '../../pipeline/render/globe.mjs';
+const LAND = loadLand(path.join(HERE, 'land.json'));        // 육지 경로는 인자 (에피소드가 자기 land.json을 넘김)
+const cam = obliqueCam({cx: 540, cy: 690, k: 150, alpha: 24}); // 공전면(X, Y) 위 Z = 법선. +Y → 오른쪽, +X → 시청자 쪽
+const V = axisView({cx: cam.cx, cy: cam.cy, R: 150}, cam.vec([sinε, 0, cosε]), {spin, sun: cam.vec(sunDir), flat: 0.12});
+drawGlobe(stage, V, {land: LAND, night: 0.5, grat: 0.1, band: {lat: 14, col: '#F2A65A', a: 0.3}});
+```
+
+| 함수 | 내용 |
+|---|---|
+| `loadLand(file)` | `{rings:[[[lon,lat],…],…]}` → 육지 객체 (2° 간격으로 촘촘히, 경계 상자) |
+| `makeView(lay, lam, tilt, roll)` / `toView` / `fromView` / `gmap` / `proj` / `tracePts` | 저수준 투영. `lam` 경도가 정면, `tilt`는 북극을 시청자 쪽으로, `roll`은 화면 안 반시계 회전. 뒤쪽 점은 원판 밖으로 거울상 → 클립하면 가장자리에서 정확히 잘림 |
+| `axisView(lay, n, {spin, sun, sunLon, flat})` | 북쪽 축이 시점 벡터 `n`을 향하는 지구본. `sun`+`sunLon`이면 그 경도가 태양 아래. 자전은 서 → 동(시간에 따라 `spin` 감소) |
+| `drawGlobe(stage, V, {land, sun, night, grat, lats, equator, band, pal, inside, halo})` | 바다 음영 → 경위선 → 육지 → 띠 → 적도 → 밤(태양이 있으면 실제 경계) 순서. 태양이 없으면 부드러운 가장자리 어둡게 |
+| `globeWithAxis(stage, V, o)`, `axisEnds`, `axisTip(V, len, sg)` | 축 그리기. 먼 쪽 끝은 지구본 앞에 그려 가려짐. `len ≤ 1`은 지구본과 함께 찌그러짐(편평한 극), `len > 1`은 방향 표시라 찌그러지지 않음 → `obliqueCam.P(len·R·n)`과 같은 원 위 |
+| `surfacePoint(V, lat, lon)`, `latitudePts(V, lat)`, `latLine`, `latBand`, `graticule`, `nightShade`, `squash` | 표면 위 점·선·띠(편평 보정 포함) |
+| `obliqueCam({cx, cy, k, alpha, yaw})` | 평면을 고도 `alpha`(90 = 바로 위)에서 본 카메라. `P(X,Y,Z)` → 화면 + 깊이, `vec(v)` → `axisView`용 시점 벡터. 위에서 반시계 = 화면에서도 반시계 |
+| `dot cross unit add sub mul E3 D2R GLOBE_PAL` | 보조 |
+
+| `lookCam({pos, target, dir, up, F, cx, cy, ortho})` | 3D 원근(또는 `ortho` 배율의 정사영) 카메라. `P(p)` → `[x, y, 깊이]`, `dirP(v)` → 무한히 먼 방향(별·하늘의 극)의 화면 위치, `hidden(p)`는 지구 뒤에 가려진 점. 2026-11-03 세차운동 편 3D 개편에서 추가 |
+| `earthTextures(land, {W, H, seed})` | Natural Earth 윤곽에서 만든 등장방형 지구 질감(바다 깊이, 위도별 육지 색, 극지 얼음, 구름). 위성 사진이 아니라 생성한 색 |
+| `drawEarthLit(stage, cam, tex, {axis, center, R, flat, sun, spin, …})` | 픽셀마다 광선 추적한 빛 받는 지구: 낮·밤 경계, 대기 테두리 빛, 바다 반짝임, 편평 지구. 오프스크린 버퍼에 그려 `globalAlpha`를 따름 |
+| `makeStars(n, seed, band)` | 천구 위 희미한 무작위 별(`band`로 은하수 띠 밀도) |
+
+편평(`flat`)은 화면에서 축 방향으로 실루엣 비율 `k = √(n_c² + (1−f)²(1−n_c²))`만큼 줄이는 근사입니다. 외곽선은 정확하고 내부는 구 그림을 눌러 그립니다(f ≲ 0.15에서 사용).

@@ -1,0 +1,182 @@
+{
+  "provisional": true,
+  "duration": 103.14245283018869,
+  "segments": [
+    {
+      "scene": "opening",
+      "text": "High in the sky, the Sun can look almost white.",
+      "gap": 0.45,
+      "index": 0,
+      "start": 1.2,
+      "end": 4.973584905660378
+    },
+    {
+      "scene": "opening",
+      "text": "But near sunset, it can glow orange or red.",
+      "gap": 0.45,
+      "index": 1,
+      "start": 5.423584905660378,
+      "end": 8.819811320754717
+    },
+    {
+      "scene": "opening",
+      "text": "The Sun has not changed. The journey of its light has.",
+      "gap": 0.7,
+      "index": 2,
+      "start": 9.269811320754718,
+      "end": 13.420754716981133
+    },
+    {
+      "scene": "spectrum",
+      "text": "Sunlight contains a broad mixture of visible colors.",
+      "gap": 0.3,
+      "index": 3,
+      "start": 14.120754716981132,
+      "end": 17.139622641509433
+    },
+    {
+      "scene": "spectrum",
+      "text": "Together, they can look white.",
+      "gap": 0.5,
+      "index": 4,
+      "start": 17.439622641509434,
+      "end": 19.326415094339623
+    },
+    {
+      "scene": "spectrum",
+      "text": "Now follow that light into Earth's atmosphere.",
+      "gap": 0.65,
+      "index": 5,
+      "start": 19.826415094339623,
+      "end": 22.467924528301886
+    },
+    {
+      "scene": "scatter",
+      "text": "Air molecules scatter some light away from its original direction.",
+      "gap": 0.4,
+      "index": 6,
+      "start": 23.117924528301888,
+      "end": 26.891509433962266
+    },
+    {
+      "scene": "scatter",
+      "text": "Shorter wavelengths, like blue, scatter much more strongly than longer wavelengths, like red.",
+      "gap": 0.5,
+      "index": 7,
+      "start": 27.291509433962265,
+      "end": 32.197169811320755
+    },
+    {
+      "scene": "scatter",
+      "text": "This is called Rayleigh scattering.",
+      "gap": 0.65,
+      "index": 8,
+      "start": 32.697169811320755,
+      "end": 34.58396226415094
+    },
+    {
+      "scene": "scatter",
+      "text": "Blue light is redirected, not turned into red light.",
+      "gap": 0.5,
+      "index": 9,
+      "start": 35.23396226415095,
+      "end": 38.630188679245286
+    },
+    {
+      "scene": "sky",
+      "text": "Some scattered light reaches us from across the sky. That is why the daytime sky looks blue.",
+      "gap": 0.7,
+      "index": 10,
+      "start": 39.130188679245286,
+      "end": 45.54528301886793
+    },
+    {
+      "scene": "high",
+      "text": "When the Sun is high, its light takes a relatively short path through the atmosphere.",
+      "gap": 0.35,
+      "index": 11,
+      "start": 46.24528301886793,
+      "end": 51.905660377358494
+    },
+    {
+      "scene": "high",
+      "text": "Enough of the color mixture remains for the Sun to appear nearly white.",
+      "gap": 0.7,
+      "index": 12,
+      "start": 52.255660377358495,
+      "end": 57.16132075471698
+    },
+    {
+      "scene": "low",
+      "text": "As the Sun sinks toward the horizon, the path through air grows much longer.",
+      "gap": 0.4,
+      "index": 13,
+      "start": 57.861320754716985,
+      "end": 63.14433962264151
+    },
+    {
+      "scene": "low",
+      "text": "More blue light is scattered out of the direct beam.",
+      "gap": 0.45,
+      "index": 14,
+      "start": 63.544339622641516,
+      "end": 67.31792452830189
+    },
+    {
+      "scene": "low",
+      "text": "The remaining light is richer in reds and oranges.",
+      "gap": 0.75,
+      "index": 15,
+      "start": 67.76792452830189,
+      "end": 71.16415094339624
+    },
+    {
+      "scene": "listen",
+      "text": "Listen to the same idea. These tones represent colors; light itself is not making sound.",
+      "gap": 0.45,
+      "index": 16,
+      "start": 71.91415094339624,
+      "end": 77.5745283018868
+    },
+    {
+      "scene": "listen",
+      "text": "A short path keeps a fuller mix.",
+      "gap": 1.5,
+      "index": 17,
+      "start": 78.0245283018868,
+      "end": 80.66603773584907
+    },
+    {
+      "scene": "listen",
+      "text": "A long path leaves much less of the blue component.",
+      "gap": 1.7,
+      "index": 18,
+      "start": 82.16603773584907,
+      "end": 85.93962264150944
+    },
+    {
+      "scene": "conclusion",
+      "text": "Dust, haze, and clouds can change the exact colors you see.",
+      "gap": 0.35,
+      "index": 19,
+      "start": 87.63962264150945,
+      "end": 91.79056603773586
+    },
+    {
+      "scene": "conclusion",
+      "text": "But the central idea stays the same.",
+      "gap": 0.4,
+      "index": 20,
+      "start": 92.14056603773587,
+      "end": 94.78207547169814
+    },
+    {
+      "scene": "conclusion",
+      "text": "One Sun. A longer path through air. A different mix of light reaching your eyes.",
+      "gap": 1.7,
+      "index": 21,
+      "start": 95.18207547169813,
+      "end": 100.84245283018869
+    }
+  ]
+}

@@ -1,0 +1,208 @@
+{
+  "file": "quartz-growth-ko.mp4",
+  "bytes": 9752406,
+  "sha256": "d182e7e4b4e513d8dfdc7b5cccb78892bc00089164a325274acd12704cacf6c0",
+  "probe": {
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "profile": "High",
+        "codec_type": "video",
+        "codec_tag_string": "avc1",
+        "codec_tag": "0x31637661",
+        "width": 1080,
+        "height": 1920,
+        "coded_width": 1080,
+        "coded_height": 1920,
+        "closed_captions": 0,
+        "film_grain": 0,
+        "has_b_frames": 2,
+        "pix_fmt": "yuv420p",
+        "level": 40,
+        "color_range": "tv",
+        "color_space": "bt709",
+        "chroma_location": "left",
+        "field_order": "progressive",
+        "refs": 1,
+        "is_avc": "true",
+        "nal_length_size": "4",
+        "id": "0x1",
+        "r_frame_rate": "30/1",
+        "avg_frame_rate": "30/1",
+        "time_base": "1/15360",
+        "start_pts": 0,
+        "start_time": "0.000000",
+        "duration_ts": 1746944,
+        "duration": "113.733333",
+        "bit_rate": "487473",
+        "bits_per_raw_sample": "8",
+        "nb_frames": "3412",
+        "extradata_size": 50,
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "non_diegetic": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0,
+          "multilayer": 0
+        },
+        "tags": {
+          "language": "und",
+          "handler_name": "VideoHandler",
+          "vendor_id": "[0][0][0][0]",
+          "encoder": "Lavc61.19.101 libx264"
+        }
+      },
+      {
+        "index": 1,
+        "codec_name": "aac",
+        "codec_long_name": "AAC (Advanced Audio Coding)",
+        "profile": "LC",
+        "codec_type": "audio",
+        "codec_tag_string": "mp4a",
+        "codec_tag": "0x6134706d",
+        "sample_fmt": "fltp",
+        "sample_rate": "48000",
+        "channels": 2,
+        "channel_layout": "stereo",
+        "bits_per_sample": 0,
+        "initial_padding": 0,
+        "id": "0x2",
+        "r_frame_rate": "0/0",
+        "avg_frame_rate": "0/0",
+        "time_base": "1/48000",
+        "start_pts": 0,
+        "start_time": "0.000000",
+        "duration_ts": 5457600,
+        "duration": "113.700000",
+        "bit_rate": "189628",
+        "nb_frames": "5331",
+        "extradata_size": 5,
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "non_diegetic": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0,
+          "multilayer": 0
+        },
+        "tags": {
+          "language": "kor",
+          "handler_name": "SoundHandler",
+          "vendor_id": "[0][0][0][0]"
+        }
+      }
+    ],
+    "format": {
+      "filename": "quartz-growth-ko.mp4",
+      "nb_streams": 2,
+      "nb_programs": 0,
+      "nb_stream_groups": 0,
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+      "format_long_name": "QuickTime / MOV",
+      "start_time": "0.000000",
+      "duration": "113.733333",
+      "size": "9752406",
+      "bit_rate": "685984",
+      "probe_score": 100,
+      "tags": {
+        "major_brand": "isom",
+        "minor_version": "512",
+        "compatible_brands": "isomiso2avc1mp41",
+        "title": "수정은 어떻게 자랄까?",
+        "encoder": "Lavf61.7.103"
+      }
+    }
+  },
+  "audio_mastering_input": {
+    "input_i": "-17.80",
+    "input_tp": "-3.33",
+    "input_lra": "5.30",
+    "input_thresh": "-29.17",
+    "output_i": "-16.21",
+    "output_tp": "-1.88",
+    "output_lra": "5.00",
+    "output_thresh": "-27.49",
+    "normalization_type": "dynamic",
+    "target_offset": "0.21"
+  },
+  "voice": "Supertonic 3 M3",
+  "model_revision": "sherpa-onnx-supertonic-3-tts-int8-2026-05-11",
+  "verification": {
+    "full_decode": "passed",
+    "direct_listening": "not performed",
+    "physical_phone_playback": "not performed",
+    "encoded_frames": {
+      "times_seconds": [
+        3,
+        29,
+        49,
+        54.5,
+        60,
+        70,
+        77,
+        83,
+        94
+      ],
+      "visual_stream": "inspected after H.264 encoding; stream copied without re-encoding into delivery file",
+      "final_mux_frame_seconds": 54.5
+    },
+    "speech_recognition": {
+      "report": "speech-check-final.json",
+      "method": "Whisper small INT8, Korean, selected actual synthesized sentences; no forced-text prompt",
+      "limitation": "Automated transcription has errors and is not direct listening."
+    },
+    "subtitle_delivery": "Burned Korean captions; separate SRT. No duplicate selectable subtitle track."
+  },
+  "encoded_audio": {
+    "input_i": "-16.03",
+    "input_tp": "-1.55",
+    "input_lra": "5.30"
+  },
+  "structure_checks": {
+    "duration": 113.70006802721089,
+    "provisional": false,
+    "atoms": 71,
+    "tetrahedra": 19,
+    "events": 26,
+    "surfaceReaction": {
+      "conserved": {
+        "Si": 2,
+        "O": 8,
+        "H": 5
+      },
+      "siliconCoordination": 4,
+      "sharedOxygenNeighbors": 2,
+      "waterAngleDegrees": 104.49999999999999,
+      "illustrativeBridgeAngleDegrees": 144
+    }
+  }
+}

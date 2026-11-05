@@ -1,0 +1,22 @@
+{
+  "country": "South Korea",
+  "year": 2025,
+  "unit": "TWh",
+  "generation": {
+    "nuclear": 184.67,
+    "coal": 194.53,
+    "gas": 174.58,
+    "solar": 37.8,
+    "wind": 3.64,
+    "hydro": 3.8,
+    "oil": 5.95,
+    "other_renewable": 19.69
+  },
+  "total": 624.66,
+  "source_url": "https://raw.githubusercontent.com/owid/energy-data/master/owid-energy-data.csv",
+  "upstream": "OWID Energy dataset; codebook cites Ember Yearly Electricity Data (2026) and Energy Institute Statistical Review (2025)",
+  "retrieved_utc": "2026-10-17",
+  "repository_revision_observed": "f8de88a4f6f9cab44f1cf606047cbd6c4414042c",
+  "download_sha256": "266f2e2baad7975351bc9bb4aa061d22b1da9fe4c47d51d2ac6071e01e171f76",
+  "note": "Annual values only. No hourly KPX data obtained. International statistical categories may differ from KPX categories."
+}

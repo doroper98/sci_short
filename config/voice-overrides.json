@@ -1,0 +1,12 @@
+{
+  "_about": "sci_short 표준 음성에서 osint_generator 기준(voice-reference.json)과 다르게 쓰기로 한 값. 허용 키: supertonic.speed, final_fall.semitones, final_fall.span_chars, final_fall.curve",
+  "_decided": "2026-10-31 사용자 청취 결정: 속도 0.85, 문장 끝 하강 6반음, 프리셋 F4(10종 샘플 청취 후 선택)",
+  "supertonic": {
+    "voice_style": "F4",
+    "speed": 0.85
+  },
+  "final_fall": {
+    "semitones": 6.0,
+    "curve": "linear"
+  }
+}

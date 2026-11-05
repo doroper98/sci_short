@@ -1,0 +1,35 @@
+{
+  "method": "Whisper small INT8 Korean automatic transcription with silence padding; selected scientific content. This is not direct listening or a guarantee of exact pronunciation.",
+  "results": [
+    {
+      "index": 1,
+      "expected": "투명한 수정은 석영의 한 종류예요. 성분은 이산화규소죠.",
+      "recognized": "투명한 수정은 석영의 한 종류예요. 성분은 이산화 규소죠."
+    },
+    {
+      "index": 6,
+      "expected": "중성에 가까운 물에서는, 규소가 규산 같은 분자 형태로 녹아 있어요.",
+      "recognized": "중성에 가까운 물에서는 규소가 규산 같은 분자 형태로 녹아 있어요."
+    },
+    {
+      "index": 9,
+      "expected": "표면의 수산기, 즉 산소와 수소가 붙은 자리에서 결합이 바뀌는 과정을 볼게요.",
+      "recognized": "표면의 수산기, 즉 산소와 수소가 붙은 자리에서 결합이 바뀌는 과정을 볼게요."
+    },
+    {
+      "index": 10,
+      "expected": "물 분자 하나가 빠져나가면서, 규소와 규소를 잇는 산소 다리가 만들어져요.",
+      "recognized": "물 분자 하나가 빠져나가면서 규소와 규소를 잇는 산소 다리가 만들어져요."
+    },
+    {
+      "index": 12,
+      "expected": "산소 하나를 두 규소가 공유하므로, 사면체들이 삼차원으로 이어져요.",
+      "recognized": "산소 하나를 두 규소가 공유함으로 사면체들이 3천 원으로 이어져요."
+    },
+    {
+      "index": 14,
+      "expected": "결합만 있다고 결정은 아니에요. 이 배열이 멀리까지 규칙적으로 반복돼야 하죠.",
+      "recognized": "결안만 있다고 결정은 아니에요. 이 배열이 멀리까지 규칙적으로 반복되어야죠."
+    }
+  ]
+}

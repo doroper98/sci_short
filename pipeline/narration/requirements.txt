@@ -1,0 +1,23 @@
+# pipeline/narration — Python 3.13 (검증: 3.13.17, Linux x86_64, 2026-10-30)
+# 설치: python3 -m venv ~/.venv-scishort && ~/.venv-scishort/bin/pip install -r pipeline/narration/requirements.txt
+# torch/torchaudio 는 CPU 휠(약 185 MB)을 쓴다. PyPI 기본 휠은 리눅스에서 CUDA 의존성(수 GB)을 끌어온다.
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+# 합성(Supertonic 3 ONNX)
+onnxruntime==1.22.1
+numpy==2.5.4
+scipy==1.18.1
+soundfile==0.14.0
+
+# 문장 끝 억양(final_fall, WORLD). 0.3.5 는 3.13 휠이 없어 소스 빌드(C 컴파일러 필요),
+# import 때 pkg_resources 를 쓰므로 setuptools<81 이 필요하다.
+pyworld==0.3.5
+setuptools==80.10.2
+
+# 강제 정렬(MMS_FA + uroman). torchaudio 2.9 에서 forced_align 이 제거됨 → 2.8.0 고정.
+torch==2.8.0
+torchaudio==2.8.0
+uroman==1.3.1.1
+
+# 테스트
+pytest==9.2.0

@@ -1,0 +1,15 @@
+{
+  "created": "2026-10-20",
+  "title": "One Sun. Two Colors.",
+  "language": "en",
+  "renderer": "Original procedural Canvas animation, 1080x1920, 30fps",
+  "globe": "Natural Earth public-domain 110m land outlines; procedural shading and illustrative clouds",
+  "asset_sha256": {
+    "assets/land.geojson": "9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9",
+    "assets/globe.png": "09e136938ea33033e51ef54f394c638e1b0000d50f371407578b8eee0fb63cf7"
+  },
+  "model": "Illustrative Rayleigh transmission and Kasten-Young relative air mass",
+  "narration_status": "Blocked pending Hugging Face network access or user-authorized alternative voice",
+  "intended_voice": "Supertonic 3 M3, speed .95, 16 steps, English",
+  "audio": "Original synthesized ambient score plus model-driven explanatory sonification"
+}

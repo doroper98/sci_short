@@ -1,0 +1,12 @@
+{
+  "name": "scishort-render",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Reusable 1080x1920 canvas rendering toolkit for Korean science shorts",
+  "main": "index.mjs",
+  "exports": {".": "./index.mjs"},
+  "engines": {"node": ">=22"},
+  "dependencies": {"@napi-rs/canvas": "1.0.11"},
+  "scripts": {"test": "node --test tests/test_*.mjs"}
+}

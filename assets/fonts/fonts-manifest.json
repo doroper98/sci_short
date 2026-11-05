@@ -1,0 +1,72 @@
+{
+  "fetched_at": "2026-10-30T13:40:27+00:00",
+  "fonts": [
+    {
+      "file": "GmarketSansBold.otf",
+      "url": "https://raw.githubusercontent.com/projectnoonnu/noonfonts_2001/master/GmarketSansBold.woff",
+      "family": "GmarketSans",
+      "weight": 700,
+      "licence": "Gmarket free font (free for personal/commercial use; check terms before redistribution)",
+      "source_bytes": 629668,
+      "source_sha256": "c9f30fc9cb858a716c07da51c5817e90c27bd7387016a2047a8b02b02fb4040d",
+      "sha256": "6d1c043916f5f6021c3be6cfd47a29f0ee17feae16915225051745cf7e34141e"
+    },
+    {
+      "file": "GmarketSansMedium.otf",
+      "url": "https://raw.githubusercontent.com/projectnoonnu/noonfonts_2001/master/GmarketSansMedium.woff",
+      "family": "GmarketSans",
+      "weight": 500,
+      "licence": "Gmarket free font (free for personal/commercial use; check terms before redistribution)",
+      "source_bytes": 610480,
+      "source_sha256": "747b8386133b10bffede3cedeb994fc681ad9dc424879a248d7cadf6749b2f97",
+      "sha256": "8a7c33f6170e5c58bfefa134c1fd8f8f3746ca3bd06fc4876eb92eaa1802e904"
+    },
+    {
+      "file": "GmarketSansLight.otf",
+      "url": "https://raw.githubusercontent.com/projectnoonnu/noonfonts_2001/master/GmarketSansLight.woff",
+      "family": "GmarketSans",
+      "weight": 300,
+      "licence": "Gmarket free font (free for personal/commercial use; check terms before redistribution)",
+      "source_bytes": 559744,
+      "source_sha256": "35dbd7fb0ee986ebaefae727cab6c12b35782ea1663e79f3db7f8f145ca5e82d",
+      "sha256": "8b077a2a002ba81d7f63a7f2b409369a06407ce778dbcdd0b01482e6cd6847dd"
+    },
+    {
+      "file": "NotoSansKR[wght].ttf",
+      "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/notosanskr/NotoSansKR%5Bwght%5D.ttf",
+      "family": "Noto Sans KR",
+      "weight": "100-900 (variable)",
+      "licence": "SIL Open Font License 1.1",
+      "source_bytes": 10414588,
+      "source_sha256": "194018e6b2b293a7964f037b25c0249ce1418bc9ab3c971060a03aa57861e252",
+      "sha256": "194018e6b2b293a7964f037b25c0249ce1418bc9ab3c971060a03aa57861e252"
+    },
+    {
+      "file": "NotoSansKR-Regular.ttf",
+      "derived_from": "NotoSansKR[wght].ttf",
+      "method": "fontTools instancer wght=400",
+      "family": "Noto Sans KR",
+      "weight": 400,
+      "licence": "SIL Open Font License 1.1",
+      "sha256": "9567326296925de2d6cba8e425ff01c96d53109159ea10651d986448c8fe7c25"
+    },
+    {
+      "file": "NotoSansKR-Medium.ttf",
+      "derived_from": "NotoSansKR[wght].ttf",
+      "method": "fontTools instancer wght=500",
+      "family": "Noto Sans KR",
+      "weight": 500,
+      "licence": "SIL Open Font License 1.1",
+      "sha256": "45157b545cb5920f12cd69de943f0a676aa2c50eef29d23084ab1cae44ea5f35"
+    },
+    {
+      "file": "NotoSansKR-Bold.ttf",
+      "derived_from": "NotoSansKR[wght].ttf",
+      "method": "fontTools instancer wght=700",
+      "family": "Noto Sans KR",
+      "weight": 700,
+      "licence": "SIL Open Font License 1.1",
+      "sha256": "66cfe52d7c3edb1c63c8de5e602968010adf3b8d699fdcbe3628af887907faaf"
+    }
+  ]
+}
