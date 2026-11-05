@@ -1,44 +1,4489 @@
 {
   "version": 1,
-  "notes": "설명용 합성음입니다(녹음 아님). 각 사건은 scenes.mjs의 ctx.events와 같은 시각을 씁니다. at 문법은 pipeline/README.md 참고.",
+  "notes": "설명용 합성음입니다(녹음 아님). 배경음악·배경음 없음. 모든 사건은 `node episodes/cold-vaccine/scenes.mjs --emit-sound`가 scenes.mjs의 같은 모형과 시간 계획(형마다의 겉모양 벡터와 맞물림 fit, 감기 바이러스 202개의 등장 순서, 169칸 격자, 온도별 배가 시간, 주사 항체의 핏속 100 : 점막 겉면 3, 독감 형의 색 변화와 2월 갱신, 저울의 감쇠 진동, 2016년 원숭이 두 마리의 41·45 → 49 / 50, 항생제 충돌과 세균 파열, 손 씻기의 지수 제거 시각)에서 써 넣습니다. 대응: 맞물림(fit ≥ 0.5) → 낮은 \"딸깍\"(247 Hz 틱 + 110·165 Hz 화음), 안 맞음 → 둔한 \"툭\"(70 Hz), 세는 것 → 작은 틱(10·13·5개마다), 증식 → 음높이 80 + 36·log2(N) Hz, 항체 수 → 110·2^(n/50) Hz, 저울 기울기 → 음높이, 물 → 낮은 잡음, 세균 파열 → 낮은 펑, 바이러스 쪽 → 무음. 모든 음은 700 Hz 아래. 타임라인이 바뀌면 다시 실행하세요. 패닝 없음(모노 안전).",
   "events": [
     {
-      "id": "bond",
-      "at": {
-        "sentence": "s03",
-        "word": "수소 결합"
-      },
-      "kind": "tick",
+      "id": "syringe_glide",
+      "at": 1.75,
+      "kind": "whoosh",
       "params": {
-        "freq": 1760,
-        "gain_db": -20,
-        "decay": 0.12,
-        "repeat": 3,
-        "interval": 0.09
+        "dur": 0.873,
+        "f_start": 90,
+        "f_end": 220,
+        "q": 1.6,
+        "gain_db": -33
       },
-      "means": "수소 결합이 이어지는 순간 — 화면의 결합선 번쩍임과 같은 시각"
+      "means": "포스터의 주사기가 \"독감 예방 주사\" 칸으로 옮겨 감",
+      "model": {
+        "sig": "21.9350@172.058/K73/8.506,10.114,8.303,8.994,10.338/80.563,80.863,81.163,81.463,81.763/122.322/151.135/2.0480"
+      }
     },
     {
-      "id": "float",
-      "at": [
-        "s05",
-        0.15
-      ],
+      "id": "flu_ok",
+      "at": 2.623,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.16,
+        "gain_db": -31,
+        "click": 0
+      },
+      "means": "독감 예방 주사 \"있음\""
+    },
+    {
+      "id": "cold_card",
+      "at": 3.354,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.12,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"감기 예방 주사\" 칸 (점선 주사기)"
+    },
+    {
+      "id": "why_mark",
+      "at": 4.826,
+      "kind": "tick",
+      "params": {
+        "freq": 165,
+        "decay": 0.14,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"?\" 표시"
+    },
+    {
+      "id": "colds",
+      "at": 8.3025,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.2035,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0.2035,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.6919,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0.6919,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.8112,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 1.8112,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 2.035,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 2.035,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          }
+        ]
+      },
+      "means": "예시 두 해: 커서가 감기에 걸린 달을 지날 때마다 툭 (2 · 3번)"
+    },
+    {
+      "id": "none",
+      "at": 12.502,
+      "kind": "custom",
+      "params": {
+        "gain_db": -29,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          }
+        ]
+      },
+      "means": "\"아직 없음\""
+    },
+    {
+      "id": "hanja",
+      "at": 15.463,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.14,
+        "gain_db": -32,
+        "click": 0
+      },
+      "means": "感 · 氣 두 글자가 맞붙음"
+    },
+    {
+      "id": "korea",
+      "at": 16.324,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.12,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"우리나라에서 만든 한자말\""
+    },
+    {
+      "id": "ko_bul",
+      "at": 19.497,
+      "kind": "custom",
+      "params": {
+        "gain_db": -32,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 110,
+              "decay": 0.12,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.46,
+            "params": {
+              "freq": 131,
+              "decay": 0.12,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "\"고 = 코\", \"블 = 불\" 차례로"
+    },
+    {
+      "id": "gotbul",
+      "at": 20.928,
+      "kind": "tick",
+      "params": {
+        "freq": 165,
+        "decay": 0.1,
+        "gain_db": -31,
+        "click": 0
+      },
+      "means": "고 + ㅅ + 블 → \"곳블\"로 합쳐짐"
+    },
+    {
+      "id": "goppul",
+      "at": 21.309,
       "kind": "swell",
       "params": {
-        "freqs": [
-          220,
-          330,
-          440
-        ],
-        "dur": 1.6,
-        "gain_db": -24
+        "freqs": [110, 165],
+        "dur": 1.3,
+        "attack": 0.4,
+        "gain_db": -32,
+        "cutoff": 700
       },
-      "means": "얼음이 떠오르는 결론 — 화면의 수면 고리와 같은 시각"
+      "means": "\"고뿔\""
+    },
+    {
+      "id": "vaccine_word",
+      "at": 23.608,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.12,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"vaccine\""
+    },
+    {
+      "id": "cow",
+      "at": 25.26,
+      "kind": "tick",
+      "params": {
+        "freq": 98,
+        "decay": 0.18,
+        "gain_db": -32,
+        "click": 0
+      },
+      "means": "소 그림"
+    },
+    {
+      "id": "vacca",
+      "at": 26.713,
+      "kind": "whoosh",
+      "params": {
+        "dur": 1.021,
+        "f_start": 110,
+        "f_end": 260,
+        "q": 1.6,
+        "gain_db": -33
+      },
+      "means": "vacca의 글자 v-a-c-c가 vaccine으로 올라감"
+    },
+    {
+      "id": "jenner",
+      "at": 28.075,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.12,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"1796 · 제너\" 카드"
+    },
+    {
+      "id": "cowpox",
+      "at": 29.167,
+      "kind": "whoosh",
+      "params": {
+        "dur": 0.851,
+        "f_start": 120,
+        "f_end": 240,
+        "q": 1.6,
+        "gain_db": -33
+      },
+      "means": "우두 입자가 소에서 사람에게로 옮겨 감"
+    },
+    {
+      "id": "smallpox_block",
+      "at": 30.509,
+      "kind": "custom",
+      "params": {
+        "gain_db": -29,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 247,
+              "decay": 0.035,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 110,
+              "dur": 0.55,
+              "harmonics": [1, 0.3],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -7,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 165,
+              "dur": 0.55,
+              "harmonics": [1, 0.2],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -9,
+              "wave": "sine"
+            }
+          }
+        ]
+      },
+      "means": "천연두 입자가 방패에 막힘 (막음 = 딸깍)"
+    },
+    {
+      "id": "trial_card",
+      "at": 33.501,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.12,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"1960~70년대 시험\" 표식"
+    },
+    {
+      "id": "vial5",
+      "at": 36.117,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.12,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "RV13 백신 병"
+    },
+    {
+      "id": "lock5",
+      "at": 38.061,
+      "kind": "custom",
+      "params": {
+        "gain_db": -29,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 247,
+              "decay": 0.035,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 110,
+              "dur": 0.55,
+              "harmonics": [1, 0.3],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -7,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 165,
+              "dur": 0.55,
+              "harmonics": [1, 0.2],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -9,
+              "wave": "sine"
+            }
+          }
+        ]
+      },
+      "means": "RV13에 맞춘 항체가 RV13에 맞물림 (맞물림 1.00 → 딸깍)"
+    },
+    {
+      "id": "tap5",
+      "at": 38.803,
+      "kind": "custom",
+      "params": {
+        "gain_db": -27,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          }
+        ]
+      },
+      "means": "같은 항체가 다른 형(B16)에 닿았다가 튕겨 나감 (맞물림 0.000 → 툭)"
+    },
+    {
+      "id": "dock5",
+      "at": 39.685,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 62,
+              "dur": 0.6,
+              "harmonics": [1, 0.35],
+              "attack": 0.006,
+              "decay": 0.2,
+              "release": 0.2,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.3,
+              "low": 40,
+              "high": 220,
+              "release": 0.22,
+              "gain_db": -9
+            }
+          }
+        ]
+      },
+      "means": "다른 형이 세포의 수용체에 붙음 (통과)"
+    },
+    {
+      "id": "loop_hi",
+      "at": 43.65,
+      "kind": "tick",
+      "params": {
+        "freq": 165,
+        "decay": 0.12,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "겉면의 고리 하나를 표시"
+    },
+    {
+      "id": "vac_show",
+      "at": 44.471,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.14,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"백신: 겉모양만 보여 줌\" (바이러스가 회색으로)"
+    },
+    {
+      "id": "fit6",
+      "at": 45.652,
+      "kind": "chirp",
+      "params": {
+        "gain_db": -32,
+        "harmonics": [1, 0.25],
+        "fade": 0.03,
+        "points": [
+          [0, 98, 0],
+          [0.03, 98, 0.0194],
+          [0.06, 98, 0.0691],
+          [0.09, 98, 0.1361],
+          [0.12, 98, 0.2074],
+          [0.15, 98, 0.27],
+          [0.18, 98, 0.311],
+          [0.21, 98, 0.32],
+          [0.63, 98, 0.32],
+          [0.66, 98.01, 0.32],
+          [0.69, 98.02, 0.32],
+          [0.72, 98.04, 0.32],
+          [0.75, 98.1, 0.32],
+          [0.78, 98.26, 0.32],
+          [0.81, 98.66, 0.32],
+          [0.84, 99.63, 0.32],
+          [0.87, 101.5, 0.32],
+          [0.9, 104.63, 0.32],
+          [0.93, 109.3, 0.32],
+          [0.96, 115.63, 0.32],
+          [0.99, 123.48, 0.32],
+          [1.02, 132.52, 0.32],
+          [1.05, 142.23, 0.32],
+          [1.08, 151.99, 0.32],
+          [1.11, 161.24, 0.32],
+          [1.14, 169.51, 0.32],
+          [1.17, 176.53, 0.32],
+          [1.2, 182.2, 0.32],
+          [1.23, 186.58, 0.32],
+          [1.26, 189.82, 0.32],
+          [1.29, 192.11, 0.32],
+          [1.32, 193.66, 0.32],
+          [1.35, 194.67, 0.32],
+          [1.38, 195.29, 0.32],
+          [1.41, 195.64, 0.32],
+          [1.44, 195.84, 0.32],
+          [1.47, 195.94, 0.32],
+          [1.5, 195.98, 0.32],
+          [1.53, 195.99, 0.32],
+          [1.56, 196, 0.32],
+          [1.59, 196, 0.32],
+          [1.62, 196, 0.2254],
+          [1.65, 196, 0]
+        ]
+      },
+      "means": "항체 끝 모양이 고리에 맞아 갈수록 음이 올라감: 맞물림 0% → 100% = 98 → 196 Hz (화면의 \"맞물림\" 값과 같은 fit)"
+    },
+    {
+      "id": "lock6",
+      "at": 47.304,
+      "kind": "custom",
+      "params": {
+        "gain_db": -29,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 247,
+              "decay": 0.035,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 110,
+              "dur": 0.55,
+              "harmonics": [1, 0.3],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -7,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 165,
+              "dur": 0.55,
+              "harmonics": [1, 0.2],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -9,
+              "wave": "sine"
+            }
+          }
+        ]
+      },
+      "means": "항체 끝이 고리에 꼭 맞물림 (맞물림 100% → 딸깍)"
+    },
+    {
+      "id": "copies",
+      "at": 47.915,
+      "kind": "custom",
+      "params": {
+        "gain_db": -34,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 110,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.2194,
+            "params": {
+              "freq": 123,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.4388,
+            "params": {
+              "freq": 139,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.6583,
+            "params": {
+              "freq": 147,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.8777,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.0971,
+            "params": {
+              "freq": 185,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "같은 항체가 1 → 2 → 4 → … → 32개로 늘어날 때마다"
+    },
+    {
+      "id": "lock7",
+      "at": 53.019,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 247,
+              "decay": 0.035,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 110,
+              "dur": 0.55,
+              "harmonics": [1, 0.3],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -7,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 165,
+              "dur": 0.55,
+              "harmonics": [1, 0.2],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -9,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.16,
+            "params": {
+              "freq": 247,
+              "decay": 0.035,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.16,
+            "params": {
+              "freq": 110,
+              "dur": 0.55,
+              "harmonics": [1, 0.3],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -7,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.16,
+            "params": {
+              "freq": 165,
+              "dur": 0.55,
+              "harmonics": [1, 0.2],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -9,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.32,
+            "params": {
+              "freq": 247,
+              "decay": 0.035,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.32,
+            "params": {
+              "freq": 110,
+              "dur": 0.55,
+              "harmonics": [1, 0.3],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -7,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.32,
+            "params": {
+              "freq": 165,
+              "dur": 0.55,
+              "harmonics": [1, 0.2],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -9,
+              "wave": "sine"
+            }
+          }
+        ]
+      },
+      "means": "오른쪽 칸: 항체 셋이 바이러스 겉면에 차례로 맞물림 (딸깍 ×3)"
+    },
+    {
+      "id": "dock7",
+      "at": 55.08,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 62,
+              "dur": 0.6,
+              "harmonics": [1, 0.35],
+              "attack": 0.006,
+              "decay": 0.2,
+              "release": 0.2,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.3,
+              "low": 40,
+              "high": 220,
+              "release": 0.22,
+              "gain_db": -9
+            }
+          }
+        ]
+      },
+      "means": "왼쪽 칸(항체 없음): 바이러스가 수용체에 붙음"
+    },
+    {
+      "id": "enter7",
+      "at": 55.44,
+      "kind": "whoosh",
+      "params": {
+        "dur": 0.8,
+        "f_start": 200,
+        "f_end": 70,
+        "q": 1.6,
+        "gain_db": -32
+      },
+      "means": "왼쪽 칸: 바이러스가 세포 안으로 들어감"
+    },
+    {
+      "id": "bump7",
+      "at": 55.87,
+      "kind": "custom",
+      "params": {
+        "gain_db": -27,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          }
+        ]
+      },
+      "means": "오른쪽 칸: 항체로 덮인 바이러스가 수용체에 닿지 못하고 튕김 (툭)"
+    },
+    {
+      "id": "strike8",
+      "at": 61.08,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.12,
+        "gain_db": -32,
+        "click": 0
+      },
+      "means": "\"병 하나?\"에 줄"
+    },
+    {
+      "id": "bloom",
+      "at": 61.9102,
+      "kind": "custom",
+      "params": {
+        "gain_db": -36,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.159,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.3053,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.4441,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.5776,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.707,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.8456,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.9687,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.0896,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.2085,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.3256,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.4411,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.5552,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.668,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.7795,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.89,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.9994,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2.1079,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2.2154,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2.3221,
+            "params": {
+              "freq": 175,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "감기 바이러스 202가지가 화면을 채움: 10개 나타날 때마다 작은 틱"
+    },
+    {
+      "id": "bundle",
+      "at": 64.494,
+      "kind": "swell",
+      "params": {
+        "freqs": [110, 165, 220],
+        "dur": 1.5,
+        "attack": 0.4,
+        "gain_db": -32,
+        "cutoff": 700
+      },
+      "means": "\"감기 = 비슷한 증상의 묶음\" 상자"
+    },
+    {
+      "id": "common",
+      "at": 67.869,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.12,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"가장 흔한 범인 · 리노바이러스\""
+    },
+    {
+      "id": "grid_fill",
+      "at": 69.1489,
+      "kind": "custom",
+      "params": {
+        "gain_db": -35,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 196,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.2588,
+            "params": {
+              "freq": 196,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.5175,
+            "params": {
+              "freq": 196,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.7763,
+            "params": {
+              "freq": 196,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.035,
+            "params": {
+              "freq": 196,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.2938,
+            "params": {
+              "freq": 196,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.5526,
+            "params": {
+              "freq": 196,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.8113,
+            "params": {
+              "freq": 196,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2.0701,
+            "params": {
+              "freq": 196,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2.3289,
+            "params": {
+              "freq": 196,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2.5876,
+            "params": {
+              "freq": 196,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2.8464,
+            "params": {
+              "freq": 196,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 3.1051,
+            "params": {
+              "freq": 196,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "리노바이러스 아이콘이 169칸에 내려앉음: 한 줄(13칸)이 찰 때마다 작은 틱"
+    },
+    {
+      "id": "rhino_card",
+      "at": 72.785,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.12,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"rhino- = 코\" 카드"
+    },
+    {
+      "id": "nose_card",
+      "at": 74.116,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.12,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"rhinoceros 코뿔소 = 코 + 뿔\""
+    },
+    {
+      "id": "cycle",
+      "at": 76.259,
+      "kind": "custom",
+      "params": {
+        "gain_db": -35,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 131,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.42,
+            "params": {
+              "freq": 131,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.84,
+            "params": {
+              "freq": 131,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.26,
+            "params": {
+              "freq": 131,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.68,
+            "params": {
+              "freq": 131,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2.1,
+            "params": {
+              "freq": 131,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "형마다 다른 겉면 고리 (모양이 바뀔 때마다)"
+    },
+    {
+      "id": "lock10",
+      "at": 79.642,
+      "kind": "custom",
+      "params": {
+        "gain_db": -29,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 247,
+              "decay": 0.035,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 110,
+              "dur": 0.55,
+              "harmonics": [1, 0.3],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -7,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 165,
+              "dur": 0.55,
+              "harmonics": [1, 0.2],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -9,
+              "wave": "sine"
+            }
+          }
+        ]
+      },
+      "means": "A74 항체가 A74에 맞물림 (딸깍) → \"이 항체가 막는 형 1 / 169\""
+    },
+    {
+      "id": "probes",
+      "at": 80.563,
+      "kind": "custom",
+      "params": {
+        "gain_db": -27,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.3,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0.3,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.6,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0.6,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.9,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0.9,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.2,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 1.2,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          }
+        ]
+      },
+      "means": "같은 항체를 다른 형 B17 · B13 · C20 · C14 · C47에 대 봄 → 모두 툭 (맞물림 0% · 0% · 0% · 0% · 0%)"
+    },
+    {
+      "id": "sweep",
+      "at": 82.105,
+      "kind": "custom",
+      "params": {
+        "gain_db": -36,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 147,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.0851,
+            "params": {
+              "freq": 147,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.1702,
+            "params": {
+              "freq": 147,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.2554,
+            "params": {
+              "freq": 147,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.3405,
+            "params": {
+              "freq": 147,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.4256,
+            "params": {
+              "freq": 147,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.5107,
+            "params": {
+              "freq": 147,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.5958,
+            "params": {
+              "freq": 147,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.681,
+            "params": {
+              "freq": 147,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.7661,
+            "params": {
+              "freq": 147,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.8512,
+            "params": {
+              "freq": 147,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.9363,
+            "params": {
+              "freq": 147,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.0214,
+            "params": {
+              "freq": 147,
+              "decay": 0.04,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "169가지 모두에 대 보기: 한 줄씩 훑을 때마다 작은 틱"
+    },
+    {
+      "id": "sweep_hit",
+      "at": 82.583,
+      "kind": "custom",
+      "params": {
+        "gain_db": -31,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 247,
+              "decay": 0.035,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 110,
+              "dur": 0.55,
+              "harmonics": [1, 0.3],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -7,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 165,
+              "dur": 0.55,
+              "harmonics": [1, 0.2],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -9,
+              "wave": "sine"
+            }
+          }
+        ]
+      },
+      "means": "훑는 중 맞는 형은 A74 하나뿐 (딸깍)"
+    },
+    {
+      "id": "one_of_169",
+      "at": 83.255,
+      "kind": "swell",
+      "params": {
+        "freqs": [98, 147],
+        "dur": 1.4,
+        "attack": 0.4,
+        "gain_db": -33,
+        "cutoff": 700
+      },
+      "means": "\"1 / 169\""
+    },
+    {
+      "id": "infect",
+      "at": 84.483,
+      "kind": "custom",
+      "params": {
+        "gain_db": -27,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          }
+        ]
+      },
+      "means": "1번째 감기: A74에 걸림 (툭)"
+    },
+    {
+      "id": "immune",
+      "at": 85.074,
+      "kind": "custom",
+      "params": {
+        "gain_db": -29,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 247,
+              "decay": 0.035,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 110,
+              "dur": 0.55,
+              "harmonics": [1, 0.3],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -7,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 165,
+              "dur": 0.55,
+              "harmonics": [1, 0.2],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -9,
+              "wave": "sine"
+            }
+          }
+        ]
+      },
+      "means": "A74에 대한 면역 생김 (딸깍 · 방패)"
+    },
+    {
+      "id": "other11",
+      "at": 86.087,
+      "kind": "custom",
+      "params": {
+        "gain_db": -27,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          }
+        ]
+      },
+      "means": "2번째 감기: 다른 형 C38 — 면역이 맞지 않음 (툭)"
+    },
+    {
+      "id": "pass11",
+      "at": 87.16,
+      "kind": "custom",
+      "params": {
+        "gain_db": -31,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 62,
+              "dur": 0.6,
+              "harmonics": [1, 0.35],
+              "attack": 0.006,
+              "decay": 0.2,
+              "release": 0.2,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.3,
+              "low": 40,
+              "high": 220,
+              "release": 0.22,
+              "gain_db": -9
+            }
+          }
+        ]
+      },
+      "means": "\"막지 못함 · 또 감기\""
+    },
+    {
+      "id": "therm",
+      "at": 91.626,
+      "kind": "whoosh",
+      "params": {
+        "dur": 1.653,
+        "f_start": 180,
+        "f_end": 100,
+        "q": 1.6,
+        "gain_db": -34
+      },
+      "means": "콧속 온도계가 37 → 33 °C로 내려감"
+    },
+    {
+      "id": "grow33",
+      "at": 93.942,
+      "kind": "chirp",
+      "params": {
+        "gain_db": -33,
+        "harmonics": [1, 0.3],
+        "fade": 0.03,
+        "points": [
+          [0, 80, 0],
+          [0.03, 81.54, 0.0207],
+          [0.06, 83.09, 0.0734],
+          [0.09, 84.63, 0.1446],
+          [0.12, 86.17, 0.2203],
+          [0.15, 87.71, 0.2869],
+          [0.18, 89.26, 0.3305],
+          [0.21, 90.8, 0.34],
+          [0.24, 92.34, 0.34],
+          [0.27, 93.89, 0.34],
+          [0.3, 95.43, 0.34],
+          [0.33, 96.97, 0.34],
+          [0.36, 98.51, 0.34],
+          [0.39, 100.06, 0.34],
+          [0.42, 101.6, 0.34],
+          [0.45, 103.14, 0.34],
+          [0.48, 104.69, 0.34],
+          [0.51, 106.23, 0.34],
+          [0.54, 107.77, 0.34],
+          [0.57, 109.31, 0.34],
+          [0.6, 110.86, 0.34],
+          [0.63, 112.4, 0.34],
+          [0.66, 113.94, 0.34],
+          [0.69, 115.49, 0.34],
+          [0.72, 117.03, 0.34],
+          [0.75, 118.57, 0.34],
+          [0.78, 120.11, 0.34],
+          [0.81, 121.66, 0.34],
+          [0.84, 123.2, 0.34],
+          [0.87, 124.74, 0.34],
+          [0.9, 126.29, 0.34],
+          [0.93, 127.83, 0.34],
+          [0.96, 129.37, 0.34],
+          [0.99, 130.91, 0.34],
+          [1.02, 132.46, 0.34],
+          [1.05, 134, 0.34],
+          [1.08, 135.54, 0.34],
+          [1.11, 137.09, 0.34],
+          [1.14, 138.63, 0.34],
+          [1.17, 140.17, 0.34],
+          [1.2, 141.71, 0.34],
+          [1.23, 143.26, 0.34],
+          [1.26, 144.8, 0.34],
+          [1.29, 146.34, 0.34],
+          [1.32, 147.89, 0.34],
+          [1.35, 149.43, 0.34],
+          [1.38, 150.97, 0.34],
+          [1.41, 152.51, 0.34],
+          [1.44, 154.06, 0.34],
+          [1.47, 155.6, 0.34],
+          [1.5, 157.14, 0.34],
+          [1.53, 158.69, 0.34],
+          [1.56, 160.23, 0.34],
+          [1.59, 161.77, 0.34],
+          [1.62, 163.31, 0.34],
+          [1.65, 164.86, 0.34],
+          [1.68, 166.4, 0.34],
+          [1.71, 167.94, 0.34],
+          [1.74, 169.49, 0.34],
+          [1.77, 171.03, 0.34],
+          [1.8, 172.57, 0.34],
+          [1.83, 174.11, 0.34],
+          [1.86, 175.66, 0.34],
+          [1.89, 177.2, 0.34],
+          [1.92, 178.74, 0.34],
+          [1.95, 180.29, 0.34],
+          [1.98, 181.83, 0.34],
+          [2.01, 183.37, 0.34],
+          [2.04, 184.91, 0.34],
+          [2.07, 186.46, 0.34],
+          [2.1, 188, 0.34],
+          [2.13, 189.54, 0.34],
+          [2.16, 191.09, 0.34],
+          [2.19, 192.63, 0.34],
+          [2.22, 194.17, 0.34],
+          [2.25, 195.71, 0.34],
+          [2.28, 197.26, 0.34],
+          [2.31, 198.8, 0.34],
+          [2.34, 200.34, 0.34],
+          [2.37, 201.89, 0.34],
+          [2.4, 203.43, 0.34],
+          [2.43, 204.97, 0.34],
+          [2.46, 206.51, 0.34],
+          [2.49, 208.06, 0.34],
+          [2.52, 209.6, 0.34],
+          [2.55, 211.14, 0.34],
+          [2.58, 212.69, 0.34],
+          [2.61, 214.23, 0.34],
+          [2.64, 215.77, 0.34],
+          [2.67, 217.31, 0.34],
+          [2.7, 218.86, 0.34],
+          [2.73, 220.4, 0.34],
+          [2.76, 221.94, 0.34],
+          [2.79, 223.49, 0.34],
+          [2.82, 225.03, 0.34],
+          [2.85, 226.57, 0.34],
+          [2.88, 228.11, 0.34],
+          [2.91, 229.66, 0.34],
+          [2.94, 231.2, 0.34],
+          [2.97, 232.74, 0.34],
+          [3, 234.29, 0.34],
+          [3.03, 235.83, 0.34],
+          [3.06, 237.37, 0.34],
+          [3.09, 238.91, 0.34],
+          [3.12, 240.46, 0.34],
+          [3.15, 242, 0.34],
+          [3.18, 243.54, 0.34],
+          [3.21, 245.09, 0.34],
+          [3.24, 246.63, 0.34],
+          [3.27, 248.17, 0.34],
+          [3.3, 249.71, 0.34],
+          [3.33, 251.26, 0.34],
+          [3.36, 252.8, 0.34],
+          [3.39, 254.34, 0.34],
+          [3.42, 255.89, 0.34],
+          [3.45, 257.43, 0.34],
+          [3.48, 258.97, 0.34],
+          [3.51, 260.51, 0.34],
+          [3.54, 262.06, 0.34],
+          [3.57, 263.6, 0.34],
+          [3.6, 265.14, 0.34],
+          [3.63, 266.69, 0.34],
+          [3.66, 268.23, 0.34],
+          [3.69, 269.77, 0.34],
+          [3.72, 271.31, 0.34],
+          [3.75, 272.86, 0.34],
+          [3.78, 274.4, 0.34],
+          [3.81, 275.94, 0.34],
+          [3.84, 277.49, 0.34],
+          [3.87, 279.03, 0.34],
+          [3.9, 280.57, 0.34],
+          [3.93, 282.11, 0.34],
+          [3.96, 283.66, 0.34],
+          [3.99, 285.2, 0.34],
+          [4.02, 286.74, 0.34],
+          [4.05, 288.29, 0.34],
+          [4.08, 289.83, 0.34],
+          [4.11, 291.37, 0.34],
+          [4.14, 292.91, 0.34],
+          [4.17, 294.46, 0.34],
+          [4.2, 296, 0.34],
+          [4.23, 297.54, 0.34],
+          [4.26, 298.06, 0.3357],
+          [4.29, 298.06, 0.3148],
+          [4.32, 298.06, 0.2804],
+          [4.35, 298.06, 0.2364],
+          [4.38, 298.06, 0.187],
+          [4.41, 298.06, 0.1362],
+          [4.44, 298.06, 0.0881],
+          [4.47, 298.06, 0.0469],
+          [4.5, 298.06, 0.0165],
+          [4.53, 298.06, 0]
+        ]
+      },
+      "means": "33 °C(콧속) 바이러스 수 → 음높이 80 + 36·log2(N) Hz: N 1 → 66 (80 → 298 Hz) — 배가 시간 0.7 s (모형)"
+    },
+    {
+      "id": "grow37",
+      "at": 93.942,
+      "kind": "chirp",
+      "params": {
+        "gain_db": -34,
+        "harmonics": [1, 0.3],
+        "fade": 0.03,
+        "points": [
+          [0, 80, 0],
+          [0.03, 80.94, 0.0182],
+          [0.06, 81.88, 0.0648],
+          [0.09, 82.82, 0.1276],
+          [0.12, 83.76, 0.1944],
+          [0.15, 84.7, 0.2531],
+          [0.18, 85.63, 0.2916],
+          [0.21, 86.57, 0.3],
+          [0.24, 87.51, 0.3],
+          [0.27, 88.45, 0.3],
+          [0.3, 89.39, 0.3],
+          [0.33, 90.33, 0.3],
+          [0.36, 91.27, 0.3],
+          [0.39, 92.21, 0.3],
+          [0.42, 93.15, 0.3],
+          [0.45, 94.09, 0.3],
+          [0.48, 95.03, 0.3],
+          [0.51, 95.97, 0.3],
+          [0.54, 96.9, 0.3],
+          [0.57, 97.84, 0.3],
+          [0.6, 98.78, 0.3],
+          [0.63, 99.72, 0.3],
+          [0.66, 100.66, 0.3],
+          [0.69, 101.6, 0.3],
+          [0.72, 102.54, 0.3],
+          [0.75, 103.48, 0.3],
+          [0.78, 104.42, 0.3],
+          [0.81, 105.36, 0.3],
+          [0.84, 106.3, 0.3],
+          [0.87, 107.23, 0.3],
+          [0.9, 108.17, 0.3],
+          [0.93, 109.11, 0.3],
+          [0.96, 110.05, 0.3],
+          [0.99, 110.99, 0.3],
+          [1.02, 111.93, 0.3],
+          [1.05, 112.87, 0.3],
+          [1.08, 113.81, 0.3],
+          [1.11, 114.75, 0.3],
+          [1.14, 115.69, 0.3],
+          [1.17, 116.63, 0.3],
+          [1.2, 117.57, 0.3],
+          [1.23, 118.5, 0.3],
+          [1.26, 119.44, 0.3],
+          [1.29, 120.38, 0.3],
+          [1.32, 121.32, 0.3],
+          [1.35, 122.26, 0.3],
+          [1.38, 123.2, 0.3],
+          [1.41, 124.14, 0.3],
+          [1.44, 125.08, 0.3],
+          [1.47, 126.02, 0.3],
+          [1.5, 126.96, 0.3],
+          [1.53, 127.9, 0.3],
+          [1.56, 128.83, 0.3],
+          [1.59, 129.77, 0.3],
+          [1.62, 130.71, 0.3],
+          [1.65, 131.65, 0.3],
+          [1.68, 132.59, 0.3],
+          [1.71, 133.53, 0.3],
+          [1.74, 134.47, 0.3],
+          [1.77, 135.41, 0.3],
+          [1.8, 136.35, 0.3],
+          [1.83, 137.29, 0.3],
+          [1.86, 138.23, 0.3],
+          [1.89, 139.17, 0.3],
+          [1.92, 140.1, 0.3],
+          [1.95, 141.04, 0.3],
+          [1.98, 141.98, 0.3],
+          [2.01, 142.92, 0.3],
+          [2.04, 143.86, 0.3],
+          [2.07, 144.8, 0.3],
+          [2.1, 145.74, 0.3],
+          [2.13, 146.68, 0.3],
+          [2.16, 147.62, 0.3],
+          [2.19, 148.56, 0.3],
+          [2.22, 149.5, 0.3],
+          [2.25, 150.43, 0.3],
+          [2.28, 151.37, 0.3],
+          [2.31, 152.31, 0.3],
+          [2.34, 153.25, 0.3],
+          [2.37, 154.19, 0.3],
+          [2.4, 155.13, 0.3],
+          [2.43, 156.07, 0.3],
+          [2.46, 157.01, 0.3],
+          [2.49, 157.95, 0.3],
+          [2.52, 158.89, 0.3],
+          [2.55, 159.83, 0.3],
+          [2.58, 160.77, 0.3],
+          [2.61, 161.7, 0.3],
+          [2.64, 162.64, 0.3],
+          [2.67, 163.58, 0.3],
+          [2.7, 164.52, 0.3],
+          [2.73, 165.46, 0.3],
+          [2.76, 166.4, 0.3],
+          [2.79, 167.34, 0.3],
+          [2.82, 168.28, 0.3],
+          [2.85, 169.22, 0.3],
+          [2.88, 170.16, 0.3],
+          [2.91, 171.1, 0.3],
+          [2.94, 172.03, 0.3],
+          [2.97, 172.97, 0.3],
+          [3, 173.91, 0.3],
+          [3.03, 174.85, 0.3],
+          [3.06, 175.79, 0.3],
+          [3.09, 176.73, 0.3],
+          [3.12, 177.67, 0.3],
+          [3.15, 178.61, 0.3],
+          [3.18, 179.55, 0.3],
+          [3.21, 180.49, 0.3],
+          [3.24, 181.43, 0.3],
+          [3.27, 182.37, 0.3],
+          [3.3, 183.3, 0.3],
+          [3.33, 184.24, 0.3],
+          [3.36, 185.18, 0.3],
+          [3.39, 186.12, 0.3],
+          [3.42, 187.06, 0.3],
+          [3.45, 188, 0.3],
+          [3.48, 188.94, 0.3],
+          [3.51, 189.88, 0.3],
+          [3.54, 190.82, 0.3],
+          [3.57, 191.76, 0.3],
+          [3.6, 192.7, 0.3],
+          [3.63, 193.63, 0.3],
+          [3.66, 194.57, 0.3],
+          [3.69, 195.51, 0.3],
+          [3.72, 196.45, 0.3],
+          [3.75, 197.39, 0.3],
+          [3.78, 198.33, 0.3],
+          [3.81, 199.27, 0.3],
+          [3.84, 200.21, 0.3],
+          [3.87, 201.15, 0.3],
+          [3.9, 202.09, 0.3],
+          [3.93, 203.03, 0.3],
+          [3.96, 203.97, 0.3],
+          [3.99, 204.9, 0.3],
+          [4.02, 205.84, 0.3],
+          [4.05, 206.78, 0.3],
+          [4.08, 207.72, 0.3],
+          [4.11, 208.66, 0.3],
+          [4.14, 209.6, 0.3],
+          [4.17, 210.54, 0.3],
+          [4.2, 211.48, 0.3],
+          [4.23, 212.42, 0.3],
+          [4.26, 212.73, 0.2962],
+          [4.29, 212.73, 0.2778],
+          [4.32, 212.73, 0.2474],
+          [4.35, 212.73, 0.2086],
+          [4.38, 212.73, 0.165],
+          [4.41, 212.73, 0.1202],
+          [4.44, 212.73, 0.0778],
+          [4.47, 212.73, 0.0414],
+          [4.5, 212.73, 0.0146],
+          [4.53, 212.73, 0]
+        ]
+      },
+      "means": "37 °C(몸속) 같은 대응: N 1 → 12 (80 → 213 Hz) — 배가 시간 1.15 s (모형), 더 천천히 올라감"
+    },
+    {
+      "id": "mucosa",
+      "at": 96.638,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.12,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"점막 (코 · 목)\" 표시"
+    },
+    {
+      "id": "inject",
+      "at": 98.848,
+      "kind": "whoosh",
+      "params": {
+        "dur": 0.9,
+        "f_start": 80,
+        "f_end": 200,
+        "q": 1.6,
+        "gain_db": -33
+      },
+      "means": "주사기가 핏줄에 항체를 넣음"
+    },
+    {
+      "id": "blood_flow",
+      "at": 99.399,
+      "kind": "env_noise",
+      "params": {
+        "low": 50,
+        "high": 260,
+        "gain_db": -36,
+        "fade": 0.05,
+        "points": [
+          [0, 0],
+          [0.04, 0.0123],
+          [0.08, 0.0451],
+          [0.12, 0.0918],
+          [0.16, 0.1455],
+          [0.2, 0.1987],
+          [0.24, 0.2436],
+          [0.28, 0.272],
+          [0.32, 0.2791],
+          [0.36, 0.2828],
+          [0.4, 0.2864],
+          [0.44, 0.2901],
+          [0.48, 0.2937],
+          [0.52, 0.2974],
+          [0.56, 0.301],
+          [0.6, 0.3047],
+          [0.64, 0.3083],
+          [0.68, 0.3119],
+          [0.72, 0.3156],
+          [0.76, 0.3192],
+          [0.8, 0.3229],
+          [0.84, 0.3265],
+          [0.88, 0.3302],
+          [0.92, 0.3338],
+          [0.96, 0.3374],
+          [1, 0.3411],
+          [1.04, 0.3447],
+          [1.08, 0.3484],
+          [1.12, 0.352],
+          [1.16, 0.3557],
+          [1.2, 0.3593],
+          [1.24, 0.363],
+          [1.28, 0.3666],
+          [1.32, 0.3702],
+          [1.36, 0.3739],
+          [1.4, 0.3775],
+          [1.44, 0.3812],
+          [1.48, 0.3848],
+          [1.52, 0.3885],
+          [1.56, 0.3921],
+          [1.6, 0.3957],
+          [1.64, 0.3994],
+          [1.68, 0.403],
+          [1.72, 0.4067],
+          [1.76, 0.4103],
+          [1.8, 0.414],
+          [1.84, 0.4176],
+          [1.88, 0.4213],
+          [1.92, 0.4249],
+          [1.96, 0.4285],
+          [2, 0.4322],
+          [2.04, 0.4358],
+          [2.08, 0.4395],
+          [2.12, 0.4431],
+          [2.16, 0.4468],
+          [2.2, 0.4504],
+          [2.24, 0.454],
+          [2.28, 0.4577],
+          [2.32, 0.4613],
+          [2.36, 0.465],
+          [2.4, 0.4686],
+          [2.44, 0.4723],
+          [2.48, 0.4759],
+          [2.52, 0.4796],
+          [2.56, 0.4832],
+          [2.6, 0.4868],
+          [2.64, 0.4905],
+          [2.68, 0.4941],
+          [2.72, 0.4978],
+          [2.76, 0.5014],
+          [2.8, 0.5051],
+          [2.84, 0.5087],
+          [2.88, 0.5123],
+          [2.92, 0.516],
+          [2.96, 0.5196],
+          [3, 0.5233],
+          [3.04, 0.5269],
+          [3.08, 0.5306],
+          [3.12, 0.5342],
+          [3.16, 0.5379],
+          [3.2, 0.5415],
+          [3.24, 0.5451],
+          [3.28, 0.5488],
+          [3.32, 0.5524],
+          [3.36, 0.5561],
+          [3.4, 0.5597],
+          [3.44, 0.5634],
+          [3.48, 0.567],
+          [3.52, 0.5706],
+          [3.56, 0.5743],
+          [3.6, 0.5779],
+          [3.64, 0.5816],
+          [3.68, 0.5852],
+          [3.72, 0.5889],
+          [3.76, 0.5925],
+          [3.8, 0.5962],
+          [3.84, 0.5998],
+          [3.88, 0.6034],
+          [3.92, 0.6071],
+          [3.96, 0.6107],
+          [4, 0.6144],
+          [4.04, 0.618],
+          [4.08, 0.6217],
+          [4.12, 0.6253],
+          [4.16, 0.6289],
+          [4.2, 0.6326],
+          [4.24, 0.6362],
+          [4.28, 0.6399],
+          [4.32, 0.6435],
+          [4.36, 0.6472],
+          [4.4, 0.6508],
+          [4.44, 0.6545],
+          [4.48, 0.6581],
+          [4.52, 0.6617],
+          [4.56, 0.6654],
+          [4.6, 0.669],
+          [4.64, 0.6727],
+          [4.68, 0.6763],
+          [4.72, 0.68],
+          [4.76, 0.6836],
+          [4.8, 0.6872],
+          [4.84, 0.6909],
+          [4.88, 0.6945],
+          [4.92, 0.6982],
+          [4.96, 0.7],
+          [7.08, 0.7],
+          [7.12, 0.6909],
+          [7.16, 0.6477],
+          [7.2, 0.5765],
+          [7.24, 0.4859],
+          [7.28, 0.3841],
+          [7.32, 0.2796],
+          [7.36, 0.1807],
+          [7.4, 0.0959],
+          [7.44, 0.0336],
+          [7.48, 0]
+        ]
+      },
+      "means": "핏줄 속 항체의 흐름: 흐르는 항체 수(26개까지 늘어남) → 낮은 잡음 크기"
+    },
+    {
+      "id": "surface_ab",
+      "at": 102.8447,
+      "kind": "custom",
+      "params": {
+        "gain_db": -31,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 247,
+              "decay": 0.035,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 110,
+              "dur": 0.55,
+              "harmonics": [1, 0.3],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -7,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 165,
+              "dur": 0.55,
+              "harmonics": [1, 0.2],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -9,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.7937,
+            "params": {
+              "freq": 247,
+              "decay": 0.035,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.7937,
+            "params": {
+              "freq": 110,
+              "dur": 0.55,
+              "harmonics": [1, 0.3],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -7,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.7937,
+            "params": {
+              "freq": 165,
+              "dur": 0.55,
+              "harmonics": [1, 0.2],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -9,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.5873,
+            "params": {
+              "freq": 247,
+              "decay": 0.035,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.5873,
+            "params": {
+              "freq": 110,
+              "dur": 0.55,
+              "harmonics": [1, 0.3],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -7,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.5873,
+            "params": {
+              "freq": 165,
+              "dur": 0.55,
+              "harmonics": [1, 0.2],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -9,
+              "wave": "sine"
+            }
+          }
+        ]
+      },
+      "means": "점막 겉면까지 온 항체 3개가 바이러스에 맞물림 (딸깍 ×3)"
+    },
+    {
+      "id": "attach",
+      "at": 104.532,
+      "kind": "custom",
+      "params": {
+        "gain_db": -31,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.1,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0.1,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.3,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0.3,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.4,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0.4,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.6,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0.6,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.7,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0.7,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.9,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0.9,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 1,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          }
+        ]
+      },
+      "means": "항체가 닿지 않은 바이러스 8개가 세포에 붙음 (툭 ×8)"
+    },
+    {
+      "id": "flu_in",
+      "at": 107.242,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.14,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "인플루엔자 바이러스"
+    },
+    {
+      "id": "flu3",
+      "at": 112.166,
+      "kind": "custom",
+      "params": {
+        "gain_db": -32,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 131,
+              "decay": 0.12,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.17,
+            "params": {
+              "freq": 147,
+              "decay": 0.12,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.34,
+            "params": {
+              "freq": 165,
+              "decay": 0.12,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "독감 유행 형 세 칸 A(H1N1) · A(H3N2) · B"
+    },
+    {
+      "id": "cmp169",
+      "at": 112.667,
+      "kind": "tick",
+      "params": {
+        "freq": 110,
+        "decay": 0.14,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "감기(리노바이러스) 169칸"
+    },
+    {
+      "id": "feb_update",
+      "at": 114.3912,
+      "kind": "custom",
+      "params": {
+        "gain_db": -31,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 247,
+              "decay": 0.035,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 110,
+              "dur": 0.55,
+              "harmonics": [1, 0.3],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -7,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 165,
+              "dur": 0.55,
+              "harmonics": [1, 0.2],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -9,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.4645,
+            "params": {
+              "freq": 247,
+              "decay": 0.035,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.4645,
+            "params": {
+              "freq": 110,
+              "dur": 0.55,
+              "harmonics": [1, 0.3],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -7,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.4645,
+            "params": {
+              "freq": 165,
+              "dur": 0.55,
+              "harmonics": [1, 0.2],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -9,
+              "wave": "sine"
+            }
+          }
+        ]
+      },
+      "means": "해마다 2월: 백신이 그해 유행 형의 색으로 바뀜 (딸깍 ×2, 모형 두 해)"
+    },
+    {
+      "id": "benefit",
+      "at": 117.991,
+      "kind": "custom",
+      "params": {
+        "gain_db": -31,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 70,
+              "dur": 0.6,
+              "harmonics": [1, 0.35],
+              "attack": 0.006,
+              "decay": 0.2,
+              "release": 0.2,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.3,
+              "low": 40,
+              "high": 220,
+              "release": 0.22,
+              "gain_db": -9
+            }
+          }
+        ]
+      },
+      "means": "\"며칠\" 추가 왼쪽 접시에 놓임"
+    },
+    {
+      "id": "stack",
+      "at": 120.3367,
+      "kind": "custom",
+      "params": {
+        "gain_db": -35,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 175,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.142,
+            "params": {
+              "freq": 175,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.2764,
+            "params": {
+              "freq": 175,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.4061,
+            "params": {
+              "freq": 175,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.5326,
+            "params": {
+              "freq": 175,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.6565,
+            "params": {
+              "freq": 175,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.7783,
+            "params": {
+              "freq": 175,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.8984,
+            "params": {
+              "freq": 175,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.017,
+            "params": {
+              "freq": 175,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.1342,
+            "params": {
+              "freq": 175,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.2503,
+            "params": {
+              "freq": 175,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.3653,
+            "params": {
+              "freq": 175,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.4793,
+            "params": {
+              "freq": 175,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "오른쪽 접시에 169가지가 쌓임: 13개마다 작은 틱"
+    },
+    {
+      "id": "beam",
+      "at": 116.888,
+      "kind": "chirp",
+      "params": {
+        "gain_db": -34,
+        "harmonics": [1, 0.25],
+        "fade": 0.03,
+        "points": [
+          [0, 98, 0],
+          [0.03, 98, 0.0045],
+          [0.06, 98, 0.017],
+          [0.09, 98, 0.0361],
+          [0.12, 98, 0.0605],
+          [0.15, 98, 0.0886],
+          [0.18, 98, 0.1191],
+          [0.21, 98, 0.1505],
+          [0.24, 98, 0.1814],
+          [0.27, 98, 0.2105],
+          [0.3, 98, 0.2363],
+          [0.33, 98, 0.2573],
+          [0.36, 98, 0.2722],
+          [0.39, 98, 0.2795],
+          [0.42, 98, 0.28],
+          [1.08, 98, 0.28],
+          [1.11, 97.98, 0.28],
+          [1.14, 97.65, 0.28],
+          [1.17, 96.93, 0.28],
+          [1.2, 95.88, 0.28],
+          [1.23, 94.57, 0.28],
+          [1.26, 93.06, 0.28],
+          [1.29, 91.42, 0.28],
+          [1.32, 89.71, 0.28],
+          [1.35, 87.98, 0.28],
+          [1.38, 86.28, 0.28],
+          [1.41, 84.65, 0.28],
+          [1.44, 83.11, 0.28],
+          [1.47, 81.69, 0.28],
+          [1.5, 80.42, 0.28],
+          [1.53, 79.3, 0.28],
+          [1.56, 78.33, 0.28],
+          [1.59, 77.53, 0.28],
+          [1.62, 76.89, 0.28],
+          [1.65, 76.41, 0.28],
+          [1.68, 76.08, 0.28],
+          [1.71, 75.9, 0.28],
+          [1.74, 75.84, 0.28],
+          [1.77, 75.91, 0.28],
+          [1.8, 76.09, 0.28],
+          [1.83, 76.36, 0.28],
+          [1.86, 76.71, 0.28],
+          [1.89, 77.12, 0.28],
+          [1.92, 77.59, 0.28],
+          [1.95, 78.09, 0.28],
+          [1.98, 78.61, 0.28],
+          [2.01, 79.14, 0.28],
+          [2.04, 79.67, 0.28],
+          [2.07, 80.18, 0.28],
+          [2.1, 80.66, 0.28],
+          [2.13, 81.11, 0.28],
+          [2.16, 81.51, 0.28],
+          [2.19, 81.87, 0.28],
+          [2.22, 82.17, 0.28],
+          [2.25, 82.41, 0.28],
+          [2.28, 82.6, 0.28],
+          [2.31, 82.74, 0.28],
+          [2.34, 82.82, 0.28],
+          [2.37, 82.85, 0.28],
+          [2.4, 82.83, 0.28],
+          [2.43, 82.77, 0.28],
+          [2.46, 82.68, 0.28],
+          [2.49, 82.55, 0.28],
+          [2.52, 82.4, 0.28],
+          [2.55, 82.23, 0.28],
+          [2.58, 82.05, 0.28],
+          [2.61, 81.86, 0.28],
+          [2.64, 81.67, 0.28],
+          [2.67, 81.49, 0.28],
+          [2.7, 81.31, 0.28],
+          [2.73, 81.14, 0.28],
+          [2.76, 80.98, 0.28],
+          [2.79, 80.84, 0.28],
+          [2.82, 80.71, 0.28],
+          [2.85, 80.61, 0.28],
+          [2.88, 80.52, 0.28],
+          [2.91, 80.45, 0.28],
+          [2.94, 80.41, 0.28],
+          [2.97, 80.38, 0.28],
+          [3, 80.36, 0.28],
+          [3.03, 80.37, 0.28],
+          [3.06, 80.38, 0.28],
+          [3.09, 80.41, 0.28],
+          [3.12, 80.45, 0.28],
+          [3.15, 80.5, 0.28],
+          [3.18, 80.56, 0.28],
+          [3.21, 80.62, 0.28],
+          [3.24, 80.68, 0.28],
+          [3.27, 80.75, 0.28],
+          [3.3, 80.81, 0.28],
+          [3.33, 80.88, 0.28],
+          [3.36, 80.97, 0.28],
+          [3.39, 81.12, 0.28],
+          [3.42, 81.33, 0.28],
+          [3.45, 81.64, 0.28],
+          [3.48, 82.04, 0.28],
+          [3.51, 82.55, 0.28],
+          [3.54, 83.19, 0.28],
+          [3.57, 83.94, 0.28],
+          [3.6, 84.83, 0.28],
+          [3.63, 85.84, 0.28],
+          [3.66, 86.98, 0.28],
+          [3.69, 88.24, 0.28],
+          [3.72, 89.62, 0.28],
+          [3.75, 91.12, 0.28],
+          [3.78, 92.71, 0.28],
+          [3.81, 94.41, 0.28],
+          [3.84, 96.18, 0.28],
+          [3.87, 98.04, 0.28],
+          [3.9, 99.95, 0.28],
+          [3.93, 101.92, 0.28],
+          [3.96, 103.93, 0.28],
+          [3.99, 105.97, 0.28],
+          [4.02, 108.03, 0.28],
+          [4.05, 110.09, 0.28],
+          [4.08, 112.16, 0.28],
+          [4.11, 114.22, 0.28],
+          [4.14, 116.26, 0.28],
+          [4.17, 118.29, 0.28],
+          [4.2, 120.29, 0.28],
+          [4.23, 122.26, 0.28],
+          [4.26, 124.21, 0.28],
+          [4.29, 126.13, 0.28],
+          [4.32, 128.02, 0.28],
+          [4.35, 129.9, 0.28],
+          [4.38, 131.75, 0.28],
+          [4.41, 133.59, 0.28],
+          [4.44, 135.42, 0.28],
+          [4.47, 137.25, 0.28],
+          [4.5, 139.08, 0.28],
+          [4.53, 140.92, 0.28],
+          [4.56, 142.77, 0.28],
+          [4.59, 144.65, 0.28],
+          [4.62, 146.56, 0.28],
+          [4.65, 148.5, 0.28],
+          [4.68, 150.48, 0.28],
+          [4.71, 152.5, 0.28],
+          [4.74, 154.58, 0.28],
+          [4.77, 156.7, 0.28],
+          [4.8, 158.88, 0.28],
+          [4.83, 161.12, 0.28],
+          [4.86, 163.42, 0.28],
+          [4.89, 165.78, 0.28],
+          [4.92, 168.2, 0.28],
+          [4.95, 170.67, 0.28],
+          [4.98, 173.16, 0.28],
+          [5.01, 175.62, 0.28],
+          [5.04, 177.97, 0.28],
+          [5.07, 180.19, 0.28],
+          [5.1, 182.22, 0.28],
+          [5.13, 184.03, 0.28],
+          [5.16, 185.6, 0.28],
+          [5.19, 186.9, 0.28],
+          [5.22, 187.93, 0.28],
+          [5.25, 188.69, 0.28],
+          [5.28, 189.18, 0.28],
+          [5.31, 189.41, 0.28],
+          [5.34, 189.4, 0.28],
+          [5.37, 189.18, 0.28],
+          [5.4, 188.77, 0.28],
+          [5.43, 188.2, 0.28],
+          [5.46, 187.5, 0.28],
+          [5.49, 186.71, 0.28],
+          [5.52, 185.84, 0.28],
+          [5.55, 184.92, 0.28],
+          [5.58, 184, 0.28],
+          [5.61, 183.08, 0.28],
+          [5.64, 182.19, 0.28],
+          [5.67, 181.34, 0.28],
+          [5.7, 180.56, 0.28],
+          [5.73, 179.85, 0.28],
+          [5.76, 179.22, 0.28],
+          [5.79, 178.68, 0.28],
+          [5.82, 178.23, 0.28],
+          [5.85, 177.87, 0.28],
+          [5.88, 177.61, 0.28],
+          [5.91, 177.44, 0.28],
+          [5.94, 177.35, 0.28],
+          [5.97, 177.33, 0.28],
+          [6, 177.39, 0.28],
+          [6.03, 177.51, 0.28],
+          [6.06, 177.69, 0.28],
+          [6.09, 177.91, 0.28],
+          [6.12, 178.17, 0.28],
+          [6.15, 178.45, 0.28],
+          [6.18, 178.75, 0.28],
+          [6.21, 179.06, 0.28],
+          [6.24, 179.37, 0.28],
+          [6.27, 179.67, 0.28],
+          [6.3, 179.97, 0.28],
+          [6.33, 180.24, 0.28],
+          [6.36, 180.49, 0.28],
+          [6.39, 180.71, 0.28],
+          [6.42, 180.91, 0.28],
+          [6.45, 181.07, 0.28],
+          [6.48, 181.2, 0.28],
+          [6.51, 181.3, 0.28],
+          [6.54, 181.37, 0.28],
+          [6.57, 181.4, 0.28],
+          [6.6, 181.41, 0.28],
+          [6.63, 181.4, 0.28],
+          [6.66, 181.36, 0.28],
+          [6.69, 181.3, 0.28],
+          [6.72, 181.22, 0.28],
+          [6.75, 181.14, 0.28],
+          [6.78, 181.04, 0.28],
+          [6.81, 180.93, 0.28],
+          [6.84, 180.83, 0.28],
+          [6.87, 180.72, 0.28],
+          [6.9, 180.61, 0.28],
+          [6.93, 180.51, 0.28],
+          [6.96, 180.41, 0.28],
+          [6.99, 180.33, 0.28],
+          [7.02, 180.25, 0.28],
+          [7.05, 180.18, 0.28],
+          [7.08, 180.12, 0.28],
+          [7.11, 180.08, 0.28],
+          [7.14, 180.04, 0.28],
+          [7.17, 180.01, 0.28],
+          [7.2, 180, 0.28],
+          [7.23, 179.99, 0.28],
+          [7.26, 180, 0.28],
+          [7.29, 180.01, 0.28],
+          [7.32, 180.03, 0.28],
+          [7.35, 180.05, 0.28],
+          [7.38, 180.08, 0.28],
+          [7.41, 180.12, 0.28],
+          [7.44, 180.15, 0.28],
+          [7.47, 180.19, 0.28],
+          [7.5, 180.23, 0.28],
+          [7.53, 180.26, 0.28],
+          [7.56, 180.3, 0.28],
+          [7.59, 180.33, 0.28],
+          [7.62, 180.36, 0.28],
+          [7.65, 180.39, 0.28],
+          [7.68, 180.41, 0.28],
+          [7.71, 180.43, 0.28],
+          [7.74, 180.45, 0.28],
+          [7.77, 180.46, 0.28],
+          [7.8, 180.47, 0.28],
+          [7.83, 180.48, 0.28],
+          [7.92, 180.48, 0.28],
+          [7.95, 180.47, 0.28],
+          [7.98, 180.46, 0.28],
+          [8.01, 180.45, 0.28],
+          [8.04, 180.44, 0.28],
+          [8.07, 180.43, 0.28],
+          [8.1, 180.42, 0.28],
+          [8.13, 180.4, 0.28],
+          [8.16, 180.39, 0.28],
+          [8.19, 180.38, 0.28],
+          [8.22, 180.37, 0.28],
+          [8.25, 180.36, 0.28],
+          [8.28, 180.35, 0.28],
+          [8.31, 180.34, 0.28],
+          [8.34, 180.33, 0.28],
+          [8.37, 180.33, 0.28],
+          [8.4, 180.32, 0.28],
+          [8.43, 180.32, 0.28],
+          [8.46, 180.31, 0.28],
+          [8.55, 180.31, 0.28],
+          [8.58, 180.32, 0.28],
+          [8.64, 180.32, 0.28],
+          [8.67, 180.33, 0.2773],
+          [8.7, 180.33, 0.2666],
+          [8.73, 180.34, 0.2488],
+          [8.76, 180.34, 0.2256],
+          [8.79, 180.34, 0.1982],
+          [8.82, 180.35, 0.1682],
+          [8.85, 180.35, 0.1369],
+          [8.88, 180.36, 0.1057],
+          [8.91, 180.36, 0.076],
+          [8.94, 180.36, 0.0494],
+          [8.97, 180.37, 0.0271],
+          [9, 180.37, 0.0107],
+          [9.03, 180.37, 0]
+        ]
+      },
+      "means": "저울 기울기 θ → 음높이 98·2^(θ/0.2) Hz: 비용 쪽으로 기울수록 높아짐 (끝 10.1°)"
+    },
+    {
+      "id": "settle",
+      "at": 122.3225,
+      "kind": "custom",
+      "params": {
+        "gain_db": -32,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 62,
+              "dur": 0.6,
+              "harmonics": [1, 0.35],
+              "attack": 0.006,
+              "decay": 0.2,
+              "release": 0.2,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.3,
+              "low": 40,
+              "high": 220,
+              "release": 0.22,
+              "gain_db": -9
+            }
+          }
+        ]
+      },
+      "means": "저울이 비용 쪽으로 기운 채 멈춤"
+    },
+    {
+      "id": "cost_risk",
+      "at": 122.268,
+      "kind": "custom",
+      "params": {
+        "gain_db": -33,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 131,
+              "decay": 0.12,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.781,
+            "params": {
+              "freq": 110,
+              "decay": 0.12,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "\"개발 · 생산 비용\", \"드문 부작용 위험\""
+    },
+    {
+      "id": "card16",
+      "at": 126.486,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.12,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"2016 · 미국 Emory 대학 연구진\" 카드"
+    },
+    {
+      "id": "tokens",
+      "at": 129.7979,
+      "kind": "custom",
+      "params": {
+        "gain_db": -34,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 110,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.1623,
+            "params": {
+              "freq": 117.89508087899225,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.3247,
+            "params": {
+              "freq": 126.35681904967386,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.487,
+            "params": {
+              "freq": 135.4258854679408,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.6494,
+            "params": {
+              "freq": 145.14587018501837,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.8117,
+            "params": {
+              "freq": 155.56349186104046,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.9741,
+            "params": {
+              "freq": 166.72882231614378,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.1364,
+            "params": {
+              "freq": 178.6955271983718,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.2988,
+            "params": {
+              "freq": 191.52112392514732,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.4611,
+            "params": {
+              "freq": 205.26725813809762,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "50가지 형이 백신 병에 담김: 5개마다 틱 (담긴 수만큼 음이 올라감)"
+    },
+    {
+      "id": "cap",
+      "at": 131.419,
+      "kind": "custom",
+      "params": {
+        "gain_db": -32,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 247,
+              "decay": 0.035,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 110,
+              "dur": 0.55,
+              "harmonics": [1, 0.3],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -7,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 165,
+              "dur": 0.55,
+              "harmonics": [1, 0.2],
+              "attack": 0.01,
+              "decay": 0.25,
+              "sustain": 0.3,
+              "release": 0.22,
+              "gain_db": -9,
+              "wave": "sine"
+            }
+          }
+        ]
+      },
+      "means": "병뚜껑이 닫힘 = 50가 백신"
+    },
+    {
+      "id": "monkeys",
+      "at": 132.23,
+      "kind": "tick",
+      "params": {
+        "freq": 98,
+        "decay": 0.16,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "붉은털원숭이 두 마리"
+    },
+    {
+      "id": "inj16",
+      "at": 132.701,
+      "kind": "whoosh",
+      "params": {
+        "dur": 0.9,
+        "f_start": 90,
+        "f_end": 200,
+        "q": 1.6,
+        "gain_db": -33
+      },
+      "means": "두 원숭이에게 백신 접종"
+    },
+    {
+      "id": "ab_monkey1",
+      "at": 134.999,
+      "kind": "chirp",
+      "params": {
+        "gain_db": -34,
+        "harmonics": [1, 0.25],
+        "fade": 0.03,
+        "points": [
+          [0, 110, 0],
+          [0.03, 111.14, 0.0312],
+          [0.06, 112.28, 0.1056],
+          [0.09, 113.44, 0.1944],
+          [0.12, 114.61, 0.2688],
+          [0.15, 115.79, 0.3],
+          [0.18, 116.99, 0.3],
+          [0.21, 118.2, 0.3],
+          [0.24, 119.42, 0.3],
+          [0.27, 120.65, 0.3],
+          [0.3, 121.89, 0.3],
+          [0.33, 123.15, 0.3],
+          [0.36, 124.42, 0.3],
+          [0.39, 125.7, 0.3],
+          [0.42, 127, 0.3],
+          [0.45, 128.31, 0.3],
+          [0.48, 129.64, 0.3],
+          [0.51, 130.97, 0.3],
+          [0.54, 132.33, 0.3],
+          [0.57, 133.69, 0.3],
+          [0.6, 135.07, 0.3],
+          [0.63, 136.46, 0.3],
+          [0.66, 137.87, 0.3],
+          [0.69, 139.29, 0.3],
+          [0.72, 140.73, 0.3],
+          [0.75, 142.18, 0.3],
+          [0.78, 143.65, 0.3],
+          [0.81, 145.13, 0.3],
+          [0.84, 146.63, 0.3],
+          [0.87, 148.14, 0.3],
+          [0.9, 149.67, 0.3],
+          [0.93, 151.22, 0.3],
+          [0.96, 152.78, 0.3],
+          [0.99, 154.35, 0.3],
+          [1.02, 155.95, 0.3],
+          [1.05, 157.56, 0.3],
+          [1.08, 159.18, 0.3],
+          [1.11, 160.82, 0.3],
+          [1.14, 162.48, 0.3],
+          [1.17, 164.16, 0.3],
+          [1.2, 165.85, 0.3],
+          [1.23, 167.57, 0.3],
+          [1.26, 169.29, 0.3],
+          [1.29, 171.04, 0.3],
+          [1.32, 172.81, 0.3],
+          [1.35, 174.59, 0.3],
+          [1.38, 176.39, 0.3],
+          [1.41, 178.21, 0.3],
+          [1.44, 180.05, 0.3],
+          [1.47, 181.91, 0.3],
+          [1.5, 183.79, 0.3],
+          [1.53, 185.68, 0.3],
+          [1.56, 187.6, 0.3],
+          [1.59, 189.53, 0.3],
+          [1.62, 191.49, 0.3],
+          [1.65, 193.47, 0.3],
+          [1.68, 194.19, 0.3],
+          [1.92, 194.19, 0.3],
+          [1.95, 194.32, 0.3],
+          [1.98, 194.8, 0.3],
+          [2.01, 195.28, 0.3],
+          [2.04, 195.76, 0.3],
+          [2.07, 196.25, 0.3],
+          [2.1, 196.73, 0.3],
+          [2.13, 197.21, 0.3],
+          [2.16, 197.7, 0.3],
+          [2.19, 198.19, 0.3],
+          [2.22, 198.68, 0.3],
+          [2.25, 199.17, 0.3],
+          [2.28, 199.66, 0.3],
+          [2.31, 200.15, 0.3],
+          [2.34, 200.64, 0.3],
+          [2.37, 201.14, 0.3],
+          [2.4, 201.63, 0.3],
+          [2.43, 202.13, 0.3],
+          [2.46, 202.63, 0.3],
+          [2.49, 203.13, 0.3],
+          [2.52, 203.63, 0.3],
+          [2.55, 204.13, 0.3],
+          [2.58, 204.64, 0.3],
+          [2.61, 205.14, 0.3],
+          [2.64, 205.65, 0.3],
+          [2.67, 206.15, 0.3],
+          [2.7, 206.66, 0.3],
+          [2.73, 207.17, 0.3],
+          [2.76, 207.68, 0.3],
+          [2.79, 208.19, 0.3],
+          [2.82, 208.71, 0.3],
+          [2.85, 209.22, 0.3],
+          [2.88, 209.74, 0.3],
+          [2.91, 210.26, 0.3],
+          [2.94, 210.77, 0.3],
+          [2.97, 211.29, 0.3],
+          [3, 211.81, 0.3],
+          [3.03, 212.34, 0.3],
+          [3.06, 212.86, 0.3],
+          [3.09, 213.39, 0.3],
+          [3.12, 213.91, 0.3],
+          [3.15, 214.44, 0.3],
+          [3.18, 214.97, 0.3],
+          [3.21, 215.5, 0.3],
+          [3.24, 216.03, 0.3],
+          [3.27, 216.56, 0.3],
+          [3.3, 216.97, 0.3],
+          [3.39, 216.97, 0.3],
+          [3.42, 216.97, 0.2961],
+          [3.45, 216.97, 0.2835],
+          [3.48, 216.97, 0.2636],
+          [3.51, 216.97, 0.238],
+          [3.54, 216.97, 0.2082],
+          [3.57, 216.97, 0.1758],
+          [3.6, 216.97, 0.1421],
+          [3.63, 216.97, 0.1088],
+          [3.66, 216.97, 0.0774],
+          [3.69, 216.97, 0.0494],
+          [3.72, 216.97, 0.0263],
+          [3.75, 216.97, 0.0097],
+          [3.78, 216.97, 0]
+        ]
+      },
+      "means": "원숭이 1: 항체가 생긴 형 수 n → 음높이 110·2^(n/50) Hz, 1차 41 → 추가 접종 49 / 50"
+    },
+    {
+      "id": "ab_monkey2",
+      "at": 134.999,
+      "kind": "chirp",
+      "params": {
+        "gain_db": -34,
+        "harmonics": [1, 0.25],
+        "fade": 0.03,
+        "points": [
+          [0, 165, 0],
+          [0.03, 166.87, 0.0312],
+          [0.06, 168.76, 0.1056],
+          [0.09, 170.67, 0.1944],
+          [0.12, 172.61, 0.2688],
+          [0.15, 174.56, 0.3],
+          [0.18, 176.54, 0.3],
+          [0.21, 178.54, 0.3],
+          [0.24, 180.56, 0.3],
+          [0.27, 182.61, 0.3],
+          [0.3, 184.68, 0.3],
+          [0.33, 186.77, 0.3],
+          [0.36, 188.89, 0.3],
+          [0.39, 191.03, 0.3],
+          [0.42, 193.19, 0.3],
+          [0.45, 195.38, 0.3],
+          [0.48, 197.6, 0.3],
+          [0.51, 199.83, 0.3],
+          [0.54, 202.1, 0.3],
+          [0.57, 204.39, 0.3],
+          [0.6, 206.7, 0.3],
+          [0.63, 209.05, 0.3],
+          [0.66, 211.42, 0.3],
+          [0.69, 213.81, 0.3],
+          [0.72, 216.23, 0.3],
+          [0.75, 218.68, 0.3],
+          [0.78, 221.16, 0.3],
+          [0.81, 223.67, 0.3],
+          [0.84, 226.2, 0.3],
+          [0.87, 228.77, 0.3],
+          [0.9, 231.36, 0.3],
+          [0.93, 233.98, 0.3],
+          [0.96, 236.63, 0.3],
+          [0.99, 239.31, 0.3],
+          [1.02, 242.02, 0.3],
+          [1.05, 244.77, 0.3],
+          [1.08, 247.54, 0.3],
+          [1.11, 250.34, 0.3],
+          [1.14, 253.18, 0.3],
+          [1.17, 256.05, 0.3],
+          [1.2, 258.95, 0.3],
+          [1.23, 261.88, 0.3],
+          [1.26, 264.85, 0.3],
+          [1.29, 267.85, 0.3],
+          [1.32, 270.89, 0.3],
+          [1.35, 273.96, 0.3],
+          [1.38, 277.06, 0.3],
+          [1.41, 280.2, 0.3],
+          [1.44, 283.38, 0.3],
+          [1.47, 286.59, 0.3],
+          [1.5, 289.83, 0.3],
+          [1.53, 293.12, 0.3],
+          [1.56, 296.44, 0.3],
+          [1.59, 299.8, 0.3],
+          [1.62, 303.2, 0.3],
+          [1.65, 306.63, 0.3],
+          [1.68, 307.9, 0.3],
+          [1.92, 307.9, 0.3],
+          [1.95, 308, 0.3],
+          [1.98, 308.38, 0.3],
+          [2.01, 308.76, 0.3],
+          [2.04, 309.14, 0.3],
+          [2.07, 309.52, 0.3],
+          [2.1, 309.9, 0.3],
+          [2.13, 310.29, 0.3],
+          [2.16, 310.67, 0.3],
+          [2.19, 311.05, 0.3],
+          [2.22, 311.43, 0.3],
+          [2.25, 311.82, 0.3],
+          [2.28, 312.2, 0.3],
+          [2.31, 312.59, 0.3],
+          [2.34, 312.97, 0.3],
+          [2.37, 313.36, 0.3],
+          [2.4, 313.74, 0.3],
+          [2.43, 314.13, 0.3],
+          [2.46, 314.52, 0.3],
+          [2.49, 314.9, 0.3],
+          [2.52, 315.29, 0.3],
+          [2.55, 315.68, 0.3],
+          [2.58, 316.07, 0.3],
+          [2.61, 316.46, 0.3],
+          [2.64, 316.85, 0.3],
+          [2.67, 317.24, 0.3],
+          [2.7, 317.63, 0.3],
+          [2.73, 318.02, 0.3],
+          [2.76, 318.41, 0.3],
+          [2.79, 318.81, 0.3],
+          [2.82, 319.2, 0.3],
+          [2.85, 319.59, 0.3],
+          [2.88, 319.99, 0.3],
+          [2.91, 320.38, 0.3],
+          [2.94, 320.78, 0.3],
+          [2.97, 321.17, 0.3],
+          [3, 321.57, 0.3],
+          [3.03, 321.96, 0.3],
+          [3.06, 322.36, 0.3],
+          [3.09, 322.76, 0.3],
+          [3.12, 323.15, 0.3],
+          [3.15, 323.55, 0.3],
+          [3.18, 323.95, 0.3],
+          [3.21, 324.35, 0.3],
+          [3.24, 324.75, 0.3],
+          [3.27, 325.15, 0.3],
+          [3.3, 325.46, 0.3],
+          [3.39, 325.46, 0.3],
+          [3.42, 325.46, 0.2961],
+          [3.45, 325.46, 0.2835],
+          [3.48, 325.46, 0.2636],
+          [3.51, 325.46, 0.238],
+          [3.54, 325.46, 0.2082],
+          [3.57, 325.46, 0.1758],
+          [3.6, 325.46, 0.1421],
+          [3.63, 325.46, 0.1088],
+          [3.66, 325.46, 0.0774],
+          [3.69, 325.46, 0.0494],
+          [3.72, 325.46, 0.0263],
+          [3.75, 325.46, 0.0097],
+          [3.78, 325.46, 0]
+        ]
+      },
+      "means": "원숭이 2: 항체가 생긴 형 수 n → 음높이 165·2^(n/50) Hz, 1차 45 → 추가 접종 49 / 50"
+    },
+    {
+      "id": "boost",
+      "at": 136.941,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.12,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"추가 접종 뒤\""
+    },
+    {
+      "id": "unconfirmed",
+      "at": 142.094,
+      "kind": "custom",
+      "params": {
+        "gain_db": -29,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          }
+        ]
+      },
+      "means": "\"감기 예방 효과는 아직 미확인\" 표식 (툭)"
+    },
+    {
+      "id": "no18",
+      "at": 148.602,
+      "kind": "custom",
+      "params": {
+        "gain_db": -29,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          }
+        ]
+      },
+      "means": "\"아닙니다\""
+    },
+    {
+      "id": "abx_hits",
+      "at": 150.225,
+      "kind": "custom",
+      "params": {
+        "gain_db": -33,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 131,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.13,
+            "params": {
+              "freq": 131,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.26,
+            "params": {
+              "freq": 131,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.39,
+            "params": {
+              "freq": 131,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.52,
+            "params": {
+              "freq": 131,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.65,
+            "params": {
+              "freq": 131,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.78,
+            "params": {
+              "freq": 131,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "항생제 알갱이가 세균의 세포벽에 부딪힘 (7번, 금이 늘어남)"
+    },
+    {
+      "id": "burst",
+      "at": 151.135,
+      "kind": "custom",
+      "params": {
+        "gain_db": -28,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 55,
+              "dur": 0.6,
+              "harmonics": [1, 0.35],
+              "attack": 0.006,
+              "decay": 0.2,
+              "release": 0.2,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.3,
+              "low": 40,
+              "high": 220,
+              "release": 0.22,
+              "gain_db": -9
+            }
+          }
+        ]
+      },
+      "means": "세포벽이 깨져 세균이 터짐 (부드러운 낮은 펑)"
+    },
+    {
+      "id": "virus_silent",
+      "at": 152.356,
+      "kind": "silent",
+      "means": "바이러스 쪽: 항생제가 붙을 세포벽이 없어 아무 일도 일어나지 않음 (소리 없음)"
+    },
+    {
+      "id": "no_effect",
+      "at": 152.827,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          }
+        ]
+      },
+      "means": "\"효과 없음\""
+    },
+    {
+      "id": "water",
+      "at": 157.82,
+      "kind": "env_noise",
+      "params": {
+        "low": 55,
+        "high": 250,
+        "gain_db": -32,
+        "fade": 0.05,
+        "points": [
+          [0, 0],
+          [0.03, 0.0179],
+          [0.06, 0.0653],
+          [0.09, 0.133],
+          [0.12, 0.2115],
+          [0.15, 0.2916],
+          [0.18, 0.3639],
+          [0.21, 0.4191],
+          [0.24, 0.4479],
+          [0.27, 0.45],
+          [0.33, 0.45],
+          [0.36, 0.5167],
+          [0.39, 0.65],
+          [0.42, 0.65],
+          [0.45, 0.7833],
+          [0.48, 0.7833],
+          [0.51, 0.85],
+          [1.29, 0.85],
+          [1.32, 0.65],
+          [1.35, 0.7167],
+          [1.38, 0.7833],
+          [1.41, 0.7833],
+          [1.44, 0.7167],
+          [1.47, 0.65],
+          [1.5, 0.5833],
+          [1.53, 0.5833],
+          [1.56, 0.65],
+          [1.65, 0.65],
+          [1.68, 0.5833],
+          [1.77, 0.5833],
+          [1.8, 0.7167],
+          [1.83, 0.7167],
+          [1.86, 0.65],
+          [1.89, 0.7167],
+          [1.92, 0.7167],
+          [1.95, 0.65],
+          [1.98, 0.7167],
+          [2.07, 0.7167],
+          [2.1, 0.5833],
+          [2.13, 0.5833],
+          [2.16, 0.173],
+          [2.19, 0.147],
+          [2.22, 0.137],
+          [2.25, 0.1239],
+          [2.28, 0.0946],
+          [2.31, 0.0801],
+          [2.34, 0.065],
+          [2.37, 0.05],
+          [2.4, 0.0358],
+          [2.43, 0.023],
+          [2.46, 0.0125],
+          [2.49, 0.0047],
+          [2.52, 0]
+        ]
+      },
+      "means": "물줄기 (55~250 Hz 낮은 잡음): 크기 = 물 + 0.3초 동안 씻겨 나간 바이러스 수"
+    },
+    {
+      "id": "route",
+      "at": 159.605,
+      "kind": "whoosh",
+      "params": {
+        "dur": 0.8,
+        "f_start": 110,
+        "f_end": 240,
+        "q": 1.6,
+        "gain_db": -34
+      },
+      "means": "손 → 코 · 눈으로 가는 길"
+    },
+    {
+      "id": "no_touch",
+      "at": 160.818,
+      "kind": "custom",
+      "params": {
+        "gain_db": -30,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0.12,
+            "params": {
+              "freq": 70,
+              "dur": 0.2,
+              "harmonics": [1, 0.5],
+              "attack": 0.003,
+              "decay": 0.05,
+              "sustain": 0,
+              "release": 0.08,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0.12,
+            "params": {
+              "dur": 0.09,
+              "low": 40,
+              "high": 200,
+              "attack": 0.002,
+              "release": 0.07,
+              "gain_db": -8
+            }
+          }
+        ]
+      },
+      "means": "\"만지지 않기\" ✕ 두 개"
+    },
+    {
+      "id": "poster",
+      "at": 164.452,
+      "kind": "swell",
+      "params": {
+        "freqs": [110, 165, 220],
+        "dur": 1.8,
+        "attack": 0.4,
+        "gain_db": -32,
+        "cutoff": 700
+      },
+      "means": "\"까닭은\" — 포스터와 제목이 돌아옴"
     }
   ],
   "ambient": {
-    "enabled": false,
     "kind": "pad",
     "seed": 7,
     "gain_db": -32,
@@ -48,14 +4493,15 @@
       7,
       12,
       16
-    ]
+    ],
+    "enabled": false
   },
   "music": {
     "id": "zabriskie_patriarch",
-    "enabled": false,
     "under_db": 12,
     "duck_db": 6,
     "start_sec": 0,
-    "note": "기본 꺼짐(2026-10-31 사용자 결정). 켜려면 enabled true. assets/music/registry.json 의 id. NO_MUSIC=1 이면 생략"
+    "enabled": false,
+    "note": "음악 없음."
   }
 }

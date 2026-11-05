@@ -37,6 +37,7 @@
 | 11 | 에딩턴 한계 | [finals/11-eddington-limit/upload.md](../finals/11-eddington-limit/upload.md) |
 | 12 | 퀘이사 | [finals/12-quasar/upload.md](../finals/12-quasar/upload.md) |
 | 13 | 감마선 폭발 | [finals/13-gamma-ray-burst/upload.md](../finals/13-gamma-ray-burst/upload.md) |
+| 14 | 감기 주사는 왜 없을까 | [finals/14-cold-vaccine/upload.md](../finals/14-cold-vaccine/upload.md) |
 
 ## 이전 작품
 
