@@ -1,0 +1,40 @@
+# 업로드 도구 시험 + outbox 에피소드 사전 검증(dry-run, 비밀값 불필요).
+# PR 에서 제목 길이·설명 바이트·쇼츠 규격·아동용 선언 누락을 미리 잡는다.
+name: ci
+
+on:
+  push:
+    paths:
+      - "publish/**"
+      - "tests/**"
+      - "config/youtube.json"
+      - "outbox/**"
+      - ".github/**"
+  pull_request:
+    paths:
+      - "publish/**"
+      - "tests/**"
+      - "config/youtube.json"
+      - "outbox/**"
+      - ".github/**"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: ffprobe 설치
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+      - name: 단위 시험
+        run: python -m unittest discover -s tests -v
+      - name: outbox 사전 검증 (dry-run)
+        run: python -m publish.youtube --all --dry-run

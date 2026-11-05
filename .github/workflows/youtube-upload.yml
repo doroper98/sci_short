@@ -1,0 +1,72 @@
+# 완성 쇼츠를 유튜브에 **비공개**로 올리는 자동화.
+# 트리거: main 에 outbox/** 변경이 들어오면(PR 병합 = 업로드 승인) · 수동 실행(workflow_dispatch).
+# 결과: outbox/<ep>/youtube_upload.json 을 main 에 커밋하고, '공개 전환 대기' 이슈를 만든다. 공개 전환은 사람이 Studio 에서 한다.
+# 비밀값: 저장소 Settings → Secrets and variables → Actions 에 YT_CLIENT_ID · YT_CLIENT_SECRET · YT_REFRESH_TOKEN.
+name: youtube-upload
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "outbox/**"
+  workflow_dispatch:
+    inputs:
+      episode:
+        description: "올릴 폴더 하나 (예: outbox/01-sky-blue). 비우면 outbox 전체에서 미업로드분"
+        required: false
+        default: ""
+      dry_run:
+        description: "검증만 하고 올리지 않음"
+        type: boolean
+        default: false
+
+concurrency:
+  group: youtube-upload
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      PYTHONUTF8: "1"
+      EPISODE: ${{ inputs.episode }}
+      DRY_RUN: ${{ inputs.dry_run }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: ffprobe 설치 (영상 규격 검사)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+      - name: 단위 시험
+        run: python -m unittest discover -s tests -q
+      - name: 업로드 (항상 비공개)
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: |
+          ARGS=()
+          if [ -n "$EPISODE" ]; then ARGS+=("$EPISODE"); else ARGS+=(--all); fi
+          if [ "$DRY_RUN" = "true" ]; then ARGS+=(--dry-run); fi
+          python -m publish.youtube "${ARGS[@]}" --report upload-report.json
+      - name: 업로드 기록 커밋 (youtube_upload.json)
+        if: ${{ always() && env.DRY_RUN != 'true' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- outbox/*/youtube_upload.json 2>/dev/null || true
+          if git diff --cached --quiet; then echo "기록 변경 없음"; exit 0; fi
+          git commit -m "publish: 유튜브 비공개 업로드 기록 [skip ci]"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+      - name: 결과 요약 · 공개 전환 대기 이슈
+        if: ${{ always() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python .github/scripts/youtube_report.py report upload-report.json

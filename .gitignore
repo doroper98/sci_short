@@ -15,3 +15,7 @@ node_modules/
 /renders/
 /models/
 *.log
+
+# 유튜브 업로드 체계
+upload-report.json
+outbox/**/*.tmp

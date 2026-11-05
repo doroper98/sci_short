@@ -20,6 +20,14 @@
 - 길이 60~90초는 제작 목표입니다. 대본과 관찰 시간을 먼저 조정하며 임의의 음성 가속으로 맞추지 마세요.
 - 공통 요소는 반복 사용이 확인된 뒤 분리합니다. 처음부터 모든 주제를 유한한 장면 종류에 끼워 넣는 엔진을 만들지 마세요.
 
+## 유튜브 업로드 체계
+
+- 완성 쇼츠는 `outbox/<episode>/` 규약(`outbox/README.md`)으로 넘기고 `publish/youtube.py` 가 **비공개**로만 올립니다. 공개 전환은 사용자가 직접 합니다. 코드·설정 어디에서도 public·unlisted 로 바꾸지 마세요.
+- 비밀값 `YT_CLIENT_ID`·`YT_CLIENT_SECRET`·`YT_REFRESH_TOKEN` 은 환경 변수(GitHub Secrets, 클라우드 환경, `.env`)에만 둡니다. 저장소·로그·커밋·채팅에 값을 남기지 마세요.
+- 리프레시 토큰은 OAuth 앱을 프로덕션으로 게시한 뒤 받은 **장기 토큰**만 씁니다. 테스트 상태의 7일 토큰으로 운영하지 마세요.
+- `config/youtube.json` 의 `made_for_kids`(아동용 선언)·`channel_id` 는 사용자 결정 사항입니다. 임의로 채우지 마세요.
+- 실제 업로드 시험은 사용자 허락 뒤 비공개 1건으로 합니다. 절차는 `docs/YOUTUBE_UPLOAD.md`.
+
 ## 참고자료 사용
 
 - 원본 7개는 `references/videos/`, 원래 이름과 해시는 `references/manifest.json`에 있습니다.

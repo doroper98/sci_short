@@ -38,6 +38,36 @@
 - 오래된 `overhaul/v2-map-engine` 브랜치에는 ElevenLabs·edge 설정이 남아 있습니다. 브랜치 이름만 보고 최종 기준으로 선택하지 마세요.
 - 단순 TTS mp3 캐시는 문장 끝 보정 전일 수 있습니다. 최종 음성을 재현하려면 후처리와 정렬/트림 순서까지 확인해야 합니다.
 
+## 유튜브 쇼츠 자동 업로드 체계 (2026-11-05 추가)
+
+사용자 요청: 참고 세션(osint_generator 유튜브 업로드 연동, 2026-11-03)을 바탕으로 **채널에 자동으로 쇼츠를 올리는 체계**를 만든다.
+**비공개로 올리고 사용자가 공개로 전환**한다. 토큰은 **7일 만료형이 아닌 장기 유지 토큰**을 쓴다.
+
+구현 상태:
+
+- `publish/youtube.py` — outbox 폴더를 읽어 비공개로 올리는 CLI. 재개 가능 업로드, 자막(captions.insert), md5 멱등 기록, 업로드 전 채널 확인(`channel_id`), 제목·설명·태그·쇼츠 규격 사전 검증, `--dry-run` `--all` `--list` `--whoami`. 표준 라이브러리만 사용.
+- `publish/oauth.py` — 루프백 OAuth(PKCE)로 리프레시 토큰 1회 발급. **프로덕션 게시 확인 없이는 발급을 거부**한다(`--production` / 프롬프트 / 비상용 `--allow-testing`).
+- `config/youtube.json` — `privacy_status` 는 private 만 로드됨. `made_for_kids`·`channel_id` 는 null(사용자 결정 대기).
+- `.github/workflows/youtube-upload.yml` — main 의 `outbox/**` 변경(= PR 병합) 또는 수동 실행 → 비공개 업로드 → `youtube_upload.json` 커밋 → "공개 전환 대기" 이슈(`youtube-review` 라벨).
+- `.github/workflows/youtube-token-check.yml` — 매주 월요일 09:17 KST 토큰 생존·채널 일치 점검, 실패 시 이슈(`youtube-alert`).
+- `.github/workflows/ci.yml` — 단위 시험 + outbox dry-run(PR 단계 사전 검증).
+- `docs/youtube-app/` — OAuth 앱 게시용 홈페이지·개인정보처리방침(GitHub Pages 배포용, 390px 폭 가로 넘침 없음 확인).
+- `tests/test_publish_youtube.py` — 31건 통과(가짜 전송: 토큰→채널→세션→308 재개→200→자막, 멱등, 채널 불일치, 503 재시도, 검증 오류, CLI, ffmpeg 실측 probe, OAuth 게이트).
+- 실측: ffmpeg 로 만든 720×1280 12초 클립을 임시 outbox 에 두고 `--all --dry-run` 통과, `--list` 상태표 정상, 비밀값 없을 때 명확한 오류로 종료 확인.
+
+**아직 하지 않은 것:** 실제 유튜브 업로드(0건). 비밀값·채널 결정 전이라 API 실응답을 보지 못했다.
+
+사용자 결정 대기:
+
+| 항목 | 내용 |
+|---|---|
+| Google 프로젝트 | A. osint_generator OAuth 앱 재사용(권장, 이 채널 토큰만 새로 발급) / B. sci_short 전용 프로젝트(docs/youtube-app 을 GitHub Pages 로 배포) |
+| `made_for_kids` | 아동용(COPPA) 자가 선언 true/false. null 이면 업로드 거부. 법적 책임 사항이라 도구가 정하지 않음 |
+| `channel_id` | 토큰 발급 때 나오는 UC… 값. 다른 채널 업로드 방지용 |
+| 첫 시험 | 설정·비밀값 저장 뒤 비공개 1건 업로드 시험(사용자 허락 뒤) |
+
+실행·절차 전체: [docs/YOUTUBE_UPLOAD.md](docs/YOUTUBE_UPLOAD.md). 폴더 규약: [outbox/README.md](outbox/README.md).
+
 ## 미정 사항
 
 | 항목 | 현재 상태 |
@@ -58,6 +88,7 @@
 4. 표준 목소리와 억양을 재현하고 한국어 발음을 확인합니다. 실제 발화 시간을 얻어 자막과 중요한 화면 변화를 맞춥니다.
 5. 한 편을 완주하면서 재사용이 확인된 요소만 분리합니다. 공통 엔진·스키마를 먼저 거대하게 만들지 않습니다.
 6. 영상에서 이해되는지, 음성이 자연스러운지, 자막이 읽히는지 확인하고 상태를 이 문서에 갱신합니다.
+7. 완성본은 `outbox/<episode>/`(final.mp4·description.txt·final.srt) 로 내보내 PR 에 포함합니다. 병합되면 비공개 업로드가 자동으로 돌고, 공개 전환은 사용자가 합니다.
 
 ## 다음 Codex 세션에 붙여 넣을 수 있는 문장
 

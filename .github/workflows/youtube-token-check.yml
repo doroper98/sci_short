@@ -1,0 +1,36 @@
+# 리프레시 토큰이 살아 있는지 매주 확인한다(channels.list, 할당량 1단위).
+# 테스트 상태 앱의 7일 토큰이 섞여 들어오거나, 철회·비밀번호 변경으로 토큰이 죽으면 업로드 전에 이슈로 알린다.
+name: youtube-token-check
+
+on:
+  schedule:
+    - cron: "17 0 * * 1"   # 매주 월요일 00:17 UTC = 09:17 KST
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 채널 확인 (--whoami)
+        id: whoami
+        continue-on-error: true
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: python -m publish.youtube --whoami --report whoami-report.json
+      - name: 결과 이슈 처리
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python .github/scripts/youtube_report.py token-check whoami-report.json "${{ steps.whoami.outcome }}"

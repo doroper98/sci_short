@@ -4,6 +4,7 @@
 주제에 맞는 시각 설명, 한국어 나레이션, 음성과 맞는 자막을 함께 설계합니다.
 
 현재는 **참고자료와 제작 방향을 정리한 인수인계 단계**입니다. 영상 제작 엔진·TTS 실행 코드·첫 에피소드는 아직 구현하지 않았습니다.
+완성 쇼츠를 채널에 **비공개로 자동 업로드**하는 체계는 준비되어 있습니다(공개 전환은 사용자가 직접). → [유튜브 업로드](docs/YOUTUBE_UPLOAD.md)
 
 ## Codex에서 시작하기
 
@@ -12,6 +13,7 @@
 3. [참고 영상 분석](docs/REFERENCE_ANALYSIS.md) — 7개 영상의 장면·장점·주의점
 4. [유연한 화면 설계](docs/CREATIVE_DIRECTION.md) — 주제에 따라 표현을 선택하는 방법
 5. [한국어 음성·자막](docs/NARRATION_AND_CAPTIONS.md) — 확인된 표준 음성과 동기화 방향
+6. [유튜브 쇼츠 자동 업로드](docs/YOUTUBE_UPLOAD.md) — outbox 규약, 1회 설정, 비공개 업로드 → 사용자가 공개 전환
 
 원본 영상은 [references/videos](references/videos)에 실제 파일로 들어 있습니다. 채팅의 임시 첨부 경로나 외부 다운로드에 의존하지 않습니다.
 빠르게 훑으려면 [전체 비교 이미지](references/contact-sheets/overview.jpg)와 [참고자료 안내](references/README.md)를 보세요.
@@ -22,6 +24,7 @@
 - 한국어 나레이션은 `doroper98/osint_generator`에서 최종 채택한 목소리·억양을 참고.
 - 한국어 자막을 적절하게 넣고 실제 발화와 화면 변화에 맞춤.
 - 다양한 과학 주제를 다룰 수 있도록 화면 구성·장면 수·표현 방식을 획일적으로 고정하지 않음.
+- 완성 쇼츠는 항상 **비공개**로 자동 업로드하고, 공개 전환은 사용자가 YouTube Studio 에서 직접 함. OAuth 토큰은 7일 만료형이 아닌 프로덕션 게시 뒤의 장기 토큰만 사용.
 
 음성 기준은 **Supertonic 3 남성 M3, speed 0.95 + 문장 끝 억양 보정**입니다.
 단순 M3 원음과 최종 후처리 음성을 구분하세요. [기준값 스냅샷](config/voice-reference.json)은 실행 설정이 아닌 재현을 위한 참조 자료입니다.
@@ -41,7 +44,17 @@ references/contact-sheets/       시간표시가 있는 장면 모음
 references/narration/            기존 최종 영상의 음성 참고 발췌
 references/SHA256SUMS             보관 자산의 무결성 확인값
 templates/episode-brief.md        필요에 맞게 바꾸는 기획 메모 양식
+publish/youtube.py                쇼츠 비공개 업로더 CLI(표준 라이브러리만)
+publish/oauth.py                  리프레시 토큰 1회 발급(프로덕션 게시 확인 뒤)
+config/youtube.json               채널 공통 업로드 설정(private 고정, made_for_kids·channel_id 결정 필요)
+outbox/                           업로드 대기열(편당 폴더). 규약은 outbox/README.md
+docs/YOUTUBE_UPLOAD.md            업로드 체계 설명·1회 설정·운영·문제 해결
+docs/youtube-app/                 OAuth 앱 게시용 홈페이지·개인정보처리방침(GitHub Pages 용)
+.github/workflows/                youtube-upload(비공개 업로드)·youtube-token-check(주간)·ci(시험+dry-run)
+tests/                            업로더 단위 시험: python -m unittest discover -s tests
 ```
+
+업로드 도구 사용: `python -m publish.youtube outbox/<ep> --dry-run` 으로 검증, `--list` 로 상태표. 자세한 절차는 [docs/YOUTUBE_UPLOAD.md](docs/YOUTUBE_UPLOAD.md).
 
 자산 확인은 저장소 루트에서 `sha256sum -c references/SHA256SUMS`로 할 수 있습니다.
 3번 영상은 원본 말미에 디코딩 경고가 있습니다. 원본을 수정하지 않고 보존했으며 상세는 manifest와 분석 문서에 기록했습니다.
