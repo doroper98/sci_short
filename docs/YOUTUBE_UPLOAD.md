@@ -40,6 +40,8 @@
 | 14 | 감기 주사는 왜 없을까 | [finals/14-cold-vaccine/upload.md](../finals/14-cold-vaccine/upload.md) |
 | 15 | 사고도 없는데 왜 막힐까 | [finals/15-traffic-jam/upload.md](../finals/15-traffic-jam/upload.md) |
 | 16 | 얼마나 차가워질 수 있을까 | [finals/16-absolute-zero/upload.md](../finals/16-absolute-zero/upload.md) |
+| 17 | 헬륨을 영하 271도로 식히면 | [finals/17-superfluid-helium/upload.md](../finals/17-superfluid-helium/upload.md) |
+| 18 | 화씨 100도면 물이 끓을까 | [finals/18-temperature-scales/upload.md](../finals/18-temperature-scales/upload.md) |
 
 ## 이전 작품
 

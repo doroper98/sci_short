@@ -271,6 +271,40 @@
       "episode_code": "episodes/absolute-zero",
       "upload_info": "finals/16-absolute-zero/upload.md",
       "thumbnail": "0초 프레임(성에 낀 창 너머 바닥선까지 내려온 유리 온도 축, 흰 질문 \"얼마나 차가워질 수 있을까?\"와 큰 얼음빛 답 \"−273.15 °C\")"
+    },
+    {
+      "number": 17,
+      "slug": "superfluid-helium",
+      "title": "벽을 타고 넘는 액체 — 초유체 헬륨",
+      "status": "final",
+      "folder": "finals/17-superfluid-helium",
+      "video": "finals/17-superfluid-helium/superfluid-helium.mp4",
+      "duration_sec": 166.2,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 24730389,
+      "sha256": "14b54ee41d4a76dac9640bfa35ee864bb79fc65e68ff9c06eb208a78f7511950",
+      "video_date": "2026-11-06",
+      "episode_code": "episodes/superfluid-helium",
+      "upload_info": "finals/17-superfluid-helium/upload.md",
+      "thumbnail": "0초 프레임(매달린 유리컵의 테두리를 넘어 흘러내리는 청록 막과 떨어지는 방울, 흰 질문 \"헬륨을 영하 271도로 식히면?\"과 큰 청록 답 \"벽을 타고 탈출\")"
+    },
+    {
+      "number": 18,
+      "slug": "temperature-scales",
+      "title": "섭씨, 화씨, 켈빈 — 온도를 재는 세 눈금",
+      "status": "final",
+      "folder": "finals/18-temperature-scales",
+      "video": "finals/18-temperature-scales/temperature-scales.mp4",
+      "duration_sec": 157.6,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 11898919,
+      "sha256": "94487fbc66ac1ffcae2bf9e74e36bdf61310dcdd33288b2a51ec2672ae9b437d",
+      "video_date": "2026-11-06",
+      "episode_code": "episodes/temperature-scales",
+      "upload_info": "finals/18-temperature-scales/upload.md",
+      "thumbnail": "0초 프레임(해 질 녘 도시 위 큰 온도계가 같은 높이에서 38 °C와 100 °F를 가리킴, 흰 질문 \"화씨 100도면 물이 끓을까?\"와 큰 주황 답 \"아니, 섭씨 38도\")"
     }
   ],
   "legacy": [
