@@ -44,8 +44,9 @@
 | 13 | 감마선 폭발 — 우주에서 가장 밝은 섬광 | 175.5초 | [13-gamma-ray-burst/](13-gamma-ray-burst/) | [upload.md](13-gamma-ray-burst/upload.md) | 2026-11-05 |
 | 14 | 감기 주사는 왜 없을까 — 범인이 200가지 | 172.1초 | [14-cold-vaccine/](14-cold-vaccine/) | [upload.md](14-cold-vaccine/upload.md) | 2026-11-05 |
 | 15 | 사고도 없는데 왜 막힐까 — 유령 체증 | 175.9초 | [15-traffic-jam/](15-traffic-jam/) | [upload.md](15-traffic-jam/upload.md) | 2026-11-06 |
+| 16 | 얼마나 차가워질 수 있을까 — 절대영도 | 164.9초 | [16-absolute-zero/](16-absolute-zero/) | [upload.md](16-absolute-zero/upload.md) | 2026-11-06 |
 
-합계 15편, 43.2분, 342 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
+합계 16편, 46.0분, 361 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
 <!-- catalog:end -->
 
 ## 이전 작품 (`legacy/`)

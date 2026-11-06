@@ -1,8 +1,8 @@
 {
   "_about": "sci_short 표준 음성에서 osint_generator 기준(voice-reference.json)과 다르게 쓰기로 한 값. 허용 키: supertonic.speed, final_fall.semitones, final_fall.span_chars, final_fall.curve",
-  "_decided": "2026-10-31 사용자 청취 결정: 속도 0.85, 문장 끝 하강 6반음, 프리셋 F4(10종 샘플 청취 후 선택)",
+  "_decided": "2026-10-31 사용자 청취 결정: 속도 0.85, 문장 끝 하강 6반음, 프리셋 F4(10종 샘플 청취 후 선택). 2026-11-06 사용자 결정 \"목소리는 남자 목소리로 하자\": 프리셋 M3(남성, osint_generator 기준 프리셋)로 변경, 속도·하강은 그대로. 이어서 \"중력파 편 음성이면 돼\": 중력파 1·2차본(2026-10-31, timeline voice \"supertonic-3 M3 ×0.85 + final_fall 6st\")과 같은 설정임을 확인. 이 날 이후 새 에피소드에 적용(이전 전달본은 F4 그대로).",
   "supertonic": {
-    "voice_style": "F4",
+    "voice_style": "M3",
     "speed": 0.85
   },
   "final_fall": {
