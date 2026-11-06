@@ -305,6 +305,23 @@
       "episode_code": "episodes/temperature-scales",
       "upload_info": "finals/18-temperature-scales/upload.md",
       "thumbnail": "0초 프레임(해 질 녘 도시 위 큰 온도계가 같은 높이에서 38 °C와 100 °F를 가리킴, 흰 질문 \"화씨 100도면 물이 끓을까?\"와 큰 주황 답 \"아니, 섭씨 38도\")"
+    },
+    {
+      "number": 19,
+      "slug": "gravity-time",
+      "title": "머리가 발보다 빨리 늙는다 — 중력과 시간",
+      "status": "final",
+      "folder": "finals/19-gravity-time",
+      "video": "finals/19-gravity-time/gravity-time.mp4",
+      "duration_sec": 157.2,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 12790025,
+      "sha256": "54bc401aa0197dd20f8bc7d5836af3a7b78b25485920d2a9580079c2e329d478",
+      "video_date": "uncommitted",
+      "episode_code": "episodes/gravity-time",
+      "upload_info": "finals/19-gravity-time/upload.md",
+      "thumbnail": "0초 프레임(땅 위에 선 사람 옆모습, 머리 옆 금빛 시계와 발 옆 푸른 시계, 흰 질문 \"머리와 발, 어디가 더 빨리 늙을까?\"와 큰 금빛 답 \"머리가 더 빨리\")"
     }
   ],
   "legacy": [

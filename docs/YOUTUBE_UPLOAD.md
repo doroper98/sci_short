@@ -42,6 +42,7 @@
 | 16 | 얼마나 차가워질 수 있을까 | [finals/16-absolute-zero/upload.md](../finals/16-absolute-zero/upload.md) |
 | 17 | 헬륨을 영하 271도로 식히면 | [finals/17-superfluid-helium/upload.md](../finals/17-superfluid-helium/upload.md) |
 | 18 | 화씨 100도면 물이 끓을까 | [finals/18-temperature-scales/upload.md](../finals/18-temperature-scales/upload.md) |
+| 19 | 머리와 발, 어디가 더 빨리 늙을까 | [finals/19-gravity-time/upload.md](../finals/19-gravity-time/upload.md) |
 
 ## 이전 작품
 
