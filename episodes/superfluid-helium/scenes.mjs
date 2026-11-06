@@ -838,7 +838,7 @@ function laneSparks(t0, t1) {
 }
 function waveScene(stage, t, ctx) {
   const c = stage.ctx, T = stage.theme, P = plan(ctx.tl), sf = sceneFade(t, ctx), TW = P.TW(t), L = P.lockW(t), lam = lambdaNm(TW);
-  const pa = fadeOut(t, P.lanes, 0.4), pb = fadeIn(t, P.lanes + 0.25, 0.45);
+  const pa = fadeOut(t, P.lanes, 0.4), pb = fadeIn(t, P.lanes + 0.42, 0.45);
   withAlpha(c, sf, () => {
     if (pa > 0) withAlpha(c, pa, () => {
       const [bx, by, bw, bh] = WBOX; rect(c, bx, by, bw, bh, 18, rgba('#04121A', 0.75), rgba(T.border, 1), 2);
@@ -908,7 +908,7 @@ function filmFront(P, t, Ltot, L1) {
 }
 function filmScene(stage, t, ctx) {
   const c = stage.ctx, T = stage.theme, P = plan(ctx.tl), sf = sceneFade(t, ctx), g = FILMCUP;
-  const pa = fadeOut(t, P.pan, 0.5), pb = fadeIn(t, P.pan + 0.2, 0.5);
+  const pa = fadeOut(t, P.pan, 0.45), pb = fadeIn(t, P.pan + 0.42, 0.5);
   withAlpha(c, sf, () => {
     if (pa > 0) withAlpha(c, pa, () => {
       const lv = g.level0 + g.levelRate * Math.max(0, t - P.front[2]), G = cupGeom(g), half = G.film(lv), Lh = plen(half), L1 = lv - 6 - g.rim;
@@ -1060,8 +1060,8 @@ function solidScene(stage, t, ctx) {
       dial(stage, 330, 1212, 92, pq, {grad: ['#5D7C86', '#E9BC78'], ticks: [[0, '0'], [25 / 30, '25', T.accent]], col: lockAll > 0.5 ? T.accent : '#FFFFFF'});
       stage.text(`${Math.round(PS)}기압`, 330, 1216, {role: 'display', weight: 700, size: 30, color: lockAll > 0.5 ? T.accent : T.ink, align: 'center'});
       stage.text('상태', 720, 1112, {size: 26, weight: 700, color: T.muted, align: 'center'});
-      withAlpha(c, 1 - smooth((lockAll - 0.35) / 0.3), () => stage.text('액체', 720, 1180, {role: 'display', weight: 700, size: 64, color: T.accent, align: 'center'}));
-      withAlpha(c, smooth((lockAll - 0.35) / 0.3), () => { stage.text('고체', 720, 1180, {role: 'display', weight: 700, size: 64, color: '#DFF4FF', align: 'center'}); stage.text('원자가 제자리에 자리 잡음', 720, 1246, {size: 26, weight: 700, color: T.ink, align: 'center'}); });
+      withAlpha(c, 1 - smooth((lockAll - 0.3) / 0.15), () => stage.text('액체', 720, 1180, {role: 'display', weight: 700, size: 64, color: T.accent, align: 'center'}));
+      withAlpha(c, smooth((lockAll - 0.5) / 0.15), () => { stage.text('고체', 720, 1180, {role: 'display', weight: 700, size: 64, color: '#DFF4FF', align: 'center'}); stage.text('원자가 제자리에 자리 잡음', 720, 1246, {size: 26, weight: 700, color: T.ink, align: 'center'}); });
       tag(stage, '설명 모형', 840, 478, {size: 24, color: T.muted, plate: false, align: 'right'});
     });
   });
@@ -1069,7 +1069,7 @@ function solidScene(stage, t, ctx) {
 
 // ------------------------------------------------------------------ use: LHC · CERN, 27 km, magnets at 1.9 K; heat spreads at once
 function useScene(stage, t, ctx) {
-  const c = stage.ctx, T = stage.theme, P = plan(ctx.tl), sf = sceneFade(t, ctx), pa = fadeOut(t, P.s18, 0.45), pb = fadeIn(t, P.s18 + 0.25, 0.5);
+  const c = stage.ctx, T = stage.theme, P = plan(ctx.tl), sf = sceneFade(t, ctx), pa = fadeOut(t, P.s18, 0.45), pb = fadeIn(t, P.s18 + 0.42, 0.5);
   withAlpha(c, sf, () => {
     if (pa > 0) withAlpha(c, pa, () => {
       const cx = 540, cy = 630, R = 236, dq = easeInOut((t - P.real) / 1.4);
