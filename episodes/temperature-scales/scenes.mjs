@@ -155,6 +155,12 @@ export function plan(tl) {
   { const t0 = P.k0, t1 = sc('kelvin').end, d = 1 / 120, n = Math.ceil((t1 - t0) / d) + 2, PH = new Float64Array(n);
     for (let i = 1; i < n; i++) PH[i] = PH[i - 1] + speedK(K_OF_C(P.T(t0 + (i - 0.5) * d))) * d;
     P.phaseK = t => { const u = clamp((t - t0) / d, 0, n - 1.001), i = Math.floor(u); return lerp(PH[i], PH[i + 1], u - i); }; }
+  // ordering checks (the plan follows the words; warn if a new timeline squeezes two animations into each other)
+  P.warnings = [['boil→top', P.boil, P.boilTop], ['top→no', P.boilTop, P.no], ['divisions→fahr', P.div1, P.f0], ['96 sweep→refine', P.div96[1], P.later],
+    ['180 sweep→scene end', P.div180[1], sc('fahr').end], ['100 sweep→"영도"', P.div100[1], P.lab0], ['flip→names', P.flip[1], P.shift[0]],
+    ['°C sweep→°F sweep', P.sweepC[1], P.sweepF[0]], ['zoom→graph', P.zoom[1], P.toB[0]], ['−40→scene end', P.meet, sc('convert').end - 0.5],
+    ['zoom out→drop end', P.zoomK[1], P.drop[1]], ['0 K→add', P.zeroK, P.addT[0]], ['rebase→293', P.toK[0], P.k293], ['6500 K→tag', P.k65[1], P.colT + 0.6],
+    ['38→100→311', P.r38, P.r100], ['311→poster', P.r311, P.reason]].filter(([, a, b]) => !(a <= b)).map(([n, a, b]) => `${n}: ${a.toFixed(2)} > ${b.toFixed(2)}`);
   PLANS.set(tl, P); return P;
 }
 
@@ -578,7 +584,7 @@ function hookScene(stage, t, ctx) {
   const kq = easeOut((t - P.kIn) / 0.8), kx = lerp(800, 700, kq);
   const ylv = panelHook(stage, t, T, {L, q, aK: kq, kx, heat: 1 + heat});
   // poster numerals shrink away
-  if (q < 1) { const ba = 1 - smooth(q / 0.7); bigReadout(stage, '38', '°C', L.tx - lerp(74, 60, q), ylv, -1, COL.C, lerp(168, 60, q), ba); bigReadout(stage, '100', '°F', L.tx + lerp(74, 60, q), ylv, 1, COL.F, lerp(168, 60, q), ba); pot(c, 836, 770, 110, t, 0.85 * ba); }
+  if (q < 1) { const ba = 1 - smooth(q / 0.45); bigReadout(stage, '38', '°C', L.tx - lerp(74, 60, q), ylv, -1, COL.C, lerp(168, 60, q), ba); bigReadout(stage, '100', '°F', L.tx + lerp(74, 60, q), ylv, 1, COL.F, lerp(168, 60, q), ba); pot(c, 836, 770, 110, t, 0.85 * ba); }
   captionShade(c, fadeIn(t, P.cap0, 0.2));
   const ta = fadeIn(t, MORPH[1] - 0.1, 0.4);
   if (ta <= 0) return;
@@ -1096,7 +1102,7 @@ function closeScene(stage, t, ctx) {
   withAlpha(c, sf, () => {
     const q = 1 - fin, Y = mapY(L);
     const ylv = panelHook(stage, t, T, {L, q, aK: q, kx: 700, heat: 1.4});
-    if (fin > 0) { const ba = smooth((fin - 0.3) / 0.7); bigReadout(stage, '38', '°C', L.tx - lerp(60, 74, fin), ylv, -1, COL.C, lerp(60, 168, fin), ba); bigReadout(stage, '100', '°F', L.tx + lerp(60, 74, fin), ylv, 1, COL.F, lerp(60, 168, fin), ba); pot(c, 836, 770, 110, t, 0.85 * ba); }
+    if (fin > 0) { const ba = smooth((fin - 0.55) / 0.45); bigReadout(stage, '38', '°C', L.tx - lerp(60, 74, fin), ylv, -1, COL.C, lerp(60, 168, fin), ba); bigReadout(stage, '100', '°F', L.tx + lerp(60, 74, fin), ylv, 1, COL.F, lerp(60, 168, fin), ba); pot(c, 836, 770, 110, t, 0.85 * ba); }
     const ta = q;
     const b38 = fadeIn(t, P.r38, 0.25), b100 = fadeIn(t, P.r100, 0.25), b311 = fadeIn(t, P.r311, 0.25);
     withAlpha(c, ta, () => {
@@ -1285,5 +1291,6 @@ if (isMain && process.argv.includes('--emit-sound')) {
   fs.writeFileSync(soundFile, txt + '\n');
   const P = plan(tl);
   console.log(`events: ${sound.events.length}; T knots ${P.Tk.length}; sweeps 96@${P.div96[0].toFixed(2)} 180@${P.div180[0].toFixed(2)} 100@${P.div100[0].toFixed(2)} C@${P.sweepC[0].toFixed(2)} F@${P.sweepF[0].toFixed(2)}; flip ${P.flip.map(x => x.toFixed(2)).join('–')}; meet ${P.meet.toFixed(2)}`);
+  if (P.warnings.length) console.warn('plan warnings:\n  ' + P.warnings.join('\n  ')); else console.log('plan order checks: ok');
   console.log(`colours 2700 K ${bbColor(2700)} 6500 K ${bbColor(6500)}; KE ratio ${KE_RATIO.toFixed(4)}; 100 °F = ${T_HOT.toFixed(2)} °C = ${K_OF_C(T_HOT).toFixed(2)} K`);
 }

@@ -919,7 +919,7 @@ function cmbLayer() {
   c.restore(); CMBL = cv; return cv;
 }
 const PHOTONS = (() => { const R = rng(404), inn = []; let tt = 0; while (tt < 20) { tt += -Math.log(Math.max(1e-9, R())) / 14; inn.push({t: tt, th: R() * TAU}); } return inn; })();
-const NEB = (() => { const R = rng(777); return [...Array(190)].map(() => { const lobe = R() < 0.72, s = R() < 0.5 ? -1 : 1; const th = lobe ? -Math.PI / 2 * s + (R() - 0.5) * 1.1 : R() * TAU; return {th, ph: R(), sp: 0.85 + 0.3 * R(), sz: 1.8 + 2.2 * R()}; }); })();
+const NEB = (() => { const R = rng(777); return [...Array(250)].map(() => { const lobe = R() < 0.72, s = R() < 0.5 ? -1 : 1; const th = lobe ? -Math.PI / 2 * s + (R() - 0.5) * 1.1 : R() * TAU; return {th, ph: R(), sp: 0.85 + 0.3 * R(), sz: 1.8 + 2.2 * R()}; }); })();
 function spaceScene(stage, t, ctx) {
   const c = stage.ctx, T = stage.theme, P = plan(ctx.tl), sf = sceneFade(t, ctx), nb = fadeIn(t, P.neb, 0.7), sk = fadeIn(t, P.sky, 0.6) * (1 - nb);
   withAlpha(c, sf, () => {
