@@ -237,6 +237,23 @@
       "episode_code": "episodes/cold-vaccine",
       "upload_info": "finals/14-cold-vaccine/upload.md",
       "thumbnail": "0초 프레임(모양·색이 저마다 다른 바이러스 무리 가운데 주사기 하나, 흰 질문 \"감기 주사는 왜 없을까?\"와 큰 주황 답 \"범인이 200가지\")"
+    },
+    {
+      "number": 15,
+      "slug": "traffic-jam",
+      "title": "사고도 없는데 왜 막힐까 — 유령 체증",
+      "status": "final",
+      "folder": "finals/15-traffic-jam",
+      "video": "finals/15-traffic-jam/traffic-jam.mp4",
+      "duration_sec": 175.9,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 19471307,
+      "sha256": "9d0dd114ace5ef51a77e72ed6a07ad9caf2a47842c0b23498e3dd4cc1965708a",
+      "video_date": "2026-11-06",
+      "episode_code": "episodes/traffic-jam",
+      "upload_info": "finals/15-traffic-jam/upload.md",
+      "thumbnail": "0초 프레임(밤 고속도로, 앞에서 뒤로 번지는 빨간 브레이크 등 띠, 흰 질문 \"사고도 없는데 왜 막힐까?\"와 큰 주황빨강 답 \"유령 체증\")"
     }
   ],
   "legacy": [
