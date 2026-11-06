@@ -1,44 +1,3523 @@
 {
   "version": 1,
-  "notes": "설명용 합성음입니다(녹음 아님). 각 사건은 scenes.mjs의 ctx.events와 같은 시각을 씁니다. at 문법은 pipeline/README.md 참고.",
+  "notes": "설명용 합성음입니다(녹음 아님). 배경음악·배경음 없음. 모든 사건은 `node episodes/gravity-time/scenes.mjs --emit-sound`가 scenes.mjs의 같은 모형과 시간 계획(머리·발 시계, 로켓 빛 신호 표, 탑의 감마선 물결, GPS 궤도·지도, 원자시계, 블랙홀 시계의 고유 시간 표)에서 써 넣습니다. 대응: 시계 초침이 넘어감 → 낮은 틱(아래·느린 시계 110~147 Hz, 위·빠른 시계 165~220 Hz; 과장 ×10¹⁵에서 두 박자가 어긋남), 로켓 신호 보냄 110 Hz · 받음 165 Hz, 받은 진동수 → 음높이(탑 196/(1 + εu) Hz, 블랙홀 196·√(1 − r_s/r) Hz, 오해 장면 165 × 0.71 Hz), 평생 차이 → 98·2^(Δ/1 μs) Hz, GPS 위치 밀림 → 휙. 모든 음은 700 Hz 아래. 타임라인이 바뀌면 다시 실행하세요. 패닝 없음(모노 안전).",
   "events": [
     {
-      "id": "bond",
-      "at": {
-        "sentence": "s03",
-        "word": "수소 결합"
-      },
-      "kind": "tick",
-      "params": {
-        "freq": 1760,
-        "gain_db": -20,
-        "decay": 0.12,
-        "repeat": 3,
-        "interval": 0.09
-      },
-      "means": "수소 결합이 이어지는 순간 — 화면의 결합선 번쩍임과 같은 시각"
-    },
-    {
-      "id": "float",
-      "at": [
-        "s05",
-        0.15
-      ],
+      "id": "poster",
+      "at": 0.05,
       "kind": "swell",
       "params": {
-        "freqs": [
-          220,
-          330,
-          440
-        ],
-        "dur": 1.6,
-        "gain_db": -24
+        "freqs": [98, 147],
+        "dur": 1.8,
+        "attack": 0.4,
+        "gain_db": -35,
+        "cutoff": 700
       },
-      "means": "얼음이 떠오르는 결론 — 화면의 수면 고리와 같은 시각"
+      "means": "첫 화면(썸네일): 서 있는 사람, 머리 시계와 발 시계, 제목",
+      "model": {
+        "sig": "1.89359@165.216/0.18556/0.21830/0.2458/30:27/8/28:24"
+      }
+    },
+    {
+      "id": "hook_foot",
+      "at": 2,
+      "kind": "custom",
+      "params": {
+        "gain_db": -38,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 3,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 4,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 5,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 6,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 7,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 8,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 9,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 10,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 11,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 12,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 13,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 14,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 15,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 16,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 17,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 18,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 19,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 20,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 21,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 22,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 23,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "발 시계(낮은 곳)의 초침이 넘어갈 때마다 낮은 틱 147 Hz (24번, 1초 간격)"
+    },
+    {
+      "id": "hook_head",
+      "at": 2.1218,
+      "kind": "custom",
+      "params": {
+        "gain_db": -38,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.8435,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.687,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2.5305,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 3.374,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 4.2175,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 5.0609,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 5.9044,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 6.7479,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 7.5914,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 8.4349,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 9.2784,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 10.1219,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 10.9653,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 11.8088,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 12.6523,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 13.4958,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 14.3393,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 15.1828,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 16.0263,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 16.8697,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 17.7132,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 18.5567,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 19.4002,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 20.2437,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 21.0872,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 21.9307,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 22.7741,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "머리 시계(높은 곳)의 초침 틱 196 Hz (28번): 과장 ×10¹⁵로 0.843초 간격 → 두 박자가 점점 어긋났다 다시 맞음"
+    },
+    {
+      "id": "tag_high",
+      "at": 6.557,
+      "kind": "tick",
+      "params": {
+        "freq": 196,
+        "decay": 0.1,
+        "gain_db": -35,
+        "click": 0
+      },
+      "means": "\"높은 곳 · 머리\" 표시"
+    },
+    {
+      "id": "tag_low",
+      "at": 7.818,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.1,
+        "gain_db": -35,
+        "click": 0
+      },
+      "means": "\"낮은 곳 · 발\" 표시"
+    },
+    {
+      "id": "lead_tile",
+      "at": 9.681,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.1,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "\"두 시계의 차이 · 과장 ×10¹⁵\" 계기"
+    },
+    {
+      "id": "height",
+      "at": 12.263,
+      "kind": "tick",
+      "params": {
+        "freq": 110,
+        "decay": 0.1,
+        "gain_db": -35,
+        "click": 0
+      },
+      "means": "\"1.7 m\" 높이 괄호"
+    },
+    {
+      "id": "life",
+      "at": 17.565,
+      "kind": "chirp",
+      "params": {
+        "gain_db": -37,
+        "harmonics": [1, 0.4],
+        "fade": 0.03,
+        "points": [
+          [0, 98, 0],
+          [0.03, 98, 0.0084],
+          [0.06, 98, 0.0312],
+          [0.09, 98, 0.0648],
+          [0.12, 98, 0.1056],
+          [0.15, 98, 0.15],
+          [0.18, 98, 0.1944],
+          [0.21, 98.01, 0.2352],
+          [0.24, 98.02, 0.2688],
+          [0.27, 98.04, 0.2916],
+          [0.3, 98.07, 0.3],
+          [0.33, 98.11, 0.3],
+          [0.36, 98.15, 0.3],
+          [0.39, 98.21, 0.3],
+          [0.42, 98.29, 0.3],
+          [0.45, 98.38, 0.3],
+          [0.48, 98.48, 0.3],
+          [0.51, 98.6, 0.3],
+          [0.54, 98.75, 0.3],
+          [0.57, 98.91, 0.3],
+          [0.6, 99.1, 0.3],
+          [0.63, 99.31, 0.3],
+          [0.66, 99.55, 0.3],
+          [0.69, 99.81, 0.3],
+          [0.72, 100.11, 0.3],
+          [0.75, 100.43, 0.3],
+          [0.78, 100.79, 0.3],
+          [0.81, 101.18, 0.3],
+          [0.84, 101.61, 0.3],
+          [0.87, 102.07, 0.3],
+          [0.9, 102.58, 0.3],
+          [0.93, 103.13, 0.3],
+          [0.96, 103.72, 0.3],
+          [0.99, 104.36, 0.3],
+          [1.02, 105.05, 0.3],
+          [1.05, 105.79, 0.3],
+          [1.08, 106.58, 0.3],
+          [1.11, 107.43, 0.3],
+          [1.14, 108.34, 0.3],
+          [1.17, 109.31, 0.3],
+          [1.2, 110.35, 0.3],
+          [1.23, 111.46, 0.3],
+          [1.26, 112.64, 0.3],
+          [1.29, 113.89, 0.3],
+          [1.32, 115.23, 0.3],
+          [1.35, 116.58, 0.3],
+          [1.38, 117.89, 0.3],
+          [1.41, 119.14, 0.3],
+          [1.44, 120.34, 0.3],
+          [1.47, 121.49, 0.3],
+          [1.5, 122.58, 0.3],
+          [1.53, 123.62, 0.3],
+          [1.56, 124.61, 0.3],
+          [1.59, 125.55, 0.3],
+          [1.62, 126.44, 0.3],
+          [1.65, 127.28, 0.3],
+          [1.68, 128.07, 0.3],
+          [1.71, 128.81, 0.3],
+          [1.74, 129.5, 0.3],
+          [1.77, 130.14, 0.3],
+          [1.8, 130.74, 0.3],
+          [1.83, 131.3, 0.3],
+          [1.86, 131.81, 0.3],
+          [1.89, 132.28, 0.3],
+          [1.92, 132.72, 0.3],
+          [1.95, 133.11, 0.3],
+          [1.98, 133.47, 0.3],
+          [2.01, 133.79, 0.3],
+          [2.04, 134.07, 0.3],
+          [2.07, 134.33, 0.3],
+          [2.1, 134.56, 0.3],
+          [2.13, 134.75, 0.3],
+          [2.16, 134.92, 0.3],
+          [2.19, 135.07, 0.3],
+          [2.22, 135.19, 0.3],
+          [2.25, 135.29, 0.3],
+          [2.28, 135.38, 0.3],
+          [2.31, 135.44, 0.3],
+          [2.34, 135.5, 0.3],
+          [2.37, 135.53, 0.3],
+          [2.4, 135.56, 0.3],
+          [2.43, 135.58, 0.3],
+          [2.46, 135.59, 0.3],
+          [2.49, 135.59, 0.3],
+          [2.52, 135.6, 0.3],
+          [3.33, 135.6, 0.3],
+          [3.36, 135.6, 0.299],
+          [3.39, 135.6, 0.2925],
+          [3.42, 135.6, 0.2808],
+          [3.45, 135.6, 0.2647],
+          [3.48, 135.6, 0.2448],
+          [3.51, 135.6, 0.222],
+          [3.54, 135.6, 0.197],
+          [3.57, 135.6, 0.1706],
+          [3.6, 135.6, 0.1437],
+          [3.63, 135.6, 0.1169],
+          [3.66, 135.6, 0.0911],
+          [3.69, 135.6, 0.0671],
+          [3.72, 135.6, 0.0455],
+          [3.75, 135.6, 0.0273],
+          [3.78, 135.6, 0.0131],
+          [3.81, 135.6, 0.0037],
+          [3.84, 135.6, 0]
+        ]
+      },
+      "means": "평생 쌓이는 실제 차이 Δ → 음높이 98·2^(Δ/1 μs) Hz: 0 → 0.47 μs에서 136 Hz (1 μs면 한 옥타브 위 196 Hz)"
+    },
+    {
+      "id": "decades",
+      "at": 18.4342,
+      "kind": "custom",
+      "params": {
+        "gain_db": -37,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 123,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.1999,
+            "params": {
+              "freq": 123,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.3402,
+            "params": {
+              "freq": 123,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.4518,
+            "params": {
+              "freq": 123,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.5635,
+            "params": {
+              "freq": 123,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.7037,
+            "params": {
+              "freq": 123,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.9036,
+            "params": {
+              "freq": 123,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.6728,
+            "params": {
+              "freq": 123,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "나이 계기가 10년씩 넘어갈 때마다 작은 틱 (8번, 80년까지)"
+    },
+    {
+      "id": "million",
+      "at": 18.766,
+      "kind": "tick",
+      "params": {
+        "freq": 196,
+        "decay": 0.12,
+        "gain_db": -35,
+        "click": 0
+      },
+      "means": "\"100만분의 1초 (1 μs)\" 눈금이 밝아짐 (위 음높이 대응의 한 옥타브)"
+    },
+    {
+      "id": "today",
+      "at": 21.608,
+      "kind": "swell",
+      "params": {
+        "freqs": [147, 220],
+        "dur": 1.4,
+        "attack": 0.4,
+        "gain_db": -34,
+        "cutoff": 700
+      },
+      "means": "\"오늘날의 원자시계로 잴 수 있는 크기\""
+    },
+    {
+      "id": "hanja",
+      "at": 26.059,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.14,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"重 + 力\" 글자"
+    },
+    {
+      "id": "heavy",
+      "at": 26.67,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.1,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "重 \"무거울 중\" 밝아짐"
+    },
+    {
+      "id": "force",
+      "at": 27.391,
+      "kind": "tick",
+      "params": {
+        "freq": 165,
+        "decay": 0.1,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "力 \"힘 력\" 밝아짐"
+    },
+    {
+      "id": "gravity",
+      "at": 28.943,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.1,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "\"gravity\""
+    },
+    {
+      "id": "latin",
+      "at": 30.174,
+      "kind": "tick",
+      "params": {
+        "freq": 110,
+        "decay": 0.1,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "\"← gravitas\" (라틴어)"
+    },
+    {
+      "id": "heaviness",
+      "at": 30.775,
+      "kind": "swell",
+      "params": {
+        "freqs": [110, 165],
+        "dur": 1.4,
+        "attack": 0.4,
+        "gain_db": -33,
+        "cutoff": 700
+      },
+      "means": "\"라틴어 · 무거움 (gravis = 무거운)\""
+    },
+    {
+      "id": "drops",
+      "at": 27.1667,
+      "kind": "custom",
+      "params": {
+        "gain_db": -32,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 62,
+              "dur": 0.45,
+              "harmonics": [1, 0.35],
+              "attack": 0.004,
+              "decay": 0.15,
+              "release": 0.15,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.2,
+              "low": 40,
+              "high": 220,
+              "release": 0.15,
+              "gain_db": -10
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.7,
+            "params": {
+              "freq": 62,
+              "dur": 0.45,
+              "harmonics": [1, 0.35],
+              "attack": 0.004,
+              "decay": 0.15,
+              "release": 0.15,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 1.7,
+            "params": {
+              "dur": 0.2,
+              "low": 40,
+              "high": 220,
+              "release": 0.15,
+              "gain_db": -10
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 3.4,
+            "params": {
+              "freq": 62,
+              "dur": 0.45,
+              "harmonics": [1, 0.35],
+              "attack": 0.004,
+              "decay": 0.15,
+              "release": 0.15,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 3.4,
+            "params": {
+              "dur": 0.2,
+              "low": 40,
+              "high": 220,
+              "release": 0.15,
+              "gain_db": -10
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 5.1,
+            "params": {
+              "freq": 62,
+              "dur": 0.45,
+              "harmonics": [1, 0.35],
+              "attack": 0.004,
+              "decay": 0.15,
+              "release": 0.15,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 5.1,
+            "params": {
+              "dur": 0.2,
+              "low": 40,
+              "high": 220,
+              "release": 0.15,
+              "gain_db": -10
+            }
+          }
+        ]
+      },
+      "means": "떨어진 공이 바닥에 닿음 (4번, 3.2 m를 실제 g로 0.81초)"
+    },
+    {
+      "id": "card1907",
+      "at": 34.621,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.14,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"1907 · Einstein\""
+    },
+    {
+      "id": "fall",
+      "at": 36.604,
+      "kind": "whoosh",
+      "params": {
+        "dur": 1.6,
+        "f_start": 170,
+        "f_end": 80,
+        "q": 1.6,
+        "gain_db": -34
+      },
+      "means": "상자가 자유 낙하를 시작 (옆 건물이 위로 미끄러짐)"
+    },
+    {
+      "id": "scale_zero",
+      "at": 36.554,
+      "kind": "chirp",
+      "params": {
+        "gain_db": -35,
+        "harmonics": [1, 0.3],
+        "fade": 0.03,
+        "points": [
+          [0, 147, 0],
+          [0.02, 147, 0.2963],
+          [0.04, 147, 0.4],
+          [0.06, 146.34, 0.4],
+          [0.08, 141.52, 0.4],
+          [0.1, 133.04, 0.4],
+          [0.12, 122.13, 0.4],
+          [0.14, 110, 0.4],
+          [0.16, 97.87, 0.4],
+          [0.18, 86.96, 0.4],
+          [0.2, 78.48, 0.4],
+          [0.22, 73.66, 0.4],
+          [0.24, 73, 0.4],
+          [0.34, 73, 0.4],
+          [0.36, 73, 0.3949],
+          [0.38, 73, 0.3584],
+          [0.4, 73, 0.2963],
+          [0.42, 73, 0.22],
+          [0.44, 73, 0.1408],
+          [0.46, 73, 0.0702],
+          [0.48, 73, 0.0194],
+          [0.5, 73, 0]
+        ]
+      },
+      "means": "저울 눈금 60 kg → 0 kg: 음높이 147 → 73 Hz (눈금에 비례)"
+    },
+    {
+      "id": "feel",
+      "at": 38.737,
+      "kind": "swell",
+      "params": {
+        "freqs": [110, 165],
+        "dur": 1.4,
+        "attack": 0.4,
+        "gain_db": -33,
+        "cutoff": 700
+      },
+      "means": "\"무게를 느끼지 못함\""
+    },
+    {
+      "id": "clue",
+      "at": 40.6,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.1,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "\"내 생애 가장 행복한 생각\""
+    },
+    {
+      "id": "two_boxes",
+      "at": 43.143,
+      "kind": "tick",
+      "params": {
+        "freq": 110,
+        "decay": 0.1,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "지구 위의 상자와 로켓 안의 상자가 나란히"
+    },
+    {
+      "id": "rocket_up",
+      "at": 45.268,
+      "kind": "swell",
+      "params": {
+        "freqs": [82, 123],
+        "dur": 1.5,
+        "attack": 0.4,
+        "gain_db": -35,
+        "cutoff": 700
+      },
+      "means": "로켓이 위로 1 g로 가속 (설명용 낮은 음, 엔진 소리 아님)"
+    },
+    {
+      "id": "apples",
+      "at": 44.0469,
+      "kind": "custom",
+      "params": {
+        "gain_db": -33,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 70,
+              "dur": 0.45,
+              "harmonics": [1, 0.35],
+              "attack": 0.004,
+              "decay": 0.15,
+              "release": 0.15,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.2,
+              "low": 40,
+              "high": 220,
+              "release": 0.15,
+              "gain_db": -10
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.45,
+            "params": {
+              "freq": 70,
+              "dur": 0.45,
+              "harmonics": [1, 0.35],
+              "attack": 0.004,
+              "decay": 0.15,
+              "release": 0.15,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 1.45,
+            "params": {
+              "dur": 0.2,
+              "low": 40,
+              "high": 220,
+              "release": 0.15,
+              "gain_db": -10
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 2.9,
+            "params": {
+              "freq": 70,
+              "dur": 0.45,
+              "harmonics": [1, 0.35],
+              "attack": 0.004,
+              "decay": 0.15,
+              "release": 0.15,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 2.9,
+            "params": {
+              "dur": 0.2,
+              "low": 40,
+              "high": 220,
+              "release": 0.15,
+              "gain_db": -10
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 4.35,
+            "params": {
+              "freq": 70,
+              "dur": 0.45,
+              "harmonics": [1, 0.35],
+              "attack": 0.004,
+              "decay": 0.15,
+              "release": 0.15,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 4.35,
+            "params": {
+              "dur": 0.2,
+              "low": 40,
+              "high": 220,
+              "release": 0.15,
+              "gain_db": -10
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 5.8,
+            "params": {
+              "freq": 70,
+              "dur": 0.45,
+              "harmonics": [1, 0.35],
+              "attack": 0.004,
+              "decay": 0.15,
+              "release": 0.15,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 5.8,
+            "params": {
+              "dur": 0.2,
+              "low": 40,
+              "high": 220,
+              "release": 0.15,
+              "gain_db": -10
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 7.25,
+            "params": {
+              "freq": 70,
+              "dur": 0.45,
+              "harmonics": [1, 0.35],
+              "attack": 0.004,
+              "decay": 0.15,
+              "release": 0.15,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 7.25,
+            "params": {
+              "dur": 0.2,
+              "low": 40,
+              "high": 220,
+              "release": 0.15,
+              "gain_db": -10
+            }
+          }
+        ]
+      },
+      "means": "두 상자에서 사과가 같은 순간 바닥에 닿음 (6번; 한 소리 = 같은 시각)"
+    },
+    {
+      "id": "same",
+      "at": 48.414,
+      "kind": "swell",
+      "params": {
+        "freqs": [131, 196, 262],
+        "dur": 1.8,
+        "attack": 0.4,
+        "gain_db": -32,
+        "cutoff": 700
+      },
+      "means": "\"=\" · \"구별할 수 없음\""
+    },
+    {
+      "id": "knob",
+      "at": 55.172,
+      "kind": "chirp",
+      "params": {
+        "gain_db": -37,
+        "harmonics": [1, 0.3],
+        "fade": 0.03,
+        "points": [
+          [0, 82, 0],
+          [0.03, 82, 0.0312],
+          [0.06, 82.01, 0.1056],
+          [0.09, 82.11, 0.1944],
+          [0.12, 82.34, 0.2688],
+          [0.15, 82.69, 0.3],
+          [0.18, 83.15, 0.3],
+          [0.21, 83.71, 0.3],
+          [0.24, 84.37, 0.3],
+          [0.27, 85.13, 0.3],
+          [0.3, 85.97, 0.3],
+          [0.33, 86.89, 0.3],
+          [0.36, 87.88, 0.3],
+          [0.39, 88.95, 0.3],
+          [0.42, 90.07, 0.3],
+          [0.45, 91.26, 0.3],
+          [0.48, 92.49, 0.3],
+          [0.51, 93.77, 0.3],
+          [0.54, 95.08, 0.3],
+          [0.57, 96.43, 0.3],
+          [0.6, 97.81, 0.3],
+          [0.63, 99.2, 0.3],
+          [0.66, 100.61, 0.3],
+          [0.69, 102.03, 0.3],
+          [0.72, 103.45, 0.3],
+          [0.75, 104.86, 0.3],
+          [0.78, 106.27, 0.3],
+          [0.81, 107.65, 0.3],
+          [0.84, 109.02, 0.3],
+          [0.87, 110.36, 0.3],
+          [0.9, 111.66, 0.3],
+          [0.93, 112.93, 0.3],
+          [0.96, 114.14, 0.3],
+          [0.99, 115.31, 0.3],
+          [1.02, 116.42, 0.3],
+          [1.05, 117.46, 0.3],
+          [1.08, 118.43, 0.3],
+          [1.11, 119.32, 0.3],
+          [1.14, 120.14, 0.3],
+          [1.17, 120.86, 0.3],
+          [1.2, 121.49, 0.3],
+          [1.23, 122.02, 0.3],
+          [1.26, 122.44, 0.3],
+          [1.29, 122.75, 0.3],
+          [1.32, 122.94, 0.3],
+          [1.35, 123, 0.3],
+          [1.74, 123, 0.3],
+          [1.77, 123, 0.2978],
+          [1.8, 123, 0.2871],
+          [1.83, 123, 0.2688],
+          [1.86, 123, 0.2444],
+          [1.89, 123, 0.2155],
+          [1.92, 123, 0.1835],
+          [1.95, 123, 0.15],
+          [1.98, 123, 0.1165],
+          [2.01, 123, 0.0845],
+          [2.04, 123, 0.0556],
+          [2.07, 123, 0.0312],
+          [2.1, 123, 0.0129],
+          [2.13, 123, 0]
+        ]
+      },
+      "means": "가속도 손잡이 a: 0 → 1 g, 음높이 82 → 123 Hz (a에 비례)"
+    },
+    {
+      "id": "pulse_send",
+      "at": 52.752,
+      "kind": "custom",
+      "params": {
+        "gain_db": -37,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 3.0156,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 4.1988,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 5.4172,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 6.6355,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 7.8538,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 9.0721,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 10.2904,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 11.5087,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 12.727,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 13.9453,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 15.1636,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 16.3819,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 17.6002,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 18.8185,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 20.0368,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 21.2551,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 22.4734,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 23.6917,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 24.91,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 26.1283,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 27.3466,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 28.5649,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 29.7832,
+            "params": {
+              "freq": 110,
+              "decay": 0.07,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "바닥 시계가 1초를 셀 때마다 빛 신호를 보냄: 낮은 틱 110 Hz (26번). 화면은 천장 시계의 시간 → 가속 뒤 간격 1.000 → 1.218초"
+    },
+    {
+      "id": "pulse_recv",
+      "at": 52.3607,
+      "kind": "custom",
+      "params": {
+        "gain_db": -36,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 3,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 4.0125,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 5.0885,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 6.2494,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 7.4649,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 8.6832,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 9.9015,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 11.1198,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 12.3381,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 13.5564,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 14.7747,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 15.993,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 17.2113,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 18.4296,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 19.6479,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 20.8662,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 22.0845,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 23.3028,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 24.5211,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 25.7394,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 26.9577,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 28.176,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 29.3943,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "천장이 신호를 받을 때마다 틱 165 Hz (26번): 받은 간격 1.000초 → 1.218초 (과장 ×10¹⁵)"
+    },
+    {
+      "id": "ceil_own",
+      "at": 69.752,
+      "kind": "custom",
+      "params": {
+        "gain_db": -40,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 220,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1,
+            "params": {
+              "freq": 220,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2,
+            "params": {
+              "freq": 220,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 3,
+            "params": {
+              "freq": 220,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 4,
+            "params": {
+              "freq": 220,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 5,
+            "params": {
+              "freq": 220,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 6,
+            "params": {
+              "freq": 220,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "위에서 볼 때(s09): 천장 자기 시계의 1초 틱 220 Hz (7번) — 받은 틱(1.218초 간격)과 점점 어긋남"
+    },
+    {
+      "id": "ceiling_speed",
+      "at": 63.0424,
+      "kind": "chirp",
+      "params": {
+        "gain_db": -38,
+        "harmonics": [1, 0.3],
+        "fade": 0.03,
+        "points": [
+          [0, 120.93, 0],
+          [0.03, 121.1, 0.017],
+          [0.06, 121.26, 0.0605],
+          [0.09, 121.42, 0.1191],
+          [0.12, 121.58, 0.1814],
+          [0.15, 121.75, 0.2363],
+          [0.18, 121.91, 0.2722],
+          [0.21, 122.07, 0.28],
+          [0.24, 122.24, 0.28],
+          [0.27, 122.4, 0.28],
+          [0.3, 122.56, 0.28],
+          [0.33, 122.72, 0.28],
+          [0.36, 122.89, 0.28],
+          [0.39, 123.05, 0.28],
+          [0.42, 123.21, 0.28],
+          [0.45, 123.38, 0.28],
+          [0.48, 123.54, 0.28],
+          [0.51, 123.7, 0.28],
+          [0.54, 123.87, 0.28],
+          [0.57, 124.03, 0.28],
+          [0.6, 124.19, 0.28],
+          [0.63, 124.35, 0.28],
+          [0.66, 124.52, 0.28],
+          [0.69, 124.68, 0.28],
+          [0.72, 124.84, 0.28],
+          [0.75, 125.01, 0.28],
+          [0.78, 125.17, 0.28],
+          [0.81, 125.33, 0.28],
+          [0.84, 125.49, 0.28],
+          [0.87, 125.66, 0.28],
+          [0.9, 125.82, 0.28],
+          [0.93, 125.98, 0.28],
+          [0.96, 126.15, 0.28],
+          [0.99, 126.31, 0.28],
+          [1.02, 126.47, 0.28],
+          [1.05, 126.64, 0.28],
+          [1.08, 126.8, 0.28],
+          [1.11, 126.96, 0.28],
+          [1.14, 127.12, 0.28],
+          [1.17, 127.29, 0.28],
+          [1.2, 127.45, 0.28],
+          [1.23, 127.61, 0.28],
+          [1.26, 127.78, 0.28],
+          [1.29, 127.94, 0.28],
+          [1.32, 128.1, 0.28],
+          [1.35, 128.26, 0.28],
+          [1.38, 128.43, 0.28],
+          [1.41, 128.59, 0.28],
+          [1.44, 128.75, 0.28],
+          [1.47, 128.92, 0.28],
+          [1.5, 129.08, 0.28],
+          [1.53, 129.24, 0.28],
+          [1.56, 129.41, 0.28],
+          [1.59, 129.57, 0.28],
+          [1.62, 129.73, 0.28],
+          [1.65, 129.89, 0.28],
+          [1.68, 130.06, 0.28],
+          [1.71, 130.22, 0.28],
+          [1.74, 130.38, 0.28],
+          [1.77, 130.55, 0.28],
+          [1.8, 130.71, 0.28],
+          [1.83, 130.87, 0.28],
+          [1.86, 131.03, 0.28],
+          [1.89, 131.2, 0.28],
+          [1.92, 131.36, 0.28],
+          [1.95, 131.52, 0.28],
+          [1.98, 131.69, 0.28],
+          [2.01, 131.85, 0.28],
+          [2.04, 132.01, 0.28],
+          [2.07, 132.17, 0.28],
+          [2.1, 132.34, 0.28],
+          [2.13, 132.5, 0.28],
+          [2.16, 132.66, 0.28],
+          [2.19, 132.83, 0.28],
+          [2.22, 132.99, 0.28],
+          [2.25, 133.15, 0.28],
+          [2.28, 133.32, 0.28],
+          [2.31, 133.48, 0.28],
+          [2.34, 133.64, 0.28],
+          [2.37, 133.8, 0.28],
+          [2.4, 133.97, 0.28],
+          [2.43, 134.13, 0.28],
+          [2.46, 134.29, 0.28],
+          [2.49, 134.46, 0.28],
+          [2.52, 134.62, 0.28],
+          [2.55, 134.78, 0.28],
+          [2.58, 134.94, 0.28],
+          [2.61, 135.11, 0.28],
+          [2.64, 135.27, 0.28],
+          [2.67, 135.43, 0.28],
+          [2.7, 135.6, 0.28],
+          [2.73, 135.76, 0.28],
+          [2.76, 135.92, 0.28],
+          [2.79, 136.09, 0.28],
+          [2.82, 136.25, 0.28],
+          [2.85, 136.41, 0.28],
+          [2.88, 136.55, 0.2796],
+          [2.91, 136.55, 0.2648],
+          [2.94, 136.55, 0.2327],
+          [2.97, 136.55, 0.189],
+          [3, 136.55, 0.1395],
+          [3.03, 136.55, 0.0901],
+          [3.06, 136.55, 0.0466],
+          [3.09, 136.55, 0.0147],
+          [3.12, 136.55, 0]
+        ]
+      },
+      "means": "노란 신호가 올라가는 동안 천장의 속도(바깥 기준 막대) → 음높이: 보낼 때보다 받을 때 높음"
+    },
+    {
+      "id": "away",
+      "at": 65.9171,
+      "kind": "tick",
+      "params": {
+        "freq": 196,
+        "decay": 0.12,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "\"더 빨라져 달아남\": 노란 신호가 천장에 닿음"
+    },
+    {
+      "id": "sec_top",
+      "at": 71.749,
+      "kind": "tick",
+      "params": {
+        "freq": 220,
+        "decay": 0.1,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "\"천장의 1초\" 막대가 끝남"
+    },
+    {
+      "id": "sec_bottom",
+      "at": 71.9673,
+      "kind": "tick",
+      "params": {
+        "freq": 110,
+        "decay": 0.1,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "\"바닥의 1초\" 막대가 0.22초 늦게 끝남"
+    },
+    {
+      "id": "slow9",
+      "at": 74.352,
+      "kind": "tick",
+      "params": {
+        "freq": 110,
+        "decay": 0.1,
+        "gain_db": -35,
+        "click": 0
+      },
+      "means": "\"아래 시계가 느리게 감\""
+    },
+    {
+      "id": "to_earth",
+      "at": 76.541,
+      "kind": "whoosh",
+      "params": {
+        "dur": 1.5,
+        "f_start": 150,
+        "f_end": 80,
+        "q": 1.6,
+        "gain_db": -35
+      },
+      "means": "로켓 바깥이 지구로 바뀜 (같은 1 g)"
+    },
+    {
+      "id": "landed",
+      "at": 78.041,
+      "kind": "custom",
+      "params": {
+        "gain_db": -33,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 55,
+              "dur": 0.45,
+              "harmonics": [1, 0.35],
+              "attack": 0.004,
+              "decay": 0.15,
+              "release": 0.15,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.2,
+              "low": 40,
+              "high": 220,
+              "release": 0.15,
+              "gain_db": -10
+            }
+          }
+        ]
+      },
+      "means": "지구 위에 섬"
+    },
+    {
+      "id": "lower10",
+      "at": 79.271,
+      "kind": "swell",
+      "params": {
+        "freqs": [98, 147],
+        "dur": 1.5,
+        "attack": 0.4,
+        "gain_db": -33,
+        "cutoff": 700
+      },
+      "means": "\"아래쪽일수록 느리게\""
+    },
+    {
+      "id": "card1959",
+      "at": 83.548,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.14,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"1959 · Harvard\""
+    },
+    {
+      "id": "h225",
+      "at": 87.401,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.1,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "\"22.5 m\" 높이 괄호가 다 그려짐"
+    },
+    {
+      "id": "src_det",
+      "at": 88.323,
+      "kind": "tick",
+      "params": {
+        "freq": 165,
+        "decay": 0.1,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "아래 감마선원과 위 검출기"
+    },
+    {
+      "id": "gamma",
+      "at": 89.255,
+      "kind": "chirp",
+      "params": {
+        "gain_db": -35,
+        "harmonics": [1, 0.3],
+        "fade": 0.03,
+        "points": [
+          [0, 196, 0],
+          [0.03, 195.46, 0.0333],
+          [0.06, 194.93, 0.1126],
+          [0.09, 194.4, 0.2074],
+          [0.12, 193.87, 0.2867],
+          [0.15, 193.34, 0.32],
+          [0.18, 192.81, 0.32],
+          [0.21, 192.28, 0.32],
+          [0.24, 191.76, 0.32],
+          [0.27, 191.23, 0.32],
+          [0.3, 190.71, 0.32],
+          [0.33, 190.19, 0.32],
+          [0.36, 189.67, 0.32],
+          [0.39, 189.15, 0.32],
+          [0.42, 188.63, 0.32],
+          [0.45, 188.12, 0.32],
+          [0.48, 187.6, 0.32],
+          [0.51, 187.09, 0.32],
+          [0.54, 186.58, 0.32],
+          [0.57, 186.07, 0.32],
+          [0.6, 185.56, 0.32],
+          [0.63, 185.05, 0.32],
+          [0.66, 184.55, 0.32],
+          [0.69, 184.04, 0.32],
+          [0.72, 183.54, 0.32],
+          [0.75, 183.04, 0.32],
+          [0.78, 182.54, 0.32],
+          [0.81, 182.04, 0.32],
+          [0.84, 181.54, 0.32],
+          [0.87, 181.05, 0.32],
+          [0.9, 180.55, 0.32],
+          [0.93, 180.06, 0.32],
+          [0.96, 179.57, 0.32],
+          [0.99, 179.08, 0.32],
+          [1.02, 178.59, 0.32],
+          [1.05, 178.1, 0.32],
+          [1.08, 177.61, 0.32],
+          [1.11, 177.13, 0.32],
+          [1.14, 176.64, 0.32],
+          [1.17, 176.16, 0.32],
+          [1.2, 175.68, 0.32],
+          [1.23, 175.2, 0.32],
+          [1.26, 174.72, 0.32],
+          [1.29, 174.24, 0.32],
+          [1.32, 173.77, 0.32],
+          [1.35, 173.29, 0.32],
+          [1.38, 172.82, 0.32],
+          [1.41, 172.35, 0.32],
+          [1.44, 171.88, 0.32],
+          [1.47, 171.41, 0.32],
+          [1.5, 170.94, 0.32],
+          [1.53, 170.47, 0.32],
+          [1.56, 170, 0.32],
+          [1.59, 169.54, 0.32],
+          [1.62, 169.08, 0.32],
+          [1.65, 168.61, 0.32],
+          [1.68, 168.15, 0.32],
+          [1.71, 167.69, 0.32],
+          [1.74, 167.24, 0.32],
+          [1.77, 166.78, 0.32],
+          [1.8, 166.32, 0.32],
+          [1.83, 165.87, 0.32],
+          [1.86, 165.42, 0.32],
+          [1.89, 164.96, 0.32],
+          [1.92, 164.51, 0.32],
+          [1.95, 164.06, 0.32],
+          [1.98, 163.61, 0.32],
+          [2.01, 163.17, 0.32],
+          [2.04, 162.72, 0.32],
+          [2.07, 162.28, 0.32],
+          [2.1, 161.83, 0.32],
+          [2.13, 161.39, 0.32],
+          [2.16, 160.95, 0.32],
+          [2.19, 160.51, 0.32],
+          [2.22, 160.07, 0.32],
+          [2.25, 159.63, 0.32],
+          [2.28, 159.2, 0.32],
+          [2.31, 158.76, 0.32],
+          [2.34, 158.33, 0.32],
+          [2.37, 157.9, 0.32],
+          [2.4, 157.47, 0.32],
+          [2.43, 157.32, 0.32],
+          [3.6, 157.32, 0.32],
+          [3.63, 157.32, 0.3177],
+          [3.66, 157.32, 0.3063],
+          [3.69, 157.32, 0.2867],
+          [3.72, 157.32, 0.2607],
+          [3.75, 157.32, 0.2298],
+          [3.78, 157.32, 0.1957],
+          [3.81, 157.32, 0.16],
+          [3.84, 157.32, 0.1243],
+          [3.87, 157.32, 0.0902],
+          [3.9, 157.32, 0.0593],
+          [3.93, 157.32, 0.0333],
+          [3.96, 157.32, 0.0138],
+          [3.99, 157.32, 0]
+        ]
+      },
+      "means": "감마선 물결의 앞머리 높이에서 잰 진동수 → 음높이 196/(1 + ε·u) Hz: 위에 닿으면 157 Hz (과장 ×10¹⁴, 실제 비 1 − 2.5×10⁻¹⁵)"
+    },
+    {
+      "id": "cmp11",
+      "at": 90.746,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.1,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "\"물결 간격\" 비교 막대"
+    },
+    {
+      "id": "first",
+      "at": 92.268,
+      "kind": "swell",
+      "params": {
+        "freqs": [110, 165, 220],
+        "dur": 1.6,
+        "attack": 0.4,
+        "gain_db": -33,
+        "cutoff": 700
+      },
+      "means": "\"처음 확인 · 예측과 10% 안에서 일치\""
+    },
+    {
+      "id": "orbit",
+      "at": 95.112,
+      "kind": "whoosh",
+      "params": {
+        "dur": 1,
+        "f_start": 90,
+        "f_end": 150,
+        "q": 1.6,
+        "gain_db": -35
+      },
+      "means": "궤도가 그려짐"
+    },
+    {
+      "id": "gps_label",
+      "at": 96.024,
+      "kind": "tick",
+      "params": {
+        "freq": 165,
+        "decay": 0.1,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "\"GPS 위성\""
+    },
+    {
+      "id": "alt",
+      "at": 99.071,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.1,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "\"약 20,200 km\" 높이 괄호"
+    },
+    {
+      "id": "row45",
+      "at": 104.537,
+      "kind": "tick",
+      "params": {
+        "freq": 196,
+        "decay": 0.12,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"+45 μs 중력이 약해서 빨리\""
+    },
+    {
+      "id": "speed_arrow",
+      "at": 106.891,
+      "kind": "whoosh",
+      "params": {
+        "dur": 0.7,
+        "f_start": 110,
+        "f_end": 170,
+        "q": 1.6,
+        "gain_db": -36
+      },
+      "means": "위성의 속도 화살표"
+    },
+    {
+      "id": "row7",
+      "at": 108.665,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.12,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"−7 μs 빠르게 움직여서 늦게\""
+    },
+    {
+      "id": "row38",
+      "at": 109.807,
+      "kind": "swell",
+      "params": {
+        "freqs": [131, 196],
+        "dur": 1.5,
+        "attack": 0.4,
+        "gain_db": -33,
+        "cutoff": 700
+      },
+      "means": "\"= +38 μs 하루에 앞서 감\""
+    },
+    {
+      "id": "map",
+      "at": 111.744,
+      "kind": "tick",
+      "params": {
+        "freq": 110,
+        "decay": 0.1,
+        "gain_db": -35,
+        "click": 0
+      },
+      "means": "지도 카드"
+    },
+    {
+      "id": "off",
+      "at": 112.486,
+      "kind": "custom",
+      "params": {
+        "gain_db": -32,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 70,
+              "dur": 0.45,
+              "harmonics": [1, 0.35],
+              "attack": 0.004,
+              "decay": 0.15,
+              "release": 0.15,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.2,
+              "low": 40,
+              "high": 220,
+              "release": 0.15,
+              "gain_db": -10
+            }
+          }
+        ]
+      },
+      "means": "\"상대성 보정\" 스위치를 끔"
+    },
+    {
+      "id": "drift",
+      "at": 112.736,
+      "kind": "whoosh",
+      "params": {
+        "dur": 3.448,
+        "f_start": 90,
+        "f_end": 180,
+        "q": 1.6,
+        "gain_db": -35
+      },
+      "means": "GPS가 계산한 위치가 밀려남: 하루에 약 11.4 km (경과 0 → 1일, 시간 압축)"
+    },
+    {
+      "id": "km11",
+      "at": 116.184,
+      "kind": "swell",
+      "params": {
+        "freqs": [110, 165],
+        "dur": 1.4,
+        "attack": 0.4,
+        "gain_db": -33,
+        "cutoff": 700
+      },
+      "means": "\"38 μs × 빛의 속도 ≈ 11 km\"에 도달"
+    },
+    {
+      "id": "chart",
+      "at": 117.93,
+      "kind": "whoosh",
+      "params": {
+        "dur": 1.2,
+        "f_start": 80,
+        "f_end": 130,
+        "q": 1.6,
+        "gain_db": -38
+      },
+      "means": "높이–시간 그래프의 곡선이 그려짐 (계산값)"
+    },
+    {
+      "id": "card2010",
+      "at": 117.97,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.14,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"2010 · NIST\""
+    },
+    {
+      "id": "rise",
+      "at": 120.145,
+      "kind": "chirp",
+      "params": {
+        "gain_db": -38,
+        "harmonics": [1, 0.3],
+        "fade": 0.03,
+        "points": [
+          [0, 98, 0],
+          [0.03, 98, 0.0605],
+          [0.06, 98.01, 0.1814],
+          [0.09, 98.05, 0.2722],
+          [0.12, 98.11, 0.28],
+          [0.15, 98.22, 0.28],
+          [0.18, 98.38, 0.28],
+          [0.21, 98.61, 0.28],
+          [0.24, 98.91, 0.28],
+          [0.27, 99.3, 0.28],
+          [0.3, 99.78, 0.28],
+          [0.33, 100.37, 0.28],
+          [0.36, 101.07, 0.28],
+          [0.39, 101.91, 0.28],
+          [0.42, 102.88, 0.28],
+          [0.45, 104, 0.28],
+          [0.48, 105.28, 0.28],
+          [0.51, 106.73, 0.28],
+          [0.54, 108.37, 0.28],
+          [0.57, 110.19, 0.28],
+          [0.6, 112.22, 0.28],
+          [0.63, 114.46, 0.28],
+          [0.66, 116.71, 0.28],
+          [0.69, 118.74, 0.28],
+          [0.72, 120.58, 0.28],
+          [0.75, 122.22, 0.28],
+          [0.78, 123.67, 0.28],
+          [0.81, 124.96, 0.28],
+          [0.84, 126.09, 0.28],
+          [0.87, 127.06, 0.28],
+          [0.9, 127.9, 0.28],
+          [0.93, 128.61, 0.28],
+          [0.96, 129.2, 0.28],
+          [0.99, 129.69, 0.28],
+          [1.02, 130.08, 0.28],
+          [1.05, 130.38, 0.28],
+          [1.08, 130.61, 0.28],
+          [1.11, 130.77, 0.28],
+          [1.14, 130.88, 0.28],
+          [1.17, 130.95, 0.28],
+          [1.2, 130.99, 0.28],
+          [1.23, 131, 0.2754],
+          [1.26, 131, 0.2519],
+          [1.29, 131, 0.2138],
+          [1.32, 131, 0.1667],
+          [1.35, 131, 0.1166],
+          [1.38, 131, 0.0691],
+          [1.41, 131, 0.0302],
+          [1.44, 131, 0]
+        ]
+      },
+      "means": "위 원자시계를 33 cm 올림: 높이 → 음높이 98 → 131 Hz"
+    },
+    {
+      "id": "beat",
+      "at": 122.52,
+      "kind": "custom",
+      "params": {
+        "gain_db": -40,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 196,
+              "dur": 2.133,
+              "harmonics": [
+                1
+              ],
+              "attack": 0.3,
+              "decay": 0.3,
+              "sustain": 1,
+              "release": 0.5,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 203.06,
+              "dur": 2.133,
+              "harmonics": [
+                1
+              ],
+              "attack": 0.3,
+              "decay": 0.3,
+              "sustain": 1,
+              "release": 0.5,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          }
+        ]
+      },
+      "means": "두 원자시계 빛의 진동 비교: 196 Hz와 203.1 Hz (위 시계, 과장 ×10¹⁵) → 초당 7.1번의 맥놀이 (화면 물결이 어긋나는 것과 같은 비)"
+    },
+    {
+      "id": "nist_pt",
+      "at": 124.053,
+      "kind": "tick",
+      "params": {
+        "freq": 196,
+        "decay": 0.12,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "그래프에 \"NIST · 33 cm\" 점이 켜짐"
+    },
+    {
+      "id": "card2022",
+      "at": 125.732,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.14,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "\"2022 · JILA\""
+    },
+    {
+      "id": "mm1",
+      "at": 127.719,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.1,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "\"1 mm\" 괄호"
+    },
+    {
+      "id": "cloud",
+      "at": 128.782,
+      "kind": "swell",
+      "params": {
+        "freqs": [110, 165],
+        "dur": 1.4,
+        "attack": 0.4,
+        "gain_db": -35,
+        "cutoff": 700
+      },
+      "means": "원자 구름 (약 10만 개)"
+    },
+    {
+      "id": "colors",
+      "at": 129.665,
+      "kind": "swell",
+      "params": {
+        "freqs": [131, 175],
+        "dur": 1.4,
+        "attack": 0.4,
+        "gain_db": -35,
+        "cutoff": 700
+      },
+      "means": "구름의 위아래 색 차이가 드러남 (과장)"
+    },
+    {
+      "id": "jila_pt",
+      "at": 130.989,
+      "kind": "tick",
+      "params": {
+        "freq": 196,
+        "decay": 0.12,
+        "gain_db": -33,
+        "click": 0
+      },
+      "means": "그래프에 \"JILA · 1 mm\" 점이 켜짐"
+    },
+    {
+      "id": "blackhole",
+      "at": 133.405,
+      "kind": "swell",
+      "params": {
+        "freqs": [55, 82],
+        "dur": 1.8,
+        "attack": 0.4,
+        "gain_db": -34,
+        "cutoff": 700
+      },
+      "means": "블랙홀"
+    },
+    {
+      "id": "bh_far",
+      "at": 133.755,
+      "kind": "custom",
+      "params": {
+        "gain_db": -41,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 147,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.5,
+            "params": {
+              "freq": 147,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1,
+            "params": {
+              "freq": 147,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.5,
+            "params": {
+              "freq": 147,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2,
+            "params": {
+              "freq": 147,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2.5,
+            "params": {
+              "freq": 147,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 3,
+            "params": {
+              "freq": 147,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 3.5,
+            "params": {
+              "freq": 147,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 4,
+            "params": {
+              "freq": 147,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 4.5,
+            "params": {
+              "freq": 147,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 5,
+            "params": {
+              "freq": 147,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 5.5,
+            "params": {
+              "freq": 147,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 6,
+            "params": {
+              "freq": 147,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 6.5,
+            "params": {
+              "freq": 147,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 7,
+            "params": {
+              "freq": 147,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 7.5,
+            "params": {
+              "freq": 147,
+              "decay": 0.05,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "멀리 있는 시계의 0.5초 틱 147 Hz (16번): 기준 박자"
+    },
+    {
+      "id": "bh_clock",
+      "at": 133.8258,
+      "kind": "custom",
+      "params": {
+        "gain_db": -35,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 172.3,
+              "decay": 0.12,
+              "click": 0,
+              "gain_db": -1.1
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.5709,
+            "params": {
+              "freq": 172.3,
+              "decay": 0.12,
+              "click": 0,
+              "gain_db": -1.1
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.1375,
+            "params": {
+              "freq": 172.3,
+              "decay": 0.12,
+              "click": 0,
+              "gain_db": -1.1
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.7209,
+            "params": {
+              "freq": 160.7,
+              "decay": 0.12,
+              "click": 0,
+              "gain_db": -1.7
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2.3709,
+            "params": {
+              "freq": 141,
+              "decay": 0.12,
+              "click": 0,
+              "gain_db": -2.9
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 3.1375,
+            "params": {
+              "freq": 113,
+              "decay": 0.12,
+              "click": 0,
+              "gain_db": -4.8
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 4.1792,
+            "params": {
+              "freq": 75.8,
+              "decay": 0.12,
+              "click": 0,
+              "gain_db": -8.3
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 6.1209,
+            "params": {
+              "freq": 40,
+              "decay": 0.12,
+              "click": 0,
+              "gain_db": -12
+            }
+          }
+        ]
+      },
+      "means": "다가가는 시계의 0.5초 틱(멀리서 본 시각): 간격이 0.5/√(1 − r_s/r)초로 늘어나고 음높이 196·√(1 − r_s/r) Hz로 낮아지다 (0.88 · 0.88 · 0.88 · 0.82 · 0.72 · 0.58 · 0.39 · 0.16) 끊김"
+    },
+    {
+      "id": "own",
+      "at": 143,
+      "kind": "custom",
+      "params": {
+        "gain_db": -38,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 165,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1,
+            "params": {
+              "freq": 165,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2,
+            "params": {
+              "freq": 165,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 3,
+            "params": {
+              "freq": 165,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 4,
+            "params": {
+              "freq": 165,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 5,
+            "params": {
+              "freq": 165,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 6,
+            "params": {
+              "freq": 165,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 7,
+            "params": {
+              "freq": 165,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 8,
+            "params": {
+              "freq": 165,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 9,
+            "params": {
+              "freq": 165,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "두 사람 각자의 시계: 1초에 1초 (같은 틱 165 Hz, 10번)"
+    },
+    {
+      "id": "q18",
+      "at": 143.971,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.1,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "\"느려진 것을 느낄까?\""
+    },
+    {
+      "id": "no",
+      "at": 145.563,
+      "kind": "custom",
+      "params": {
+        "gain_db": -33,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 70,
+              "dur": 0.45,
+              "harmonics": [1, 0.35],
+              "attack": 0.004,
+              "decay": 0.15,
+              "release": 0.15,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "noise",
+            "offset": 0,
+            "params": {
+              "dur": 0.2,
+              "low": 40,
+              "high": 220,
+              "release": 0.15,
+              "gain_db": -10
+            }
+          }
+        ]
+      },
+      "means": "\"아니다\" — 질문에 줄"
+    },
+    {
+      "id": "each",
+      "at": 146.416,
+      "kind": "swell",
+      "params": {
+        "freqs": [131, 196],
+        "dur": 1.5,
+        "attack": 0.4,
+        "gain_db": -33,
+        "cutoff": 700
+      },
+      "means": "\"각자의 시간으로 본 화면\" · \"1초에 1초\""
+    },
+    {
+      "id": "own_top",
+      "at": 153,
+      "kind": "custom",
+      "params": {
+        "gain_db": -38,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 165,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1,
+            "params": {
+              "freq": 165,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2,
+            "params": {
+              "freq": 165,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 3,
+            "params": {
+              "freq": 165,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 4,
+            "params": {
+              "freq": 165,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "위 사람의 자기 시계 1초 틱 165 Hz"
+    },
+    {
+      "id": "low_seen",
+      "at": 154.0462,
+      "kind": "custom",
+      "params": {
+        "gain_db": -36,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 116.7,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.4142,
+            "params": {
+              "freq": 116.7,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2.8284,
+            "params": {
+              "freq": 116.7,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "빛으로 받아 나란히 놓은 아래 시계의 틱: 1.41초 간격, 음높이도 0.71배 (117 Hz)"
+    },
+    {
+      "id": "reveal",
+      "at": 155.343,
+      "kind": "swell",
+      "params": {
+        "freqs": [117, 175],
+        "dur": 1.5,
+        "attack": 0.4,
+        "gain_db": -33,
+        "cutoff": 700
+      },
+      "means": "\"0.71배로 느림\" — 비교할 때에만 드러남"
+    },
+    {
+      "id": "poster_back",
+      "at": 157.604,
+      "kind": "swell",
+      "params": {
+        "freqs": [110, 165, 220],
+        "dur": 1.8,
+        "attack": 0.4,
+        "gain_db": -33,
+        "cutoff": 700
+      },
+      "means": "\"중력이 강한 곳일수록\" — 첫 화면의 포스터와 제목이 돌아옴"
+    },
+    {
+      "id": "close_foot",
+      "at": 158.216,
+      "kind": "custom",
+      "params": {
+        "gain_db": -38,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 3,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 4,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 5,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 6,
+            "params": {
+              "freq": 147,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "포스터의 발 시계 틱 147 Hz"
+    },
+    {
+      "id": "close_head",
+      "at": 158.903,
+      "kind": "custom",
+      "params": {
+        "gain_db": -38,
+        "layers": [
+          {
+            "kind": "tick",
+            "offset": 0,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 0.8435,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.6869,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2.5304,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 3.3739,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 4.2174,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 5.0609,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 5.9044,
+            "params": {
+              "freq": 196,
+              "decay": 0.06,
+              "click": 0,
+              "gain_db": 0
+            }
+          }
+        ]
+      },
+      "means": "포스터의 머리 시계 틱 196 Hz (과장 ×10¹⁵: 끝 화면에서 썸네일과 같은 상태로 앞섬)"
     }
   ],
   "ambient": {
-    "enabled": false,
     "kind": "pad",
     "seed": 7,
     "gain_db": -32,
@@ -48,14 +3527,15 @@
       7,
       12,
       16
-    ]
+    ],
+    "enabled": false
   },
   "music": {
     "id": "zabriskie_patriarch",
-    "enabled": false,
     "under_db": 12,
     "duck_db": 6,
     "start_sec": 0,
-    "note": "기본 꺼짐(2026-10-31 사용자 결정). 켜려면 enabled true. assets/music/registry.json 의 id. NO_MUSIC=1 이면 생략"
+    "enabled": false,
+    "note": "음악 없음."
   }
 }
