@@ -137,7 +137,7 @@ export const A = {
   so8: W('s08', '그래서'), e8: W('s08', '일억'), need8: W('s08', '필요하고'), heat8: W('s08', '열로'), thermo8: W('s08', '열핵반응이라고도'),
   h9: W('s09', '수소의'), sib9: W('s09', '형제인'), d9: W('s09', '중수소와'), t9: W('s09', '삼중수소가'),
   two10: W('s10', '둘이'), he10: W('s10', '헬륨이'), n10: W('s10', '중성자'), big10: W('s10', '큰'), out10: W('s10', '튀어나옵니다'),
-  temp11: W('s11', '온도를'), instant11: W('s11', '한순간에'), abomb11: W('s11', '원자폭탄뿐이라'), hbomb11: W('s11', '수소폭탄은'), trig11: W('s11', '방아쇠로'),
+  fuel11: W('s11', '많은'), instant11: W('s11', '한순간에'), temp11: W('s11', '온도로'), abomb11: W('s11', '원자폭탄뿐이라'), hbomb11: W('s11', '수소폭탄은'), trig11: W('s11', '방아쇠로'),
   burst12: W('s12', '터진'), heat12: W('s12', '열과'), press12: W('s12', '압력이'), squeeze12: W('s12', '짓눌러'), hot12: W('s12', '달구면'), fusion12: W('s12', '핵융합이'),
   pacific: W('s13', '태평양의'), island13: W('s13', '섬에서'), test13: W('s13', '시험했고'), gone13: W('s13', '섬 하나가'), whole13: W('s13', '통째로'),
   bikini: W('s14', '비키니'), test14: W('s14', '시험에서는'), fallout14: W('s14', '낙진이'), km100: W('s14', '백킬로미터'), boat14: W('s14', '어선까지'), fly14: W('s14', '날아가'), crew14: W('s14', '선원들이'),
@@ -198,7 +198,7 @@ export function plan(tl) {
   P.nH = at(A.h9) - 0.1; P.sib = at(A.sib9) - 0.1; P.nD = at(A.d9) - 0.1; P.nT = at(A.t9) - 0.1;
   P.move = at(A.two10) - 0.25; P.hit = at(A.he10) - 0.05; P.nLbl = at(A.n10) - 0.05; P.eLbl = at(A.big10) - 0.1; P.sumLbl = at(A.out10) - 0.05;
   // ---- trigger
-  P.curve = sc('trigger').start + 0.15; P.therm = at(A.temp11) - 0.1; P.flame = at(A.instant11) - 0.05; P.fis = at(A.abomb11) - 0.1; P.fus = at(A.hbomb11) - 0.1; P.trig = at(A.trig11) - 0.1;
+  P.curve = sc('trigger').start + 0.15; P.therm = at(A.fuel11) - 0.1; P.flame = at(A.temp11) - 0.05; P.fis = at(A.abomb11) - 0.1; P.fus = at(A.hbomb11) - 0.1; P.trig = at(A.trig11) - 0.1;
   P.blocks = at('s12') - 0.55; P.stage1 = at(A.burst12) - 0.02; P.heatArrow = at(A.heat12) - 0.1; P.press = at(A.press12) - 0.1; P.dens = at(A.squeeze12) - 0.05; P.hot = at(A.hot12) - 0.05;
   P.rho = t => 1 + 0.6 * smooth((t - P.dens) / 0.8);
   P.T2 = t => 10 ** lerp(6, Math.log10(BURN.T1), smooth((t - P.hot) / 0.9));
@@ -1083,7 +1083,7 @@ const thx = l => TH.x0 + (l - TH.l0) / (TH.l1 - TH.l0) * (TH.x1 - TH.x0);
 function thermometer(stage, t, P, a) {
   const c = stage.ctx, T = stage.theme;
   withAlpha(c, a, () => {
-    stage.text('한순간에 만들 수 있는 온도', 150, 820, {size: 26, weight: 700, color: T.ink});
+    stage.text('많은 연료를 한순간에 달굴 수 있는 온도', 150, 820, {size: 26, weight: 700, color: T.ink});
     rect(c, TH.x0, TH.y - 12, TH.x1 - TH.x0, 24, 12, rgba(PAL.grid, 1));
     const lbl = ['1천', '1만', '10만', '100만', '1,000만', '1억', '10억 도'];
     for (let l = 3; l <= 9; l++) { line(c, [[thx(l), TH.y + 16], [thx(l), TH.y + 28]], rgba(T.muted, 0.9), 2); stage.text(lbl[l - 3], thx(l), TH.y + 50, {size: 24, color: l === 8 ? PAL.fus : T.muted, align: 'center'}); }
@@ -1093,7 +1093,7 @@ function thermometer(stage, t, P, a) {
     if (fl > 0) { rect(c, TH.x0, TH.y - 12, (thx(lf) - TH.x0) * fq + 1, 24, 12, PAL.warm); withAlpha(c, fl, () => stage.text('가장 뜨거운 불꽃 · 수천 도', thx(lf) - 20, TH.y - 52, {size: 24, color: PAL.warm})); }
     const fb = clamp((t - P.fis) / 0.25);
     if (fb > 0) { const xe = lerp(thx(lf), thx(8), easeOut(fb)); rect(c, TH.x0, TH.y - 12, xe - TH.x0, 24, 12, PAL.fis); c.save(); c.globalCompositeOperation = 'lighter'; glow(c, xe, TH.y, 90, PAL.fis, 0.5 * (1 - fb * 0.6)); c.restore();
-      withAlpha(c, fadeIn(t, P.fis + 0.2, 0.3), () => stage.text('원자폭탄 · 한순간에', thx(8) - 16, TH.y + 92, {role: 'display', size: 30, weight: 700, color: PAL.fis, align: 'right'})); }
+      withAlpha(c, fadeIn(t, P.fis + 0.2, 0.3), () => stage.text('많은 연료를 한순간에 · 원자폭탄', thx(8) - 16, TH.y + 92, {role: 'display', size: 30, weight: 700, color: PAL.fis, align: 'right'})); }
   });
 }
 const BLK = [{x: 150, y: 790, w: 270, h: 260}, {x: 660, y: 790, w: 270, h: 260}];
@@ -1534,7 +1534,7 @@ export function soundEvents(tl) {
   whoosh('curve', P.curve, 1.2, 80, 160, '결합 에너지 곡선이 그려짐 (측정값)', -36);
   tick('need', P.therm, 131, -34, '"핵융합에 필요 · 1억 도" 표시', {decay: 0.12});
   tick('hot_flame', P.flame, 147, -35, '"가장 뜨거운 불꽃 · 수천 도"', {decay: 0.1});
-  tick('fission_arrow', P.fis, 110, -31, '핵분열 화살표(우라늄 → 철 쪽)와 온도 막대가 한순간에 1억 도 쪽으로 (분열: 단일 틱)', {decay: 0.18});
+  tick('fission_arrow', P.fis, 110, -31, '핵분열 화살표(우라늄 → 철 쪽)와 온도 막대가 한순간에 1억 도 쪽으로 "많은 연료를 한순간에 · 원자폭탄" (분열: 단일 틱)', {decay: 0.18});
   chords('fusion_arrow', [P.fus], -33, '핵융합 화살표(수소 → 헬륨)');
   swell('trigger_link', P.trig, [98, 147], '"방아쇠" 연결', {dur: 1.3, gain: -34});
   thump('stage1', P.stage1, '1단계 블록: 핵분열 (낮은 쿵)', -29, 62, 0.7);
