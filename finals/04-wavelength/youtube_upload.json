@@ -20,6 +20,8 @@
  "caption_error": null,
  "thumbnail_file": "thumbnail.jpg",
  "thumbnail_error": null,
+ "thumbnail_after_processing": true,
+ "thumbnail_set_at": "2026-11-07T07:03:06+00:00",
  "number": 4,
  "slug": "wavelength",
  "source": "api",
