@@ -1,8 +1,8 @@
 {
   "file": "mushroom-cloud.mp4",
-  "bytes": 32472401,
-  "sha256": "8c7a1521c3c270dac19db5a2bc35c9533429267f2651875d9a018fd6aa4149ba",
-  "created": "2026-11-07T11:42:41+00:00",
+  "bytes": 39012608,
+  "sha256": "00126d37e5b49d3f943bbdced8697959d6406d0e0c3a8dc067bab09ffa3572b8",
+  "created": "2026-11-07T12:32:04+00:00",
   "title": "버섯구름은 왜 버섯 모양일까",
   "timeline_duration": 149.733,
   "max_sec": 180.0,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2299904,
         "duration": "149.733333",
-        "bit_rate": "1557050",
+        "bit_rate": "1906530",
         "bits_per_raw_sample": "8",
         "nb_frames": "4492",
         "extradata_size": 50,
@@ -95,7 +95,7 @@
         "start_time": "0.000000",
         "duration_ts": 7187184,
         "duration": "149.733000",
-        "bit_rate": "169013",
+        "bit_rate": "168967",
         "nb_frames": "7017",
         "extradata_size": 5,
         "disposition": {
@@ -133,8 +133,8 @@
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "149.733333",
-      "size": "32472401",
-      "bit_rate": "1734945",
+      "size": "39012608",
+      "bit_rate": "2084377",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -159,7 +159,7 @@
   },
   "encoded_audio": {
     "input_i": "-14.07",
-    "input_tp": "-1.40",
+    "input_tp": "-1.18",
     "input_lra": "4.60"
   },
   "targets": {
