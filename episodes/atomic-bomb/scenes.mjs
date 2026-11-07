@@ -641,7 +641,7 @@ export function overlays(stage, t, ctx) {
     withAlpha(stage.ctx, fadeIn(t, MORPH[1], 0.4), () => progressBar(stage, t, ctx.tl.duration)); return;
   }
   if (id === 'close') {
-    const a = smooth(ctx.scene.p / 0.04) * fadeOut(t, P.back - 0.35, 0.3);
+    const a = smooth(ctx.scene.p / 0.04) * fadeOut(t, P.back - 0.5, 0.38);
     if (a > 0) head(stage, ...titles.close, a, a);
     if (t >= P.back - 0.1) posterTitle(stage, t, 0, fadeIn(t, P.back - 0.1, 0.5));
     progressBar(stage, t, ctx.tl.duration); return;
@@ -659,16 +659,18 @@ let QSIZE = 0, ASIZE = 0;
 function posterTitle(stage, t, q = easeInOut((t - MORPH[0]) / (MORPH[1] - MORPH[0])), a = 1) {
   const c = stage.ctx, T = stage.theme;
   const TR = -0.03, fit = (s, w, max) => Math.min(max, max * w / stage.measure(s, {role: 'display', weight: 700, size: max, tracking: TR * max}));
-  QSIZE ||= fit(POSTER_Q.q + '?', 790, 80); ASIZE ||= fit(POSTER_Q.ans, 790, 230);
-  const y1 = lerp(POSTER_Q.y, 228, q), s1 = lerp(QSIZE, 54, q), y2 = lerp(POSTER_Q.y2, 290, q), s2 = lerp(ASIZE, 32, q), tr = lerp(TR, -0.011, q);
+  QSIZE ||= fit(POSTER_Q.q + '?', 770, 80); ASIZE ||= fit(POSTER_Q.ans, 790, 230);
+  let s1 = lerp(QSIZE, 54, q); const y1 = lerp(POSTER_Q.y, 228, q), y2 = lerp(POSTER_Q.y2, 290, q), s2 = lerp(ASIZE, 32, q), tr = lerp(TR, -0.011, q);
   if (q < 1) withAlpha(c, (1 - q) * a, () => {
     const g2 = c.createLinearGradient(0, 900, 0, 1330); g2.addColorStop(0, 'rgba(4,4,5,0)'); g2.addColorStop(0.25, 'rgba(4,4,5,0.74)'); g2.addColorStop(0.8, 'rgba(4,4,5,0.74)'); g2.addColorStop(1, 'rgba(4,4,5,0)');
     c.fillStyle = g2; c.fillRect(0, 900, 1080, 430);
   });
   withAlpha(c, a, () => {
     const sh = q < 0.5 ? 'rgba(0,0,0,0.9)' : null;
-    const wb = stage.measure(POSTER_Q.q, {role: 'display', weight: 700, size: s1, tracking: tr * s1}), wq = stage.measure('?', {role: 'display', weight: 700, size: s1, tracking: tr * s1}), kq = 1 - smooth(q / 0.7);
-    const x0 = 540 - (wb + wq * kq) / 2;
+    const kq = 1 - smooth(q / 0.7), wid = z => stage.measure(POSTER_Q.q, {role: 'display', weight: 700, size: z, tracking: tr * z}) + Math.min(1, kq * 10) * stage.measure('?', {role: 'display', weight: 700, size: z, tracking: tr * z});
+    s1 = Math.min(s1, s1 * 790 / wid(s1));
+    const wb = stage.measure(POSTER_Q.q, {role: 'display', weight: 700, size: s1, tracking: tr * s1}), wq = stage.measure('?', {role: 'display', weight: 700, size: s1, tracking: tr * s1});
+    const x0 = 540 - (wb + wq * Math.min(1, kq * 10)) / 2;
     stage.text(POSTER_Q.q, x0, y1, {role: 'display', weight: 700, size: s1, color: T.ink, shadow: sh, shadowBlur: 20, tracking: tr * s1});
     if (kq > 0) stage.text('?', x0 + wb, y1, {role: 'display', weight: 700, size: s1, color: T.ink, alpha: kq, shadow: sh, shadowBlur: 20, tracking: tr * s1});
     stage.text(POSTER_Q.ans, 540, y2, {role: 'display', weight: 700, size: s2, color: PAL.answer, align: 'center', tracking: tr * s2, shadow: q < 0.5 ? 'rgba(0,0,0,0.9)' : null, shadowBlur: 26});
@@ -945,19 +947,19 @@ function essenceScene(stage, t, ctx) {
       const am = fadeIn(t, P.read6, 0.4); if (am > 0) withAlpha(c, am, () => { stage.text(`${M_BEFORE.toFixed(2)} u`, 300, 1194, {role: 'display', size: 36, weight: 700, color: T.ink, align: 'center'}); stage.text(`${M_AFTER.toFixed(2)} u`, 780, 1194, {role: 'display', size: 36, weight: 700, color: T.ink, align: 'center'}); });
       tag(stage, `차이 ${DM.toFixed(2)} u ≈ 1000분의 1`, 540, 1290, {size: 30, color: PAL.answer, a: fadeIn(t, P.thou6, 0.4), plateA: 0.8});
       tag(stage, 'u = 원자 질량 단위', 540, 1336 - 10, {size: 24, color: T.muted, a: fadeIn(t, P.read6, 0.4) * fadeOut(t, P.thou6 - 0.2, 0.3), plate: false});
-      tag(stage, '기울기 과장', 680, 752, {size: 24, color: T.muted, a: fadeIn(t, P.drop6[1] + 0.4, 0.4), plate: false});
+      tag(stage, '기울기 과장', 680, 752, {size: 24, color: T.muted, a: fadeIn(t, P.drop6[1] + 0.4, 0.4) * fadeOut(t, P.gone7 - 0.3, 0.3), plate: false});
     });
     // s07 — the missing mass rises and becomes energy: m × c × c = E
     if (t > P.gone7 - 0.1) {
       const rx = pans[1][0], ry = pans[1][1] - 70, mq = smooth((t - P.gone7 - 0.4) / 0.9), gx = lerp(rx, 290, mq), gy = lerp(ry, 470, mq) - Math.sin(mq * Math.PI) * 60;
-      const fade = 1 - fadeIn(t, P.formula, 0.4);
+      const fade = 1 - fadeIn(t, P.formula - 0.4, 0.3);
       if (fade > 0) withAlpha(c, fade, () => {
         grain(c, gx, gy, 9, fadeIn(t, P.gone7, 0.3), Math.exp(-(t - P.gone7) / 0.5));
         tag(stage, '사라진 질량 m', gx, gy + 52, {size: 26, color: PAL.answer, a: fadeIn(t, P.gone7 + 0.2, 0.4), plate: false});
         const c1 = fadeIn(t, P.c1, 0.3), c2 = fadeIn(t, P.c2, 0.3), ee = fadeIn(t, P.eFlash, 0.25);
         if (c1 > 0) stage.text('× c', 450, 472, {role: 'display', size: 60, weight: 700, color: PAL.n, align: 'center', alpha: c1});
         if (c2 > 0) stage.text('× c', 600, 472, {role: 'display', size: 60, weight: 700, color: PAL.n, align: 'center', alpha: c2});
-        if (c1 > 0) stage.text('c = 빛의 속도 · 초속 30만 km', 525, 545, {size: 26, weight: 500, color: T.muted, align: 'center', alpha: c1});
+        if (c1 > 0) stage.text('c = 빛의 속도 · 초속 30만 km', 525, 600, {size: 26, weight: 500, color: T.muted, align: 'center', alpha: c1});
         for (const [t0, y0] of [[P.c1, 440], [P.c2, 500]]) { const u = (t - t0) / 0.35; if (u > 0 && u < 1) trail(c, [lerp(140, 940, Math.max(0, u - 0.3)), y0], [lerp(140, 940, u), y0], 1, 3); }
         if (ee > 0) { stage.text('=', 710, 472, {role: 'display', size: 60, weight: 700, color: T.ink, align: 'center', alpha: ee}); const g = glowBuf(); g.splat(820, 470, 150, FLASH_C, ee * (0.7 + 1.6 * Math.exp(-(t - P.eFlash) / 0.35))); g.flush(stage, {bloom: 0.6}); stage.text('E', 820, 474, {role: 'display', size: 76, weight: 700, color: '#1A1208', align: 'center', alpha: ee}); stage.text('에너지', 820, 545, {size: 26, weight: 700, color: PAL.answer, align: 'center', alpha: ee}); }
       });
@@ -1125,6 +1127,7 @@ function blastScene(stage, t, ctx) {
       stage.text('거리', 912, cy + 34, {size: 24, weight: 500, color: T.muted, align: 'center'});
     });
     tag(stage, '그림 · 크기와 빛은 모형', 300, 350, {size: 24, color: T.muted, a: fadeIn(t, b0 + 0.3, 0.4), plateA: 0.7});
+    tag(stage, '멀리서 보기 (화면 축소)', 800, 350, {size: 24, color: T.muted, a: fadeIn(t, P.fb13 + 0.4, 0.3) * fadeOut(t, P.fb13 + 2.9, 0.4), plateA: 0.7});
     // readouts (s13)
     const tA = fadeIn(t, P.end13, 0.4) * fadeOut(t, ctx.tl.at('s14') + 0.3, 0.5), tB = fadeIn(t, P.temp13, 0.4) * fadeOut(t, ctx.tl.at('s14') + 0.3, 0.5);
     if (tA > 0) withAlpha(c, tA, () => tile(stage, 160, 960, 370, '연쇄반응이 끝나는 데', '100만분의 1초 안', {size: 32, color: PAL.flash}));
@@ -1250,7 +1253,7 @@ function mythScene(stage, t, ctx) {
       const g = c.createRadialGradient(lx - 40, ly - 50, 10, lx, ly, LR); g.addColorStop(0, 'rgba(120,108,92,0.35)'); g.addColorStop(1, 'rgba(40,37,33,0.5)'); circle(c, lx, ly, LR, g);
       const tau = t < P.mBombG[0] ? -0.01 : P.mTau(t), late = smooth((tau - 6) / 6);
       c.save(); c.beginPath(); c.arc(lx, ly, LR, 0, TAU); c.clip();
-      chainPicture(stage, t, {cx: lx, cy: ly, s: 15, tau, tOf: invOf(P.mTau, P.mBombG[0] - 1, ctx.scene.end + 1), clip: [lx - LR, ly - LR, lx + LR, ly + LR], fieldA: la, glowA: la, trailA: 0.5, flashK: 0.8, hot: {R: 9.3, I: 0.85 * late, heat: 0.7}});
+      chainPicture(stage, t, {cx: lx, cy: ly, s: 15, tau, tOf: invOf(P.mTau, P.mBombG[0] - 1, ctx.scene.end + 1), clip: [lx - LR, ly - LR, lx + LR, ly + LR], fieldA: la, glowA: la, trailA: 0.5, flashK: 0.8, hot: {R: 9.3, I: 0.5 * late, heat: 0.65}});
       c.restore();
       ring(c, lx, ly, LR, rgba(T.ink, 0.5), 1.6);
     });
@@ -1277,7 +1280,7 @@ function mythScene(stage, t, ctx) {
 const K1 = {xs: [300, 372], y0: 470, dy: 66, rod: 214};
 const k1Pos = k => [K1.xs[k % 2], K1.y0 + k * K1.dy];
 function closeScene(stage, t, ctx) {
-  const c = stage.ctx, T = stage.theme, P = plan(ctx.tl), sf = fadeIn(t, ctx.scene.start, 0.3), out = 1 - fadeIn(t, P.back - 0.3, 0.45);
+  const c = stage.ctx, T = stage.theme, P = plan(ctx.tl), sf = fadeIn(t, ctx.scene.start, 0.3), out = 1 - fadeIn(t, P.back - 0.5, 0.38);
   if (out > 0) withAlpha(c, sf * out, () => {
     stage.text('천천히 다스리면', 335, 368, {role: 'display', size: 32, weight: 700, color: PAL.reactor, align: 'center'});
     stage.text('k = 1', 335, 412, {size: 26, weight: 700, color: T.muted, align: 'center'});

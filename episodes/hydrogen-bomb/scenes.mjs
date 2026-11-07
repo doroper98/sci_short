@@ -618,7 +618,7 @@ const hbY = dec => HB.y0 - dec * HB.dy;
 function yieldChart(stage, t, P, a) {
   const c = stage.ctx, T = stage.theme;
   withAlpha(c, a, () => {
-    const g = c.createLinearGradient(0, 320, 0, 1345); g.addColorStop(0, 'rgba(2,5,14,0)'); g.addColorStop(0.08, 'rgba(2,5,14,0.7)'); g.addColorStop(0.95, 'rgba(2,5,14,0.7)'); g.addColorStop(1, 'rgba(2,5,14,0)');
+    const g = c.createLinearGradient(0, 320, 0, 1345); g.addColorStop(0, 'rgba(2,5,14,0)'); g.addColorStop(0.08, 'rgba(2,5,14,0.8)'); g.addColorStop(0.95, 'rgba(2,5,14,0.8)'); g.addColorStop(1, 'rgba(2,5,14,0)');
     c.fillStyle = g; c.fillRect(0, 320, 1080, 1025);
     stage.text('위력 (TNT로 환산 · 로그 눈금)', 150, 400, {size: 26, weight: 700, color: T.muted});
     for (let d = 0; d <= 8; d++) { line(c, [[262, hbY(d)], [930, hbY(d)]], rgba(PAL.grid, d === 0 ? 1 : 0.7), d === 0 ? 2 : 1); stage.text(DEC_LBL[d], 250, hbY(d), {size: 24, color: T.muted, align: 'right'}); }
@@ -700,7 +700,7 @@ function hookScene(stage, t, ctx) {
 
 
 // ------------------------------------------------------------------ origin: hydrogène = "water maker" (H₂ + O₂ → H₂O) → 水 + 素
-const ATOM = {H: {r: 13, col: '#E6ECF6'}, O: {r: 20, col: '#E0665E'}};
+const ATOM = {H: {r: 16, col: '#E6ECF6'}, O: {r: 25, col: '#E0665E'}};
 function atom(c, x, y, k, a = 1) { const A = ATOM[k]; withAlpha(c, a, () => { glow(c, x, y, A.r * 2.2, A.col, 0.18); sphere(c, x, y, A.r, A.col, {shade: k === 'O' ? '#4A1612' : '#3A4458'}); }); }
 function bond(c, p, q, a = 1, n = 1) { const dx = q[0] - p[0], dy = q[1] - p[1], L = Math.hypot(dx, dy) || 1, ox = -dy / L * 4, oy = dx / L * 4;
   if (n === 2) { line(c, [[p[0] + ox, p[1] + oy], [q[0] + ox, q[1] + oy]], rgba('#C9D3E6', 0.75 * a), 3); line(c, [[p[0] - ox, p[1] - oy], [q[0] - ox, q[1] - oy]], rgba('#C9D3E6', 0.75 * a), 3); }
@@ -746,7 +746,7 @@ function originScene(stage, t, ctx) {
       let filled = 0;
       for (let k = 0; k < P.rx.length; k++) {
         const u = (t - (P.rx[k] - 0.9)) / 0.9; if (u < 0) continue;
-        if (u < 2.1) { const dr = waterReaction(c, u, cx, cy, drop); if (u >= 1) flash(c, cx, cy, dr / 0.5, 70, '#BFE6FF'); }
+        if (u < 2.1) { c.save(); c.translate(cx, cy); c.scale(1.25, 1.25); c.translate(-cx, -cy); const dr = waterReaction(c, u, cx, cy, [drop[0], cy + (drop[1] - cy) / 1.25]); c.restore(); if (u >= 1) flash(c, cx, cy, dr / 0.5, 80, '#BFE6FF'); }
         filled += smooth((u - 1.6) / 0.4);
       }
       // the drop
@@ -985,26 +985,29 @@ const RX = {cx: 540, cy: 1000, vHe: 30, angHe: Math.PI + 0.22, angN: 0.22};
 function fuelScene(stage, t, ctx) {
   const c = stage.ctx, T = stage.theme, P = plan(ctx.tl), sf = sceneFade(t, ctx);
   withAlpha(c, sf, () => {
-    const appear = [P.nH, P.nD, P.nT], dim = 1 - 0.45 * fadeIn(t, P.move, 0.5);
+    const appear = [P.nH, P.nD, P.nT], dim = 1 - 0.45 * fadeIn(t, P.move, 0.5), up = easeInOut(clamp((t - P.move + 0.5) / 0.9)), oy = lerp(250, 0, up), rN = lerp(46, 34, up);
     ISO.forEach((it, i) => {
       const a = fadeIn(t, appear[i], 0.35); if (a <= 0) return;
       withAlpha(c, a * dim, () => {
         const sc = 0.8 + 0.2 * easeOut(clamp((t - appear[i]) / 0.4));
-        nucleus(c, it.x, 530, 34 * sc, 1, it.n, {t, jig: 0.03, rot: 0.3 + i * 0.4});
-        stage.text(it.name, it.x, 628, {role: 'display', size: 36, weight: 700, color: T.ink, align: 'center'});
-        stage.text(it.sym, it.x, 672, {role: 'display', size: 30, weight: 700, color: i ? PAL.fus : T.muted, align: 'center'});
-        stage.text(`양성자 1 · 중성자 ${it.n}`, it.x, 712, {size: 24, color: T.muted, align: 'center'});
+        if (oy > 1) { c.save(); c.globalCompositeOperation = 'lighter'; glow(c, it.x, 530 + oy, rN * 3, i ? PAL.fus : PAL.p, 0.1 * (1 - up)); c.restore(); }
+        nucleus(c, it.x, 530 + oy, rN * sc, 1, it.n, {t, jig: 0.03, rot: 0.3 + i * 0.4});
+        stage.text(it.name, it.x, 628 + oy * 1.2, {role: 'display', size: 36, weight: 700, color: T.ink, align: 'center'});
+        stage.text(it.sym, it.x, 672 + oy * 1.2, {role: 'display', size: 30, weight: 700, color: i ? PAL.fus : T.muted, align: 'center'});
+        stage.text(`양성자 1 · 중성자 ${it.n}`, it.x, 712 + oy * 1.2, {size: 24, color: T.muted, align: 'center'});
+        if (oy > 1) withAlpha(c, (1 - up) ** 3, () => stage.text(`질량 약 ${i + 1}배`, it.x, 752 + oy * 1.2, {size: 24, weight: 700, color: i ? PAL.fus : T.muted, align: 'center'}));
       });
     });
     const ba = fadeIn(t, P.sib, 0.35) * dim;
     if (ba > 0) withAlpha(c, ba, () => {
-      line(c, [[200, 448], [200, 432], [880, 432], [880, 448]], rgba(PAL.p, 0.85), 2.5);
-      stage.text('양성자가 1개 → 모두 수소 (중성자 수만 다름)', 540, 404, {size: 26, weight: 700, color: PAL.p, align: 'center'});
+      const y = 432 + oy * 0.8;
+      line(c, [[200, y + 16], [200, y], [880, y], [880, y + 16]], rgba(PAL.p, 0.85), 2.5);
+      stage.text('양성자가 1개 → 모두 수소 (중성자 수만 다름)', 540, y - 28, {size: 26, weight: 700, color: PAL.p, align: 'center'});
     });
     const lg = fadeIn(t, P.nH + 0.3, 0.4) * dim;
-    if (lg > 0) withAlpha(c, lg, () => { nucleon(c, 380, 762, 11, true); stage.text('양성자 (+)', 398, 762, {size: 24, color: T.muted}); nucleon(c, 580, 762, 11, false); stage.text('중성자', 598, 762, {size: 24, color: T.muted}); });
+    if (lg > 0) withAlpha(c, lg, () => { const y = 762 + oy * 1.45; nucleon(c, 380, y, 11, true); stage.text('양성자 (+)', 398, y, {size: 24, color: T.muted}); nucleon(c, 580, y, 11, false); stage.text('중성자', 598, y, {size: 24, color: T.muted}); });
     // the reaction (slow motion): D and T glide down, collide, ⁴He and n leave with equal and opposite momenta (n 4× faster)
-    const ra = fadeIn(t, P.move, 0.4);
+    const ra = fadeIn(t, P.move + 0.4, 0.3);
     if (ra <= 0) return;
     withAlpha(c, ra, () => {
       stage.text('D + T → ⁴He + n', 540, 830, {role: 'display', size: 44, weight: 700, color: T.ink, align: 'center'});
@@ -1127,7 +1130,7 @@ function stageBlocks(stage, t, P, a) {
     if (burned > 0.01) { const gb = glowBuf(); gb.splat(cx, cy + 10, 130, FUSC, 1.0 * smooth(burned / 0.25) * (0.5 + 0.5 * Math.exp(-(t - P.burst) / 1.2))); gb.flush(stage, {gain: 1.2, bloom: 0.35}); }
     stage.text('1단계', BLK[0].x + 18, BLK[0].y + 30, {size: 24, weight: 700, color: PAL.fis, shadow: 'rgba(0,0,0,0.8)'}); stage.text('핵분열', BLK[0].x + 18, BLK[0].y + 68, {role: 'display', size: 34, weight: 700, color: T.ink, shadow: 'rgba(0,0,0,0.8)'});
     stage.text('2단계', BLK[1].x + 18, BLK[1].y + 30, {size: 24, weight: 700, color: PAL.fus, shadow: 'rgba(0,0,0,0.8)'}); stage.text('핵융합', BLK[1].x + 18, BLK[1].y + 68, {role: 'display', size: 34, weight: 700, color: T.ink, shadow: 'rgba(0,0,0,0.8)'});
-    if (t > P.dens - 0.2) stage.text(`온도 ${fmtTemp(T2)}`, b2.x + b2.w / 2, b2.y + b2.h - 20, {size: 24, weight: 700, color: T2 >= 1e8 ? PAL.fus : T.muted, align: 'center', shadow: 'rgba(0,0,0,0.9)'});
+    if (t > P.dens - 0.2) stage.text(`온도 ${fmtTemp(T2)}`, b2.x + b2.w / 2, b2.y + b2.h + 26, {size: 24, weight: 700, color: T2 >= 1e8 ? PAL.fus : T.muted, align: 'center', shadow: 'rgba(0,0,0,0.9)'});
     // energy meter (relative, no numbers)
     stage.text('나온 에너지 (설명용 상대값)', 150, 1110, {size: 24, weight: 700, color: T.muted});
     rect(c, 150, 1140, 780, 36, 8, rgba(PAL.grid, 1));
@@ -1135,7 +1138,7 @@ function stageBlocks(stage, t, P, a) {
     if (e1 > 0) rect(c, 150, 1140, 780 * e1, 36, 8, PAL.fis);
     if (e2 > 0) { rect(c, 150 + 780 * 0.1, 1140, 780 * e2, 36, 8, PAL.fus); c.save(); c.globalCompositeOperation = 'lighter'; glow(c, 150 + 780 * (0.1 + e2), 1158, 80, PAL.fus, 0.4); c.restore(); }
     if (e1 > 0.02) stage.text('1단계', 150 + 39, 1206, {size: 24, weight: 700, color: PAL.fis, align: 'center'});
-    if (e2 > 0.15) stage.text('2단계 · 훨씬 큼', 150 + 780 * (0.1 + e2 / 2), 1206, {size: 24, weight: 700, color: PAL.fus, align: 'center'});
+    if (e2 > 0.35) stage.text('2단계 · 훨씬 큼', 150 + 780 * (0.1 + e2 / 2), 1206, {size: 24, weight: 700, color: PAL.fus, align: 'center'});
     tag(stage, '설명용 도식 · 장치의 모양이 아님', 540, 1290, {size: 24, color: T.muted, plate: false});
   });
 }
