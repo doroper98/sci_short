@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""GitHub Actions 보조 — 업로드 결과를 작업 요약에 쓰고, '공개 전환 대기'·실패 이슈를 만든다. gh CLI(GH_TOKEN) 사용.
+"""GitHub Actions 보조 — 업로드·게시 결과를 작업 요약에 쓰고, '공개 전환 대기'·실패 이슈를 만든다. gh CLI(GH_TOKEN) 사용.
 
-    youtube_report.py report upload-report.json
+    youtube_report.py report upload-report.json [instagram-report.json]
     youtube_report.py token-check whoami-report.json <success|failure>
+    youtube_report.py ig-token-check ig-whoami-report.json <success|failure|skipped>
 이슈 제목에 video id·폴더 이름을 넣어 같은 건을 두 번 만들지 않는다.
 """
 
@@ -16,6 +17,7 @@ from pathlib import Path
 
 LABEL_REVIEW = "youtube-review"      # 비공개로 올라감 → 공개 전환 결정 대기
 LABEL_ALERT = "youtube-alert"        # 업로드·토큰 문제
+LABEL_IG_ALERT = "instagram-alert"   # 인스타 게시·토큰 문제
 REPO = os.environ.get("GITHUB_REPOSITORY", "")
 RUN_URL = (f"{os.environ.get('GITHUB_SERVER_URL', 'https://github.com')}/{REPO}/actions/runs/{os.environ.get('GITHUB_RUN_ID', '')}"
            if REPO else "")
@@ -32,6 +34,7 @@ def gh(*args: str) -> str:
 def ensure_labels() -> None:
     gh("label", "create", LABEL_REVIEW, "--color", "0E8A16", "--description", "유튜브 비공개 업로드 완료 — 공개 전환 결정 대기", "--force")
     gh("label", "create", LABEL_ALERT, "--color", "D93F0B", "--description", "유튜브 업로드·토큰 문제", "--force")
+    gh("label", "create", LABEL_IG_ALERT, "--color", "B60205", "--description", "인스타 릴스 게시·토큰 문제", "--force")
 
 
 def open_issues(label: str) -> list[dict]:
@@ -73,7 +76,36 @@ def cell(text: str) -> str:
     return str(text).replace("|", "\\|").replace("\n", " ")
 
 
-def cmd_report(path: str) -> int:
+def instagram_section(ig: dict | None) -> dict[str, dict]:
+    """인스타 결과를 요약에 쓰고 실패 이슈를 만든다. 폴더 → 결과 사전을 돌려준다(유튜브 이슈 본문에 주소를 넣으려고)."""
+    if ig is None:
+        return {}                     # 인스타 단계가 건너뛰었거나(비밀값 없음 등) 결과 파일이 없음 — 단계가 요약에 직접 적는다
+    ensure_labels()
+    alerts = open_issues(LABEL_IG_ALERT)
+    if "results" not in ig:
+        summary(f"## 인스타 릴스\n실패: {ig.get('error', '?')}\n\n{RUN_URL}")
+        create_issue_once("인스타 게시 실패: 설정·비밀값", f"오류: {ig.get('error', '?')}\n\n실행: {RUN_URL}\n\n"
+                          "docs/INSTAGRAM_AUTO_POST.md '문제 해결'을 보십시오.", LABEL_IG_ALERT, alerts)
+        return {}
+    c = ig.get("counts", {})
+    lines = ["## 인스타 릴스 (게시 즉시 공개)", "",
+             f"게시 {c.get('posted', 0)} · 건너뜀 {c.get('skipped', 0)} · dry-run {c.get('dry-run', 0)} · 오류 {c.get('error', 0)}", "",
+             "| 폴더 | 상태 | 제목 | 게시물 | 비고 |", "|---|---|---|---|---|"]
+    for r in ig["results"]:
+        note = cell(r.get("error") or " / ".join(r.get("warnings", [])))
+        link = f"[instagram]({r['permalink']})" if r.get("permalink") else ""
+        lines.append(f"| `{r['dir']}` | {r['status']} | {cell(r.get('title', ''))} | {link} | {note} |")
+        if r["status"] == "error":
+            create_issue_once(f"인스타 게시 실패: {r['dir']}",
+                              f"오류: {r.get('error', '?')}\n\n실행: {RUN_URL}\n\n'게시됐을 수 있어 다시 게시하지 않습니다'라는 오류면 "
+                              "인스타 앱에서 실제 게시 여부를 먼저 확인하십시오. 원인을 고친 뒤 Actions → youtube-upload 수동 실행"
+                              "(episode 지정, instagram 켬)으로 다시 게시할 수 있습니다.", LABEL_IG_ALERT, alerts)
+    summary("\n".join(lines))
+    return {r["dir"]: r for r in ig["results"]}
+
+
+def cmd_report(path: str, ig_path: str | None = None) -> int:
+    ig_by_dir = instagram_section(load(ig_path) if ig_path else None)
     data = load(path)
     if data is None:
         summary("## 유튜브 업로드\n결과 파일이 없습니다 — 업로드 단계가 시작 전에 실패했습니다(비밀값·설정 확인). " + RUN_URL)
@@ -100,8 +132,11 @@ def cmd_report(path: str) -> int:
         if r["status"] == "uploaded":
             title = f"공개 전환 대기: {r.get('title', '')} ({r['video_id']})"
             warns = "\n".join(f"- {w}" for w in r.get("warnings", [])) or "- 없음"
+            igr = ig_by_dir.get(r["dir"]) or {}
+            ig_line = (f"- 인스타 릴스(이미 공개): {igr.get('permalink') or igr.get('media_id')}\n" if igr.get("status") == "posted" else
+                       f"- 인스타 릴스: {igr.get('status')} — {igr.get('error') or ' / '.join(igr.get('warnings', []))}\n" if igr else "")
             body = (f"비공개로 올라갔습니다. YouTube Studio 에서 내용·자막을 확인한 뒤 **공개**로 바꾸고 이 이슈를 닫으십시오.\n\n"
-                    f"- 폴더: `{r['dir']}`\n- 채널: {r.get('channel', '')}\n- 보기: {r['url']}\n- Studio: {r['studio_url']}\n\n"
+                    f"- 폴더: `{r['dir']}`\n- 채널: {r.get('channel', '')}\n- 보기: {r['url']}\n- Studio: {r['studio_url']}\n{ig_line}\n"
                     f"경고:\n{warns}\n\n확인할 것:\n- [ ] 영상·음성·자막이 맞는가\n- [ ] 제목·설명·태그가 맞는가\n"
                     f"- [ ] 아동용 선언·합성 콘텐츠 표시가 맞는가\n- [ ] 공개(또는 예약 공개)로 전환\n\n실행: {RUN_URL}")
             create_issue_once(title, body, LABEL_REVIEW, review)
@@ -138,9 +173,34 @@ def cmd_token_check(path: str, outcome: str) -> int:
     return 0
 
 
+def cmd_ig_token_check(path: str, outcome: str) -> int:
+    if outcome == "skipped":
+        summary("## 인스타 토큰 점검\nIG_ACCESS_TOKEN 비밀값이 없어 건너뜀(인스타 연결 전)")
+        return 0
+    data = load(path) or {}
+    ensure_labels()
+    alerts = open_issues(LABEL_IG_ALERT)
+    title = "인스타 토큰 점검 실패"
+    if outcome == "success" and data.get("ok"):
+        summary(f"## 인스타 토큰 점검\n정상 — @{data.get('username')} ({data.get('ig_user_id')})"
+                + ("" if data.get("matches_config") is None else " · 설정과 일치"))
+        for i in alerts:
+            if i["title"] == title:
+                gh("issue", "close", str(i["number"]), "--comment", f"인스타 토큰 점검이 다시 정상입니다. {RUN_URL}")
+        return 0
+    err = data.get("error") or ("설정과 다른 계정" if data.get("matches_config") is False else "결과 파일 없음")
+    summary(f"## 인스타 토큰 점검\n실패: {err}\n\n{RUN_URL}")
+    create_issue_once(title, f"오류: {err}\n\n오류 190 이면 토큰이 만료·무효입니다. docs/INSTAGRAM_AUTO_POST.md '토큰' 절차로 새 토큰을 받아 "
+                      f"IG_ACCESS_TOKEN 비밀값을 바꾸십시오. 이 상태에서는 새 편이 병합돼도 인스타에 게시되지 않습니다.\n\n실행: {RUN_URL}",
+                      LABEL_IG_ALERT, alerts)
+    return 0
+
+
 def main(argv: list[str]) -> int:
     if len(argv) >= 2 and argv[0] == "report":
-        return cmd_report(argv[1])
+        return cmd_report(argv[1], argv[2] if len(argv) >= 3 else None)
+    if len(argv) >= 3 and argv[0] == "ig-token-check":
+        return cmd_ig_token_check(argv[1], argv[2])
     if len(argv) >= 3 and argv[0] == "token-check":
         return cmd_token_check(argv[1], argv[2])
     print(__doc__, file=sys.stderr)

@@ -1,4 +1,4 @@
-# 리프레시 토큰이 살아 있는지 매주 확인한다(channels.list, 할당량 1단위).
+# 유튜브 리프레시 토큰과 인스타 토큰이 살아 있는지 매주 확인한다(channels.list 할당량 1단위, 인스타 계정 조회 1회).
 # 테스트 상태 앱의 7일 토큰이 섞여 들어오거나, 철회·비밀번호 변경으로 토큰이 죽으면 업로드 전에 이슈로 알린다.
 name: youtube-token-check
 
@@ -34,3 +34,19 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: python .github/scripts/youtube_report.py token-check whoami-report.json "${{ steps.whoami.outcome }}"
+      - name: 인스타 계정 확인 (--whoami)
+        id: igwhoami
+        continue-on-error: true
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+        run: |
+          if [ -z "$IG_ACCESS_TOKEN" ]; then echo "skipped" > ig-outcome.txt; exit 0; fi
+          echo "run" > ig-outcome.txt
+          python -m publish.instagram --whoami --report ig-whoami-report.json
+      - name: 인스타 결과 이슈 처리
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          o="${{ steps.igwhoami.outcome }}"
+          if [ "$(cat ig-outcome.txt 2>/dev/null)" = "skipped" ]; then o=skipped; fi
+          python .github/scripts/youtube_report.py ig-token-check ig-whoami-report.json "$o"

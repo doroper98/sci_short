@@ -416,6 +416,28 @@ class UploadFlowTest(unittest.TestCase):
             again = yu.process_episode(ep, _cfg(channel_id="UC1"), dry_run=False, send=api, env={}, sleep=lambda s: None)
             self.assertEqual((again["status"], api.calls), ("skipped", []))  # 고친 뒤에는 네트워크도 쓰지 않는다
 
+    def test_auto_mode_skips_old_numbers_without_network(self) -> None:
+        """push 자동 실행은 22번 이상 새 편만. 01~21 은 손으로 올린 편이 섞여 있어 폴더를 고쳐도 다시 올리지 않는다."""
+        api = FakeApi()
+        with tempfile.TemporaryDirectory() as d:
+            old = _episode(Path(d))                                   # 01-…
+            res = yu.process_episode(old, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None, auto=True)
+            self.assertEqual(res["status"], "skipped")
+            self.assertIn("자동 대상 아님", res["warnings"][0])
+            self.assertEqual(api.calls, [])
+            optin = _episode(Path(d), name="02-optin", slug="optin", meta={"auto_publish": True})
+            self.assertEqual(yu.process_episode(optin, _cfg(), dry_run=True, auto=True)["status"], "dry-run")
+            new = _episode(Path(d), name="22-new", slug="new")
+            self.assertEqual(yu.process_episode(new, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None,
+                                                auto=True)["status"], "uploaded")
+            self.assertEqual(yu.process_episode(old, _cfg(), dry_run=True)["status"], "dry-run")   # 수동 지정은 그대로
+
+    def test_meta_switch_types(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            ep = _episode(Path(d), meta={"auto_publish": "yes"})
+            with self.assertRaisesRegex(yu.UploadError, "auto_publish"):
+                yu.load_episode(ep)
+
     def test_thumbnail_reapply_refuses_other_channel(self) -> None:
         with tempfile.TemporaryDirectory() as d:
             ep = _episode(Path(d))
