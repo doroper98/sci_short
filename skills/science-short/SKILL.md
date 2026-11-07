@@ -121,7 +121,7 @@ python pipeline/validate.py outputs/<slug>
 ### 7. 전달
 
 - **전달본이 곧 최종본**이다(2026-11-03 사용자 결정). 사용자가 다시 만들라고 하지 않으면 바꾸지 않는다.
-- 다음 번호로 `finals/<번호>-<slug>/`를 만들고 넣는다. 들어갈 것은 mp4, srt, poster.jpg(0초 프레임), scenes.jpg, timeline.json, validation.json, README.md, upload.md다. 다시 만들 때는 같은 폴더를 덮어쓴다.
+- `docs/TOPIC_BACKLOG.md`에 예약된 번호로 `finals/<번호>-<slug>/`를 만들고 넣는다(목록 번호 = 완성본 번호, 2026-11-07 사용자 결정). 목록에 없는 주제는 먼저 목록 끝에 다음 번호로 적는다. 만든 뒤 목록의 상태를 폴더 이름으로 바꾼다. 들어갈 것은 mp4, srt, poster.jpg(0초 프레임), scenes.jpg, timeline.json, validation.json, README.md, upload.md다. 다시 만들 때는 같은 폴더를 덮어쓴다.
 - `python3 pipeline/catalog.py`로 `finals/README.md` 목록과 `finals/catalog.json`(길이·해상도·SHA-256)을 갱신한다.
 - README에는 길이, 음성 상태(`degraded` 여부), 검증 방법, 직접 청취·휴대전화 재생 여부를 사실대로 적는다.
 - `HANDOFF.md`에 날짜·주제·결과·남은 한계를 추가한다.
