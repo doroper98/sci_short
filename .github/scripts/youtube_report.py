@@ -182,8 +182,13 @@ def cmd_ig_token_check(path: str, outcome: str) -> int:
     alerts = open_issues(LABEL_IG_ALERT)
     title = "인스타 토큰 점검 실패"
     if outcome == "success" and data.get("ok"):
-        summary(f"## 인스타 토큰 점검\n정상 — @{data.get('username')} ({data.get('ig_user_id')})"
-                + ("" if data.get("matches_config") is None else " · 설정과 일치"))
+        if data.get("ig_user_id"):
+            summary(f"## 인스타 토큰 점검\n정상 — @{data.get('username')} ({data.get('ig_user_id')})"
+                    + ("" if data.get("matches_config") is None else " · 설정과 일치"))
+        else:                         # 계정 잠금 전: 토큰이 닿는 인스타 계정 후보를 보여 준다(config 에 넣을 값)
+            rows = "\n".join(f"- @{c.get('username')} — ig_user_id `{c.get('ig_user_id')}` (페이지 「{c.get('page')}」)"
+                             for c in data.get("candidates", []))
+            summary("## 인스타 토큰 점검\n토큰 정상. 아직 계정이 잠기지 않았습니다. 아래 값을 config/instagram.json 에 넣습니다.\n\n" + rows)
         for i in alerts:
             if i["title"] == title:
                 gh("issue", "close", str(i["number"]), "--comment", f"인스타 토큰 점검이 다시 정상입니다. {RUN_URL}")
