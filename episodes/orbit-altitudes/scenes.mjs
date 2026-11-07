@@ -202,6 +202,7 @@ export function plan(tl) {
   P.km400 = at(A.km400) - 0.1; P.min92 = at(A.min92) - 0.1; P.km500 = at(A.km500) - 0.1; P.pole13 = at(A.pole13) - 0.1; P.cloud13 = at(A.cloud13) - 0.1; P.km800 = at(A.km800) - 0.1;
   P.drag = [at(A.thin14) - 0.1, at(A.down14) + 0.9]; P.close14 = at(A.close14) - 0.1;
   P.hubbleH = t => (t < P.drag[0] ? OBJ.hubble.h : lerp(615, OBJ.hubble.h, easeInOut((t - P.drag[0]) / (P.drag[1] - P.drag[0]))));
+  // (2026-11-07) label shows only the two dated endpoints; intermediate heights are interpolation, not dated data.
   P.hubbleYear = t => Math.round(lerp(1990, 2026, easeInOut((t - P.drag[0]) / (P.drag[1] - P.drag[0]))));
   P.leoRevs = {};
   for (const id of ['iss', 'hubble', 'weather']) {
@@ -775,7 +776,7 @@ function ladderStrip(stage, t, P, L, id) {
   if (id === 'leo') {
     const tr = P.tracked(t);
     rows.push([OBJ.iss.h, '우주정거장', OBJ.iss.col, tr === 'iss' ? 1 : 0.55]);
-    rows.push([P.hubbleH(t), tr === 'hubble' && t > P.drag[0] ? `허블 · ${P.hubbleYear(t)}년` : '허블 · 스타링크', OBJ.hubble.col, tr === 'hubble' || tr === 'starlink' ? 1 : 0.55]);
+    rows.push([P.hubbleH(t), tr === 'hubble' && t > P.drag[0] ? '허블 · 1990 → 2026' : '허블 · 스타링크', OBJ.hubble.col, tr === 'hubble' || tr === 'starlink' ? 1 : 0.55]);
     rows.push([OBJ.weather.h, '극궤도 기상위성', OBJ.weather.col, tr === 'weather' ? 1 : 0.55]);
     rows.push([2000, '저궤도의 끝', PAL.gold, 0.9 * lA]);
   } else {

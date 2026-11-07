@@ -620,7 +620,7 @@ function leoScene(stage, t, ctx) {
     const qc = easeInOut((t - P.toss0 + 1.0) / 0.8);
     const V = qs > 0 ? lerpView(VIEW.full, VIEW.small, qs) : qz > 0 ? lerpView(VIEW.close, VIEW.full, qz) : lerpView(VIEW.arc, VIEW.close, qc);
     // LEO band (0–2,000 km)
-    const bandA = fadeIn(t, P.band, 0.5) * (1 - qz);
+    const bandA = fadeIn(t, P.band, 0.5) * (1 - qz) * (1 - qc);
     if (bandA > 0) withAlpha(c, bandA, () => {
       c.beginPath(); c.arc(V.cx, V.cy, V.R + 2000 * V.R / RE * V.ex, 0, TAU); c.arc(V.cx, V.cy, V.R, 0, TAU, true); c.fillStyle = rgba(PAL.speed, 0.10); c.fill('evenodd');
       ring(c, V.cx, V.cy, V.R + 2000 * V.R / RE * V.ex, rgba(PAL.speed, 0.7 * fadeIn(t, P.b2000, 0.4)), 2);
@@ -914,7 +914,7 @@ function inset(stage, t, m, ang, st, s) {
   });
   ring(c, x, y, r, T.accent, 3);
   const ph = m < MODEL.T.bb0 ? RT_PH[0] : m < MODEL.T.bb1 ? RT_PH[1] : m < MODEL.T.en0 ? null : m < MODEL.T.en1 ? RT_PH[2] : RT_PH[3];
-  const label = ph ? `${ph.n} ${ph.name}` : '날아 내려옴 (엔진 끔)';
+  const label = ph ? `${ph.n} ${ph.name}` : '엔진 끄고 날아감';
   tag(stage, label, x, y + r + 34, {size: 26, color: ph ? T.accent : T.muted});
   if (st.burn) tag(stage, `엔진 ${st.engines}개`, x, y - r - 26, {size: 24, color: T.ink, plate: false});
 }
@@ -1053,10 +1053,10 @@ function cycle(stage, t, P) {
   stage.text('다시 날기', CY.x, CY.y + 22, {size: 28, weight: 700, color: T.accent, align: 'center', alpha: fadeIn(t, P.fly15, 0.3)});
 }
 function fairing(stage, t, P) {
-  const c = stage.ctx, T = stage.theme, a = fadeIn(t, P.fairSplit - 0.3, 0.35);
+  const c = stage.ctx, T = stage.theme, a = fadeIn(t, P.cycle0 + 0.4, 0.4);
   if (a <= 0) return;
   withAlpha(c, a, () => {
-    const seaY = 1250, x = 540, topY = 960;
+    const seaY = 1250, x = 540, topY = 960 - 6 * Math.sin(t * 1.2) * (t < P.fairSplit ? 1 : 0);
     // sea
     const gs = c.createLinearGradient(0, seaY, 0, 1340); gs.addColorStop(0, PAL.sea); gs.addColorStop(1, PAL.sea2); c.fillStyle = gs; c.fillRect(140, seaY, 800, 90);
     line(c, [[140, seaY], [940, seaY]], rgba(PAL.atm, 0.5), 2);
@@ -1109,6 +1109,7 @@ function manySats(stage, t, P) {
   // old vs new (top), looping until the LEO picture returns
   const oa = fadeIn(t, P.old, 0.35) * fadeOut(t, P.leoBack, 0.4);
   if (oa > 0) withAlpha(c, oa, () => {
+    c.save(); c.translate(0, 60);
     panel(c, T, 150, 360, 370, 560, 0.86); panel(c, T, 560, 360, 370, 560, 0.86);
     stage.text('예전', 335, 404, {role: 'display', size: 32, weight: 700, color: T.muted, align: 'center'}); stage.text('지금', 745, 404, {role: 'display', size: 32, weight: 700, color: T.accent, align: 'center'});
     const u = ((t - P.old) % 2.4) / 2.4;
@@ -1121,9 +1122,10 @@ function manySats(stage, t, P) {
     c.save(); c.translate(745, 826); c.scale(1, 0.15); ring(c, 0, 0, 80, rgba('#D9D3C8', 0.5), 6); c.restore();
     if (t >= P.newer) clipRect(c, 565, 430, 360, 450, 6, () => rocket(c, 745, lerp(500, 820, 1 - (1 - vv) ** 2), 0, {L: 130, w: 16, legs: smooth((vv - 0.6) / 0.3), fins: 1, soot: 0.6, burn: vv > 0.35 && vv < 1 ? 1 : 0, engines: 1, plumeLen: 70}));
     stage.text('돌아와 다시 씀', 745, 905, {size: 26, weight: 700, color: T.accent, align: 'center'});
+    c.restore();
     const ca = fadeIn(t, P.cost, 0.35), da = fadeIn(t, P.costDown, 0.3);
-    if (ca > 0) withAlpha(c, ca, () => { panel(c, T, 230, 960, 620, 100, 0.92); stage.text('발사 비용', 400, 1010, {role: 'display', size: 34, weight: 700, color: T.ink, align: 'center'});
-      withAlpha(c, da, () => { arrow(c, [560, 980], [560, 980 + 60 * easeOut(clamp((t - P.costDown) / 0.4))], PAL.good, 6); stage.text('크게 내려감', 700, 1010, {role: 'display', size: 34, weight: 700, color: PAL.good, align: 'center'}); }); });
+    if (ca > 0) withAlpha(c, ca, () => { panel(c, T, 230, 1050, 620, 100, 0.92); stage.text('발사 비용', 400, 1100, {role: 'display', size: 34, weight: 700, color: T.ink, align: 'center'});
+      withAlpha(c, da, () => { arrow(c, [560, 1070], [560, 1070 + 60 * easeOut(clamp((t - P.costDown) / 0.4))], PAL.good, 6); stage.text('크게 내려감', 700, 1100, {role: 'display', size: 34, weight: 700, color: PAL.good, align: 'center'}); }); });
   });
   const la = fadeIn(t, P.leoBack, 0.45);
   if (la > 0) withAlpha(c, la, () => {
@@ -1161,7 +1163,7 @@ function mythScene(stage, t, ctx) {
     tag(stage, '짙은 공기 (약 30 km 아래)', 700, mpt(700, 0)[1] - 64, {size: 24, color: PAL.atm, plate: false, a: fadeIn(t, P.thick, 0.4)});
     // orbit line at 200 km (dashed)
     const op = []; for (let x = -100; x <= MODEL.s2.at(-1).x + 150; x += 20) op.push(mpt(x, 200)); line(c, op, rgba(PAL.speed, 0.35), 2, {dash: [6, 8]});
-    stage.text('궤도 고도 200 km', 905, mpt(1600, 200)[1] - 26, {size: 24, color: PAL.speed, align: 'right'});
+    stage.text('궤도 고도 200 km', 905, mpt(1600, 200)[1] + 30, {size: 24, color: PAL.speed, align: 'right'});
     // ghost: straight up and back down
     const gA = fadeIn(t, P.ghost0, 0.3) * fadeOut(t, P.no + 0.4, 0.4);
     if (gA > 0) withAlpha(c, gA, () => {
