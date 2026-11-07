@@ -30,7 +30,12 @@
 GitHub Secrets 에 오래 두는 토큰이 새면 채널 영상을 지울 수 있어 `youtube.readonly` 로 바꿨다. 사용자 승인 뒤 그 권한으로 토큰을 받았다.
 업로드(`videos.insert`)·썸네일(`thumbnails.set`)은 `youtube.upload` 로, 채널 확인(`channels.list mine`)은 `youtube.readonly` 로 된다. 공식 문서로 앞의 둘을 확인했고 채널 확인은 첫 `--whoami` 로 확인한다.
 자막 파일 업로드(`captions.insert`)는 쓸 수 없게 되었다. 2026-11-03 결정대로 원래 꺼져 있던 기능이다.
-진행 상황: GitHub Pages 켜기·브랜딩·프로덕션 게시·웹 애플리케이션 클라이언트 생성 완료(프로젝트 Osint Gen, 앱 이름 "clip uploader 261103"). 토큰은 OAuth Playground 로 받는 중. 다음은 Secrets 저장 → `--whoami` → 비공개 1건 시험.
+진행 상황(2026-11-07): GitHub Pages 켜기·브랜딩·프로덕션 게시·웹 애플리케이션 클라이언트 생성·토큰 발급·Secrets 저장 완료(프로젝트 Osint Gen, 앱 이름 "clip uploader 261103").
+- 첫 토큰은 같은 메일 아래 다른 채널 `_billy`(`UCEMqZEFkaxrWjFC0iRG1jmA`)에 묶였다. 동의 중 채널 고르는 화면을 지나친 탓이다. 앱 접근을 지우고 다시 받아 **과학쑛츠**(`UCZJSpmlBYUthLg0PSWcbU6w`)로 바로잡았다.
+- `youtube-token-check` 수동 실행으로 확인(실행 42346298831): `정상 — 채널 과학쑛츠`. 유튜브 채널 공개 페이지 제목으로 ID 를 따로 대조했다. **읽기 전용 권한으로 채널 확인이 된다는 것도 이 실행으로 확인**되었다.
+- `config/youtube.json` 의 `channel_id` 를 과학쑛츠로 잠갔다(사용자 확인).
+- 사용자는 채팅에 한 번 노출된 클라이언트 비밀번호를 바꾸지 않기로 했다(사용자 결정). `_billy` 토큰은 앱 접근 삭제로 무효가 되었다.
+- 다음: PR 병합 → 비공개 1건 실제 업로드 시험(사용자 허락 뒤). 워크플로 수동 실행은 사용자가 누른다(이 세션의 GitHub 권한으로는 실행 403).
 
 ### 2026-11-07: 네트워크 제한 해제
 

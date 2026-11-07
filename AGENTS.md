@@ -31,7 +31,7 @@
 - `upload.md` 의 제목·설명·태그가 그대로 올라갑니다(인스타그램 설명 블록은 유튜브에 올라가지 않습니다). 제목 100자, 설명 UTF-8 5000바이트, `<` `>` 금지.
 - 비밀값 `YT_CLIENT_ID`·`YT_CLIENT_SECRET`·`YT_REFRESH_TOKEN` 은 환경 변수(GitHub Secrets, 클라우드 환경, `.env`)에만 둡니다. 저장소·로그·커밋·채팅에 값을 남기지 마세요.
 - 리프레시 토큰은 OAuth 앱을 프로덕션으로 게시한 뒤 받은 **장기 토큰**만 씁니다. 테스트 상태의 7일 토큰으로 운영하지 마세요.
-- `config/youtube.json` 의 `channel_id` 는 사용자 결정 사항입니다. 임의로 채우지 마세요. `made_for_kids` 는 2026-11-07 사용자 결정으로 `false` 입니다.
+- `config/youtube.json` 의 `channel_id` 는 **과학쑛츠**(`UCZJSpmlBYUthLg0PSWcbU6w`)로 잠겨 있습니다(2026-11-07 사용자 확인). 다른 채널로 바꾸려면 사용자에게 먼저 묻습니다. `made_for_kids` 는 2026-11-07 사용자 결정으로 `false` 입니다.
 - 실제 업로드 시험은 사용자 허락 뒤 비공개 1건으로 합니다. 절차는 `docs/YOUTUBE_AUTO_UPLOAD.md`.
 
 ## 참고자료 사용

@@ -103,7 +103,10 @@ YouTube API 공식 문서로 확인한 범위: `videos.insert`·`thumbnails.set`
    ```
    https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube.readonly
    ```
-4. 채널을 가진 계정으로 로그인 → 채널이 여럿이면 **과학 쇼츠 채널** 선택 → "확인되지 않은 앱" 경고에서 고급 → 이동
+4. 채널을 가진 계정으로 로그인 → **채널 목록에서 과학쑛츠 선택** → "확인되지 않은 앱" 경고에서 고급 → 이동
+   - **같은 메일에 채널이 여럿이면 이 목록을 놓치기 쉽습니다.** 2026-11-07 첫 시도에서 이 화면을 지나쳐 토큰이 개인 채널 `_billy` 에 묶였습니다.
+   - 확실히 다시 묻게 하려면 먼저 `myaccount.google.com/permissions` 에서 이 앱의 접근을 지우고, 톱니바퀴의 Force prompt 를 `Select Account` 로 둡니다. 회사 PC 라 시크릿 창이 막혀 있어도 이 방법이면 됩니다.
+   - 동의 화면 **맨 위의 이름과 사진이 과학쑛츠**인지 보고 계속을 누릅니다.
 5. 동의 화면의 두 항목("YouTube 동영상 관리", "YouTube 계정 보기")을 체크 → 계속
 6. Step 2 **Exchange authorization code for tokens** → **Refresh token** 값을 복사(채팅에 붙이지 않습니다)
 
@@ -125,7 +128,7 @@ YouTube API 공식 문서로 확인한 범위: `videos.insert`·`thumbnails.set`
 | 키 | 결정 |
 |---|---|
 | `made_for_kids` | **결정 완료: `false`(아동용 아님, 2026-11-07).** 주 시청자가 약 11~16세이고 13세 미만 어린이를 주 대상으로 하지 않기 때문입니다. 편마다 `meta.json` 으로 바꿀 수 있습니다 |
-| `channel_id` | 토큰 발급 때 나온 UC… 값. 다른 채널로 올라가는 사고를 막습니다 |
+| `channel_id` | **결정 완료: 과학쑛츠 `UCZJSpmlBYUthLg0PSWcbU6w`(2026-11-07).** 토큰이 다른 채널이면 업로드 전에 멈춥니다 |
 | `category_id` | 27 교육(공통 설정과 같음) |
 | `upload_captions` | false(공통 설정: SRT 는 올리지 않음). 편별 `--caption` 가능 |
 | `upload_thumbnail` | true. `thumbnail.jpg`(없으면 0초 프레임 `poster.jpg`)를 `thumbnails.set` 으로 시도. 채널이 맞춤 썸네일을 못 쓰면 경고로 남기고 Studio 에서 고르십시오 |
@@ -191,7 +194,7 @@ python -m publish.youtube finals/13-gamma-ray-burst --env-file .env   # 비공�
 ## 미시험 · 미결
 
 - **실제 업로드 0건.** 가짜 전송으로 흐름(토큰→채널→세션→308 재개→200→썸네일→자막)을 시험했고, 실제 API 응답은 아직 보지 못했습니다. main 의 실제 21편 영상·`upload.md` 로 dry-run 은 통과했습니다.
-- 남은 사용자 결정: `channel_id`(토큰 발급 때 나옴), 이미 손으로 올린 편의 목록(`--mark-uploaded` 로 등록).
+- 남은 사용자 결정: 이미 손으로 올린 편의 목록(`--mark-uploaded` 로 등록). `channel_id` 는 2026-11-07 에 과학쑛츠로 정해졌습니다.
 - 남은 사용자 작업: PR 병합 → GitHub Pages 켜기 → 구글 브랜딩·게시 → 토큰 발급 → Secrets 저장.
 - 맞춤 썸네일은 채널 권한(전화 인증)에 따라 실패할 수 있습니다. 실패해도 영상은 올라가고 경고로 남습니다.
 - 고정 댓글·관련 동영상·재생목록·예약 공개는 범위에 넣지 않았습니다. `upload.md` 에 적힌 고정 댓글은 사람이 답니다.

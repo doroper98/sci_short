@@ -161,6 +161,7 @@ class ConfigTest(unittest.TestCase):
         cfg = yu.load_config()
         self.assertEqual(cfg.privacy_status, "private")
         self.assertIs(cfg.made_for_kids, False, "2026-11-07 사용자 결정: 아동용 아님")
+        self.assertEqual(cfg.channel_id, "UCZJSpmlBYUthLg0PSWcbU6w", "2026-11-07 사용자 확인: 과학쑛츠 채널로 잠금")
         self.assertTrue(cfg.contains_synthetic_media)
         self.assertFalse(cfg.upload_captions, "2026-11-03 결정: SRT 는 기본 올리지 않음")
         self.assertTrue(cfg.upload_thumbnail)

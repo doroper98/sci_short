@@ -18,8 +18,8 @@
   "made_for_kids": false,
   "_made_for_kids": "status.selfDeclaredMadeForKids(아동용 콘텐츠 자가 선언). 2026-11-07 사용자 결정: 아동용 아님. 이 채널의 주 시청자는 약 11~16세이며 13세 미만 어린이를 주 대상으로 하지 않는다. null 로 되돌리면 업로드를 거부한다. 편별로 바꾸려면 meta.json 의 made_for_kids. 판단 기준은 docs/YOUTUBE_UPLOAD.md '아동용 여부'.",
 
-  "channel_id": null,
-  "_channel_id": "python -m publish.youtube --whoami 로 확인한 채널 ID(UC...). 넣어 두면 토큰이 다른 채널을 가리킬 때 업로드를 막는다. null 이면 확인만 하고 기록에 남긴다.",
+  "channel_id": "UCZJSpmlBYUthLg0PSWcbU6w",
+  "_channel_id": "과학쑛츠 채널(2026-11-07 사용자 확인). 토큰이 다른 채널을 가리키면 업로드 전에 멈춘다. 첫 토큰이 같은 구글 계정의 다른 채널 '_billy'(UCEMqZEFkaxrWjFC0iRG1jmA)에 묶였던 일이 있어 잠가 둔다. 토큰 점검 워크플로 로그와 유튜브 채널 공개 페이지 제목으로 이 ID 가 과학쑛츠임을 확인했다.",
 
   "tags": [],
   "_tags": "모든 편에 덧붙이는 공통 태그. 편별 태그는 finals/<ep>/upload.md 의 '태그'에서 읽는다(합계 500자 한도). 비워 두면 upload.md 그대로.",
