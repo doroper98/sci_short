@@ -58,6 +58,27 @@ SENTENCE_END = re.compile(r"(?<=[.!?])\s+")
 ORPHAN_CHARS = 1          # a cue must not end with a 1-글자 word that belongs to the next clause ("… 두" | "블랙홀의 …")
 ORPHAN = 50.0
 
+# 숫자와 그 단위·셈 단위는 한 덩어리(2026-11-07 사용자 지시: "3천 / 배"처럼 자막이 갈리거나 줄이 바뀌지 않게).
+# 큐 경계든 줄바꿈이든, 숫자로 끝나는 어절 뒤("3천 | 배가", "스물두 | 대", "수천만 | 도"), 분수의 "~분의" 뒤
+# ("1억분의 | 1초"), 숫자를 꾸미는 말 뒤("약 | 0.7그램", "섭씨 | 38도")에서는 끊지 않는다. 쉼표로 끝나면 끊어도 된다.
+# 같은 규칙이 pipeline/render/stage.mjs 의 두 줄 나누기(numberGlue)에 있다 — 함께 고친다.
+NUMBER_BREAK = 1000.0
+_SUP = "⁰¹²³⁴⁵⁶⁷⁸⁹"
+NUM_END = re.compile(rf"(?:[0-9{_SUP}]|[0-9][0-9.,]*[십백천만억조]+|^(?:수|몇)?[십백천만억조]+)$")
+NATIVE_NUM = re.compile(r"^(?:한|두|세|네|다섯|여섯|일곱|여덟|아홉|열|열한|열두|열세|열네|스무|스물|스물한|스물두|스물세|스물네|"
+                        r"서른|마흔|쉰|예순|일흔|여든|아흔|두세|서너|너덧|몇|수십|수백|수천|수만|수십만|수백만|수천만|수억|수십억)$")
+NUM_PREFIX = {"약", "단", "총", "무려", "불과", "겨우", "최대", "최소", "시속", "초속", "섭씨", "화씨", "영하", "영상"}
+
+
+def number_glue(prev: str, nxt: str) -> bool:
+    """True if a cue/line must not break between `prev` and `nxt` (a number and what it counts)."""
+    if re.search(r"[,，;.!?]$", prev):
+        return False
+    if NUM_END.search(prev) or NATIVE_NUM.match(prev):
+        return True
+    starts_num = bool(re.match(rf"^[0-9{_SUP}]", nxt)) or bool(NATIVE_NUM.match(re.sub(r"[^가-힣].*$", "", nxt) or "-"))
+    return starts_num and (prev.endswith("분의") or prev in NUM_PREFIX)
+
 
 def split_cues(text: str, max_chars: int = MAX_CHARS) -> list[str]:
     """Split at sentence-final punctuation first (a cue never crosses '. ' / '? ' / '! '), then by length."""
@@ -90,6 +111,8 @@ def _split_segment(text: str, max_chars: int) -> list[str]:
                 c += _break_cost(words[i - 1])
                 if nchars(words[i - 1]) <= ORPHAN_CHARS:
                     c += ORPHAN
+                if number_glue(words[i - 1], words[i]):
+                    c += NUMBER_BREAK
             if size < SHORT_CUE_CHARS:
                 c += SHORT_CUE
             if c < best[i][0]:

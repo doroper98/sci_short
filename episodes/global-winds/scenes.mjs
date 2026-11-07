@@ -1405,7 +1405,7 @@ function insolGraph(stage, t, a) {
 }
 
 /** Drawn after the scene, before captions. */
-export function overlays(stage, t, ctx) {
+function baseOverlays(stage, t, ctx) {
   const id = ctx.scene.id, tl = ctx.tl;
   let [kicker, title] = titles[id] || ['', ''];
   if (id === 'belts' && t >= tl.at('s19') - 0.3) [kicker, title] = ['메커니즘 ④ 세 개의 띠', t >= tl.at('s20') - 0.3 ? '반구마다 세 개의 띠' : '우리나라는 편서풍 띠'];
@@ -1498,3 +1498,8 @@ if (isMain && process.argv.includes('--emit-sound')) {
   const m = model(tl);
   console.log(`events: ${sound.events.length}; spin keys ${m.keys.length}; parcel t0 ${m.p1.t0.toFixed(2)} / ${m.p2.t0.toFixed(2)} s; latitude ticks ${m.crossings.length}`);
 }
+
+// First frame = thumbnail (2026-11-07 retrofit, user request): poster 0–0.9 s, morph away 0.9–1.7 s, back at the last
+// sentence. Config and key picture: episodes/global-winds/poster.json, poster-key.jpg (pipeline/render/posterintro.mjs).
+import {posterIntro} from '../../pipeline/render/posterintro.mjs';
+export const overlays = await posterIntro(baseOverlays, {slug: 'global-winds'});

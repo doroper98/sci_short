@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-05T12:33:50+00:00",
+  "fetched_at": "2026-10-30T13:40:27+00:00",
   "fonts": [
     {
       "file": "GmarketSansBold.otf",
@@ -9,7 +9,7 @@
       "licence": "Gmarket free font (free for personal/commercial use; check terms before redistribution)",
       "source_bytes": 629668,
       "source_sha256": "c9f30fc9cb858a716c07da51c5817e90c27bd7387016a2047a8b02b02fb4040d",
-      "sha256": "a583b85b7a73c2114ccafa330fca3a3406986a1a53f360afaca79ad7c358c89f"
+      "sha256": "6d1c043916f5f6021c3be6cfd47a29f0ee17feae16915225051745cf7e34141e"
     },
     {
       "file": "GmarketSansMedium.otf",
@@ -19,7 +19,7 @@
       "licence": "Gmarket free font (free for personal/commercial use; check terms before redistribution)",
       "source_bytes": 610480,
       "source_sha256": "747b8386133b10bffede3cedeb994fc681ad9dc424879a248d7cadf6749b2f97",
-      "sha256": "4b93f3bb0de12dc84226bd00bb174de1956e3f60f24ad0f7dba2cc553395d3e9"
+      "sha256": "8a7c33f6170e5c58bfefa134c1fd8f8f3746ca3bd06fc4876eb92eaa1802e904"
     },
     {
       "file": "GmarketSansLight.otf",
@@ -29,7 +29,7 @@
       "licence": "Gmarket free font (free for personal/commercial use; check terms before redistribution)",
       "source_bytes": 559744,
       "source_sha256": "35dbd7fb0ee986ebaefae727cab6c12b35782ea1663e79f3db7f8f145ca5e82d",
-      "sha256": "17a1239de9a10194f8354c8b15735246effeaaa0b989952e2d6ae1c0ba40be3e"
+      "sha256": "8b077a2a002ba81d7f63a7f2b409369a06407ce778dbcdd0b01482e6cd6847dd"
     },
     {
       "file": "NotoSansKR[wght].ttf",
@@ -48,7 +48,7 @@
       "family": "Noto Sans KR",
       "weight": 400,
       "licence": "SIL Open Font License 1.1",
-      "sha256": "84a116eeaef0329490361718f39b63c7652797052573803bc051ecc8aa37b55c"
+      "sha256": "9567326296925de2d6cba8e425ff01c96d53109159ea10651d986448c8fe7c25"
     },
     {
       "file": "NotoSansKR-Medium.ttf",
@@ -57,7 +57,7 @@
       "family": "Noto Sans KR",
       "weight": 500,
       "licence": "SIL Open Font License 1.1",
-      "sha256": "e7c538ac99078279b1f0d93de0a02424b99826be94381c5dded2b516e9c72ab8"
+      "sha256": "45157b545cb5920f12cd69de943f0a676aa2c50eef29d23084ab1cae44ea5f35"
     },
     {
       "file": "NotoSansKR-Bold.ttf",
@@ -66,7 +66,7 @@
       "family": "Noto Sans KR",
       "weight": 700,
       "licence": "SIL Open Font License 1.1",
-      "sha256": "99e5cd2731b6f60cae68af9756da20edb32409a0b209f1dc6143aa95d32226f0"
+      "sha256": "66cfe52d7c3edb1c63c8de5e602968010adf3b8d699fdcbe3628af887907faaf"
     }
   ]
 }

@@ -924,7 +924,7 @@ function readoutsRecombine(stage, t, ctx, map, tau) {
 }
 
 /** Drawn after the scene, before captions. */
-export function overlays(stage, t, ctx) {
+function baseOverlays(stage, t, ctx) {
   const id = ctx.scene.id;
   let [kicker, title] = titles[id] || ['', ''];
   if (id === 'recombine' && t >= ctx.tl.at(A_GW_START) - 0.3) [kicker, title] = [`중력파 통과 · 실제 0.5초를 ${mapOf(ctx).label}× 느리게`, '한 팔은 늘고, 한 팔은 줄고'];
@@ -975,3 +975,8 @@ if (isMain && process.argv.includes('--emit-sound')) {
   fs.writeFileSync(soundFile, JSON.stringify(sound, null, 2).replace(/\[\n\s+([-\d.e]+),\n\s+([-\d.e]+),\n\s+([-\d.e]+)\n\s+\]/g, '[$1, $2, $3]') + '\n');
   console.log(`brightness: ${b.params.points.length} points, N = ${map.N.toFixed(2)} (label ${map.label}×), peak at ${map.tM.toFixed(3)} s; sites interval ${si.params.interval} s`);
 }
+
+// First frame = thumbnail (2026-11-07 retrofit, user request): poster 0–0.9 s, morph away 0.9–1.7 s, back at the last
+// sentence. Config and key picture: episodes/ligo-how-it-works/poster.json, poster-key.jpg (pipeline/render/posterintro.mjs).
+import {posterIntro} from '../../pipeline/render/posterintro.mjs';
+export const overlays = await posterIntro(baseOverlays, {slug: 'ligo-how-it-works'});

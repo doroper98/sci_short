@@ -27,7 +27,7 @@
 | `publish/youtube.py` | 업로더 CLI. 표준 라이브러리만 사용. `--dry-run` `--all` `--list` `--whoami` `--mark-uploaded` |
 | `publish/oauth.py` | 리프레시 토큰 1회 발급(사용자 PC, 루프백 OAuth + PKCE). **프로덕션 게시 확인 없이는 발급 거부** |
 | `config/youtube.json` | 채널 공통 설정. `privacy_status` 는 `private` 만 허용 |
-| `finals/<NN>-<slug>/upload.md` | 제목 / 설명 / 태그(기존 규약 그대로). 두 형식(태그 한 줄 · 태그 블록) 모두 읽음 |
+| `finals/<NN>-<slug>/upload.md` | 제목 / 설명 / 태그(기존 규약 그대로). 두 형식(태그 한 줄 · 태그 블록) 모두 읽음. **'인스타그램(릴스) 설명' 블록은 유튜브에 올라가지 않습니다** — 머리말이 `제목`·`설명`·`태그` 와 정확히 일치할 때만 읽습니다 |
 | `finals/<NN>-<slug>/youtube_upload.json` | 업로드 기록(도구가 씀). 영상 ID·URL·md5·채널·시각 |
 | `.github/workflows/youtube-upload.yml` | main 의 `finals/**` 변경 → 바뀐 편만 비공개 업로드 → 기록 커밋 → 이슈. 수동 실행은 한 편 또는 전체 |
 | `.github/workflows/youtube-token-check.yml` | 매주 월요일 09:17 KST 토큰 점검 |
@@ -49,10 +49,12 @@
 
 게시(프로덕션 전환)에는 **앱 홈페이지 URL·개인정보처리방침 URL·승인된 도메인**이 필요합니다.
 
-| 길 | 내용 | 장점 | 단점 |
-|---|---|---|---|
-| A. osint_generator 의 OAuth 앱 재사용 (권장) | 이미 만든 Google Cloud 프로젝트·클라이언트·브랜딩 페이지(`osint-generator.vercel.app/youtube-app`)를 그대로 쓰고, **이 채널용 리프레시 토큰만** 새로 받음 | 설정이 한 곳. 게시 작업 1회 | 그 저장소의 페이지가 main 에 병합·배포돼 있어야 함 |
-| B. sci_short 전용 프로젝트 | 새 Google Cloud 프로젝트. 브랜딩 페이지는 이 저장소 `docs/youtube-app/` 을 GitHub Pages 로 배포(저장소가 공개라 가능) | 저장소 하나로 완결 | Pages 활성화·동의 화면·게시를 다시 해야 함 |
+| 길 | 내용 | 현재 상태 |
+|---|---|---|
+| **B. sci_short 전용 (권장)** | 이 저장소 `docs/youtube-app/` 을 GitHub Pages 로 배포하고, 그 주소를 브랜딩에 넣는다 | 저장소는 공개. **Pages 는 아직 꺼져 있다.** PR 병합 뒤 Settings → Pages → `main` / `docs` 로 켠다 |
+| A. osint_generator 앱 재사용 | 그 저장소의 페이지(`osint-generator.vercel.app/youtube-app`)를 쓰고 이 채널 토큰만 새로 받는다 | **2026-11-07 확인: 두 주소 모두 404.** 그 저장소에서 페이지를 main 에 병합·배포해야 쓸 수 있다 |
+
+2026-11-07 확인 결과 A 안의 페이지가 열리지 않아 **B 안을 기준으로 합니다.**
 
 같은 Google 계정이 두 채널을 소유하면 A 로 충분합니다. 리프레시 토큰은 **동의할 때 고른 채널**에 묶이므로 채널만 다르게 고르면 됩니다.
 
@@ -62,9 +64,16 @@
 
 1. 프로젝트 선택(A: 기존 / B: 새 프로젝트). `console.cloud.google.com/apis/library/youtube.googleapis.com` 에서 **YouTube Data API v3 사용**.
 2. Google 인증 플랫폼 → **브랜딩**: 앱 이름, 지원 이메일, 앱 홈페이지, 개인정보처리방침, 승인된 도메인.
-   - A: `https://osint-generator.vercel.app/youtube-app`, `.../youtube-app/privacy`, 도메인 `osint-generator.vercel.app`
-   - B: 저장소 Settings → Pages → Deploy from a branch, `main` / `/docs` 로 배포한 뒤 `https://doroper98.github.io/sci_short/youtube-app/`, `.../youtube-app/privacy.html`, 도메인 `doroper98.github.io`
-3. **대상** → **앱 게시** → 프로덕션. 개인용(사용자 100명 미만)은 심사 없이 "확인되지 않은 앱" 경고만 뜹니다. 심사 제출을 요구하는 화면이 나오면 캡처를 다음 세션에 보여 주십시오.
+   - 저장소 Settings → Pages → Deploy from a branch, `main` / `/docs` 로 배포한 뒤:
+     - 앱 홈페이지 `https://doroper98.github.io/sci_short/youtube-app/`
+     - 개인정보처리방침 `https://doroper98.github.io/sci_short/youtube-app/privacy.html`
+     - 승인된 도메인 `doroper98.github.io`
+   - **주소 두 개가 실제로 열리는지 먼저 확인하십시오.** 구글이 접속해 봅니다.
+3. **대상** → **앱 게시** → 프로덕션.
+   - `youtube.upload` 은 구글이 **민감한 범위**로 분류합니다. 심사를 받지 않은 앱은 **신규 사용자 100명 상한**이 붙습니다(구글 공식 FAQ). 1인용이라 문제가 없습니다.
+   - 동의할 때 "확인되지 않은 앱" 경고가 한 번 뜹니다. 고급 → 이동 → 허용.
+   - **심사(verification)는 받지 않아도 됩니다.** 받으면 몇 달 걸릴 수 있고, 100명 상한이 풀릴 뿐입니다.
+   - 심사 제출을 강제하는 화면이 나오면 캡처를 다음 세션에 보여 주십시오.
 4. **클라이언트** → 만들기 → 유형 **데스크톱 앱**. ID·비밀값은 채팅에 붙이지 말고 다음 단계에서 터미널에만 넣습니다. (기존 '웹 애플리케이션' 클라이언트를 쓰려면 승인된 리디렉션 URI 에 `http://127.0.0.1:8765/` 추가.)
 
 ### 2) 토큰 발급 (사용자 PC, 1회)
@@ -91,7 +100,7 @@ python -m publish.oauth --production --write-env .env
 
 | 키 | 결정 |
 |---|---|
-| `made_for_kids` | **2026-11-07 사용자 결정: `false`(아동용 아님).** 주 시청자가 약 11~16세이고 13세 미만 어린이를 주 대상으로 하지 않기 때문입니다. null 로 두면 업로드를 거부합니다. 편마다 `meta.json` 으로 바꿀 수 있습니다 |
+| `made_for_kids` | **결정 완료: `false`(아동용 아님, 2026-11-07).** 주 시청자가 약 11~16세이고 13세 미만 어린이를 주 대상으로 하지 않기 때문입니다. 편마다 `meta.json` 으로 바꿀 수 있습니다 |
 | `channel_id` | 토큰 발급 때 나온 UC… 값. 다른 채널로 올라가는 사고를 막습니다 |
 | `category_id` | 27 교육(공통 설정과 같음) |
 | `upload_captions` | false(공통 설정: SRT 는 올리지 않음). 편별 `--caption` 가능 |
@@ -156,8 +165,10 @@ python -m publish.youtube finals/13-gamma-ray-burst --env-file .env   # 비공�
 
 ## 미시험 · 미결
 
-- **실제 업로드 0건.** 가짜 전송으로 흐름(토큰→채널→세션→308 재개→200→썸네일→자막)을 시험했고, 실제 API 응답은 아직 보지 못했습니다. 실제 13편 영상·`upload.md` 로 dry-run 은 통과했습니다.
-- `channel_id`, Google 프로젝트 재사용(A/B), 이미 손으로 올린 편의 목록은 사용자 결정·확인 대기입니다. `made_for_kids` 는 2026-11-07 에 `false` 로 정해졌습니다.
-- 맞춤 썸네일은 채널 권한에 따라 실패할 수 있습니다(경고로 남김).
-- 고정 댓글·관련 동영상·재생목록·예약 공개(`publishAt`)는 범위에 넣지 않았습니다. 필요하면 다음 작업으로 분리합니다.
+- **실제 업로드 0건.** 가짜 전송으로 흐름(토큰→채널→세션→308 재개→200→썸네일→자막)을 시험했고, 실제 API 응답은 아직 보지 못했습니다. main 의 실제 21편 영상·`upload.md` 로 dry-run 은 통과했습니다.
+- 남은 사용자 결정: `channel_id`(토큰 발급 때 나옴), 이미 손으로 올린 편의 목록(`--mark-uploaded` 로 등록).
+- 남은 사용자 작업: PR 병합 → GitHub Pages 켜기 → 구글 브랜딩·게시 → 토큰 발급 → Secrets 저장.
+- 맞춤 썸네일은 채널 권한(전화 인증)에 따라 실패할 수 있습니다. 실패해도 영상은 올라가고 경고로 남습니다.
+- 고정 댓글·관련 동영상·재생목록·예약 공개는 범위에 넣지 않았습니다. `upload.md` 에 적힌 고정 댓글은 사람이 답니다.
+- **인스타그램 업로드는 포함되어 있지 않습니다.** 인스타 게시 API 에는 비공개·초안 상태가 없어 "비공개로 올리고 사람이 공개"를 재현할 수 없습니다. `finals/INSTAGRAM.md` 의 설명문은 사람이 붙여 넣는 용도입니다.
 - Actions 의 기록 커밋은 main 보호 규칙이 없다는 전제입니다.

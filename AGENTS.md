@@ -14,7 +14,7 @@
 
 ## 유지할 기준과 자유롭게 설계할 부분
 
-- **음성**: Supertonic 3 M3 + MMS 정렬 + `니다` 문장 끝 억양 보정. osint 기준값은 `config/voice-reference.json`, 이 프로젝트가 바꾼 값(프리셋 F4, 속도 0.85, 하강 6반음, 2026-10-31 사용자 결정)은 `config/voice-overrides.json`에만 둡니다. 두 파일 외의 방법으로 목소리 값을 바꾸지 마세요. 구현은 `pipeline/narration/`입니다. 다른 목소리·다른 모델 변환본·speaker id 추정·글자 수 비례 시각으로 조용히 대체하지 마세요. 정렬 모델을 받을 수 없으면 `--skip-alignment`의 결과가 표준이 아님을 알리고 전달합니다.
+- **음성**: Supertonic 3 M3 + MMS 정렬 + `니다` 문장 끝 억양 보정. osint 기준값은 `config/voice-reference.json`, 이 프로젝트가 바꾼 값(속도 0.85, 하강 6반음은 2026-10-31 사용자 결정; 프리셋은 2026-10-31 F4 → 2026-11-06 "남자 목소리로" 결정으로 M3)은 `config/voice-overrides.json`에만 둡니다. 두 파일 외의 방법으로 목소리 값을 바꾸지 마세요. 구현은 `pipeline/narration/`입니다. 다른 목소리·다른 모델 변환본·speaker id 추정·글자 수 비례 시각으로 조용히 대체하지 마세요. 정렬 모델을 받을 수 없으면 `--skip-alignment`의 결과가 표준이 아님을 알리고 전달합니다.
 - 이전 석영 영상(`samples/quartz/`)의 Sherpa-ONNX INT8 경로는 **호스트 차단 시의 임시 우회 기록**입니다. 표준이 아니며 새 에피소드에 재사용하지 않습니다. 필요한 호스트는 `docs/NETWORK_AND_ASSETS.md`에 있습니다.
 - **문체**: 내레이션은 합니다체입니다. 억양 보정이 `니다`에만 적용되므로 문체와 음성 기준이 함께 갑니다. 감탄사·마스코트·의성어 자막을 쓰지 않습니다.
 - **글꼴·톤**: `doroper98/agents_reviewer` 르포 템플릿 기준(GmarketSans 제목, Noto Sans KR 본문, `noturno` 테마 기본). 글꼴 파일은 `pipeline/render/fetch_fonts.py`로 받고 Git에 넣지 않습니다.
@@ -28,10 +28,10 @@
 ## 유튜브 업로드 체계
 
 - 완성 쇼츠는 기존 규약대로 `finals/<번호>-<slug>/`(mp4·`upload.md`·썸네일)에 두면 됩니다. PR 이 main 에 병합되면 `publish/youtube.py`(GitHub Actions)가 그 편을 **비공개**로만 올립니다. 공개 전환은 사용자가 직접 합니다. 코드·설정 어디에서도 public·unlisted 로 바꾸지 마세요.
-- `upload.md` 의 제목·설명·태그가 그대로 올라갑니다. 제목 100자, 설명 UTF-8 5000바이트, `<` `>` 금지. 자막 SRT 는 올리지 않는 것이 기본(2026-11-03 사용자 결정)입니다.
+- `upload.md` 의 제목·설명·태그가 그대로 올라갑니다(인스타그램 설명 블록은 유튜브에 올라가지 않습니다). 제목 100자, 설명 UTF-8 5000바이트, `<` `>` 금지.
 - 비밀값 `YT_CLIENT_ID`·`YT_CLIENT_SECRET`·`YT_REFRESH_TOKEN` 은 환경 변수(GitHub Secrets, 클라우드 환경, `.env`)에만 둡니다. 저장소·로그·커밋·채팅에 값을 남기지 마세요.
 - 리프레시 토큰은 OAuth 앱을 프로덕션으로 게시한 뒤 받은 **장기 토큰**만 씁니다. 테스트 상태의 7일 토큰으로 운영하지 마세요.
-- `config/youtube.json` 의 `made_for_kids`(아동용 선언)·`channel_id` 는 사용자 결정 사항입니다. 임의로 채우지 마세요.
+- `config/youtube.json` 의 `channel_id` 는 사용자 결정 사항입니다. 임의로 채우지 마세요. `made_for_kids` 는 2026-11-07 사용자 결정으로 `false` 입니다.
 - 실제 업로드 시험은 사용자 허락 뒤 비공개 1건으로 합니다. 절차는 `docs/YOUTUBE_AUTO_UPLOAD.md`.
 
 ## 참고자료 사용

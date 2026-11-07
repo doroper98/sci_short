@@ -62,6 +62,19 @@ export function fontString(role, size, weight = 400) {
   return `${w} ${size}px ${stack.join(', ')}`;
 }
 
+// Number glue (2026-11-07 user rule): never break between a number and what it counts. Mirrors
+// number_glue() in pipeline/narration/captions.py, which applies the same rule to caption cue boundaries.
+const NUM_END = /(?:[0-9⁰¹²³⁴⁵⁶⁷⁸⁹]|[0-9][0-9.,]*[십백천만억조]+|^(?:수|몇)?[십백천만억조]+)$/;
+const NATIVE_NUM = /^(?:한|두|세|네|다섯|여섯|일곱|여덟|아홉|열|열한|열두|열세|열네|스무|스물|스물한|스물두|스물세|스물네|서른|마흔|쉰|예순|일흔|여든|아흔|두세|서너|너덧|몇|수십|수백|수천|수만|수십만|수백만|수천만|수억|수십억)$/;
+const NUM_PREFIX = new Set(['약', '단', '총', '무려', '불과', '겨우', '최대', '최소', '시속', '초속', '섭씨', '화씨', '영하', '영상']);
+export function numberGlue(prev, next) {
+  if (!prev || !next || /[,，;.!?]$/.test(prev)) return false;
+  if (NUM_END.test(prev) || NATIVE_NUM.test(prev)) return true;
+  const lead = next.replace(/[^가-힣].*$/, '') || '-';
+  const startsNum = /^[0-9⁰¹²³⁴⁵⁶⁷⁸⁹]/.test(next) || NATIVE_NUM.test(lead);
+  return startsNum && (prev.endsWith('분의') || NUM_PREFIX.has(prev));
+}
+
 export function createStage({width = 1080, height = 1920, fps = 30, fonts = {}, theme = null} = {}) {
   const info = registerFonts(fonts);
   const canvas = createCanvas(width, height), ctx = canvas.getContext('2d');
@@ -135,7 +148,10 @@ export function createStage({width = 1080, height = 1920, fps = 30, fonts = {}, 
       const BOUND = /^(번|개|수|것|때|등|중|쪽|년|배|초|분|명|곳|줄|채|뿐|듯|칸|쯤)(에|은|는|이|가|을|를|의|으로|로|도|씩|째|에서|까지|부터)?[.,!?]?$/;
       const DET = /^(그|이|저|한|두|세|네|첫|각|몇|온|약|극|빔|찬|큰|새)$/;
       const dangling = i => BOUND.test(words[i]) || DET.test(words[i - 1]);
-      const cost = (a, b, i) => Math.max(w(a), w(b)) + (dangling(i) ? 0.25 * maxWidth : 0);
+      // A number and what it counts never sit on different lines ("3천 / 배가", "1억분의 / 1초", "섭씨 / 38도");
+      // same rule as number_glue() in pipeline/narration/captions.py (2026-11-07 user rule).
+      const cost = (a, b, i) => Math.max(w(a), w(b)) + (dangling(i) ? 0.25 * maxWidth : 0)
+        + (numberGlue(words[i - 1], words[i]) ? 10 * maxWidth : 0);
       let best = out, bestC = Infinity;
       for (let i = 1; i < words.length; i++) {
         const a = words.slice(0, i).join(' '), b = words.slice(i).join(' ');

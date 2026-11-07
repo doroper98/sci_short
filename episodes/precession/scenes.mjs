@@ -1419,7 +1419,7 @@ function closeScene(stage, t, ctx) {
 }
 
 /** Drawn after the scene, before captions. */
-export function overlays(stage, t, ctx) {
+function baseOverlays(stage, t, ctx) {
   const L = titleList(ctx.scene.id, ctx.tl), a = smooth(ctx.scene.p / 0.04);
   let k = 0; while (k + 1 < L.length && t >= L[k + 1][0]) k++;
   // sequential swap (old line fades out, then the new one fades in) so two titles never overlap (user saw a garbled header at ~98 s)
@@ -1534,3 +1534,8 @@ if (isMain && process.argv.includes('--emit-sound')) {
   console.log(`pole closest: Polaris ${POLE_YEARS.polaris.toFixed(0)}, Thuban ${POLE_YEARS.thuban.toFixed(0)}, Vega ${POLE_YEARS.vega.toFixed(0)}; Vega off the circle ${(90 - STARS.vega.beta - EPS).toFixed(2)}°, Thuban ${(90 - STARS.thuban.beta - EPS).toFixed(2)}°, Polaris ${(90 - STARS.polaris.beta - EPS).toFixed(2)}°`);
   console.log(`moon/equator angle ${TH_MIN.toFixed(2)}…${TH_MAX.toFixed(2)}°, torque ratio min/max ${TQ_MIN.toFixed(3)}; 9.2″/moon = 1/${(MOON_DIAM / NUT_EPS).toFixed(0)}; perihelion decl now ${periDecl(2026).toFixed(1)}°, 11 kyr ago ${periDecl(2026 - 11000).toFixed(1)}°`);
 }
+
+// First frame = thumbnail (2026-11-07 retrofit, user request): poster 0–0.9 s, morph away 0.9–1.7 s, back at the last
+// sentence. Config and key picture: episodes/precession/poster.json, poster-key.jpg (pipeline/render/posterintro.mjs).
+import {posterIntro} from '../../pipeline/render/posterintro.mjs';
+export const overlays = await posterIntro(baseOverlays, {slug: 'precession'});

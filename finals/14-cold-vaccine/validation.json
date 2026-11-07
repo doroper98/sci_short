@@ -1,10 +1,10 @@
 {
   "file": "cold-vaccine.mp4",
-  "bytes": 23125193,
-  "sha256": "99a1c20938b34219b3af75305e5baff37d8becf3369b093ee337b0c4f2bc81a5",
-  "created": "2026-11-05T13:12:02+00:00",
-  "title": "감기 예방 주사가 없는 이유 — 외워야 할 얼굴이 너무 많다",
-  "timeline_duration": 161.795,
+  "bytes": 25479691,
+  "sha256": "de6602468a880dc1ce46748ab6d2d13054c3b019949fb36685bf531814bc414c",
+  "created": "2026-11-05T13:46:46+00:00",
+  "title": "감기 주사는 왜 없을까 — 범인이 200가지",
+  "timeline_duration": 172.058,
   "max_sec": 180.0,
   "probe": {
     "streams": [
@@ -40,11 +40,11 @@
         "time_base": "1/15360",
         "start_pts": 0,
         "start_time": "0.000000",
-        "duration_ts": 2485248,
-        "duration": "161.800000",
-        "bit_rate": "978636",
+        "duration_ts": 2642944,
+        "duration": "172.066667",
+        "bit_rate": "1008130",
         "bits_per_raw_sample": "8",
-        "nb_frames": "4854",
+        "nb_frames": "5162",
         "extradata_size": 50,
         "disposition": {
           "default": 1,
@@ -93,10 +93,10 @@
         "time_base": "1/48000",
         "start_pts": 0,
         "start_time": "0.000000",
-        "duration_ts": 7766160,
-        "duration": "161.795000",
-        "bit_rate": "156021",
-        "nb_frames": "7585",
+        "duration_ts": 8258784,
+        "duration": "172.058000",
+        "bit_rate": "167701",
+        "nb_frames": "8065",
         "extradata_size": 5,
         "disposition": {
           "default": 1,
@@ -126,41 +126,41 @@
       }
     ],
     "format": {
-      "filename": "outputs/cold-vaccine/final/cold-vaccine.mp4",
+      "filename": "/home/user/sci_short/outputs/cold-vaccine/final/cold-vaccine.mp4",
       "nb_streams": 2,
       "nb_programs": 0,
       "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
-      "duration": "161.800000",
-      "size": "23125193",
-      "bit_rate": "1143396",
+      "duration": "172.066667",
+      "size": "25479691",
+      "bit_rate": "1184642",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
         "minor_version": "512",
         "compatible_brands": "isomiso2avc1mp41",
-        "title": "감기 예방 주사가 없는 이유 — 외워야 할 얼굴이 너무 많다",
+        "title": "감기 주사는 왜 없을까 — 범인이 200가지",
         "encoder": "Lavf60.16.100"
       }
     }
   },
   "audio_mastering_input": {
-    "input_i": "-17.87",
-    "input_tp": "-1.94",
-    "input_lra": "4.70",
-    "input_thresh": "-28.13",
-    "output_i": "-14.12",
+    "input_i": "-16.10",
+    "input_tp": "-1.92",
+    "input_lra": "4.20",
+    "input_thresh": "-26.46",
+    "output_i": "-14.17",
     "output_tp": "-1.50",
-    "output_lra": "4.60",
-    "output_thresh": "-24.40",
+    "output_lra": "4.40",
+    "output_thresh": "-24.53",
     "normalization_type": "dynamic",
-    "target_offset": "0.12"
+    "target_offset": "0.17"
   },
   "encoded_audio": {
-    "input_i": "-14.04",
-    "input_tp": "-1.42",
-    "input_lra": "4.60"
+    "input_i": "-14.06",
+    "input_tp": "-1.41",
+    "input_lra": "4.40"
   },
   "targets": {
     "lufs": -14.0,
@@ -173,7 +173,7 @@
   "alignment_sources": [
     "mms_forced_alignment"
   ],
-  "final_fall_applied": 22,
+  "final_fall_applied": 19,
   "music": null,
   "music_credit_required": false,
   "captions_srt": "cold-vaccine.srt",

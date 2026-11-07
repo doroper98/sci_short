@@ -4,7 +4,6 @@
 대상은 초등학교 고학년부터 고등학교 저학년(약 11~16세)입니다. 장치 해부도 수준의 메커니즘 자세함, 이해를 돕는 배경지식, 소화할 수 있는 호흡을 함께 설계하고, 유치하지 않은 톤을 유지합니다.
 
 현재 상태(2026-10-30): **표준 음성 파이프라인과 공통 제작 도구가 작동하며 통합 테스트를 통과했습니다.** 첫 실제 에피소드는 아직 만들지 않았습니다. 상세는 [HANDOFF.md](HANDOFF.md).
-최종본 13편이 `finals/` 에 있고, 완성 쇼츠를 채널에 **비공개로 자동 업로드**하는 체계(공개 전환은 사용자)가 준비되어 있습니다. → [자동 업로드](docs/YOUTUBE_AUTO_UPLOAD.md)
 
 ## 시작하기
 
@@ -17,7 +16,6 @@
 7. [한국어 음성·자막](docs/NARRATION_AND_CAPTIONS.md) — 표준 음성 근거와 구현 상태
 8. [애니메이션 품질](docs/ANIMATION_QUALITY.md), [과학을 설명하는 소리](docs/SOUND_DESIGN.md), [화면 설계](docs/CREATIVE_DIRECTION.md)
 9. [참고 영상 분석](docs/REFERENCE_ANALYSIS.md) — 현상 설명 계열 1~8번, 장치 해부도 계열 9~13번
-10. [유튜브 업로드](docs/YOUTUBE_UPLOAD.md) 공통 설정 · [자동 업로드 체계](docs/YOUTUBE_AUTO_UPLOAD.md) — finals 병합 → 비공개 업로드 → 사용자가 공개 전환
 
 ## 한 편 만들기
 
@@ -31,15 +29,16 @@ episodes/<slug>/run.sh                               # narrate → stills → re
 
 가상환경과 설치 방법은 [pipeline/narration/README.md](pipeline/narration/README.md)와 [pipeline/README.md](pipeline/README.md)에 있습니다.
 
+완성 쇼츠를 채널에 **비공개로 자동 업로드**하는 체계가 있습니다(공개 전환은 사용자). → [자동 업로드](docs/YOUTUBE_AUTO_UPLOAD.md)
+
 ## 확정된 기준
 
-- **음성**: Supertonic 3 남성 M3 + MMS 강제 정렬 + `니다` 문장 끝 억양 보정. `doroper98/osint_generator`와 같은 코드·모델 파일이며, 이 프로젝트는 프리셋 F4·속도 0.85·끝 하강 6반음으로 조정했습니다(`config/voice-overrides.json`). 내레이션은 합니다체.
+- **음성**: Supertonic 3 남성 M3 + MMS 강제 정렬 + `니다` 문장 끝 억양 보정. `doroper98/osint_generator`와 같은 코드·모델 파일이며, 이 프로젝트는 속도 0.85·끝 하강 6반음으로 조정했습니다(프리셋은 2026-10-31~11-05 F4, 2026-11-06부터 다시 남성 M3)(`config/voice-overrides.json`). 내레이션은 합니다체.
 - **자막**: 실제 음성의 글자 시각에 맞춘 큐. 화면의 핵심 현상을 가리지 않도록 장면별 위치 조정.
 - **화면**: 하나의 무대, 전체 단면 → 번호 붙인 확대 → 측정값 그래프의 3단 계기판, 역할 색 고정, 시간 배율·단순화를 화면에 선언.
 - **소리**: 화면 사건과 같은 시간표에서 생성한 설명용 음향. 핵심 비교 구간에서 음악을 비움.
 - **글꼴·테마**: GmarketSans(제목)·Noto Sans KR(본문), 기본 테마 `noturno`. `agents_reviewer` 르포 템플릿 기준.
 - **길이**: 최대 180초, 권장 150~170초. 음성 가속 금지.
-- **업로드**: 항상 **비공개**로 자동 업로드하고 공개 전환은 사용자가 직접. OAuth 토큰은 7일 만료형이 아닌 프로덕션 게시 뒤의 장기 토큰만 사용.
 
 ## 구조
 
@@ -65,14 +64,6 @@ assets/fonts/                     글꼴 해시 목록(바이너리는 받아서
 references/                       참고 영상 13편·장면 모음·음성 발췌·무결성 확인값
 finals/                           최종본 보관함(번호-slug 폴더, 목록·해시는 pipeline/catalog.py)
 finals/legacy/, samples/          이전 시제품(석영·전력·태양)과 그 제작 코드
-publish/youtube.py                finals/<ep> 를 유튜브에 비공개로 올리는 CLI(표준 라이브러리만)
-publish/oauth.py                  리프레시 토큰 1회 발급(프로덕션 게시 확인 뒤)
-config/youtube.json               채널 공통 업로드 설정(private 고정, made_for_kids·channel_id 결정 필요)
-docs/YOUTUBE_UPLOAD.md            업로드 공통 설정(사용자 결정)
-docs/YOUTUBE_AUTO_UPLOAD.md       자동 업로드 체계·1회 설정·운영·문제 해결
-docs/youtube-app/                 OAuth 앱 게시용 홈페이지·개인정보처리방침(GitHub Pages 용)
-.github/workflows/                youtube-upload(비공개 업로드)·youtube-token-check(주간)·ci(시험+dry-run)
-tests/                            업로더 단위 시험: python -m unittest discover -s tests
 templates/episode-brief.md        기획 메모 양식
 ```
 

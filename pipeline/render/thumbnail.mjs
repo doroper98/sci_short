@@ -9,6 +9,8 @@
 //   --crop x,y,w,h        keep only this region of the scene, scaled to --fit px wide (default 1000, height capped
 //                         at 900) and centred at y = --cy (default 640) on a fresh background, edges feathered
 //   --raw                 also write <out>.raw.jpg without the title (for choosing the moment)
+//   --raw-only            write only the picture without any title to --out and stop (poster key image for
+//                         pipeline/render/posterintro.mjs, 2026-11-07)
 // Timeline: outputs/<slug>/narration/timeline.json, else the archived finals/*-<slug>/timeline.json.
 import fs from 'node:fs'; import path from 'node:path'; import {fileURLToPath, pathToFileURL} from 'node:url';
 
@@ -63,6 +65,11 @@ if (crop) {
 const out = path.resolve(opt('--out', path.join(root, 'outputs', slug, 'thumbnail.jpg')));
 fs.mkdirSync(path.dirname(out), {recursive: true});
 if (argv.includes('--raw')) fs.writeFileSync(out.replace(/\.jpg$/i, '') + '.raw.jpg', await stage.canvas.encode('jpeg', 90));
+if (argv.includes('--raw-only')) {
+  fs.writeFileSync(out, await stage.canvas.encode('jpeg', 92));
+  console.log(`poster key: ${path.relative(root, out)}  (scene ${scene.id} @ ${t.toFixed(2)} s)`);
+  process.exit(0);
+}
 
 // poster title: dark band behind, big main line fitted to 800 px, subtitle below (same as the first-frame posters)
 const c = stage.ctx, T = stage.theme, y2 = y1 + 126;
