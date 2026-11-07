@@ -767,7 +767,7 @@ function cases(stage, t, p, ctx) {
   if (t < P.mirror - 0.3) {
     const a = smooth((t - P.ink + 0.25) / 0.5);
     inkShot(stage, t, P.ink - 0.25, {end: P.mirror + 6});
-    tag(stage, '물에 떨어뜨린 잉크 한 방울', 790, 430, {size: 38, color: '#FFFFFF', a: fadeIn(t, P.ink + 0.2, 0.4)});
+    tag(stage, '물속의 잉크 한 방울', 800, 430, {size: 38, color: '#FFFFFF', a: fadeIn(t, P.ink + 0.2, 0.4)});
     if (a < 1) { withAlpha(c, 1 - a, () => { background(stage); fireShot(stage, t, P, sc); }); }
     return;
   }
@@ -854,7 +854,7 @@ export function soundEvents(tl) {
   const f = sim('main'), rise = tt => { f.goto(P.hookStep(tt)); return f.riseSpeed(); };
 
   // ---- hook
-  swell('poster', 0.05, [73, 110], '첫 화면(썸네일): 해 질 녘 사막의 버섯구름', {dur: 1.8, gain: -34});
+  swell('poster', 0.05, [73, 110], '첫 화면(썸네일): 점과 등고선으로 그린 버섯구름', {dur: 1.8, gain: -34});
   ev[ev.length - 1].model = {sig: modelSignature(tl)};
   thump('flash', P.flash, '섬광 — 폭발의 순간(빛은 바로 도착)', -31, 46, 0.9);
   const delay = OBS_KM * 1000 / 343 / P.speedup;
