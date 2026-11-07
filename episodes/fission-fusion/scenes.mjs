@@ -8,20 +8,20 @@
 //
 // Model notes (also in README.md; nothing of this is printed on screen as a footnote):
 //  - Nuclei: nucleons are shaded spheres packed in a ball of radius (A/0.6)^(1/3) nucleon radii (random close packing,
-//    relaxed with a short repulsion pass; seeded). Colours: proton warm red, neutron cool silver. Explanatory drawing —
+//    relaxed with a short repulsion pass; seeded). Colours: proton warm orange, neutron grey (matte). Explanatory drawing —
 //    nucleons are not marbles.
 //  - Fission (설명 모형, liquid drop): U-236* wobbles (quadrupole), stretches into a peanut, the neck snaps; fragments
 //    Ba-141 (56 p) + Kr-92 (36 p) + 3 neutrons fly apart. Real time scale ≲ 10⁻¹⁴ s; shown in declared slow motion.
 //  - Valley: binding energy per nucleon B/A (measured, MeV): H-1 0, H-2 1.112, H-3 2.827, He-4 7.074, C-12 7.680,
 //    O-16 7.976, Ne-20 8.032, Mg-24 8.261, Si-28 8.448, S-32 8.493, Ca-40 8.551, Ti-48 8.723, Fe-56 8.790, Ni-62 8.795,
 //    Kr-84 8.717, Mo-98 8.635, Sn-120 8.505, Ba-138 8.393, Gd-158 8.202, W-184 8.005, Pb-208 7.868, U-235 7.591,
-//    U-238 7.570 (upper envelope of stable nuclei on the light side). Drawn upside-down as a valley: height = 8.8 − B/A,
-//    x = log₁₀A. Fusion D+T: 17.6 MeV / 5 = 3.5 MeV per nucleon; fission U-235: ≈ 200 MeV / 236 ≈ 0.85 → ×4 per mass.
+//    U-238 7.570 (upper envelope of stable nuclei on the light side). Drawn as a 2D line graph upside down (iron at the
+//    bottom): y = B/A downward, x = log₁₀A; measured points shown as dots. Fusion D+T: 17.6 MeV / 5 = 3.5 MeV per nucleon; fission U-235: ≈ 200 MeV / 236 ≈ 0.85 → ×4 per mass.
 //  - Reactor (설명 모형): neutron population with multiplication factor k set by control-rod depth; k = 1 keeps the
 //    number of streaks steady. Cherenkov glow: real (water, electrons faster than light in water ≈ 0.75 c).
-//  - Fusion: Coulomb repulsion sketched as deceleration and bounce; at 1억 °C a D–T pair fuses → He-4 + n (17.6 MeV).
-//  - Tokamak (설명 모형): torus R0 = 1, plasma minor radius 0.32, elongation 1.35; helical field lines with safety factor
-//    q(r) = 1 + 2(r/a)²; plasma particles stream along the field. Not KSTAR's or ITER's real geometry.
+//  - Fusion: Coulomb repulsion sketched as a hill graph (U ∝ 1/r, capped at contact); a cold pair turns back, at 1억 °C a D–T pair fuses → He-4 + n (17.6 MeV).
+//  - Tokamak (설명 모형): torus R0 = 1, plasma minor radius 0.32, elongation 1.35; helical field lines drawn at the plasma
+//    edge with q = 3; plasma particles stream along the field, dθ/dφ = 1/q(r), q(r) = 1 + 2(r/a)². Not KSTAR's or ITER's real geometry.
 //  - Numbers on screen: 31.7 % (2024 Korea, 산업통상자원부), 400만 톤/초 (solar luminosity / c² ≈ 4.26 Mt/s), 1938, 1939,
 //    1920, −0.7 % (He-4 vs 4 H), ×4, 1억 °C · 48초 (KSTAR, announced 2024), 2034 / 2039 (ITER 2024 baseline), 1 g 미만.
 //  - Sound: node episodes/fission-fusion/scenes.mjs --emit-sound writes sound.json from the same plan.
