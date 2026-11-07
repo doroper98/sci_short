@@ -24,6 +24,14 @@
 
 **인스타그램은 포함하지 않았습니다.** 인스타 게시 API 에는 비공개·초안 상태가 없어(메타 공식 문서 확인, 2026-11-07) "비공개로 올리고 사람이 공개"를 재현할 수 없습니다. `finals/INSTAGRAM.md` 의 설명문은 사람이 붙여 넣는 용도입니다.
 
+### 2026-11-07: 토큰 권한을 최소로 줄임
+
+사용자가 토큰을 받는 동의 화면에서, 처음 설계한 `youtube.force-ssl` 이 "동영상·댓글·자막 보기, 수정 및 **완전 삭제**"로 표시되는 것을 확인했다.
+GitHub Secrets 에 오래 두는 토큰이 새면 채널 영상을 지울 수 있어 `youtube.readonly` 로 바꿨다. 사용자 승인 뒤 그 권한으로 토큰을 받았다.
+업로드(`videos.insert`)·썸네일(`thumbnails.set`)은 `youtube.upload` 로, 채널 확인(`channels.list mine`)은 `youtube.readonly` 로 된다. 공식 문서로 앞의 둘을 확인했고 채널 확인은 첫 `--whoami` 로 확인한다.
+자막 파일 업로드(`captions.insert`)는 쓸 수 없게 되었다. 2026-11-03 결정대로 원래 꺼져 있던 기능이다.
+진행 상황: GitHub Pages 켜기·브랜딩·프로덕션 게시·웹 애플리케이션 클라이언트 생성 완료(프로젝트 Osint Gen, 앱 이름 "clip uploader 261103"). 토큰은 OAuth Playground 로 받는 중. 다음은 Secrets 저장 → `--whoami` → 비공개 1건 시험.
+
 ### 2026-11-07: 네트워크 제한 해제
 
 사용자가 환경 설정에서 `sci_shorts` 의 네트워크 제한을 해제했습니다(Unrestricted). 같은 날 실측해 `docs/NETWORK_AND_ASSETS.md` 를 사실에 맞췄습니다.

@@ -58,6 +58,19 @@
 
 같은 Google 계정이 두 채널을 소유하면 A 로 충분합니다. 리프레시 토큰은 **동의할 때 고른 채널**에 묶이므로 채널만 다르게 고르면 됩니다.
 
+## 권한 — 최소한만 받는다 (2026-11-07)
+
+| 권한 | 쓰는 곳 | 영상 수정·삭제 |
+|---|---|---|
+| `youtube.upload` | `videos.insert`(업로드), `thumbnails.set`(썸네일) | 불가 |
+| `youtube.readonly` | `channels.list(mine=true)` — 업로드 전 채널 확인 | 불가 |
+
+**`youtube.force-ssl` 은 받지 않습니다.** 동의 화면에 "동영상, 평가, 댓글, 자막 보기, 수정 및 **완전 삭제**"로 표시되는 권한입니다.
+GitHub Secrets 에 오래 두는 토큰이 새면 채널 영상을 지울 수 있어 뺐습니다.
+대가로 `captions.insert`(자막 파일 업로드)를 쓸 수 없습니다. 자막은 화면에 새겨져 있어 2026-11-03 결정대로 원래 올리지 않습니다.
+YouTube API 공식 문서로 확인한 범위: `videos.insert`·`thumbnails.set` 은 `youtube.upload` 로 되고, `videos.delete` 와 `captions.insert` 는 `youtube.upload` 로 안 됩니다.
+`channels.list(mine=true)` 는 문서가 "인증된 요청"이라고만 적고 범위를 나열하지 않아, 첫 `--whoami` 실행으로 확인합니다.
+
 ## 1회 설정 절차
 
 ### 1) Google Cloud (브라우저)
@@ -75,19 +88,29 @@
    - 동의할 때 "확인되지 않은 앱" 경고가 한 번 뜹니다. 고급 → 이동 → 허용.
    - **심사(verification)는 받지 않아도 됩니다.** 받으면 몇 달 걸릴 수 있고, 100명 상한이 풀릴 뿐입니다.
    - 심사 제출을 강제하는 화면이 나오면 캡처를 다음 세션에 보여 주십시오.
-4. **클라이언트** → 만들기 → 유형 **데스크톱 앱**. ID·비밀값은 채팅에 붙이지 말고 다음 단계에서 터미널에만 넣습니다. (기존 '웹 애플리케이션' 클라이언트를 쓰려면 승인된 리디렉션 URI 에 `http://127.0.0.1:8765/` 추가.)
+4. **클라이언트** → 만들기 → 유형 **웹 애플리케이션**, 승인된 리디렉션 URI `https://developers.google.com/oauthplayground`.
+   - "AI 기반 에이전트에 이 클라이언트 사용" 은 **체크하지 않습니다.** 정해진 대로 도는 스크립트라 일반 클라이언트가 맞는 분류입니다.
+   - 만들자마자 **JSON 내려받기**. ID·비밀값은 채팅에 붙이지 않습니다.
 
-### 2) 토큰 발급 (사용자 PC, 1회)
+### 2) 토큰 발급 — 브라우저만으로 (2026-11-07 실제로 쓴 경로)
 
-```bash
-git clone https://github.com/doroper98/sci_short && cd sci_short
-python -m publish.oauth --production --write-env .env
-```
+설치 없이 OAuth Playground 로 받습니다. **반드시 3번(프로덕션 게시)을 끝낸 뒤에** 받습니다.
 
-- 브라우저가 열리면 채널을 소유한 Google 계정으로 로그인하고, 채널이 여럿이면 **과학 쇼츠 채널**을 고릅니다.
-- "확인되지 않은 앱" 경고 → 고급 → 이동 → 허용.
-- 끝나면 터미널에 채널 이름과 ID(UC…)가 나옵니다. 이 ID 를 `config/youtube.json` 의 `channel_id` 에 넣으십시오.
-- `.env` 는 저장소가 무시하는 파일입니다. 커밋하지 마십시오.
+1. `https://developers.google.com/oauthplayground` → 오른쪽 위 톱니바퀴
+2. **"Use your own OAuth credentials"** 체크 → 내려받은 JSON 의 `client_id`·`client_secret` 입력
+   (이 체크를 빼면 놀이터 자체 신분증을 써서 토큰이 24시간 뒤 폐기됩니다)
+3. Step 1 맨 아래 입력칸에 두 권한을 띄어쓰기로 이어 붙여 넣고 **Authorize APIs**
+   ```
+   https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube.readonly
+   ```
+4. 채널을 가진 계정으로 로그인 → 채널이 여럿이면 **과학 쇼츠 채널** 선택 → "확인되지 않은 앱" 경고에서 고급 → 이동
+5. 동의 화면의 두 항목("YouTube 동영상 관리", "YouTube 계정 보기")을 체크 → 계속
+6. Step 2 **Exchange authorization code for tokens** → **Refresh token** 값을 복사(채팅에 붙이지 않습니다)
+
+막힐 때: `redirect_uri_mismatch` 는 클라이언트 설정 반영 전이니 10분 뒤 다시. Refresh token 칸이 비면 톱니바퀴의 Force prompt 를 Consent Screen 으로.
+
+**다른 경로 — PC 에 파이썬이 있을 때**: 데스크톱 앱 클라이언트를 만들고 `python -m publish.oauth --production --write-env .env`.
+요청 권한은 위와 같고, 끝나면 채널 이름과 ID 를 보여 줍니다.
 
 ### 3) 비밀값 저장
 
@@ -159,7 +182,8 @@ python -m publish.youtube finals/13-gamma-ray-burst --env-file .env   # 비공�
 | `토큰이 가리키는 채널 … 다릅니다` | 토큰을 받을 때 다른 채널을 골랐음. 다시 발급하거나 `channel_id` 수정 |
 | `made_for_kids … 정해지지 않았습니다` | `config/youtube.json` 의 `made_for_kids` 를 true/false 로 |
 | `썸네일 설정 실패 … forbidden` | 채널 전화 인증(맞춤 썸네일 권한) 필요. Studio 에서 직접 고르거나 `upload_thumbnail: false` |
-| `HTTP 401/403 insufficientPermissions` | 범위 부족. `publish.oauth` 로 다시 발급(youtube.upload + youtube.force-ssl) |
+| `HTTP 401/403 insufficientPermissions` | 범위 부족. 위 '토큰 발급'대로 다시 받습니다(youtube.upload + youtube.readonly) |
+| `자막 업로드 실패 … force-ssl` | 의도된 동작입니다. 자막 업로드 권한은 받지 않습니다('권한' 절) |
 | `quotaExceeded` / `uploadLimitExceeded` | 하루 한도. 다음 날 다시 |
 | 기록 커밋 push 실패 | main 에 보호 규칙이 있으면 `github-actions[bot]` 의 push 를 허용 |
 | push 트리거가 아무것도 안 올림 | 그 push 에서 바뀐 finals 폴더가 없거나 기록 파일만 바뀜. 수동 실행으로 폴더 지정 |

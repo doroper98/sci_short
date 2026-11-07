@@ -36,8 +36,14 @@ from pathlib import Path
 from publish.youtube import CHANNELS_URL, TOKEN_URL, UploadError, my_channel, urllib_transport
 
 AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
-SCOPES = ("https://www.googleapis.com/auth/youtube.upload",      # videos.insert
-          "https://www.googleapis.com/auth/youtube.force-ssl")   # captions.insert · channels.list
+# 최소 권한(2026-11-07): 업로드에 꼭 필요한 둘만 요청한다. 둘 다 영상을 수정·삭제할 수 없다.
+#   youtube.upload   → videos.insert, thumbnails.set
+#   youtube.readonly → channels.list(mine=true): 업로드 전 "이 채널이 맞는지" 확인
+# youtube.force-ssl 은 요청하지 않는다. 영상·댓글·자막의 수정과 "완전 삭제"까지 포함해,
+# GitHub Secrets 에 오래 두는 토큰이 새면 채널 영상을 지울 수 있기 때문이다.
+# 대가로 captions.insert(자막 파일 업로드)를 못 쓴다. 자막은 화면에 새겨져 있어 원래 꺼져 있다.
+SCOPES = ("https://www.googleapis.com/auth/youtube.upload",
+          "https://www.googleapis.com/auth/youtube.readonly")
 DEFAULT_PORT = 8765
 DONE_HTML = ("<!doctype html><meta charset='utf-8'><title>완료</title>"
              "<body style='font:18px/1.6 system-ui;padding:2rem'>인증이 끝났습니다. 이 창을 닫고 터미널로 돌아가십시오.</body>")

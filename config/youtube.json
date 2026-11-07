@@ -25,7 +25,7 @@
   "_tags": "모든 편에 덧붙이는 공통 태그. 편별 태그는 finals/<ep>/upload.md 의 '태그'에서 읽는다(합계 500자 한도). 비워 두면 upload.md 그대로.",
 
   "upload_captions": false,
-  "_upload_captions": "2026-11-03 사용자 결정: 자막은 화면에 새겨져 있어 SRT 를 올리지 않는다. 올리려면 true 또는 --caption.",
+  "_upload_captions": "2026-11-03 사용자 결정: 자막은 화면에 새겨져 있어 SRT 를 올리지 않는다. true 로 켜도 지금 토큰으로는 실패한다 — 자막 업로드에 필요한 youtube.force-ssl(영상 삭제까지 포함)을 최소 권한 원칙으로 받지 않기 때문이다(2026-11-07).",
 
   "upload_thumbnail": true,
   "_upload_thumbnail": "thumbnail.jpg(없으면 poster.jpg = 0초 프레임)를 thumbnails.set 으로 설정한다. 채널이 맞춤 썸네일을 못 쓰면 경고로 남기고 영상은 그대로 둔다.",

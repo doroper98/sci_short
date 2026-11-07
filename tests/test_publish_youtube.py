@@ -563,7 +563,11 @@ class OAuthHelperTest(unittest.TestCase):
         self.assertEqual(q["prompt"], "consent")
         self.assertEqual(q["code_challenge_method"], "S256")
         self.assertIn("youtube.upload", q["scope"])
-        self.assertIn("youtube.force-ssl", q["scope"])
+        self.assertIn("youtube.readonly", q["scope"])
+        # 최소 권한: 영상 수정·삭제가 가능한 범위는 요청하지 않는다
+        for broad in ("youtube.force-ssl", "auth%2Fyoutube+", "auth%2Fyoutube%20", "youtubepartner"):
+            self.assertNotIn(broad, q["scope"])
+        self.assertFalse(q["scope"].endswith("auth%2Fyoutube"))
 
     def test_exchange_requires_refresh_token(self) -> None:
         def ok(method, url, headers, data):  # noqa: ANN001, ANN202
