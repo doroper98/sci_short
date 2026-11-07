@@ -42,7 +42,7 @@ export const V_ORB = 7.8, H_ISS = 400;
 export const E_UP = PE(H_ISS), E_SIDE = 0.5 * V_ORB * V_ORB, E_RATIO = E_SIDE / E_UP;          // 3.70, 30.4, 8.2
 export const SEOUL_BUSAN = 325, SB_SEC = SEOUL_BUSAN / V_ORB;                                    // km (straight line), 41.7 s
 // ---- rocket equation (single stage, kerosene engine) ----
-export const VE = 3.0, DV_NEED = 9.4;
+export const VE = 3.1, DV_NEED = 9.4;
 export const dvOf = f => -VE * Math.log(1 - Math.min(f, 0.9999));
 export const F_NEED = 1 - Math.exp(-DV_NEED / VE);                                             // 0.956
 // ---- Newton's cannon at 400 km (s06): exact two-body arcs, RK4 ----
@@ -215,7 +215,7 @@ export function plan(tl) {
   // ---- rocket dashboard
   P.tag1903 = at(A.y1903) - 0.1; P.formula = at(A.rocket8) - 0.1; P.m0 = at(A.full8) - 0.05; P.m1 = at(A.empty8) - 0.05;
   P.f = t => (t < P.m0 ? 0 : t < at(A.orbit9) ? 0.8 * easeInOut((t - P.m0) / (at('s08:end') - P.m0)) : lerp(0.8, F_NEED, easeInOut((t - at(A.orbit9)) / (at(A.pct95) - at(A.orbit9) + 0.3))));
-  P.need = at(A.orbit9) - 0.1; P.p95 = at(A.pct95) + 0.2; P.split = at(A.used9) - 0.1; P.drop = at(A.drop9) - 0.05; P.stagesTag = at(A.stages9) - 0.05;
+  P.need = at(A.orbit9) - 0.1; P.p95 = at(A.pct95) + 0.2; P.split = at(A.fuel9) + 0.45; P.drain = P.split + 0.25; P.drop = at(A.drop9) - 0.05; P.stagesTag = at(A.stages9) - 0.05;
   // ---- ascent (s10) and return (s11–s12): screen time ↔ mission time
   P.xs = at('s10') - 0.55; P.sep = at(A.sep10) - 0.05;
   P.ascM = pw([[at('s10') - 0.2, 0], [P.sep, 150]]);                     // ≈ 27 ×
@@ -235,7 +235,7 @@ export function plan(tl) {
   P.tower = at('s16') - 0.45; P.bigIn = at(A.big16) - 0.1; P.armsTag = at(A.arms16) - 0.1; P.catch = at(A.catch16) + 0.05;
   P.old = at(A.old17) - 0.1; P.newer = at(A.reuse17) - 0.1; P.cost = at(A.cost17) - 0.1; P.costDown = at(A.down17) - 0.1;
   P.leoBack = at(A.yearly17) - 0.45; P.flock = at(A.thousands17) - 0.1;
-  P.launches = [...Array(7)].map((_, k) => +(P.flock - 0.4 + 0.42 * k).toFixed(4));
+  P.launches = [...Array(8)].map((_, k) => +(P.flock - 0.6 + 0.36 * k).toFixed(4));
   // ---- myth
   P.ghost0 = at(A.straight18) - 0.3; P.ghostTop = P.ghost0 + 1.5; P.ghostFall = at('s18:end') + 0.45;
   P.no = at(A.no19) - 0.05; P.realKnots = [[at(A.no19) + 0.3, 0], [at(A.tilt19) + 0.15, 150], [at('s19:end') - 0.3, 513]];
@@ -350,13 +350,13 @@ function rocket(c, x, y, ang, o = {}) {
   }
   // landing legs: hinge at the body bottom; folded = along the body, deployed = down and out
   const hinge = -eb - L * 0.04, legL = L * 0.25, phi = lerp(0, 2.55, easeInOut(legs));
-  for (const s of [-1, 1]) {
+  if (!o.noLegs) for (const s of [-1, 1]) {
     const hx = s * w / 2, fx = hx + s * Math.sin(phi) * legL, fy2 = hinge - Math.cos(phi) * legL;
     line(c, [[hx, hinge], [fx, fy2]], '#3A3C41', Math.max(2, w * 0.16), {cap: 'butt'});
     if (legs > 0.05) line(c, [[hx * 0.9, hinge - L * 0.16 * (1 - legs * 0.5)], [lerp(hx, fx, 0.55), lerp(hinge, fy2, 0.55)]], '#2F3135', Math.max(1.5, w * 0.07));
     if (legs > 0.85) rect(c, fx - w * 0.12, fy2 - 1, w * 0.24, Math.max(2, w * 0.06), 1, '#26282B');
   }
-  if (legs < 0.05) rect(c, -w * 0.08, hinge - legL, w * 0.16, legL, 0, '#3A3C41');   // the middle (front) folded leg
+  if (legs < 0.05 && !o.noLegs) rect(c, -w * 0.08, hinge - legL, w * 0.16, legL, 0, '#3A3C41');   // the middle (front) folded leg
   if (o.stack) {
     const L2 = L * 0.3, Lf = L * 0.27, wf = w * 1.25, s2b = top;
     const g2 = c.createLinearGradient(-w / 2, 0, w / 2, 0); g2.addColorStop(0, PAL.bodyShade); g2.addColorStop(0.3, PAL.body); g2.addColorStop(0.55, '#FBF8F2'); g2.addColorStop(1, '#A7A29A');
@@ -518,7 +518,8 @@ function hookBooster(t, P) {
 }
 function hookPicture(stage, t, P, poster = false) {
   const c = stage.ctx;
-  landingZone(stage, t);
+  const slide0 = poster ? 0 : smooth((t - P.slide3) / 0.8);
+  landingZone(stage, t, {padX: lerp(PAD.x, 330, slide0)});
   const tt = poster ? P.posterT : t;
   // full stack before and during liftoff
   if (!poster && t < P.liftOut + 0.2) {
@@ -538,11 +539,11 @@ function hookPicture(stage, t, P, poster = false) {
     withAlpha(c, a, () => {
       const touch = B.y >= PAD.y - 8.5;
       const smoke = poster ? 1 : clamp((t - P.ign2 + 0.6) / 1.2) * (t > P.touch2 ? Math.exp(-(t - P.touch2) / 1.6) : 1);
-      groundSmoke(c, bx, PAD.y + 6, smoke * 1.05, B.burn, tt);
-      if (B.burn > 0.02) { const gl = c.createRadialGradient(bx, PAD.y, 0, bx, PAD.y, 380); gl.addColorStop(0, rgba('#FFB060', 0.5 * B.burn)); gl.addColorStop(1, rgba('#FF8040', 0)); c.save(); c.globalCompositeOperation = 'lighter'; c.fillStyle = gl; c.fillRect(0, 700, 1080, 900); c.restore(); }
+      groundSmoke(c, bx, PAD.y + 6, smoke * 1.2, B.burn, tt);
+      if (B.burn > 0.02) { const gl = c.createRadialGradient(bx, PAD.y, 0, bx, PAD.y, 460); gl.addColorStop(0, rgba('#FFB060', 0.6 * B.burn)); gl.addColorStop(1, rgba('#FF8040', 0)); c.save(); c.globalCompositeOperation = 'lighter'; c.fillStyle = gl; c.fillRect(0, 700, 1080, 900); c.restore(); }
       if (!touch || t > P.touch2) { c.save(); c.translate(bx, PAD.y); c.scale(1, 0.18); glow(c, 0, 0, 90, '#000000', 0.5); c.restore(); }
       const soot = poster ? 0.35 : lerp(0.35, 0.9, clamp((t - P.tally0) / (P.tally1 - P.tally0)));
-      rocket(c, bx, B.y - HOOK_L * 0.0, 0, {L: HOOK_L, legs: B.legs, fins: 1, soot, burn: B.burn, engines: 1, plumeLen: B.plen, spread: 0.4 * B.burn});
+      rocket(c, bx, B.y, 0, {L: HOOK_L, legs: B.legs, fins: 1, soot, burn: B.burn, engines: 1, plumeLen: B.plen, spread: 0.9 * B.burn});
     });
   }
 }
@@ -556,8 +557,13 @@ function hookScene(stage, t, ctx) {
     // s02 tags
     const ta = fadeIn(t, P.dateTag, 0.35) * fadeOut(t, P.slide3 - 0.3, 0.3);
     if (ta > 0) {
-      tag(stage, '2015.12.21 · Falcon 9 1단', 540, 372, {size: 28, a: ta, color: stage.theme.ink});
-      tag(stage, '위성 11개를 궤도로 보낸 뒤 → 발사장 착륙', 540, 420, {size: 24, a: ta * fadeIn(t, P.satTag, 0.35), color: stage.theme.muted, plate: false});
+      withAlpha(c, ta, () => {
+        panel(c, stage.theme, 620, 370, 310, 196, 0.86);
+        stage.text('2015.12.21', 640, 410, {role: 'display', size: 34, weight: 700, color: stage.theme.ink});
+        stage.text('Falcon 9 1단', 640, 452, {size: 26, weight: 700, color: stage.theme.accent});
+        stage.text('위성 11개를 올려 보낸 뒤', 640, 494, {size: 24, weight: 500, color: stage.theme.muted, alpha: fadeIn(t, P.satTag, 0.35)});
+        stage.text('→ 발사장에 착륙', 640, 530, {size: 24, weight: 500, color: stage.theme.muted, alpha: fadeIn(t, P.satTag + 0.3, 0.35)});
+      });
     }
     // s03 tally
     const ya = fadeIn(t, P.tag3, 0.4);
@@ -577,7 +583,7 @@ function hookScene(stage, t, ctx) {
 }
 
 // ------------------------------------------------------------------ leo: Earth arc → Newton's cannon → energy bars
-const VIEW = {arc: {cx: 540, cy: 2150, R: 1250, ex: 1}, full: {cx: 540, cy: 790, R: 280, ex: 4}, small: {cx: 540, cy: 610, R: 180, ex: 4}};
+const VIEW = {arc: {cx: 540, cy: 2150, R: 1250, ex: 1}, close: {cx: 540, cy: 3960, R: 3000, ex: 1}, full: {cx: 540, cy: 790, R: 280, ex: 4}, small: {cx: 540, cy: 610, R: 180, ex: 4}};
 function lerpView(a, b, q) { return {cx: lerp(a.cx, b.cx, q), cy: lerp(a.cy - a.R, b.cy - b.R, q) + Math.exp(lerp(Math.log(a.R), Math.log(b.R), q)), R: Math.exp(lerp(Math.log(a.R), Math.log(b.R), q)), ex: lerp(a.ex, b.ex, q)}; }
 const vpt = (V, ang, h) => { const r = V.R + h * V.R / RE * V.ex; return [V.cx + r * Math.sin(ang), V.cy - r * Math.cos(ang)]; };
 function earth(c, V, a = 1) {
@@ -593,7 +599,7 @@ function earth(c, V, a = 1) {
     const ga = c.createRadialGradient(V.cx, V.cy, V.R, V.cx, V.cy, V.R * 1.05 + 10); ga.addColorStop(0, rgba(PAL.atm, 0.25)); ga.addColorStop(1, rgba(PAL.atm, 0)); circle(c, V.cx, V.cy, V.R * 1.05 + 10, ga);
   });
 }
-const SATS = (() => { const R = rng(2026), o = []; for (let i = 0; i < 300; i++) { const u = R(); const h = u < 0.68 ? 480 + 90 * R() : u < 0.9 ? 300 + 900 * R() : 1200 + 800 * R(); o.push({h, a0: R() * TAU, r: 1.2 + 1.2 * R(), late: R()}); } return o; })();
+const SATS = (() => { const R = rng(2026), o = []; for (let i = 0; i < 1100; i++) { const u = R(); const h = u < 0.68 ? 480 + 90 * R() : u < 0.9 ? 300 + 900 * R() : 1200 + 800 * R(); o.push({h, a0: R() * TAU, r: 1.8 + 1.6 * R(), late: R()}); } return o; })();
 const SAT_X = 120;                                                       // satellite motion: real s per screen s
 function satellites(c, V, t, a = 1, frac = 1) {
   if (a <= 0) return;
@@ -611,16 +617,17 @@ function leoScene(stage, t, ctx) {
   withAlpha(c, ef * ein, () => {
     stars(c, 0.7);
     const qz = easeInOut((t - P.zoom[0]) / (P.zoom[1] - P.zoom[0])), qs = easeInOut((t - P.shrink[0]) / (P.shrink[1] - P.shrink[0]));
-    const V = qs > 0 ? lerpView(VIEW.full, VIEW.small, qs) : lerpView(VIEW.arc, VIEW.full, qz);
+    const qc = easeInOut((t - P.toss0 + 1.0) / 0.8);
+    const V = qs > 0 ? lerpView(VIEW.full, VIEW.small, qs) : qz > 0 ? lerpView(VIEW.close, VIEW.full, qz) : lerpView(VIEW.arc, VIEW.close, qc);
     // LEO band (0–2,000 km)
-    const bandA = fadeIn(t, P.band, 0.5) * (1 - 0.6 * qz);
+    const bandA = fadeIn(t, P.band, 0.5) * (1 - qz);
     if (bandA > 0) withAlpha(c, bandA, () => {
       c.beginPath(); c.arc(V.cx, V.cy, V.R + 2000 * V.R / RE * V.ex, 0, TAU); c.arc(V.cx, V.cy, V.R, 0, TAU, true); c.fillStyle = rgba(PAL.speed, 0.10); c.fill('evenodd');
       ring(c, V.cx, V.cy, V.R + 2000 * V.R / RE * V.ex, rgba(PAL.speed, 0.7 * fadeIn(t, P.b2000, 0.4)), 2);
     });
     earth(c, V);
     satellites(c, V, t, fadeIn(t, P.band - 0.3, 0.6) * (1 - 0.6 * fadeIn(t, P.toss0 - 0.6, 0.5)) * (1 - qz * 0.85) * (1 - qs));
-    const lab = (1 - smooth((t - P.toss0 + 0.6) / 0.5));
+    const lab = (1 - smooth((t - P.toss0 + 1.1) / 0.4));
     if (lab > 0 && qz < 0.01) {
       tag(stage, 'LEO · 낮은 지구 궤도', 300, 560, {size: 30, a: lab * fadeIn(t, P.band, 0.4), color: PAL.speed, role: 'display'});
       tag(stage, '고도 2,000 km', 800, 505, {size: 26, a: lab * fadeIn(t, P.b2000, 0.4), color: PAL.speed});
@@ -635,13 +642,14 @@ function leoScene(stage, t, ctx) {
       const top = vpt(V, 0, H_ISS), base = vpt(V, 0, 0);
       const u = clamp((t - P.toss0) / (P.tossLand - P.toss0)), hh = u <= 0 ? 0 : H_ISS * (1 - (2 * u - 1) ** 2);
       line(c, [base, top], rgba(T.ink, 0.25), 2, {dash: [6, 8]});
-      const b = vpt(V, 0, hh); if (u > 0 && u < 1) { glow(c, b[0], b[1], 16, T.ink, 0.25); circle(c, b[0], b[1], 7, T.ink); }
-      arrow(c, [base[0] - 40, base[1] - 6], [top[0] - 40, top[1] + 6], rgba(T.ink, 0.8), 3);
-      tag(stage, '높이만 오르면', base[0] - 54, top[1] - 62, {size: 28, align: 'right', a: fadeIn(t, P.toss0, 0.3), plate: false});
-      tag(stage, '→ 다시 떨어짐', base[0] - 54, top[1] - 22, {size: 28, align: 'right', a: fadeIn(t, P.notTag, 0.3), color: PAL.bad, plate: false});
+      const b = vpt(V, 0, hh); if (u > 0 && u < 1) { glow(c, b[0], b[1], 22, T.ink, 0.3); circle(c, b[0], b[1], 9, T.ink); }
+      tag(stage, '400 km', top[0] - 60, top[1], {size: 26, align: 'right', color: T.muted, plate: false, a: fadeIn(t, P.toss0, 0.3)});
+      arrow(c, [base[0] - 40, base[1] - 6], [top[0] - 40, top[1] + 6], rgba(T.ink, 0.8), 4);
+      tag(stage, '높이만 오르면', base[0] - 60, top[1] + 40, {size: 30, align: 'right', a: fadeIn(t, P.toss0, 0.3), plate: false});
+      tag(stage, '→ 다시 떨어짐', base[0] - 60, top[1] + 84, {size: 30, align: 'right', a: fadeIn(t, P.notTag, 0.3), color: PAL.bad, plate: false});
       const sa = fadeIn(t, P.sideArrow, 0.3);
-      if (sa > 0) withAlpha(c, sa, () => { arrow(c, [top[0] + 10, top[1]], [top[0] + 10 + 220 * easeOut(clamp((t - P.sideArrow) / 0.5)), top[1]], T.accent, 5); });
-      tag(stage, '옆으로 빠르게', top[0] + 130, top[1] - 40, {size: 30, role: 'display', color: T.accent, a: fadeIn(t, P.sideTag, 0.3), plate: false});
+      if (sa > 0) withAlpha(c, sa, () => { arrow(c, [top[0] + 10, top[1]], [top[0] + 10 + 330 * easeOut(clamp((t - P.sideArrow) / 0.5)), top[1]], T.accent, 7); });
+      tag(stage, '옆으로 빠르게', top[0] + 175, top[1] - 46, {size: 30, role: 'display', color: T.accent, a: fadeIn(t, P.sideTag, 0.3), plate: false});
     });
     // s06: Newton's cannon from 400 km (altitudes ×4)
     const ca = qz * (1 - 0.25 * qs);
@@ -671,24 +679,24 @@ function cannonShots(stage, t, P, V) {
     if (k < 3 && la > 0) { const [lx, ly] = vpt(V, arc.angEnd, 0), nx = Math.sin(arc.angEnd), ny = -Math.cos(arc.angEnd); tag(stage, `${CANNON_V[k].toFixed(1)}`, lx + nx * 44, ly + ny * 44, {size: 26, a: la, color: PAL.bad, plate: false}); }
   }
   // knob readout (left)
-  const ra = fadeIn(t, P.shot[0] - 0.2, 0.3);
+  const ra = fadeIn(t, P.shot[0] - 0.2, 0.3) * fadeOut(t, P.shrink[0], 0.3);
   if (ra > 0) withAlpha(c, ra, () => {
     panel(c, T, 160, 1238, 330, 100, 0.86);
     stage.text('옆으로 쏜 빠르기', 180, 1268, {size: 24, weight: 500, color: T.muted});
     stage.text(`초속 ${v.toFixed(1)} km`, 180, 1310, {role: 'display', size: 42, weight: 700, color: cur === 3 ? T.accent : T.ink});
   });
-  const oa = fadeIn(t, P.orbitDone - 0.15, 0.35);
+  const oa = fadeIn(t, P.orbitDone - 0.15, 0.35) * fadeOut(t, P.shrink[0], 0.3);
   if (oa > 0) tag(stage, '7.8 → 땅에 닿지 않고 돈다', 540, 380, {size: 30, a: oa, color: T.accent, role: 'display', plate: false});
 }
 function seoulBusan(stage, t, P, a) {
   if (a <= 0) return; const c = stage.ctx, T = stage.theme;
   withAlpha(c, a, () => {
     panel(c, T, 520, 1238, 410, 100, 0.86);
-    const x0 = 560, x1 = 890, y = 1300, u = clamp((t - P.sb0 - 0.2) / (P.sb1 - P.sb0 - 0.2));
+    const x0 = 580, x1 = 870, y = 1296, u = clamp((t - P.sb0 - 0.2) / (P.sb1 - P.sb0 - 0.2));
     line(c, [[x0, y], [x1, y]], rgba(T.ink, 0.5), 3); circle(c, x0, y, 7, T.ink); circle(c, x1, y, 7, T.ink);
-    stage.text('서울', x0, y - 30, {size: 24, weight: 700, align: 'center'}); stage.text('부산', x1, y - 30, {size: 24, weight: 700, align: 'center'});
+    stage.text('서울', x0, y + 26, {size: 24, weight: 700, align: 'center'}); stage.text('부산', x1, y + 26, {size: 24, weight: 700, align: 'center'});
     const bx = lerp(x0, x1, u); glow(c, bx, y, 16, T.accent, 0.5); circle(c, bx, y, 6, T.accent);
-    stage.text(`직선 325 km · ${Math.round(u * SB_SEC)}초`, (x0 + x1) / 2, y - 30, {size: 26, weight: 700, color: T.accent, align: 'center'});
+    stage.text(`직선 325 km · ${Math.round(u * SB_SEC)}초`, (x0 + x1) / 2, y - 32, {size: 26, weight: 700, color: T.accent, align: 'center'});
   });
 }
 function energyBars(stage, t, P, qs) {
@@ -712,7 +720,7 @@ function energyBars(stage, t, P, qs) {
 
 // ------------------------------------------------------------------ rocket: 3-stage dashboard (cut-away · Δv curve · mass bar), then the ascent picture
 const RK = {x: 250, y: 1290, L: 560};
-const GR = {x0: 450, x1: 910, y0: 820, y1: 420, dvMax: 12};               // Δv graph
+const GR = {x0: 450, x1: 910, y0: 840, y1: 480, dvMax: 12};               // Δv graph
 const gx = f => GR.x0 + f * (GR.x1 - GR.x0), gy = dv => GR.y0 - Math.min(dv, GR.dvMax) / GR.dvMax * (GR.y0 - GR.y1);
 function rocketScene(stage, t, ctx) {
   const c = stage.ctx, P = plan(ctx.tl), T = stage.theme, ein = fadeIn(t, ctx.scene.start, 0.3), ef = fadeOut(t, ctx.scene.end - 0.3, 0.3);
@@ -726,74 +734,76 @@ function rocketScene(stage, t, ctx) {
 }
 function dashboard(stage, t, P) {
   const c = stage.ctx, T = stage.theme, f = P.f(t);
-  // ① cut-away rocket
-  const sepU = clamp((t - P.drop) / 1.6), drop = easeIn(sepU);
+  // ① cut-away rocket: the tanks fill as the fuel share f grows (s08–s09); then stage 1 burns its tank empty and drops away
   const L = RK.L, w = L * 0.105, eb = L * 0.05, top1 = RK.y - eb - L;
-  const s1 = 1 - drop;
-  // stage-1 fuel and stage-2 fuel levels follow the burned fraction (both drawn with the same overall f: explanatory)
-  withAlpha(c, s1 > 0 ? 1 : 0, () => {
-    c.save(); c.translate(0, 900 * drop); c.globalAlpha *= 1 - smooth(sepU * 1.4);
-    rocket(c, RK.x, RK.y, 0, {L, legs: 0, fins: 0.1, soot: 0, burn: t >= P.m0 && t < P.drop ? 0.8 : 0, plumeLen: 160});
-    // stage-1 tank window
-    const ty0 = top1 + L * 0.14, ty1 = RK.y - eb - L * 0.06, lvl = ty0 + (ty1 - ty0) * clamp(f / F_NEED);
+  const fill = clamp(f / F_NEED), drain = clamp((t - P.drain) / (P.drop - P.drain)), sepU = clamp((t - P.drop) / 1.6), drop = easeIn(sepU);
+  const lvl1 = fill * (1 - drain);
+  withAlpha(c, 1 - smooth(sepU * 1.3), () => {
+    c.save(); c.translate(0, 900 * drop);
+    rocket(c, RK.x, RK.y, 0, {L, legs: 0, fins: 0.1, soot: 0, burn: t >= P.drain && t < P.drop ? 1 : 0, plumeLen: 180});
+    const ty0 = top1 + L * 0.14, ty1 = RK.y - eb - L * 0.06, ly = ty1 - (ty1 - ty0) * lvl1;
     rect(c, RK.x - w * 0.32, ty0, w * 0.64, ty1 - ty0, 3, rgba('#000000', 0.55));
-    rect(c, RK.x - w * 0.32, lvl, w * 0.64, ty1 - lvl, 3, rgba(PAL.fuel, 0.9));
+    if (lvl1 > 0) rect(c, RK.x - w * 0.32, ly, w * 0.64, ty1 - ly, 3, rgba(PAL.fuel, 0.92));
+    if (t >= P.m0 && t < P.drain) ring(c, RK.x, ly, 20, PAL.fuel, 3);                                   // tracking mark on the fuel level
     c.restore();
   });
-  // stage 2 + fairing (stays; climbs a little after separation)
-  const up2 = -60 * easeOut(clamp((t - P.drop - 0.3) / 1.2));
+  // stage 2 + fairing (stays; climbs after separation and burns)
+  const up2 = -70 * easeOut(clamp((t - P.drop - 0.3) / 1.4));
   c.save(); c.translate(0, up2);
-  const L2 = L * 0.3, s2y = top1, w2 = w;
-  rect(c, RK.x - w2 / 2, s2y - L2, w2, L2, 0, PAL.body); rect(c, RK.x - w2 * 0.32, s2y - L2 * 0.85, w2 * 0.64, L2 * 0.7, 3, rgba('#000000', 0.55));
-  const l2 = s2y - L2 * 0.85 + L2 * 0.7 * clamp((f - F_NEED * 0.8) / (F_NEED * 0.2)); rect(c, RK.x - w2 * 0.32, l2, w2 * 0.64, s2y - L2 * 0.15 - l2, 3, rgba(PAL.fuel, 0.9));
+  const L2 = L * 0.3, s2y = top1, w2 = w, d2 = clamp((t - P.drop - 0.3) / 3);
+  rect(c, RK.x - w2 / 2, s2y - L2, w2, L2, 0, PAL.body);
+  const t0 = s2y - L2 * 0.88, t1 = s2y - L2 * 0.12, l2 = t1 - (t1 - t0) * fill * (1 - 0.6 * d2);
+  rect(c, RK.x - w2 * 0.32, t0, w2 * 0.64, t1 - t0, 3, rgba('#000000', 0.55)); rect(c, RK.x - w2 * 0.32, l2, w2 * 0.64, t1 - l2, 3, rgba(PAL.fuel, 0.92));
   const Lf = L * 0.27, wf = w * 1.25, fb = s2y - L2;
   c.beginPath(); c.moveTo(RK.x - wf / 2, fb); c.lineTo(RK.x - wf / 2, fb - Lf * 0.45); c.quadraticCurveTo(RK.x - wf / 2, fb - Lf * 0.95, RK.x, fb - Lf); c.quadraticCurveTo(RK.x + wf / 2, fb - Lf * 0.95, RK.x + wf / 2, fb - Lf * 0.45); c.lineTo(RK.x + wf / 2, fb); c.closePath(); c.fillStyle = '#E9E5DD'; c.fill();
-  rect(c, RK.x - w * 0.3, fb - Lf * 0.5, w * 0.6, Lf * 0.38, 3, rgba('#C9B27A', 0.95));                      // satellite inside
-  if (t > P.drop + 0.3) { c.save(); c.translate(RK.x, s2y); plume(c, 90, w * 0.5, smooth((t - P.drop - 0.3) / 0.3)); c.restore(); }
+  rect(c, RK.x - w * 0.3, fb - Lf * 0.5, w * 0.6, Lf * 0.38, 3, rgba('#C9B27A', 0.95));                      // the satellite inside
+  if (t > P.drop + 0.3) { poly(c, [[RK.x - w * 0.18, s2y], [RK.x + w * 0.18, s2y], [RK.x + w * 0.28, s2y + 22], [RK.x - w * 0.28, s2y + 22]], PAL.bell); c.save(); c.translate(RK.x, s2y + 22); plume(c, 110, w * 0.55, smooth((t - P.drop - 0.3) / 0.3)); c.restore(); }
   c.restore();
   // labels on the rocket
   const la = fadeIn(t, P.m0, 0.3) * (1 - smooth((t - P.drop) / 0.4));
-  if (la > 0) { tag(stage, '연료', RK.x + 60, top1 + L * 0.5, {size: 26, align: 'left', a: la, color: PAL.fuel, plate: false}); tag(stage, '위성', RK.x + 60, s2y - L2 - Lf * 0.35, {size: 26, align: 'left', a: la, color: '#E3CB8E', plate: false}); }
-  tag(stage, '1단', RK.x - 60, RK.y - L * 0.3, {size: 26, align: 'right', a: fadeIn(t, P.split, 0.3) * (1 - sepU), plate: false});
-  tag(stage, '2단', RK.x - 60, s2y - L2 / 2 + up2, {size: 26, align: 'right', a: fadeIn(t, P.split, 0.3), plate: false});
-  tag(stage, '다 쓴 1단을 떼어 냄', RK.x + 40, 1240, {size: 26, align: 'left', a: fadeIn(t, P.drop + 0.2, 0.3), color: T.muted, plate: false});
+  if (la > 0) { tag(stage, '연료', RK.x + 52, top1 + L * 0.55, {size: 26, align: 'left', a: la, color: PAL.fuel, plate: false}); }
+  tag(stage, '위성', RK.x + 52, s2y - L2 - Lf * 0.32 + up2, {size: 26, align: 'left', a: fadeIn(t, P.m0, 0.3), color: '#E3CB8E', plate: false});
+  tag(stage, '1단', RK.x - 50, RK.y - L * 0.3 + 900 * drop, {size: 28, align: 'right', a: fadeIn(t, P.split, 0.3) * (1 - sepU), plate: false});
+  tag(stage, '2단', RK.x - 50, s2y - L2 / 2 + up2, {size: 28, align: 'right', a: fadeIn(t, P.split, 0.3), plate: false});
   // ② Δv curve
   const ga = fadeIn(t, P.formula - 0.4, 0.4);
   if (ga > 0) withAlpha(c, ga, () => {
-    panel(c, T, GR.x0 - 70, GR.y1 - 110, GR.x1 - GR.x0 + 100, GR.y0 - GR.y1 + 200, 0.86);
-    stage.text('Δv = vₑ · ln(m₀ / m₁)', (GR.x0 + GR.x1) / 2 - 20, GR.y1 - 64, {role: 'display', size: 38, weight: 700, color: T.ink, align: 'center'});
-    stage.text('m₀ 연료를 채운 무게', GR.x0 - 40, GR.y1 - 18, {size: 24, weight: 700, color: PAL.fuel, alpha: fadeIn(t, P.m0, 0.3)});
-    stage.text('m₁ 빈 무게', GR.x0 + 250, GR.y1 - 18, {size: 24, weight: 700, color: PAL.struct, alpha: fadeIn(t, P.m1, 0.3)});
-    line(c, [[GR.x0, GR.y1 + 10], [GR.x0, GR.y0], [GR.x1, GR.y0]], rgba(T.ink, 0.6), 2);
+    panel(c, T, GR.x0 - 70, 316, GR.x1 - GR.x0 + 100, GR.y0 - 316 + 100, 0.86);
+    stage.text('Δv = vₑ · ln(m₀ / m₁)', (GR.x0 + GR.x1) / 2 - 20, 360, {role: 'display', size: 38, weight: 700, color: T.ink, align: 'center'});
+    stage.text('m₀ 연료를 채운 무게', GR.x0 - 46, 406, {size: 24, weight: 700, color: PAL.fuel, alpha: fadeIn(t, P.m0, 0.3)});
+    stage.text('m₁ 빈 무게', GR.x0 + 236, 406, {size: 24, weight: 700, color: PAL.struct, alpha: fadeIn(t, P.m1, 0.3)});
+    stage.text(`vₑ ≈ ${VE} km/s (등유 엔진의 분사 속도)`, GR.x0 - 46, 442, {size: 24, weight: 500, color: T.muted});
+    line(c, [[GR.x0, GR.y1 - 6], [GR.x0, GR.y0], [GR.x1, GR.y0]], rgba(T.ink, 0.6), 2);
     for (const v of [0, 3, 6, 9, 12]) { line(c, [[GR.x0 - 6, gy(v)], [GR.x0, gy(v)]], rgba(T.ink, 0.6), 2); stage.text(String(v), GR.x0 - 12, gy(v), {size: 24, color: T.muted, align: 'right'}); }
-    for (const p of [0, 50, 100]) stage.text(`${p}%`, gx(p / 100), GR.y0 + 28, {size: 24, color: T.muted, align: 'center'});
-    stage.text('빠르기 km/s', GR.x0 + 12, GR.y1 + 18, {size: 24, weight: 500, color: T.muted});
-    stage.text('연료가 차지하는 무게', (GR.x0 + GR.x1) / 2, GR.y0 + 62, {size: 24, weight: 500, color: T.muted, align: 'center'});
+    for (const q of [0, 50, 100]) stage.text(`${q}%`, gx(q / 100), GR.y0 + 26, {size: 24, color: T.muted, align: 'center'});
+    stage.text('얻는 빠르기 (km/s)', GR.x0 + 14, GR.y1 + 18, {size: 24, weight: 500, color: T.muted});
+    stage.text('무게에서 연료가 차지하는 몫', (GR.x0 + GR.x1) / 2, GR.y0 + 60, {size: 24, weight: 500, color: T.muted, align: 'center'});
     const pts = []; for (let i = 0; i <= 200; i++) { const ff = i / 200 * 0.985; pts.push([gx(ff), gy(dvOf(ff))]); }
     line(c, pts, rgba(T.ink, 0.85), 3);
     const na = fadeIn(t, P.need, 0.35);
     if (na > 0) withAlpha(c, na, () => { line(c, [[GR.x0, gy(DV_NEED)], [GR.x1, gy(DV_NEED)]], rgba(T.accent, 0.9), 2.5, {dash: [10, 8]}); stage.text('궤도에 필요 ≈ 9.4', GR.x0 + 16, gy(DV_NEED) - 22, {size: 26, weight: 700, color: T.accent}); });
     if (t >= P.m0) { const px = gx(f), py = gy(dvOf(f)); ring(c, px, py, 16, PAL.fuel, 3); circle(c, px, py, 7, PAL.fuel);
-      const pa = fadeIn(t, P.p95 - 0.3, 0.3); if (pa > 0) { line(c, [[px, py], [px, GR.y0]], rgba(T.accent, 0.7 * pa), 2, {dash: [5, 6]}); stage.text('95%', px - 8, GR.y0 - 22, {size: 28, weight: 700, color: T.accent, align: 'right', alpha: pa}); } }
-    stage.text('vₑ ≈ 3 km/s (등유 엔진)', GR.x1, GR.y1 + 18, {size: 24, weight: 500, color: T.muted, align: 'right'});
+      const pa = fadeIn(t, P.p95 - 0.3, 0.3); if (pa > 0) { line(c, [[px, py], [px, GR.y0]], rgba(T.accent, 0.7 * pa), 2, {dash: [5, 6]}); stage.text(`${Math.round(F_NEED * 100)}%`, px - 10, GR.y0 - 22, {size: 28, weight: 700, color: T.accent, align: 'right', alpha: pa}); } }
   });
-  // ③ mass bar
+  // ③ mass bar: fuel share → split into stages → the empty stage 1 drops off
   const ma = fadeIn(t, P.m0, 0.4);
   if (ma > 0) withAlpha(c, ma, () => {
-    const x0 = GR.x0 - 40, x1 = GR.x1 + 20, y = 1040, h = 56, wF = (x1 - x0) * f;
+    const x0 = GR.x0 - 40, x1 = GR.x1 + 20, y = 1040, h = 56, wT = x1 - x0, s1w = wT * 0.8;
     stage.text('로켓 무게', x0, y - 30, {size: 26, weight: 700, color: T.ink});
     const split = clamp((t - P.split) / 0.5), dU = easeIn(clamp((t - P.drop) / 1.2));
-    const s1w = (x1 - x0) * 0.8;
-    rect(c, x0, y, x1 - x0, h, 4, rgba(PAL.struct, 0.75));
-    rect(c, x0, y, wF, h, 4, rgba(PAL.fuel, 0.95));
-    ring(c, x0 + wF, y + h / 2, 14, PAL.fuel, 3);
-    stage.text(`연료 ${Math.round(f * 100)}%`, x0 + 14, y + h / 2, {size: 28, weight: 700, color: '#1A1208'});
-    stage.text(`나머지 ${Math.round((1 - f) * 100)}%: 통 · 엔진 · 위성`, x1, y + h + 30, {size: 24, weight: 500, color: T.muted, align: 'right', alpha: fadeIn(t, P.p95, 0.3) * (1 - split)});
-    if (split > 0) withAlpha(c, split, () => {
-      line(c, [[x0 + s1w, y - 8 + dU * 120], [x0 + s1w, y + h + 8 + dU * 120]], '#FFFFFF', 3);
-      c.save(); c.globalAlpha *= 1 - dU; stage.text('1단', x0 + s1w / 2, y + h + 34 + dU * 120, {size: 26, weight: 700, color: T.ink, align: 'center'}); c.restore();
-      stage.text('2단 + 위성', x0 + s1w + (x1 - x0 - s1w) / 2, y - 30, {size: 24, weight: 700, color: T.ink, align: 'center'});
-    });
+    if (split <= 0) {
+      rect(c, x0, y, wT, h, 4, rgba(PAL.struct, 0.75)); rect(c, x0, y, wT * f, h, 4, rgba(PAL.fuel, 0.95)); ring(c, x0 + wT * f, y + h / 2, 16, PAL.fuel, 3);
+      stage.text(`연료 ${Math.round(f * 100)}%`, x0 + 14, y + h / 2, {size: 28, weight: 700, color: '#1A1208'});
+      stage.text(`나머지 ${Math.round((1 - f) * 100)}%: 통 · 엔진 · 위성`, x1, y + h + 30, {size: 24, weight: 500, color: T.muted, align: 'right', alpha: fadeIn(t, P.p95, 0.3)});
+    } else {
+      // stage 1 block (its fuel burns away, then it drops), stage 2 + satellite block stays
+      withAlpha(c, 1 - dU, () => { c.save(); c.translate(0, 120 * dU);
+        rect(c, x0, y, s1w - 3, h, 4, rgba(PAL.struct, 0.75)); rect(c, x0, y, (s1w - 3) * 0.94 * (1 - drain), h, 4, rgba(PAL.fuel, 0.95));
+        stage.text('1단', x0 + s1w / 2, y + h + 32, {size: 26, weight: 700, color: T.ink, align: 'center'}); c.restore(); });
+      rect(c, x0 + s1w + 3, y, wT - s1w - 3, h, 4, rgba(PAL.struct, 0.75)); rect(c, x0 + s1w + 3, y, (wT - s1w - 3) * 0.8, h, 4, rgba(PAL.fuel, 0.95));
+      stage.text('2단 + 위성', x0 + s1w + (wT - s1w) / 2, y - 30, {size: 24, weight: 700, color: T.ink, align: 'center', alpha: split});
+      tag(stage, '다 쓴 1단을 떼어 내면 가벼워짐', x0, y + h + 76, {size: 24, align: 'left', a: fadeIn(t, P.drop + 0.2, 0.3), color: T.muted, plate: false});
+    }
   });
 }
 // ---- cross-section (true scale, downrange × height), shared by s10–s12
@@ -824,7 +834,7 @@ function crossSection(stage, t, P) {
     if (p2.length > 1) line(c, p2, rgba(T.ink, 0.5), 2.5, {dash: [8, 7]});
     const q = sampleAt(MODEL.s2, m2);
     if (q.x < 162) stage2(c, xsx(q.x), xsy(q.h), Math.atan2(q.ve, q.vu), {L: 22, burn: m2 > 153 ? 1 : 0, plumeLen: 40});
-    tag(stage, '2단 → 궤도 (고도 200 km)', 910, xsy(112), {size: 24, align: 'right', color: T.muted, plate: false, a: fadeIn(t, P.sep + 0.5, 0.4)});
+    tag(stage, '2단 → 궤도 (고도 200 km)', 910, xsy(78), {size: 24, align: 'right', color: T.muted, plate: false, a: fadeIn(t, P.sep + 0.5, 0.4)});
     const r = sampleAt(BACK, m); rocket(c, xsx(r.x), xsy(r.h), boosterAngle(m), {L: 30, burn: 0});
   }
   // readouts
@@ -832,10 +842,10 @@ function crossSection(stage, t, P) {
   if (ra > 0) withAlpha(c, ra, () => {
     panel(c, T, 160, 1140, 760, 120, 0.86);
     const cells = [['시간', `T+${mmss(mA)}`], ['높이', `${Math.round(s.h)} km`], ['빠르기', `초속 ${f1(speedOf(s))} km`]];
-    cells.forEach(([k, v], i) => { const x = 230 + i * 250; stage.text(k, x, 1175, {size: 24, weight: 500, color: T.muted}); stage.text(v, x, 1222, {role: 'display', size: 36, weight: 700, color: i === 1 ? T.accent : T.ink}); });
+    cells.forEach(([k, v], i) => { const x = 195 + i * 235; stage.text(k, x, 1175, {size: 24, weight: 500, color: T.muted}); stage.text(v, x, 1222, {role: 'display', size: 34, weight: 700, color: i === 1 ? T.accent : T.ink}); });
   });
   const sa = fadeIn(t, P.sep, 0.3);
-  if (sa > 0) { const q = MODEL.meco; tag(stage, '분리 · 약 70 km · 2분 30초', xsx(q.x) + 20, xsy(q.h) + 46, {size: 26, align: 'left', a: sa, color: T.accent}); }
+  if (sa > 0) { const q = MODEL.meco; tag(stage, '분리 · 약 70 km · 2분 30초', xsx(q.x) - 24, xsy(q.h) + 48, {size: 26, align: 'right', a: sa, color: T.accent}); }
 }
 
 // ------------------------------------------------------------------ return: 3-stage dashboard with the tracked first stage
@@ -871,7 +881,7 @@ function returnScene(stage, t, ctx) {
     // ascent (dim) and stage 2 leaving
     line(c, pathPts(MODEL.asc, 0, 150), rgba(T.ink, 0.3), 2.5);
     const p2 = pathPts(MODEL.s2, 150, 400); if (p2.length > 1) line(c, p2, rgba(T.ink, 0.25), 2, {dash: [8, 7]});
-    tag(stage, '2단 → 궤도', 910, xsy(112), {size: 24, align: 'right', color: T.muted, plate: false});
+    tag(stage, '2단 → 궤도', 910, xsy(78), {size: 24, align: 'right', color: T.muted, plate: false});
     // stage-1 return path so far (burns highlighted)
     const done = MODEL.ret.filter(q => q.t <= m);
     for (let i = 1; i < done.length; i++) {
@@ -908,11 +918,11 @@ function inset(stage, t, m, ang, st, s) {
   tag(stage, label, x, y + r + 34, {size: 26, color: ph ? T.accent : T.muted});
   if (st.burn) tag(stage, `엔진 ${st.engines}개`, x, y - r - 26, {size: 24, color: T.ink, plate: false});
 }
-const GP = {x0: 210, x1: 910, y0: 1325, y1: 1110, t0: 150, t1: 490};
+const GP = {x0: 210, x1: 910, y0: 1320, y1: 1150, t0: 150, t1: 490};
 function graph(stage, t, m) {
   const c = stage.ctx, T = stage.theme, tx = tt => GP.x0 + (tt - GP.t0) / (GP.t1 - GP.t0) * (GP.x1 - GP.x0);
   const hy = h => GP.y0 - h / 140 * (GP.y0 - GP.y1), vy = v => GP.y0 - v / 2.6 * (GP.y0 - GP.y1);
-  panel(c, T, GP.x0 - 60, GP.y1 - 62, GP.x1 - GP.x0 + 80, GP.y0 - GP.y1 + 76, 0.86);
+  panel(c, T, GP.x0 - 60, GP.y1 - 64, GP.x1 - GP.x0 + 80, GP.y0 - GP.y1 + 80, 0.86);
   for (const [a, b] of [[MODEL.T.bb0, MODEL.T.bb1], [MODEL.T.en0, MODEL.T.en1], [MODEL.T.ign, MODEL.T.touch]]) rect(c, tx(a), GP.y1, tx(b) - tx(a), GP.y0 - GP.y1, 0, rgba(T.accent, 0.18));
   line(c, [[GP.x0, GP.y1], [GP.x0, GP.y0], [GP.x1, GP.y0]], rgba(T.ink, 0.5), 2);
   const hp = [], vp = []; for (const q of MODEL.ret) { if (q.t > m) break; hp.push([tx(q.t), hy(q.h)]); vp.push([tx(q.t), vy(speedOf(q))]); }
@@ -975,13 +985,12 @@ function forces(stage, t, P) {
     withAlpha(c, wa, () => {
       stage.text('1단의 무게 (약 30 t)', 580, 500, {size: 26, weight: 700, color: T.ink});
       rect(c, 580, 528, LAND.weightKN * k, 40, 4, rgba(T.ink, 0.85)); stage.text(`약 ${Math.round(LAND.weightKN / 10) * 10} kN`, 590, 548, {size: 26, weight: 700, color: '#141414'});
-      line(c, [[580 + LAND.weightKN * k, 418], [580 + LAND.weightKN * k, 572]], rgba('#FFFFFF', 0.7), 2, {dash: [4, 5]});
     });
     const va = fadeIn(t, P.verdict, 0.35);
     if (va > 0) stage.text('→ 멈춰 떠 있을 수 없다', 580, 620, {role: 'display', size: 32, weight: 700, color: T.accent, alpha: va});
   });
 }
-const PP = {x0: 620, x1: 900, y0: 1295, y1: 880, vMax: 360, hMax: 4.6};
+const PP = {x0: 620, x1: 900, y0: 1295, y1: 900, vMax: 360, hMax: 4.6};
 function phasePlot(stage, t, P, m) {
   const c = stage.ctx, T = stage.theme;
   const px = v => PP.x0 + v / PP.vMax * (PP.x1 - PP.x0), py = h => PP.y0 - h / PP.hMax * (PP.y0 - PP.y1);
@@ -989,7 +998,7 @@ function phasePlot(stage, t, P, m) {
   stage.text('높이 – 빠르기', 580, 736, {size: 26, weight: 700, color: T.ink});
   line(c, [[PP.x0, PP.y1], [PP.x0, PP.y0], [PP.x1, PP.y0]], rgba(T.ink, 0.6), 2);
   for (const h of [1, 2, 3, 4]) stage.text(`${h} km`, PP.x0 - 8, py(h), {size: 24, color: T.muted, align: 'right'});
-  for (const v of [100, 300]) stage.text(`${v}`, px(v), PP.y0 + 26, {size: 24, color: T.muted, align: 'center'});
+  for (const v of [100, 200]) stage.text(`${v}`, px(v), PP.y0 + 26, {size: 24, color: T.muted, align: 'center'});
   stage.text('m/s', PP.x1, PP.y0 + 26, {size: 24, color: T.muted, align: 'right'});
   // ghosts (explanatory model): too early / too late
   const ga = fadeIn(t, P.ghosts, 0.4);
@@ -1004,13 +1013,13 @@ function phasePlot(stage, t, P, m) {
   });
   // target (0, 0)
   const ta = fadeIn(t, P.target, 0.35);
-  if (ta > 0) { ring(c, px(0), py(0), 16 + 6 * Math.sin(t * 5) * (t < P.touchS ? 1 : 0), rgba(PAL.good, ta), 3); stage.text('0 · 0', px(0) + 22, py(0) - 22, {size: 26, weight: 700, color: PAL.good, alpha: ta}); }
+  if (ta > 0) { ring(c, px(0), py(0), 16 + 6 * Math.sin(t * 5) * (t < P.touchS ? 1 : 0), rgba(PAL.good, ta), 3); ring(c, 597, 860, 9, rgba(PAL.good, ta), 3); stage.text('목표: 높이 0 · 속도 0', 625, 860, {size: 24, weight: 700, color: PAL.good, alpha: ta}); }
   // actual path so far
   const pts = MODEL.ret.filter(q => q.t >= MODEL.T.ign - 6.5 && q.t <= m).map(q => [px(speedOf(q) * 1000), py(hShow(q))]);
   if (pts.length > 1) line(c, pts, T.accent, 3.5);
   const s = sampleAt(BACK, m); const cp = [px(speedOf(s) * 1000), py(hShow(s))];
   ring(c, cp[0], cp[1], 13, T.accent, 3); circle(c, cp[0], cp[1], 5, T.accent);
-  const ig = MODEL.ign; if (m >= MODEL.T.ign) stage.text('점화', px(speedOf(ig) * 1000) - 14, py(ig.h) - 28, {size: 24, weight: 700, color: T.accent, align: 'right'});
+  const ig = MODEL.ign; if (m >= MODEL.T.ign) { circle(c, px(speedOf(ig) * 1000), py(ig.h), 5, T.accent); stage.text('점화', px(speedOf(ig) * 1000) + 14, py(ig.h) + 2, {size: 24, weight: 700, color: T.accent}); }
 }
 
 // ------------------------------------------------------------------ reuse: cycle + fairing recovery → tower catch → satellites
@@ -1035,11 +1044,11 @@ function cycle(stage, t, P) {
   for (const s of CY_ST) {
     const x = CY.x + CY.r * Math.cos(s.a), y = CY.y + CY.r * Math.sin(s.a), lit = ((ang - s.a) % TAU + TAU) % TAU < 0.5 && ang > s.a - 0.01;
     circle(c, x, y, 13, lit ? T.accent : T.plate); ring(c, x, y, 13, T.accent, 2.5);
-    const ox = Math.cos(s.a) * 70, oy = Math.sin(s.a) * 42;
+    const ox = Math.cos(s.a) * (s.a === 0 ? 100 : 70), oy = Math.sin(s.a) * 42;
     stage.text(s.n, x + ox, y + oy, {size: 26, weight: 700, color: lit ? T.accent : T.ink, align: 'center'});
   }
   const bx = CY.x + CY.r * Math.cos(ang), by = CY.y + CY.r * Math.sin(ang);
-  rocket(c, bx, by + 24, 0, {L: 46, legs: 1, fins: 1, soot: 0.6});
+  rocket(c, bx, by + 36, 0, {L: 72, w: 12, legs: 1, fins: 1, soot: 0.6});
   stage.text('같은 1단', CY.x, CY.y - 18, {size: 28, weight: 700, color: T.ink, align: 'center'});
   stage.text('다시 날기', CY.x, CY.y + 22, {size: 28, weight: 700, color: T.accent, align: 'center', alpha: fadeIn(t, P.fly15, 0.3)});
 }
@@ -1070,7 +1079,7 @@ function fairing(stage, t, P) {
     const boatX = lerp(980, 540, easeOut(clamp((t - P.splash + 0.2) / 0.9)));
     if (t > P.splash - 0.3) { poly(c, [[boatX - 120, seaY - 10], [boatX + 120, seaY - 10], [boatX + 95, seaY + 22], [boatX - 95, seaY + 22]], '#3B3E44'); rect(c, boatX + 40, seaY - 44, 50, 34, 3, '#4A4D54'); }
     if (u >= 1 && pick <= 0) for (const s of [-1, 1]) { const fx = x + s * 164; c.save(); c.globalCompositeOperation = 'lighter'; glow(c, fx, seaY, 50, '#BFE3FF', 0.25 * Math.exp(-(t - P.splash) / 0.5)); c.restore(); }
-    tag(stage, '위성 덮개 두 쪽 · 낙하산 → 바다 → 배', 540, 875, {size: 26, color: T.ink});
+    tag(stage, '위성 덮개 두 쪽 · 낙하산 → 바다 → 배', 540, 1302, {size: 26, color: T.ink});
   });
 }
 function towerCatch(stage, t, P) {
@@ -1082,7 +1091,7 @@ function towerCatch(stage, t, P) {
   // booster: descends to the catch point
   const L = 640, catchY = 1150, u = clamp((t - P.bigIn) / (P.catch - P.bigIn)), yE = lerp(catchY - 900, catchY, 1 - (1 - u) ** 2);
   const burn = t < P.catch ? fadeIn(t, P.bigIn, 0.3) : Math.exp(-(t - P.catch) / 0.25);
-  rocket(c, 510, yE, 0, {L, w: 84, fins: 1, soot: 0.25, burn, engines: 3, plumeLen: 200});
+  rocket(c, 540, yE, 0, {L, w: 84, fins: 1, soot: 0.25, burn, engines: 3, plumeLen: 200, noLegs: true});
   // arms: pivot on the tower at the catch height; close at the catch
   const armY = catchY - L * 0.86, close = easeInOut(clamp((t - P.catch + 0.5) / 0.5));
   for (const s of [-1, 1]) {
@@ -1097,37 +1106,41 @@ function towerCatch(stage, t, P) {
 }
 function manySats(stage, t, P) {
   const c = stage.ctx, T = stage.theme, V = VIEW.arc;
-  // old vs new (top)
+  // old vs new (top), looping until the LEO picture returns
   const oa = fadeIn(t, P.old, 0.35) * fadeOut(t, P.leoBack, 0.4);
   if (oa > 0) withAlpha(c, oa, () => {
-    panel(c, T, 160, 340, 360, 520, 0.86); panel(c, T, 560, 340, 370, 520, 0.86);
-    stage.text('예전', 340, 380, {size: 28, weight: 700, color: T.muted, align: 'center'}); stage.text('지금', 745, 380, {size: 28, weight: 700, color: T.accent, align: 'center'});
-    const u = clamp((t - P.old) / 1.6);
-    const gs = c.createLinearGradient(0, 780, 0, 840); gs.addColorStop(0, PAL.sea); gs.addColorStop(1, PAL.sea2); c.fillStyle = gs; c.fillRect(170, 780, 340, 70);
-    rocket(c, 340 + 40 * u, 500 + 270 * easeIn(u), 0.5 + 1.6 * u, {L: 120, soot: 0.2, alpha: 1 - smooth((u - 0.85) / 0.15)});
-    stage.text('1단은 바다로 → 한 번 쓰고 버림', 340, 820, {size: 24, weight: 700, color: T.muted, align: 'center'});
-    const v = clamp((t - P.newer) / 1.2);
-    c.fillStyle = '#1C1D20'; c.fillRect(570, 780, 350, 70);
-    rocket(c, 745, lerp(440, 772, 1 - (1 - v) ** 2), 0, {L: 120, legs: smooth((v - 0.6) / 0.3), fins: 1, soot: 0.6, burn: v > 0.4 && v < 1 ? 1 : 0, engines: 1, plumeLen: 60});
-    stage.text('돌아와 다시 씀', 745, 820, {size: 24, weight: 700, color: T.accent, align: 'center'});
-    const ca = fadeIn(t, P.cost, 0.35);
-    if (ca > 0) { panel(c, T, 300, 900, 480, 90, 0.9); stage.text('발사 비용', 470, 945, {size: 30, weight: 700, color: T.ink, align: 'center', alpha: ca}); arrow(c, [640, 915], [640, 975 * 1 + 0 * fadeIn(t, P.costDown, 0.3)], rgba(PAL.good, ca * fadeIn(t, P.costDown, 0.3)), 6); stage.text('크게 내려감', 760, 945, {size: 28, weight: 700, color: PAL.good, align: 'center', alpha: fadeIn(t, P.costDown, 0.3)}); }
+    panel(c, T, 150, 360, 370, 560, 0.86); panel(c, T, 560, 360, 370, 560, 0.86);
+    stage.text('예전', 335, 404, {role: 'display', size: 32, weight: 700, color: T.muted, align: 'center'}); stage.text('지금', 745, 404, {role: 'display', size: 32, weight: 700, color: T.accent, align: 'center'});
+    const u = ((t - P.old) % 2.4) / 2.4;
+    const gs = c.createLinearGradient(0, 820, 0, 880); gs.addColorStop(0, PAL.sea); gs.addColorStop(1, PAL.sea2); c.fillStyle = gs; c.fillRect(160, 820, 350, 60);
+    if (t >= P.old) clipRect(c, 155, 430, 360, 450, 6, () => rocket(c, 300 + 70 * u, 520 + 300 * easeIn(clamp(u / 0.8)), 0.4 + 1.5 * u, {L: 130, w: 16, soot: 0.2, noLegs: true, alpha: 1 - smooth((u - 0.8) / 0.2)}));
+    if (u > 0.78 && t >= P.old) { c.save(); c.globalCompositeOperation = 'lighter'; glow(c, 390, 826, 70, '#BFE3FF', 0.3 * (1 - (u - 0.78) / 0.22)); c.restore(); }
+    stage.text('1단은 바다로', 335, 905, {size: 26, weight: 700, color: T.muted, align: 'center'});
+    const v = ((t - P.newer) % 2.4) / 2.4, vv = clamp(v / 0.7);
+    c.fillStyle = '#1C1D20'; c.fillRect(570, 820, 350, 60);
+    c.save(); c.translate(745, 826); c.scale(1, 0.15); ring(c, 0, 0, 80, rgba('#D9D3C8', 0.5), 6); c.restore();
+    if (t >= P.newer) clipRect(c, 565, 430, 360, 450, 6, () => rocket(c, 745, lerp(500, 820, 1 - (1 - vv) ** 2), 0, {L: 130, w: 16, legs: smooth((vv - 0.6) / 0.3), fins: 1, soot: 0.6, burn: vv > 0.35 && vv < 1 ? 1 : 0, engines: 1, plumeLen: 70}));
+    stage.text('돌아와 다시 씀', 745, 905, {size: 26, weight: 700, color: T.accent, align: 'center'});
+    const ca = fadeIn(t, P.cost, 0.35), da = fadeIn(t, P.costDown, 0.3);
+    if (ca > 0) withAlpha(c, ca, () => { panel(c, T, 230, 960, 620, 100, 0.92); stage.text('발사 비용', 400, 1010, {role: 'display', size: 34, weight: 700, color: T.ink, align: 'center'});
+      withAlpha(c, da, () => { arrow(c, [560, 980], [560, 980 + 60 * easeOut(clamp((t - P.costDown) / 0.4))], PAL.good, 6); stage.text('크게 내려감', 700, 1010, {role: 'display', size: 34, weight: 700, color: PAL.good, align: 'center'}); }); });
   });
   const la = fadeIn(t, P.leoBack, 0.45);
   if (la > 0) withAlpha(c, la, () => {
-    c.beginPath(); c.arc(V.cx, V.cy, V.R + 2000 * V.R / RE, 0, TAU); c.arc(V.cx, V.cy, V.R, 0, TAU, true); c.fillStyle = rgba(PAL.speed, 0.08); c.fill('evenodd');
+    c.beginPath(); c.arc(V.cx, V.cy, V.R + 2000 * V.R / RE, 0, TAU); c.arc(V.cx, V.cy, V.R, 0, TAU, true); c.fillStyle = rgba(PAL.speed, 0.10); c.fill('evenodd');
+    ring(c, V.cx, V.cy, V.R + 2000 * V.R / RE, rgba(PAL.speed, 0.6), 2);
     earth(c, V);
-    const frac = 0.25 + 0.75 * clamp((t - P.flock) / 2.8);
+    const frac = 0.2 + 0.8 * clamp((t - P.flock) / 2.8);
     satellites(c, V, t, 1, frac);
-    // launches: arcs from the ground into the band
+    // launches: bright trails from the ground into the band
     P.launches.forEach((t0, k) => {
-      const u = clamp((t - t0) / 1.1); if (u <= 0 || u >= 1) return;
-      const a0 = -0.28 + 0.09 * k, p0 = vpt(V, a0, 0), p1 = vpt(V, a0 + 0.12, 520), q = easeOut(u);
-      const x = lerp(p0[0], p1[0], q), y = lerp(p0[1], p1[1], q) - Math.sin(q * Math.PI) * 30;
-      glow(c, x, y, 14, T.accent, 0.5 * (1 - u)); circle(c, x, y, 3.5, '#FFFFFF');
+      const u = clamp((t - t0) / 1.2); if (u <= 0 || u >= 1.0) return;
+      const a0 = -0.26 + 0.085 * k, p0 = vpt(V, a0, 0), p1 = vpt(V, a0 + 0.1, 550), pts = [];
+      for (let i = 0; i <= 24; i++) { const q = easeOut(u) * i / 24; pts.push([lerp(p0[0], p1[0], q), lerp(p0[1], p1[1], q) - Math.sin(q * Math.PI / 2) * 40]); }
+      line(c, pts, rgba(T.accent, 0.85 * (1 - u * 0.6)), 3); const e = pts.at(-1); glow(c, e[0], e[1], 22, T.accent, 0.6 * (1 - u)); circle(c, e[0], e[1], 4.5, '#FFFFFF');
     });
-    tag(stage, '해마다 수천 개 → 낮은 궤도', 540, 600, {size: 32, role: 'display', color: T.accent, a: fadeIn(t, P.flock, 0.35)});
-    tag(stage, 'LEO', 820, 520, {size: 28, color: PAL.speed, plate: false});
+    tag(stage, '해마다 수천 개 → 낮은 궤도', 540, 420, {size: 34, role: 'display', color: T.accent, a: fadeIn(t, P.flock, 0.35)});
+    tag(stage, 'LEO · 고도 2,000 km 아래', 540, 475, {size: 26, color: PAL.speed, plate: false, a: fadeIn(t, P.leoBack + 0.3, 0.35)});
   });
 }
 
@@ -1140,7 +1153,7 @@ function mythScene(stage, t, ctx) {
   withAlpha(c, ein * ef, () => {
     stars(c, 0.6);
     // Earth limb and the dense air (×3 height)
-    c.save(); c.beginPath(); c.arc(MY.cx, MY.cy, MY.R, 0, TAU); c.fillStyle = '#16314F'; c.fill(); c.restore();
+    c.save(); c.beginPath(); c.arc(MY.cx, MY.cy, MY.R, 0, TAU); const ge = c.createLinearGradient(0, MY.top, 0, MY.top + 500); ge.addColorStop(0, '#1A3A5C'); ge.addColorStop(1, '#0B1A2B'); c.fillStyle = ge; c.fill(); c.restore();
     const ta = 0.6 + 0.4 * fadeIn(t, P.thick, 0.4) * fadeOut(t, P.tilt + 0.6, 0.6);
     const ga = c.createRadialGradient(MY.cx, MY.cy, MY.R, MY.cx, MY.cy, MY.R + 30 * MY.k * MY.ex); ga.addColorStop(0, rgba(PAL.atm, 0.55 * ta)); ga.addColorStop(1, rgba(PAL.atm, 0));
     c.beginPath(); c.arc(MY.cx, MY.cy, MY.R + 30 * MY.k * MY.ex, 0, TAU); c.fillStyle = ga; c.fill();
@@ -1171,32 +1184,36 @@ function mythScene(stage, t, ctx) {
   });
 }
 function gauge(stage, t, P, s) {
-  const c = stage.ctx, T = stage.theme, x = 320, y = 760, r = 150, a = fadeIn(t, P.leave, 0.35);
+  const c = stage.ctx, T = stage.theme, x0 = 200, y = 790, r = 190, a = fadeIn(t, P.leave, 0.35);
   if (a <= 0) return;
   withAlpha(c, a, () => {
-    panel(c, T, 160, 470, 330, 340, 0.86);
-    stage.text('실제 기울기', 180, 508, {size: 26, weight: 700, color: T.ink});
-    ring(c, x - 130, y, r, rgba(T.ink, 0.4), 3, -Math.PI / 2, 0);
-    for (const d of [0, 30, 60, 90]) { const th = -d * Math.PI / 180; line(c, [[x - 130 + (r - 10) * Math.cos(th), y + (r - 10) * Math.sin(th)], [x - 130 + r * Math.cos(th), y + r * Math.sin(th)]], rgba(T.ink, 0.6), 2); stage.text(`${d}°`, x - 130 + (r + 26) * Math.cos(th), y + (r + 18) * Math.sin(th), {size: 24, color: T.muted, align: 'center'}); }
+    panel(c, T, 150, 380, 380, 500, 0.86);
+    stage.text('실제 기울기', 170, 420, {role: 'display', size: 30, weight: 700, color: T.ink});
+    stage.text('(수평에서 잰 각도)', 170, 458, {size: 24, weight: 500, color: T.muted});
+    ring(c, x0, y, r, rgba(T.ink, 0.4), 3, -Math.PI / 2, 0);
+    for (const d of [0, 30, 60, 90]) { const th = -d * Math.PI / 180; line(c, [[x0 + (r - 12) * Math.cos(th), y + (r - 12) * Math.sin(th)], [x0 + r * Math.cos(th), y + r * Math.sin(th)]], rgba(T.ink, 0.6), 2);
+      stage.text(`${d}°`, x0 + (r + 28) * Math.cos(th) + (d === 90 ? 30 : 0), y + (r + 22) * Math.sin(th) + (d === 0 ? -26 : 0), {size: 24, color: T.muted, align: 'center'}); }
     const d = clamp(pitchDeg(s), 0, 90), th = -d * Math.PI / 180;
-    arrow(c, [x - 130, y], [x - 130 + (r - 18) * Math.cos(th), y + (r - 18) * Math.sin(th)], T.accent, 4);
-    stage.text(`${Math.round(d)}°`, x + 30, y - 40, {role: 'display', size: 44, weight: 700, color: T.accent});
-    stage.text('90° = 똑바로 위', 180, y + 34, {size: 24, color: T.muted}); stage.text('0° = 옆으로', 345, y + 34, {size: 24, color: T.muted});
+    arrow(c, [x0, y], [x0 + (r - 22) * Math.cos(th), y + (r - 22) * Math.sin(th)], T.accent, 5);
+    circle(c, x0, y, 6, T.accent);
+    stage.text(`${Math.round(d)}°`, 500, 540, {role: 'display', size: 56, weight: 700, color: T.accent, align: 'right'});
+    stage.text('90° = 똑바로 위', 170, 840, {size: 24, color: T.muted}); stage.text('0° = 옆으로', 510, 840, {size: 24, color: T.muted, align: 'right'});
   });
 }
 function budget(stage, t, P) {
   const c = stage.ctx, T = stage.theme, a = fadeIn(t, P.budget, 0.35);
   if (a <= 0) return;
   withAlpha(c, a, () => {
-    panel(c, T, 520, 470, 410, 340, 0.86);
-    stage.text('로켓이 낸 빠르기', 540, 508, {size: 26, weight: 700, color: T.ink});
-    stage.text(`합계 초속 ${f1(MODEL.dvIdeal / 1000)} km`, 540, 548, {size: 24, weight: 500, color: T.muted});
-    const x0 = 545, w = 360, y = 590, h = 64, fs = MODEL.sideFrac, u = easeOut(clamp((t - P.sideFill) / 0.8));
-    rect(c, x0, y, w, h, 4, rgba(PAL.struct, 0.6));
-    rect(c, x0, y, w * fs * u, h, 4, rgba(T.accent, 0.95));
-    stage.text(`옆으로 ${Math.round(fs * 100)}%`, x0 + 14, y + h / 2, {size: 28, weight: 700, color: '#1A1208', alpha: smooth((u - 0.4) / 0.3)});
-    stage.text(`궤도 속도 초속 ${f1(MODEL.vFinal)} km`, x0, y + h + 34, {size: 24, weight: 700, color: T.accent, alpha: u});
-    stage.text(`나머지 ${Math.round((1 - fs) * 100)}%: 중력을 이기는 데 등`, x0, y + h + 70, {size: 24, weight: 500, color: T.muted, alpha: u});
+    panel(c, T, 555, 380, 375, 500, 0.86);
+    stage.text('로켓이 낸 빠르기', 575, 420, {role: 'display', size: 30, weight: 700, color: T.ink});
+    stage.text(`합계 초속 ${f1(MODEL.dvIdeal / 1000)} km`, 575, 458, {size: 24, weight: 500, color: T.muted});
+    const x0 = 580, w = 70, yb = 840, H = 300, fs = MODEL.sideFrac, u = easeOut(clamp((t - P.sideFill) / 0.8));
+    rect(c, x0, yb - H, w, H, 4, rgba(PAL.struct, 0.6));
+    rect(c, x0, yb - H * fs * u, w, H * fs * u, 4, rgba(T.accent, 0.95));
+    stage.text(`옆으로 ${Math.round(fs * 100)}%`, x0 + w + 16, yb - H * fs * 0.5, {role: 'display', size: 34, weight: 700, color: T.accent, alpha: smooth((u - 0.3) / 0.3)});
+    stage.text(`궤도 속도 초속 ${f1(MODEL.vFinal)} km`, x0 + w + 16, yb - H * fs * 0.5 + 40, {size: 24, weight: 500, color: T.ink, alpha: u});
+    stage.text(`나머지 ${Math.round((1 - fs) * 100)}%`, x0 + w + 16, yb - H + 14, {size: 24, weight: 700, color: T.muted, alpha: u});
+    stage.text('중력을 이기는 데 등', x0 + w + 16, yb - H + 44, {size: 24, weight: 500, color: T.muted, alpha: u});
   });
 }
 
