@@ -23,7 +23,7 @@ import {Fluid, Projector} from './fluid.mjs';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const {createCanvas} = createRequire(path.join(HERE, '../../pipeline/render/package.json'))('@napi-rs/canvas');
 export const theme = {base: 'navy', accent: '#FFB070'};
-export const captionLayout = {hook: {plate: true}, myth: {plate: true}};
+export const captionLayout = {hook: {plate: true}, cases: {plate: true}, myth: {plate: true}};   // cases: pale water behind the ink → plate for contrast (2026-11-07 review)
 export const events = [];
 
 // =====================================================================================================
