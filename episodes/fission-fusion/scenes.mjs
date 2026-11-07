@@ -1,25 +1,27 @@
 // Episode scenes — "핵분열과 핵융합 — 쪼개도 합쳐도 에너지가 나오는 까닭" (29)
 // Shape: export {theme, scenes, overlays, background, captionLayout, events}; scenes.<id>(stage, t, p, ctx).
 //
-// Visual direction (2026-11-07 user feedback: "다이내믹함과 비주얼함을 높여야 해"): full-bleed cinematic frames, heroes lit in
-// 3D with bloom, the camera always moving, few large labels and big numbers instead of dashboards.
+// Visual direction (2026-11-07 remake, docs/ANIMATION_QUALITY.md "시리즈 화풍은 지킨다"): the series' diagram style —
+// dark graphite background, thin precise lines, small glowing dots, flat matte nucleon balls (no specular, no bloom),
+// graphs with axes; one warm accent (fusion) and one cool secondary (fission). Dynamics come from frame-filling
+// diagrams, camera moves, an event every 2–4 s (white flash + thin shock rings) and big numbers.
 //
 // Model notes (also in README.md; nothing of this is printed on screen as a footnote):
 //  - Nuclei: nucleons are shaded spheres packed in a ball of radius (A/0.6)^(1/3) nucleon radii (random close packing,
-//    relaxed with a short repulsion pass; seeded). Colours: proton warm red, neutron cool silver. Explanatory drawing —
+//    relaxed with a short repulsion pass; seeded). Colours: proton warm orange, neutron grey (matte). Explanatory drawing —
 //    nucleons are not marbles.
 //  - Fission (설명 모형, liquid drop): U-236* wobbles (quadrupole), stretches into a peanut, the neck snaps; fragments
 //    Ba-141 (56 p) + Kr-92 (36 p) + 3 neutrons fly apart. Real time scale ≲ 10⁻¹⁴ s; shown in declared slow motion.
 //  - Valley: binding energy per nucleon B/A (measured, MeV): H-1 0, H-2 1.112, H-3 2.827, He-4 7.074, C-12 7.680,
 //    O-16 7.976, Ne-20 8.032, Mg-24 8.261, Si-28 8.448, S-32 8.493, Ca-40 8.551, Ti-48 8.723, Fe-56 8.790, Ni-62 8.795,
 //    Kr-84 8.717, Mo-98 8.635, Sn-120 8.505, Ba-138 8.393, Gd-158 8.202, W-184 8.005, Pb-208 7.868, U-235 7.591,
-//    U-238 7.570 (upper envelope of stable nuclei on the light side). Drawn upside-down as a valley: height = 8.8 − B/A,
-//    x = log₁₀A. Fusion D+T: 17.6 MeV / 5 = 3.5 MeV per nucleon; fission U-235: ≈ 200 MeV / 236 ≈ 0.85 → ×4 per mass.
+//    U-238 7.570 (upper envelope of stable nuclei on the light side). Drawn as a 2D line graph upside down (iron at the
+//    bottom): y = B/A downward, x = log₁₀A; measured points shown as dots. Fusion D+T: 17.6 MeV / 5 = 3.5 MeV per nucleon; fission U-235: ≈ 200 MeV / 236 ≈ 0.85 → ×4 per mass.
 //  - Reactor (설명 모형): neutron population with multiplication factor k set by control-rod depth; k = 1 keeps the
 //    number of streaks steady. Cherenkov glow: real (water, electrons faster than light in water ≈ 0.75 c).
-//  - Fusion: Coulomb repulsion sketched as deceleration and bounce; at 1억 °C a D–T pair fuses → He-4 + n (17.6 MeV).
-//  - Tokamak (설명 모형): torus R0 = 1, plasma minor radius 0.32, elongation 1.35; helical field lines with safety factor
-//    q(r) = 1 + 2(r/a)²; plasma particles stream along the field. Not KSTAR's or ITER's real geometry.
+//  - Fusion: Coulomb repulsion sketched as a hill graph (U ∝ 1/r, capped at contact); a cold pair turns back, at 1억 °C a D–T pair fuses → He-4 + n (17.6 MeV).
+//  - Tokamak (설명 모형): torus R0 = 1, plasma minor radius 0.32, elongation 1.35; helical field lines drawn at the plasma
+//    edge with q = 3; plasma particles stream along the field, dθ/dφ = 1/q(r), q(r) = 1 + 2(r/a)². Not KSTAR's or ITER's real geometry.
 //  - Numbers on screen: 31.7 % (2024 Korea, 산업통상자원부), 400만 톤/초 (solar luminosity / c² ≈ 4.26 Mt/s), 1938, 1939,
 //    1920, −0.7 % (He-4 vs 4 H), ×4, 1억 °C · 48초 (KSTAR, announced 2024), 2034 / 2039 (ITER 2024 baseline), 1 g 미만.
 //  - Sound: node episodes/fission-fusion/scenes.mjs --emit-sound writes sound.json from the same plan.
@@ -28,15 +30,16 @@ import {progressBar, rgba, mix, clamp, lerp, smooth, easeInOut, easeOut, easeIn,
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const {createCanvas} = createRequire(path.join(HERE, '../../pipeline/render/package.json'))('@napi-rs/canvas');
-export const theme = {base: 'graphite', accent: '#FFB04A', ink: '#F5F1EA', muted: '#B8B2A8'};
+export const theme = {base: 'graphite', accent: '#FFB547'};
 export const captionLayout = {};
 const W = 1080, H = 1920;
 
 // =====================================================================================================
 // Palette and helpers
 // =====================================================================================================
-export const PAL = {p: '#E4532F', n: '#8C9FBA', fus: '#FFB04A', fusHot: '#FFE6B0', fis: '#58B4FF', fisHot: '#D6F0FF', cher: '#3D9BFF',
-  plasma: '#FF6FB8', plasma2: '#9D7BFF', iron: '#FFD27A', ink: '#F5F1EA', muted: '#B8B2A8', answer: '#FFB04A', cell: '#4FD1A5'};
+export const PAL = {p: '#C98A55', pL: '#F6DABA', pS: '#3A2414', n: '#8E979E', nL: '#E6EBEE', nS: '#1D2226', fus: '#FFB547', fusHot: '#FFD9A0',
+  fis: '#86D0FF', fisHot: '#E8F6FF', cher: '#6FC0FF', plasma: '#FFC46A', iron: '#FFD27A', ink: '#F1EDE6', muted: '#A09A90', grid: '#3A3B3F',
+  line: '#D8D2C8', answer: '#FFB547', cell: '#A9CDBB', land: '#7E7A73', city: '#FFD9A0'};
 const fadeIn = (t, t0, d = 0.4) => smooth((t - t0) / d);
 const fadeOut = (t, t1, d = 0.4) => 1 - smooth((t - t1) / d);
 const win = (t, a, b, fi = 0.35, fo = 0.35) => fadeIn(t, a, fi) * fadeOut(t, b - fo, fo);
@@ -52,20 +55,13 @@ function cam3(pos, tgt, {fov = 0.85, cx = 540, cy = 900} = {}) {
 }
 const orbit = (yaw, pitch, dist, tgt = [0, 0, 0]) => V.add(tgt, [dist * Math.sin(yaw) * Math.cos(pitch), dist * Math.sin(pitch), -dist * Math.cos(yaw) * Math.cos(pitch)]);
 
-// ---- sprites (pre-rendered, drawn with drawImage) ----
+// ---- sprites: matte nucleon balls (series style: soft shading like episode 20, thin outline, no specular) ----
 const SPR = {};
-function sphereSprite(base, size = 112) {
-  const cv = createCanvas(size, size), c = cv.getContext('2d'), r = size / 2;
-  const g = c.createRadialGradient(r * 0.68, r * 0.6, r * 0.04, r, r, r * 0.98);
-  g.addColorStop(0, mix('#FFFFFF', base, 0.55)); g.addColorStop(0.28, mix('#FFFFFF', base, 0.92)); g.addColorStop(0.62, base);
-  g.addColorStop(0.9, mix(base, '#000000', 0.62)); g.addColorStop(1, mix(base, '#000000', 0.8));
-  circle(c, r, r, r * 0.98, g);
-  c.globalCompositeOperation = 'lighter';                                  // rim light (lower right, cool)
-  const g2 = c.createRadialGradient(r * 1.55, r * 1.62, r * 0.2, r * 1.2, r * 1.25, r * 1.05);
-  g2.addColorStop(0, 'rgba(160,200,255,0.0)'); g2.addColorStop(0.75, 'rgba(160,200,255,0.0)'); g2.addColorStop(0.93, 'rgba(170,210,255,0.28)'); g2.addColorStop(1, 'rgba(170,210,255,0)');
-  c.save(); c.beginPath(); c.arc(r, r, r * 0.98, 0, TAU); c.clip(); c.fillStyle = g2; c.fillRect(0, 0, size, size); c.restore();
-  const g3 = c.createRadialGradient(r * 0.62, r * 0.52, 0, r * 0.62, r * 0.52, r * 0.26);   // specular
-  g3.addColorStop(0, 'rgba(255,255,255,0.75)'); g3.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = g3; c.fillRect(0, 0, size, size);
+function ballSprite(col, lightC, shade, r = 30) {
+  const cv = createCanvas(2 * r + 6, 2 * r + 6), c = cv.getContext('2d'), x = r + 3;
+  const g = c.createRadialGradient(x - r * 0.35, x - r * 0.4, r * 0.04, x, x, r);
+  g.addColorStop(0, lightC); g.addColorStop(0.3, col); g.addColorStop(0.75, col); g.addColorStop(1, shade);
+  c.fillStyle = g; c.beginPath(); c.arc(x, x, r, 0, TAU); c.fill();
   return cv;
 }
 function glowSprite(col, size = 128) {
@@ -74,71 +70,44 @@ function glowSprite(col, size = 128) {
   c.fillStyle = g; c.fillRect(0, 0, size, size); return cv;
 }
 const G = col => (SPR['g' + col] ||= glowSprite(col));
-const SP = col => (SPR['s' + col] ||= sphereSprite(col));
+const ball = proton => (proton ? (SPR.p ||= ballSprite(PAL.p, PAL.pL, PAL.pS)) : (SPR.n ||= ballSprite(PAL.n, PAL.nL, PAL.nS)));
 function gl(c, x, y, r, col, a = 1) { if (a <= 0 || r <= 0) return; c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = Math.min(1, a); c.drawImage(G(col), x - r, y - r, 2 * r, 2 * r); c.restore(); }
-
-// ---- textures ----
-function valueNoise(N, seed, octaves = 5) {
-  const R = rng(seed), out = new Float32Array(N * N);
-  for (let o = 0; o < octaves; o++) {
-    const g = 4 << o, lat = new Float32Array(g * g).map(() => R()), amp = 0.5 ** o;
-    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
-      const fx = x / N * g, fy = y / N * g, x0 = Math.floor(fx), y0 = Math.floor(fy), tx = smooth(fx - x0), ty = smooth(fy - y0);
-      const v = (i, j) => lat[((j % g) * g) + (i % g)];
-      out[y * N + x] += amp * lerp(lerp(v(x0, y0), v(x0 + 1, y0), tx), lerp(v(x0, y0 + 1), v(x0 + 1, y0 + 1), tx), ty);
-    }
-  }
-  let mn = Infinity, mx = -Infinity; for (const v of out) { mn = Math.min(mn, v); mx = Math.max(mx, v); }
-  for (let i = 0; i < out.length; i++) out[i] = (out[i] - mn) / (mx - mn);
-  return out;
+/** thin glowing ring (shock ring) */
+function ringFx(c, x, y, r, col, a, w = 2.5) {
+  if (a <= 0.01 || r <= 0) return;
+  c.save(); c.globalCompositeOperation = 'lighter'; c.beginPath(); c.arc(x, y, r, 0, TAU);
+  c.strokeStyle = rgba(col, a * 0.22); c.lineWidth = w * 4; c.stroke(); c.strokeStyle = rgba(col, a); c.lineWidth = w; c.stroke(); c.restore();
 }
-function texFrom(N, f) { const cv = createCanvas(N, N), c = cv.getContext('2d'), img = c.createImageData(N, N); for (let i = 0; i < N * N; i++) { const [r, g, b, a] = f(i); img.data.set([r, g, b, a], i * 4); } c.putImageData(img, 0, 0); return cv; }
-const TEX = {};
-function tex(name) {
-  if (TEX[name]) return TEX[name];
-  const N = 256;
-  if (name === 'gran') { const n = valueNoise(N, 11, 6); TEX[name] = texFrom(N, i => { const v = n[i] ** 1.6; return [255, 150 + 105 * v, 40 + 150 * v ** 2, 255 * (0.25 + 0.75 * v)]; }); }
-  if (name === 'haze') { const n = valueNoise(N, 23, 5); TEX[name] = texFrom(N, i => [255, 255, 255, 255 * n[i] ** 2]); }
-  if (name === 'caustic') TEX[name] = texFrom(N, i => {
-    const x = (i % N) / N * TAU, y = Math.floor(i / N) / N * TAU;
-    let s = 0; for (const [a, b, ph] of [[3, 2, 0.4], [-2, 3, 1.7], [4, -1, 2.9], [1, 4, 0.9]]) s += Math.sin(a * x + b * y + ph + 0.8 * Math.sin(2 * x - y));
-    const v = Math.max(0, 1 - Math.abs(s) / 1.1) ** 5; return [200, 235, 255, 255 * v];
-  });
-  if (name === 'grain') { const R = rng(5); TEX[name] = texFrom(N, () => { const v = 100 + 55 * R(); return [v, v, v, 255]; }); }
-  return TEX[name];
+/** an event: white flash + two expanding thin shock rings (age in screen seconds) */
+function burst(c, x, y, age, R, col = PAL.fusHot, k = 1) {
+  if (age < 0 || age > 2.6) return;
+  gl(c, x, y, R * 0.5 * (0.6 + age), '#FFFFFF', 0.8 * k * Math.exp(-age / 0.12)); gl(c, x, y, R * (0.45 + age * 0.8), col, 0.35 * k * Math.exp(-age / 0.35));
+  ringFx(c, x, y, R * (0.2 + 1.6 * easeOut(age / 1.3)), col, 0.8 * k * Math.exp(-age / 0.6));
+  if (age > 0.18) ringFx(c, x, y, R * (0.15 + 1.1 * easeOut((age - 0.18) / 1.3)), '#FFFFFF', 0.45 * k * Math.exp(-(age - 0.18) / 0.5), 1.5);
 }
-function tiled(c, img, x0, y0, scale, a, op = 'source-over', rot = 0, cx = 540, cy = 960) {
-  if (a <= 0) return; c.save(); c.globalAlpha = a; c.globalCompositeOperation = op;
-  c.translate(cx, cy); c.rotate(rot); c.translate(-cx, -cy);
-  const s = img.width * scale, ox = ((x0 % s) + s) % s, oy = ((y0 % s) + s) % s;
-  for (let y = -oy - s; y < H + s; y += s) for (let x = -ox - s; x < W + s; x += s) c.drawImage(img, x, y, s, s);
-  c.restore();
-}
-
-// ---- bloom (screen-space, quarter resolution) ----
-const BL = {a: createCanvas(270, 480), b: createCanvas(270, 480), c: createCanvas(135, 240)};
-function bloom(stage, k = 0.6, wide = 0.35, thr = 2.4) {
-  const c = stage.ctx, ca = BL.a.getContext('2d'), cb = BL.b.getContext('2d'), cc = BL.c.getContext('2d');
-  ca.globalCompositeOperation = 'copy'; ca.filter = `contrast(${thr}) brightness(0.85)`; ca.drawImage(stage.canvas, 0, 0, 270, 480); ca.filter = 'none';
-  cb.globalCompositeOperation = 'copy'; cb.filter = 'blur(5px)'; cb.drawImage(BL.a, 0, 0); cb.filter = 'none';
-  cc.globalCompositeOperation = 'copy'; cc.filter = 'blur(9px)'; cc.drawImage(BL.a, 0, 0, 135, 240); cc.filter = 'none';
-  c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = k; c.drawImage(BL.b, 0, 0, W, H);
-  c.globalAlpha = wide; c.drawImage(BL.c, 0, 0, W, H); c.restore();
-}
-function finish(stage, t, o = {}) {                                         // bloom + vignette + grain on every scene
-  const c = stage.ctx;
-  bloom(stage, o.bloom ?? 0.6, o.wide ?? 0.35, o.thr ?? 2.4);
-  const v = c.createRadialGradient(540, 900, 520, 540, 900, 1260); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, `rgba(0,0,0,${o.vig ?? 0.55})`);
-  c.fillStyle = v; c.fillRect(0, 0, W, H);
-}
-
+function finish() {}                                                         // series style: no screen-space bloom
 // ---- text helpers ----
 function big(stage, s, x, y, size, col, a = 1, o = {}) {
-  if (a <= 0) return; withAlpha(stage.ctx, a, () => stage.text(s, x, y, {role: 'display', weight: 700, size, color: col, align: o.align || 'center', tracking: -0.02 * size, shadow: 'rgba(0,0,0,0.85)', shadowBlur: 24, ...o}));
+  if (a <= 0) return; withAlpha(stage.ctx, a, () => stage.text(s, x, y, {role: 'display', weight: 700, size, color: col, align: o.align || 'center', tracking: -0.02 * size, shadow: 'rgba(0,0,0,0.8)', shadowBlur: 18, ...o}));
 }
 function label(stage, s, x, y, a = 1, o = {}) {
-  if (a <= 0) return; withAlpha(stage.ctx, a, () => stage.text(s, x, y, {role: 'display', weight: o.weight ?? 500, size: o.size || 34, color: o.color || PAL.ink, align: o.align || 'center', shadow: 'rgba(0,0,0,0.9)', shadowBlur: 16}));
+  if (a <= 0) return; withAlpha(stage.ctx, a, () => stage.text(s, x, y, {role: o.role || 'body', weight: o.weight ?? 700, size: Math.max(30, o.size || 32), color: o.color || PAL.ink, align: o.align || 'center', shadow: 'rgba(0,0,0,0.85)', shadowBlur: 12}));
 }
+// ---- series background ----
+function seriesBg(c, tint = '#3A3026', a = 0.12, cx = 540, cy = 760) {
+  const g = c.createLinearGradient(0, 0, W * 0.3, H); g.addColorStop(0, '#121315'); g.addColorStop(1, '#060607'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+  if (a > 0) glow(c, cx, cy, 950, tint, a);
+  const v = c.createRadialGradient(W / 2, H * 0.42, H * 0.25, W / 2, H * 0.42, H * 0.8); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,0.45)'); c.fillStyle = v; c.fillRect(0, 0, W, H);
+}
+const DUST = (() => { const R = rng(17), d = []; for (let i = 0; i < 90; i++) d.push([R() * W, R() * H, 0.6 + 1.4 * R() ** 2, 0.06 + 0.18 * R() ** 2, R() * TAU]); return d; })();
+function dust(c, t, col = '#D8D2C8', k = 1) { for (const [x, y, r, a, ph] of DUST) circle(c, (x + t * 4 * Math.sin(ph)) % W, (y - t * 6 * (0.3 + r * 0.3) + H) % H, r, rgba(col, a * k)); }
+function grid(c, x0, y0, x1, y1, step, a = 0.35) {
+  c.save(); c.strokeStyle = rgba(PAL.grid, a); c.lineWidth = 1;
+  for (let x = x0; x <= x1; x += step) { c.beginPath(); c.moveTo(x, y0); c.lineTo(x, y1); c.stroke(); }
+  for (let y = y0; y <= y1; y += step) { c.beginPath(); c.moveTo(x0, y); c.lineTo(x1, y); c.stroke(); }
+  c.restore();
+}
+const rand2 = i => { const x = Math.sin(i * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); };
 
 // =====================================================================================================
 // Nuclei
@@ -162,17 +131,19 @@ function pack(A, Z, seed) {
 }
 const rotY = (p, a) => [p[0] * Math.cos(a) + p[2] * Math.sin(a), p[1], -p[0] * Math.sin(a) + p[2] * Math.cos(a)];
 const rotX = (p, a) => [p[0], p[1] * Math.cos(a) - p[2] * Math.sin(a), p[1] * Math.sin(a) + p[2] * Math.cos(a)];
-/** draw nucleons (array of {p:[x,y,z] (screen-aligned after transforms), proton}) at cx, cy with px per unit */
+/** draw nucleons (array of {p:[x,y,z] (screen-aligned after transforms), proton}) at cx, cy with px per unit; depth by size/brightness only */
 function drawNucleons(c, list, cx, cy, s, o = {}) {
   const arr = list.map(q => ({...q, z: q.p[2]})).sort((a, b) => a.z - b.z), a0 = o.alpha ?? 1;
-  if (o.under !== false) gl(c, cx, cy, s * (o.R || 6) * 2.2, o.glowCol || '#FF9A6A', 0.25 * a0 * (o.glow ?? 1));
-  c.save(); c.globalAlpha = a0;
+  if (a0 <= 0) return;
+  if (o.under !== false) gl(c, cx, cy, s * (o.R || 6) * 1.6, o.glowCol || PAL.fus, 0.12 * a0 * (o.glow ?? 1));
+  let zmin = Infinity, zmax = -Infinity; for (const q of arr) { zmin = Math.min(zmin, q.z); zmax = Math.max(zmax, q.z); }
+  c.save();
   for (const q of arr) {
-    const k = 1 + q.z * 0.012, r = s * 1.02 * k, x = cx + q.p[0] * s * k, y = cy + q.p[1] * s * k;
-    c.drawImage(SP(q.proton ? PAL.p : PAL.n), x - r, y - r, 2 * r, 2 * r);
+    const k = 1 + q.z * 0.012, r = s * k, x = cx + q.p[0] * s * k, y = cy + q.p[1] * s * k, d = zmax > zmin ? (q.z - zmin) / (zmax - zmin) : 1;
+    c.globalAlpha = a0 * (0.78 + 0.22 * d);
+    c.drawImage(ball(q.proton), x - r * 1.1, y - r * 1.1, 2.2 * r, 2.2 * r);
   }
   c.restore();
-  if (o.hot) gl(c, cx, cy, s * (o.R || 6) * 1.4, o.hotCol || '#FFE6B0', o.hot);
 }
 /** a whole nucleus with gentle rotation and optional quadrupole wobble */
 function nucleus(c, n, cx, cy, s, t, o = {}) {
@@ -221,37 +192,37 @@ function fissionNucleons(e, u, yaw, pitch, wob = 0, wph = 0) {
   if (u <= 0) for (const q of FIS.free) out.push({p: tr(q.p, 'L'), proton: false, g: 'F'});
   return out;
 }
-/** draw the fission event; returns screen positions of the 3 free neutrons (for streaks) */
+/** draw the fission event (series style); o.age = screen seconds since scission for the flash/rings */
 function fissionDraw(c, cx, cy, s, e, u, t, o = {}) {
   const yaw = o.yaw ?? 0.3, pitch = o.pitch ?? 0.25;
   const list = fissionNucleons(e, u, yaw, pitch, o.wob || 0, o.wph || 0);
-  drawNucleons(c, list, cx, cy, s, {R: FIS.n.Rb * (1 + e * 0.6), glow: o.glow ?? 1, glowCol: o.glowCol});
-  if (u > 0) {                                                             // neck flash + free neutrons
-    const fl = Math.exp(-u / 0.06) + 0.25 * Math.exp(-u / 0.5);
-    gl(c, cx, cy, s * 7 * (0.6 + u * 2), '#FFFFFF', fl * 0.7); gl(c, cx, cy, s * 20 * (0.6 + u), PAL.fis, fl * 0.5);
+  drawNucleons(c, list, cx, cy, s, {R: FIS.n.Rb * (1 + e * 0.6), glow: o.glow ?? 1, glowCol: o.glowCol || PAL.fus, alpha: o.alpha});
+  if (u > 0) {
+    burst(c, cx, cy, o.age ?? u * 3, s * (o.ringR ?? 12), PAL.fusHot, o.flashK ?? 1);
     const at = d => FIS.dirs.map(v => { const p = rotX(rotY(V.mul(v, d), yaw), pitch); return [cx + p[0] * s, cy + p[1] * s]; });
-    const hd = 1.5 + 60 * u, pos = at(hd), tail = at(Math.max(1.2, hd - 6.5));
-    pos.forEach((p, k) => streak(c, tail[k], p, s * 0.9, PAL.fisHot, 1));
+    const hd = 1.5 + 60 * u, pos = at(hd), tail = at(Math.max(1.2, hd - (o.trail ?? 4)));
+    pos.forEach((p, k) => { trail(c, tail[k], p, o.alpha ?? 1, Math.max(2, s * 0.09)); neutronDot(c, p[0], p[1], Math.max(4, s * 0.24), o.alpha ?? 1); });
     return pos;
   }
   return [];
 }
-/** bright moving particle with a fading trail from a → b (b = head) */
-function streak(c, a, b, r, col, alpha = 1) {                              // tapered comet: bright head, fading tail, soft blur
-  if (alpha <= 0) return;
-  const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L, px = -uy, py = ux;
+/** a free neutron: small cool light (as in episode 20) */
+function neutronDot(c, x, y, r = 5, a = 1) {
+  if (a <= 0) return;
   c.save(); c.globalCompositeOperation = 'lighter';
-  const taper = (w, col2, aMax, start = 0) => {
-    const sx = a[0] + dx * start, sy = a[1] + dy * start, g = c.createLinearGradient(sx, sy, b[0], b[1]);
-    g.addColorStop(0, rgba(col2, 0)); g.addColorStop(0.65, rgba(col2, aMax * 0.35)); g.addColorStop(1, rgba(col2, aMax));
-    c.fillStyle = g; c.beginPath(); c.moveTo(sx, sy); c.lineTo(b[0] + px * w / 2, b[1] + py * w / 2);
-    c.quadraticCurveTo(b[0] + ux * w * 0.8, b[1] + uy * w * 0.8, b[0] - px * w / 2, b[1] - py * w / 2); c.closePath(); c.fill(); };
-  taper(r * 2.4, col, 0.22 * alpha);
-  taper(r * 1.1, col, 0.75 * alpha, 0.15);
-  taper(r * 0.45, '#FFFFFF', 0.95 * alpha, 0.45);
+  glow(c, x, y, r * 4.2, PAL.fis, 0.5 * a); circle(c, x, y, r, rgba(PAL.fis, 0.9 * a)); circle(c, x, y, r * 0.5, rgba(PAL.fisHot, a));
   c.restore();
-  gl(c, b[0] - ux * r * 0.3, b[1] - uy * r * 0.3, r * 1.9, col, 0.75 * alpha); gl(c, b[0], b[1], r * 0.75, '#FFFFFF', 0.9 * alpha);
 }
+/** light trail from a to b (head at b): faint wide stroke + thin bright stroke, brighter toward the head */
+function trail(c, a, b, alpha = 1, w = 2, col = PAL.fis) {
+  if (alpha <= 0.003) return; const L = Math.hypot(b[0] - a[0], b[1] - a[1]); if (L < 0.5) return;
+  c.save(); c.globalCompositeOperation = 'lighter'; c.lineCap = 'round';
+  const grad = k => { const g = c.createLinearGradient(a[0], a[1], b[0], b[1]); g.addColorStop(0, rgba(col, 0)); g.addColorStop(1, rgba(col, k * alpha)); return g; };
+  for (const [ww, k] of [[w * 4, 0.1], [w * 2, 0.25], [w, 0.95]]) { c.strokeStyle = grad(k); c.lineWidth = ww; c.beginPath(); c.moveTo(a[0], a[1]); c.lineTo(b[0], b[1]); c.stroke(); }
+  c.restore();
+}
+/** moving particle = short trail + dot */
+function streak(c, a, b, r, col = PAL.fis, alpha = 1) { trail(c, a, b, alpha, Math.max(1.5, r * 0.22), col); if (col === PAL.fis || col === PAL.fisHot) neutronDot(c, b[0], b[1], Math.max(3, r * 0.4), alpha); else { gl(c, b[0], b[1], r * 1.4, col, 0.6 * alpha); circle(c, b[0], b[1], Math.max(2.5, r * 0.35), rgba('#FFFFFF', 0.9 * alpha)); } }
 /** small light nucleus (D, T, He-4) drawn from explicit nucleon offsets */
 const LIGHT = {
   H: [{p: [0, 0, 0], proton: true}],
@@ -261,7 +232,7 @@ const LIGHT = {
 };
 function light(c, kind, x, y, s, t, o = {}) {
   const yaw = (o.yaw ?? 0) + t * (o.spin ?? 1.2);
-  drawNucleons(c, LIGHT[kind].map(q => ({p: rotX(rotY(q.p, yaw), 0.4), proton: q.proton})), x, y, s, {R: 1.6, glow: o.glow ?? 1.2, glowCol: o.glowCol || '#FFB070', hot: o.hot, alpha: o.alpha});
+  drawNucleons(c, LIGHT[kind].map(q => ({p: rotX(rotY(q.p, yaw), 0.4), proton: q.proton})), x, y, s, {R: 1.6, glow: o.glow ?? 1.2, glowCol: o.glowCol || PAL.fus, alpha: o.alpha});
 }
 
 // =====================================================================================================
@@ -278,100 +249,77 @@ function pchip(xs, ys) {
     const u = (x - xs[i]) / h[i], u2 = u * u, u3 = u2 * u; return (2 * u3 - 3 * u2 + 1) * ys[i] + (u3 - 2 * u2 + u) * h[i] * m[i] + (-2 * u3 + 3 * u2) * ys[i + 1] + (u3 - u2) * h[i] * m[i + 1]; };
 }
 export const baCurve = pchip(BA.map(q => Math.log10(q[0])), BA.map(q => q[1]));
-const VX = A => Math.log10(A) / Math.log10(240) * 12 - 6;             // world x ∈ [-6, 6]
-const VY = A => (8.8 - baCurve(Math.log10(A))) * 0.95;                  // height above the iron floor (world units)
-const VYx = x => VY(10 ** ((x + 6) / 12 * Math.log10(240)));
-function valley(stage, cam, t, o = {}) {
-  const c = stage.ctx, N = 150, Zw = 2.2, base = -1.6, pts = [];
-  for (let i = 0; i <= N; i++) { const x = -6 + 12 * i / N; pts.push([x, VYx(x)]); }
-  const shade = (x0, y0, x1, y1) => { const dx = x1 - x0, dy = y1 - y0, l = Math.hypot(dx, dy); return clamp(0.45 + 0.55 * (dx / l) * 0.6 - (dy / l) * 0.5, 0.15, 1); };
-  const colAt = x => (x < VX(56) ? mix(PAL.fus, '#8A4A2A', clamp((x - VX(4)) / (VX(56) - VX(4)))) : mix('#3A5E8A', PAL.fis, clamp((x - VX(56)) / (6 - VX(56)))));
-  // top surface strips, back half first then front wall
-  const order = [...Array(N).keys()].sort((i, j) => Math.abs(pts[j][0] - cam.pos[0]) - Math.abs(pts[i][0] - cam.pos[0]));
-  for (const i of order) {
-    const [x0, y0] = pts[i], [x1, y1] = pts[i + 1];
-    const q = [cam.P([x0, y0, Zw]), cam.P([x1, y1, Zw]), cam.P([x1, y1, -Zw]), cam.P([x0, y0, -Zw])];
-    if (q.some(p => p[2] < 0.1)) continue;
-    const sh = shade(x0, y0, x1, y1), col = mix('#05070C', colAt((x0 + x1) / 2), 0.16 + 0.44 * sh);
-    c.beginPath(); c.moveTo(q[0][0], q[0][1]); for (const p of q.slice(1)) c.lineTo(p[0], p[1]); c.closePath(); c.fillStyle = col; c.fill();
-    if (i % 5 === 0) { c.strokeStyle = rgba('#FFFFFF', 0.07); c.lineWidth = 1.2; c.beginPath(); c.moveTo(q[0][0], q[0][1]); c.lineTo(q[3][0], q[3][1]); c.stroke(); }
-  }
-  for (const zz of [-1.6, -0.8, 0, 0.8, 1.6]) {                                   // contour lines along the valley
-    c.beginPath(); pts.forEach(([x, y], i) => { const p = cam.P([x, y + 0.01, zz]); i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1]); }); c.strokeStyle = rgba('#FFFFFF', 0.12); c.lineWidth = 1.4; c.stroke();
-  }
-  // front wall
-  c.beginPath(); pts.forEach(([x, y], i) => { const p = cam.P([x, y, -Zw]); i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1]); });
-  for (let i = N; i >= 0; i--) { const p = cam.P([pts[i][0], base, -Zw]); c.lineTo(p[0], p[1]); } c.closePath();
-  const pb = cam.P([0, base, -Zw]), pt = cam.P([0, 3, -Zw]), wg = c.createLinearGradient(0, pt[1], 0, pb[1]);
-  wg.addColorStop(0, '#1B1E26'); wg.addColorStop(1, '#07080B'); c.fillStyle = wg; c.fill();
-  // glowing rim on the front edge, warm on the fusion side, blue on the fission side
-  for (let i = 0; i < N; i++) {
-    const a = cam.P([pts[i][0], pts[i][1], -Zw]), b = cam.P([pts[i + 1][0], pts[i + 1][1], -Zw]);
-    c.strokeStyle = rgba(colAt(pts[i][0]), 0.95); c.lineWidth = 4; c.beginPath(); c.moveTo(a[0], a[1]); c.lineTo(b[0], b[1]); c.stroke();
-  }
-  // iron glow at the floor
-  const fe = cam.P([VX(56), VY(56), 0]);
-  gl(c, fe[0], fe[1], 260 * (fe[3] / 120), PAL.iron, 0.55 * (o.iron ?? 1)); gl(c, fe[0], fe[1], 90 * (fe[3] / 120), '#FFFFFF', 0.5 * (o.iron ?? 1));
-  return {fe, P: (A, z = 0, lift = 0.55) => cam.P([VX(A), VY(A) + lift, z])};
+// ---- binding-energy valley as a 2D line graph (x = log₁₀A, y = B/A downward: iron at the bottom) ----
+const GX = A => 150 + Math.log10(A) / Math.log10(240) * 800;            // base layout (px, before the camera)
+const GY = b => 360 + b * 98;                                            // 0 MeV → 360, 8.8 MeV → 1222
+const BA_PTS = [[2, 1.112, '수소', PAL.fus], [3, 2.827], [4, 7.074], [12, 7.680], [16, 7.976], [28, 8.448], [40, 8.551], [56, 8.790, '철', PAL.iron], [62, 8.795], [92, 8.51], [141, 8.33], [208, 7.868], [235, 7.591, '우라늄', PAL.fis]];
+const vCam = (cam, x, y) => [540 + (x - cam.fx) * cam.z, 860 + (y - cam.fy) * cam.z];
+function valleyCam(t, P, o) {
+  const u = t - o.from;
+  const key = o.glide ? [[o.from, 560, 800, 1], [P.fe9 - 0.6, 560, 800, 1], [P.fe9 + 0.6, GX(56), GY(7.2), 1.45], [P.u9 - 0.3, GX(56), GY(7.3), 1.5], [P.u9 + 0.9, GX(150), GY(8.0), 2.0], [P.h9 - 0.4, GX(150), GY(8.0), 2.0], [P.h9 + 0.8, GX(7), GY(5.4), 1.15], [o.from + 30, GX(7.5), GY(5.5), 1.18]]
+    : [[o.from, 560, 790, 1.04], [o.from + 30, 540, 820, 0.98]];
+  let k = 0; while (k + 2 < key.length && t > key[k + 1][0]) k++;
+  const q = easeInOut((t - key[k][0]) / Math.max(1e-3, key[k + 1][0] - key[k][0]));
+  return {fx: lerp(key[k][1], key[k + 1][1], q) + 6 * Math.sin(u * 0.4), fy: lerp(key[k][2], key[k + 1][2], q) + 5 * Math.cos(u * 0.33), z: lerp(key[k][3], key[k + 1][3], q)};
 }
-
-// =====================================================================================================
-// Backgrounds
-// =====================================================================================================
-function bgFill(c, top, bot) { const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, top); g.addColorStop(1, bot); c.fillStyle = g; c.fillRect(0, 0, W, H); }
-function bgDual(c, t) {                                                     // warm (fusion) above, blue (fission/reactor) below
-  bgFill(c, '#1A0B06', '#02101F');
-  gl(c, 540, -120, 1300, '#FF7A2A', 0.55); gl(c, 980, 260, 700, '#FFB04A', 0.25);
-  gl(c, 540, 2100, 1500, '#1E78FF', 0.75); gl(c, 540, 2000, 760, '#4FB0FF', 0.6); gl(c, 120, 1500, 700, '#3D9BFF', 0.2);
-  tiled(c, tex('haze'), t * 14, t * 6, 4, 0.08, 'lighter');
-  c.save(); const m = c.createLinearGradient(0, 1150, 0, 1500); m.addColorStop(0, 'rgba(0,0,0,0)'); m.addColorStop(1, 'rgba(0,0,0,1)');
-  c.beginPath(); c.rect(0, 1150, W, H - 1150); c.clip();
-  tiled(c, tex('caustic'), t * 18, t * 9, 3.0, 0.13, 'lighter', 0.3, 540, 1700);
-  tiled(c, tex('caustic'), -t * 12, t * 14, 4.0, 0.08, 'lighter', -0.5, 540, 1700);
-  c.globalCompositeOperation = 'lighter';
-  for (let k = 0; k < 13; k++) {                                            // light shafts rising from the core
-    const x0 = 540 + (k - 6) * 70, sway = 22 * Math.sin(t * 0.7 + k * 1.7), x1 = 540 + (k - 6) * 120 + sway;
-    const g = c.createLinearGradient(0, 1920, 0, 1150); g.addColorStop(0, `rgba(110,185,255,${0.16 + 0.05 * Math.sin(t * 1.3 + k)})`); g.addColorStop(1, 'rgba(110,185,255,0)');
-    c.fillStyle = g; c.beginPath(); c.moveTo(x0 - 14, 1920); c.lineTo(x0 + 14, 1920); c.lineTo(x1 + 30, 1150); c.lineTo(x1 - 30, 1150); c.closePath(); c.fill();
-  }
-  for (let r = 0; r < 3; r++) for (let k = -7; k <= 7; k++) {                // fuel-rod tops glowing at the bottom edge
-    const sc = 0.7 + r * 0.25, x = 540 + k * 62 * sc, y = 1760 + r * 62, a = 0.35 + 0.12 * Math.sin(t * 2 + k * 0.7 + r);
-    gl(c, x, y, 40 * sc, '#8FD0FF', a * 0.55); gl(c, x, y, 14 * sc, '#E8F6FF', a * 0.6);
-  }
-  const R = rng(31); for (let i = 0; i < 40; i++) { const sp = 0.3 + 0.7 * R(), q = ((t * 0.18 * sp + R()) % 1), x = 120 + R() * 840 + Math.sin(t * 2 + i) * 6, y = 1920 - q * 760, rr = 3 + 6 * R();
-    c.strokeStyle = rgba('#CFEFFF', 0.35 * (1 - q)); c.lineWidth = 1.5; c.beginPath(); c.arc(x, y, rr, 0, TAU); c.stroke(); }
+/** curve point at mass number A (screen) */
+const vAt = (cam, A, lift = 0) => { const p = vCam(cam, GX(A), GY(baCurve(Math.log10(A)))); return [p[0], p[1] - lift * cam.z]; };
+function valleyGraph(stage, t, P, o) {
+  const c = stage.ctx, cam = valleyCam(t, P, o), z = cam.z, la = o.labels ?? 1;
+  seriesBg(c, '#2A2A30', 0.1); dust(c, t, '#D8D2C8', 0.6);
+  c.save(); c.beginPath(); c.rect(0, 318, W, 1000); c.clip();                  // the graph stays between the header and the captions
+  // grid and axes
+  c.save(); c.lineWidth = 1;
+  for (const b of [0, 2, 4, 6, 8]) { const [x0, y] = vCam(cam, GX(1) - 30, GY(b)), [x1] = vCam(cam, GX(240) + 20, GY(b)); c.strokeStyle = rgba(PAL.grid, 0.7); c.beginPath(); c.moveTo(x0, y); c.lineTo(x1, y); c.stroke(); }
+  for (const A of [1, 10, 100]) { const [x, y0] = vCam(cam, GX(A), GY(-0.2)), [, y1] = vCam(cam, GX(A), GY(9.2)); c.strokeStyle = rgba(PAL.grid, 0.5); c.beginPath(); c.moveTo(x, y0); c.lineTo(x, y1); c.stroke(); }
+  const [ax, ay0] = vCam(cam, GX(1) - 30, GY(-0.3)), [, ay1] = vCam(cam, GX(1) - 30, GY(9.3)), [bx1] = vCam(cam, GX(240) + 30, GY(9.3));
+  c.strokeStyle = rgba(PAL.line, 0.7); c.lineWidth = 2; c.beginPath(); c.moveTo(ax, ay0); c.lineTo(ax, ay1); c.lineTo(bx1, ay1); c.stroke();
   c.restore();
+  // the measured curve: warm on the light side, cool on the heavy side
+  const seg = (A0, A1, col) => { c.save(); c.lineJoin = 'round'; c.lineCap = 'round'; c.beginPath(); for (let i = 0; i <= 120; i++) { const A = 10 ** lerp(Math.log10(A0), Math.log10(A1), i / 120), p = vCam(cam, GX(A), GY(baCurve(Math.log10(A)))); i ? c.lineTo(...p) : c.moveTo(...p); }
+    c.strokeStyle = rgba(col, 0.16); c.lineWidth = 10; c.stroke(); c.strokeStyle = rgba(col, 0.95); c.lineWidth = 3; c.stroke(); c.restore(); };
+  seg(1, 56, PAL.fus); seg(56, 240, PAL.fis);
+  for (const [A, b, nm, col] of BA_PTS) { const [x, y] = vCam(cam, GX(A), GY(b)); circle(c, x, y, nm ? 7 : 5, rgba(nm ? col : PAL.line, nm ? 1 : 0.75)); if (nm) gl(c, x, y, 26, col, 0.5); }
+  const fe = vCam(cam, GX(56), GY(8.79)), pulse = 0.5 + 0.5 * Math.sin(t * 2.2);
+  gl(c, fe[0], fe[1], 70 * Math.sqrt(z), PAL.iron, 0.55 + 0.2 * pulse); ringFx(c, fe[0], fe[1], (24 + 10 * pulse) * Math.sqrt(z), PAL.iron, 0.5);
+  // runs: fusion (D + T → He-4 down the left slope), fission (U → Kr + Ba down the right slope)
+  const runs = o.runs || [[P.vFuse8, 'fus'], [P.vSplit8, 'fis'], [P.vFuse, 'fus'], [P.vSplit, 'fis'], [P.vF21, 'fus'], [P.vS21, 'fis']];
+  const s = 17 * Math.sqrt(z);
+  for (const [t0, kind] of runs) {
+    const a = t - t0; if (a < -0.8 || a > 3.4) continue;
+    if (kind === 'fus') {
+      const q = easeIn(clamp(a / 0.9));
+      if (a < 0.9) { const pD = vAt(cam, lerp(2, 3.85, q), 26), pT = vAt(cam, lerp(3, 4.15, q), 26);
+        light(c, 'D', pD[0] - 14, pD[1], s, t, {glow: 1}); light(c, 'T', pT[0] + 14, pT[1], s, t + 1, {glow: 1});
+        const top = vCam(cam, GX(2.5), GY(2.14)), bot = vCam(cam, GX(2.5), GY(5.66)); dashedDrop(c, top, bot, smooth(a / 0.4) * 0.8, PAL.fus); }
+      else { const f = a - 0.9, he = vAt(cam, 4, 26); light(c, 'He', he[0], he[1], s * 1.05, t, {glow: 1.4}); burst(c, he[0], he[1], f, 95 * Math.sqrt(z) * 1.0, PAL.fusHot);
+        const top = vCam(cam, GX(2.5), GY(2.14)), bot = vCam(cam, GX(2.5), GY(5.66)); dashedDrop(c, top, bot, 0.8 * (1 - smooth((f - 1.2) / 0.6)), PAL.fus);
+        streak(c, [he[0] - 40 + f * 300, he[1] - 30 - f * 160], [he[0] + f * 380, he[1] - f * 210], 12, PAL.fis, Math.exp(-f / 1.2)); }
+    } else {
+      const pu = vAt(cam, 235, 40);
+      if (a < 0.7) { nucleus(c, pack(235, 92, 7), pu[0], pu[1], 5.2 * Math.sqrt(z), t, {wob: 0.08 * smooth(a / 0.5), wph: t * 12, glow: 0.7}); }
+      else { const q = smooth((a - 0.7) / 1.3), pk = vAt(cam, lerp(235, 92, q), 34), pb = vAt(cam, lerp(235, 141, q), 38);
+        nucleus(c, pack(92, 36, 92), pk[0], pk[1], 4.8 * Math.sqrt(z), t, {glow: 0.6}); nucleus(c, pack(141, 56, 141), pb[0], pb[1], 4.9 * Math.sqrt(z), t, {glow: 0.6});
+        burst(c, pu[0], pu[1], a - 0.7, 34 * Math.sqrt(z), PAL.fisHot);
+        const top = vCam(cam, GX(200), GY(7.59)), bot = vCam(cam, GX(200), GY(8.42)); dashedDrop(c, top, bot, 0.8 * smooth((a - 0.7) / 0.4) * (1 - smooth((a - 2.6) / 0.6)), PAL.fis); }
+    }
+  }
+  c.restore();
+  // labels (≤ 4): axis + named points that are on screen
+  if (la > 0) {
+    const yl = vCam(cam, GX(240) + 20, GY(0.5)); label(stage, '↓ 더 단단히 묶임', clamp(yl[0], 420, 1040), clamp(yl[1], 340, 1250), la * 0.95, {size: 30, align: 'right', color: PAL.muted});
+    for (const [A, b, nm, col] of BA_PTS) { if (!nm) continue; const [x, y] = vCam(cam, GX(A), GY(b)); if (x < 120 || x > 960 || y < 320 || y > 1300) continue; label(stage, nm, clamp(nm === '수소' ? x + 70 : x, 170, 930), nm === '수소' ? y + 12 : nm === '철' ? y - 52 : y + 54, la, {size: nm === '철' ? 40 : 34, color: col}); }
+  }
 }
-function bgSunPlasma(c, t, a = 1) {
-  bgFill(c, '#1E0602', '#0A0200');
-  gl(c, 540, 820, 1400, '#C8400A', 0.5 * a);
-  tiled(c, tex('gran'), t * 10, -t * 7, 3.6, 0.22 * a, 'lighter', t * 0.01);
-  tiled(c, tex('gran'), -t * 13, t * 5, 2.4, 0.14 * a, 'lighter', -t * 0.015);
-  const v = c.createRadialGradient(540, 820, 200, 540, 820, 1100); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,0.6)'); c.fillStyle = v; c.fillRect(0, 0, W, H);
+function dashedDrop(c, a, b, alpha, col) {
+  if (alpha <= 0.01) return; c.save(); c.strokeStyle = rgba(col, alpha); c.lineWidth = 2.5; c.setLineDash([10, 8]); c.beginPath(); c.moveTo(...a); c.lineTo(...b); c.stroke(); c.setLineDash([]);
+  c.fillStyle = rgba(col, alpha); c.beginPath(); c.moveTo(b[0], b[1] + 4); c.lineTo(b[0] - 10, b[1] - 14); c.lineTo(b[0] + 10, b[1] - 14); c.closePath(); c.fill(); c.restore();
 }
-function bgLab(c, t) {
-  bgFill(c, '#0E1218', '#040507');
-  c.save(); c.globalCompositeOperation = 'lighter';                         // volumetric light cone from above
-  const g = c.createLinearGradient(540, 0, 540, 1500); g.addColorStop(0, 'rgba(160,190,230,0.22)'); g.addColorStop(1, 'rgba(160,190,230,0)');
-  c.fillStyle = g; c.beginPath(); c.moveTo(430, 0); c.lineTo(650, 0); c.lineTo(980, 1500); c.lineTo(100, 1500); c.closePath(); c.fill(); c.restore();
-  tiled(c, tex('haze'), t * 20, t * 9, 3, 0.07, 'lighter');
-  const R = rng(3); for (let i = 0; i < 70; i++) { const x = (R() * W + t * (6 + 10 * R())) % W, y = (R() * 1500 + Math.sin(t * 0.5 + i) * 20); circle(c, x, y, 1 + 1.6 * R(), rgba('#DDE8FF', 0.08 + 0.18 * R())); }
-}
-function bgPool(c, t, a = 1, cx = 540, cy = 1100) {
-  bgFill(c, '#021226', '#00050C');
-  gl(c, cx, cy, 1500, '#1C6DFF', 0.55 * a); gl(c, cx, cy, 700, '#4FB0FF', 0.55 * a); gl(c, cx, cy, 280, '#CFEFFF', 0.45 * a);
-  tiled(c, tex('caustic'), t * 22, t * 11, 2.6, 0.22 * a, 'lighter', 0.3);
-  tiled(c, tex('caustic'), -t * 15, t * 18, 3.4, 0.16 * a, 'lighter', -0.5);
-}
-function bgPlasma(c, t, a = 1) {
-  bgFill(c, '#12041A', '#05020A');
-  gl(c, 540, 820, 1300, '#B03A9A', 0.35 * a); gl(c, 300, 1300, 900, '#5A3AD0', 0.25 * a);
-  tiled(c, tex('haze'), t * 25, -t * 12, 3.5, 0.12 * a, 'lighter', t * 0.02);
-}
-function bgSpace(c, t) {
-  bgFill(c, '#06070C', '#020204');
-  const R = rng(9); for (let i = 0; i < 260; i++) { const x = R() * W, y = R() * H, r = 0.6 + 1.6 * R() ** 3, tw = 0.6 + 0.4 * Math.sin(t * (1 + R() * 2) + i); circle(c, x, y, r, rgba(R() > 0.85 ? '#FFE3C8' : '#DDE6FF', (0.15 + 0.5 * R() ** 2) * tw)); }
-}
+// ---- night map of Korea (Natural Earth 1:110m coastline, thin line) ----
+const COAST = [[130.94, 42.55], [130.78, 42.22], [130.4, 42.28], [129.97, 41.94], [129.67, 41.6], [129.7, 40.88], [129.19, 40.66], [129.01, 40.48], [128.63, 40.19], [127.97, 40.03], [127.53, 39.76], [127.5, 39.32], [127.39, 39.21], [127.79, 39.05], [128.35, 38.61], [129.21, 37.43], [129.46, 36.78], [129.47, 35.63], [129.09, 35.08], [128.18, 34.89], [127.39, 34.48], [126.49, 34.39], [126.37, 34.93], [126.56, 35.68], [126.12, 36.73], [126.86, 36.89], [126.18, 37.75], [125.69, 37.94], [125.57, 37.75], [125.28, 37.67], [125.24, 37.86], [124.98, 37.95], [124.71, 38.11], [124.99, 38.55], [125.22, 38.67], [125.13, 38.85], [125.39, 39.39], [125.32, 39.55], [124.74, 39.66], [124.26, 39.93]];
+const CITIES = [[37.57, 126.98, 1.0], [37.46, 126.70, 0.45], [37.26, 127.03, 0.4], [36.35, 127.38, 0.35], [35.87, 128.60, 0.5], [35.18, 129.08, 0.65], [35.54, 129.31, 0.3], [35.16, 126.85, 0.35], [35.23, 128.68, 0.25], [36.64, 127.49, 0.2], [35.82, 127.15, 0.2], [36.02, 129.34, 0.18], [37.75, 128.88, 0.12], [37.34, 127.92, 0.12], [33.5, 126.53, 0.15]];
+const PLANTS = [[35.32, 129.29], [35.71, 129.48], [37.09, 129.38], [35.41, 126.42]];
+const CITYDOTS = (() => { const R = rng(77), d = []; for (const [la, lo, w] of CITIES) { const n = Math.round(30 + 260 * w); for (let i = 0; i < n; i++) { const r = Math.sqrt(-2 * Math.log(R() + 1e-6)) * 0.07 * Math.sqrt(w) * 1.4, a = R() * TAU; d.push([la + r * Math.sin(a), lo + r * Math.cos(a) / 0.8, R()]); } } return d; })();
 
 // =====================================================================================================
 // Time anchors (words from the tts text) and plan
@@ -471,7 +419,7 @@ function posterTitle(stage, t, q = easeInOut((t - MORPH[0]) / (MORPH[1] - MORPH[
   const c = stage.ctx, T = stage.theme, TR = -0.03, fit = (s, w, max) => Math.min(max, max * w / stage.measure(s, {role: 'display', weight: 700, size: max, tracking: TR * max}));
   QSIZE ||= fit(POSTER_Q.q + '?', 820, 100); ASIZE ||= fit(POSTER_Q.ans, 860, 150);
   const y1 = lerp(POSTER_Q.y, 228, q), s1 = lerp(QSIZE, 56, q), y2 = lerp(POSTER_Q.y2, 292, q), s2 = lerp(ASIZE, 34, q), tr = lerp(TR, -0.011, q);
-  if (q < 1) withAlpha(c, (1 - q) * a, () => { const g2 = c.createLinearGradient(0, 960, 0, 1300); g2.addColorStop(0, 'rgba(2,4,10,0)'); g2.addColorStop(0.3, 'rgba(2,4,10,0.6)'); g2.addColorStop(0.75, 'rgba(2,4,10,0.6)'); g2.addColorStop(1, 'rgba(2,4,10,0)'); c.fillStyle = g2; c.fillRect(0, 960, 1080, 340); });
+  if (q < 1) withAlpha(c, (1 - q) * a, () => { const g2 = c.createLinearGradient(0, 960, 0, 1300); g2.addColorStop(0, 'rgba(6,6,7,0)'); g2.addColorStop(0.3, 'rgba(6,6,7,0.6)'); g2.addColorStop(0.75, 'rgba(6,6,7,0.6)'); g2.addColorStop(1, 'rgba(6,6,7,0)'); c.fillStyle = g2; c.fillRect(0, 960, 1080, 340); });
   withAlpha(c, a, () => {
     const sh = 'rgba(0,0,0,0.9)', wb = stage.measure(POSTER_Q.q, {role: 'display', weight: 700, size: s1, tracking: tr * s1}), wq = stage.measure('?', {role: 'display', weight: 700, size: s1, tracking: tr * s1}), kq = 1 - smooth(q / 0.7);
     const x0 = 540 - (wb + wq * kq) / 2;
@@ -480,7 +428,7 @@ function posterTitle(stage, t, q = easeInOut((t - MORPH[0]) / (MORPH[1] - MORPH[
     stage.text(POSTER_Q.ans, 540, y2, {role: 'display', weight: 700, size: s2, color: PAL.answer, align: 'center', tracking: tr * s2, shadow: sh, shadowBlur: 28});
   });
 }
-function captionBand(c) { const g = c.createLinearGradient(0, 1290, 0, 1920); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(0.35, 'rgba(0,0,0,0.45)'); g.addColorStop(1, 'rgba(0,0,0,0.62)'); c.fillStyle = g; c.fillRect(0, 1290, W, 630); }
+function captionBand(c) { const g = c.createLinearGradient(0, 1290, 0, 1920); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(0.35, 'rgba(0,0,0,0.3)'); g.addColorStop(1, 'rgba(0,0,0,0.5)'); c.fillStyle = g; c.fillRect(0, 1290, W, 630); }
 export function overlays(stage, t, ctx) {
   const id = ctx.scene.id, P = plan(ctx.tl); P._tl = ctx.tl;
   if (id === 'hook' && t < MORPH[1]) { posterTitle(stage, t); return; }
@@ -522,610 +470,470 @@ export const scenes = {
 };
 
 // ------------------------------------------------------------------ hook
-function posterPicture(stage, t, P, u) {                                  // the thumbnail composition (also the close bookend)
+function posterPicture(stage, t, P, u, age = 0.16) {                        // the thumbnail composition (also the close bookend)
   const c = stage.ctx;
-  bgDual(c, t);
-  // fusion pair (upper right): D and T touching with a warm burst
-  const fz = 0.5 + 0.5 * Math.sin(t * 2), fa = P && t < P.end - 3 ? t - P.fuseHook : -1;
-  gl(c, 820, 360, 260, PAL.fus, 0.55); gl(c, 820, 360, 90, '#FFFFFF', 0.4 + 0.1 * fz);
-  if (fa < 0) { const k = t > MORPH[0] ? smooth((t - MORPH[0]) / Math.max(0.3, P.fuseHook - MORPH[0])) : 0; light(c, 'D', 770 + 30 * k, 372 - 8 * k, 30, t, {glow: 1.4}); light(c, 'T', 872 - 30 * k, 344 + 8 * k, 30, t + 1, {glow: 1.4}); }
-  else { light(c, 'He', 820 + fa * 60, 358 - fa * 50, 32, t, {glow: 1.6, hot: 0.5 * Math.exp(-fa / 0.5)}); streak(c, [820 + Math.max(0, fa - 0.2) * 520, 360 + Math.max(0, fa - 0.2) * 180], [820 + fa * 520, 360 + fa * 180], 12, PAL.fisHot, Math.exp(-fa / 1.5)); }
-  // fission (centre): just after scission
-  fissionDraw(c, 520, 680, 35, 1, u, t, {yaw: 0.35, pitch: 0.22, glowCol: '#7FC0FF'});
+  seriesBg(c, '#3A2A1E', 0.16, 540, 700); dust(c, t);
+  const fa = P && t < P.end - 3 ? t - P.fuseHook : -1;                        // fusion pair, upper right
+  gl(c, 810, 340, 170, PAL.fus, 0.22);
+  if (fa < 0) { const k = t > MORPH[0] ? smooth((t - MORPH[0]) / Math.max(0.3, P.fuseHook - MORPH[0])) : 0; light(c, 'D', 755 + 28 * k, 350 - 6 * k, 30, t, {glow: 1}); light(c, 'T', 865 - 28 * k, 330 + 6 * k, 30, t + 1, {glow: 1}); }
+  else { light(c, 'He', 810 + fa * 50, 338 - fa * 40, 30, t, {glow: 1.2, alpha: 1 - smooth((fa - 0.8) / 1.0)}); burst(c, 810, 340, fa, 190, PAL.fusHot); streak(c, [810 + Math.max(0, fa - 0.25) * 520, 340 + Math.max(0, fa - 0.25) * 180], [810 + fa * 520, 340 + fa * 180], 14, PAL.fis, Math.exp(-fa / 1.5)); }
+  fissionDraw(c, 520, 690, 34, 1, u, t, {yaw: 0.35, pitch: 0.22, age, ringR: 13});
+  if (age < 0.6) gl(c, 520, 690, 120, '#FFFFFF', 0.45 * (1 - age / 0.6));
 }
 function hookScene(stage, t, ctx) {
   const c = stage.ctx, P = plan(ctx.tl);
   if (t < P.toNight + 0.6) {
-    const u = t < MORPH[0] ? 0.12 : 0.12 + (t - MORPH[0]) * 0.1;             // slow motion after the poster
-    c.save();
-    const zs = 1 + 0.06 * smooth((t - 1) / 6) + (t > P.toNight ? 0.9 * easeIn((t - P.toNight) / 0.6) : 0);
-    zoomAbout(c, 540, 700, zs);
-    posterPicture(stage, t, P, u);
+    const u = t < MORPH[0] ? 0.12 : 0.12 + (t - MORPH[0]) * 0.1, age = t < MORPH[0] ? 0.16 : 0.16 + (t - MORPH[0]);
+    c.save(); zoomAbout(c, 540, 700, 1 + 0.05 * smooth((t - 1) / 6) + (t > P.toNight ? 0.6 * easeIn((t - P.toNight) / 0.6) : 0));
+    posterPicture(stage, t, P, u, age);
     const act2 = P.fuseHook + 0.1;
     if (t > act2) {
       const na = smooth((t - act2) / 0.6), gp = lerp(150, 46, smooth((t - act2 - 0.5) / 3.2));
-      nucleus(c, pack(235, 92, 7), 400, 880, 25 * (0.85 + 0.15 * na), t, {pitch: 0.3, glowCol: '#7FC0FF', jit: 0.05, alpha: na, wob: 0.05, wph: t * 8});
-      withAlpha(c, na, () => { light(c, 'D', 760 - gp, 560, 34, t, {glow: 1.4}); light(c, 'T', 760 + gp, 560, 34, t + 1, {glow: 1.4}); gl(c, 760, 560, 200, PAL.fus, 0.25 * na * (1 - gp / 150)); });
-      label(stage, '쪼개기', 400, 1130, na * fadeOut(t, P.toNight, 0.3), {size: 40, weight: 700, color: '#CFE6FF'});
-      label(stage, '합치기', 760, 720, na * fadeOut(t, P.toNight, 0.3), {size: 40, weight: 700, color: '#FFE0B0'});
+      nucleus(c, pack(235, 92, 7), 390, 900, 24 * (0.85 + 0.15 * na), t, {pitch: 0.3, jit: 0.05, alpha: na, wob: 0.05, wph: t * 8});
+      withAlpha(c, na, () => { light(c, 'D', 760 - gp, 560, 42, t); light(c, 'T', 760 + gp, 560, 42, t + 1); });
+      label(stage, '쪼개기', 390, 1140, na * fadeOut(t, P.toNight, 0.3), {size: 40, color: PAL.fis});
+      label(stage, '합치기', 760, 740, na * fadeOut(t, P.toNight, 0.3), {size: 40, color: PAL.fus});
     }
-    // fusion burst at "합치는"
-    const fa = t - P.fuseHook;
-    if (fa > 0) { gl(c, 820, 360, 420 * (0.4 + fa), '#FFE6B0', Math.exp(-fa / 0.35)); gl(c, 820, 360, 160, '#FFFFFF', Math.exp(-fa / 0.15)); }
     c.restore();
-    finish(stage, t, {bloom: 0.7, wide: 0.45});
     const wa = t > P.toNight ? smooth((t - P.toNight - 0.3) / 0.3) : 0;
-    if (wa > 0) { c.fillStyle = rgba('#04060A', wa); c.fillRect(0, 0, W, H); }
+    if (wa > 0) { c.fillStyle = rgba('#060607', wa); c.fillRect(0, 0, W, H); }
     return;
   }
   if (t < P.toSun + 0.8) { nightScene(stage, t, P); return; }
   sunScene(stage, t, P);
 }
-// night landscape of power and cities (s02)
-const CITY = (() => {
-  const R = rng(77), pts = [], centers = [[-3, 14, 1.8, 700], [2.5, 22, 1.4, 500], [-1, 30, 2.2, 650], [4, 34, 1.2, 300], [-5, 24, 1.0, 260], [1, 9, 0.8, 200], [-4.5, 38, 1.6, 350]];
-  for (const [cx, cz, s, n] of centers) for (let i = 0; i < n; i++) { const r = s * Math.sqrt(-2 * Math.log(R() + 1e-6)) * 0.7, a = R() * TAU; pts.push([cx + r * Math.cos(a), cz + r * Math.sin(a), R()]); }
-  for (let i = 0; i < 900; i++) { const k = Math.floor(R() * centers.length), j = Math.floor(R() * centers.length), q = R(); const a = centers[k], b = centers[j]; pts.push([lerp(a[0], b[0], q) + (R() - 0.5) * 0.2, lerp(a[1], b[1], q) + (R() - 0.5) * 0.2, R() * 0.6]); }
-  return {pts, centers, plant: [6.5, 18]};
-})();
 function nightScene(stage, t, P) {
-  const c = stage.ctx, u = t - P.nightIn;
-  bgFill(c, '#03060E', '#0A0D14');
-  gl(c, 540, 380, 1200, '#16233F', 0.6);
-  const camZ = -6 + u * 1.6, tilt = t > P.toSun ? easeIn((t - P.toSun) / 0.8) : 0;
-  const cam = cam3([0.6 - u * 0.12, 7 + tilt * 2, camZ], [1.5, tilt * 16, camZ + 16], {fov: 0.95, cy: 980});
-  // sea on the right (east), coastline
-  c.save(); c.globalCompositeOperation = 'lighter';
-  for (const [x, z, b] of CITY.pts) { const p = cam.P([x, 0, z]); if (p[2] < 0.5 || p[0] < -40 || p[0] > W + 40 || p[1] > H) continue; const r = clamp(p[3] * 0.035, 1, 6); c.drawImage(G(b > 0.85 ? '#FFFFFF' : b > 0.4 ? '#FFD08A' : '#FFAA55'), p[0] - r * 3, p[1] - r * 3, r * 6, r * 6); }
+  const c = stage.ctx, u = t - P.nightCut, z = 1 + 0.07 * smooth(u / 6), tilt = t > P.toSun ? easeIn((t - P.toSun) / 0.8) : 0;
+  seriesBg(c, '#1E2A3A', 0.12, 540, 900); dust(c, t, '#C8D4E8', 0.5);
+  const pr = (la, lo) => [540 + (lo - 127.9) * 0.8 * 290 * z, 1000 - (la - 36.0) * 290 * z + tilt * 1100];
+  c.save(); c.lineJoin = 'round'; c.lineCap = 'round';
+  for (let i = 1; i < COAST.length; i++) { const a = pr(COAST[i - 1][1], COAST[i - 1][0]), b = pr(COAST[i][1], COAST[i][0]), f = smooth(((a[1] + b[1]) / 2 - 330) / 260);
+    if (f <= 0) continue; c.beginPath(); c.moveTo(...a); c.lineTo(...b); c.strokeStyle = rgba(PAL.land, 0.25 * f); c.lineWidth = 7; c.stroke(); c.strokeStyle = rgba('#B8B2A8', 0.85 * f); c.lineWidth = 2; c.stroke(); }
   c.restore();
-  // plant: two domes with blue glow, power lines pulsing to cities
-  const pl = cam.P([CITY.plant[0], 0, CITY.plant[1]]), ps = pl[3] * 0.018;
-  if (pl[2] > 0.5) {
-    gl(c, pl[0], pl[1], 520 * ps, PAL.cher, 0.75); gl(c, pl[0], pl[1], 160 * ps, '#DFF3FF', 0.7);
-    for (const dx of [-0.5, 0.5]) { const d = cam.P([CITY.plant[0] + dx, 0, CITY.plant[1]]); c.fillStyle = '#C8D6E8'; c.beginPath(); c.ellipse(d[0], d[1], 46 * ps, 36 * ps, 0, Math.PI, TAU); c.fill(); }
-    for (const [k, cc] of CITY.centers.slice(0, 5).entries()) {
-      const a = [CITY.plant[0], 0.3, CITY.plant[1]], b = [cc[0], 0.3, cc[1]], seg = 40;
-      c.beginPath(); for (let i = 0; i <= seg; i++) { const q = i / seg, p = cam.P([lerp(a[0], b[0], q), 0.3 + 0.6 * Math.sin(q * Math.PI), lerp(a[2], b[2], q)]); i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1]); }
-      c.strokeStyle = rgba('#8FC8FF', 0.25); c.lineWidth = 2; c.stroke();
-      const q = ((t * 0.7 + k * 0.23) % 1), pp = cam.P([lerp(a[0], b[0], q), 0.3 + 0.6 * Math.sin(q * Math.PI), lerp(a[2], b[2], q)]);
-      gl(c, pp[0], pp[1], 40, '#BFE6FF', 0.8);
-    }
-  }
-  // dawn as the camera tilts up
-  if (tilt > 0) gl(c, 540, 300 + 600 * (1 - tilt), 1300, '#FF8A3A', 0.6 * tilt);
-  finish(stage, t, {bloom: 0.55});
+  for (const [la, lo, w] of CITIES) { const [x, y] = pr(la, lo); gl(c, x, y, 40 + 90 * w, PAL.city, 0.18 + 0.2 * w); }
+  for (const [la, lo, b] of CITYDOTS) { const [x, y] = pr(la, lo); if (y < -20 || y > H + 20) continue; circle(c, x, y, 1.3 + 1.5 * b, rgba(b > 0.7 ? '#FFF1D6' : PAL.city, 0.45 + 0.45 * b)); }
+  // plants and power lines (pulses of light travel to the cities)
+  const hubs = [[37.57, 126.98], [35.18, 129.08], [35.87, 128.60], [36.35, 127.38], [35.16, 126.85]];
+  PLANTS.forEach(([la, lo], k) => {
+    const p = pr(la, lo), pulse = 0.5 + 0.5 * Math.sin(t * 3 + k);
+    for (const [hla, hlo] of hubs) { const h = pr(hla, hlo), mx = (p[0] + h[0]) / 2, my = (p[1] + h[1]) / 2 - 40;
+      c.strokeStyle = rgba(PAL.fis, 0.22); c.lineWidth = 1.5; c.beginPath(); c.moveTo(...p); c.quadraticCurveTo(mx, my, ...h); c.stroke();
+      const q = ((t * 0.45 + k * 0.17 + hla * 0.03) % 1), x = (1 - q) ** 2 * p[0] + 2 * (1 - q) * q * mx + q * q * h[0], y = (1 - q) ** 2 * p[1] + 2 * (1 - q) * q * my + q * q * h[1]; neutronDot(c, x, y, 3.2, 0.8); }
+    gl(c, p[0], p[1], 46, PAL.fis, 0.6); circle(c, p[0], p[1], 7, PAL.fisHot); ringFx(c, p[0], p[1], 16 + 10 * pulse, PAL.fis, 0.6, 2);
+  });
+  if (tilt > 0) gl(c, 540, 200 + 300 * (1 - tilt), 900, PAL.fus, 0.22 * tilt);
   const n = fadeIn(t, P.pct2 - 0.1, 0.4) * fadeOut(t, P.toSun, 0.4);
-  big(stage, '31.7%', 540, 560, 210, '#BFE6FF', n);
-  label(stage, '2024 · 전기 중 원자력', 540, 690, n, {size: 36, color: PAL.ink});
-  const fi = smooth((t - P.nightCut) / 0.5); if (fi < 1) { c.fillStyle = rgba('#04060A', 1 - fi); c.fillRect(0, 0, W, H); }
+  big(stage, '31.7%', 540, 430, 200, '#DDF0FF', n); label(stage, '2024 · 전기 중 원자력', 540, 545, n, {size: 36});
+  label(stage, '원자력 발전소', 880, 1130 + tilt * 1100, fadeIn(t, P.plant2 - 0.2) * (1 - tilt), {size: 32, color: PAL.fis});
+  const fi = smooth((t - P.nightCut) / 0.5); if (fi < 1) { c.fillStyle = rgba('#060607', 1 - fi); c.fillRect(0, 0, W, H); }
 }
+const SUNDOTS = (() => { const R = rng(23), d = []; for (let y = -1; y <= 1; y += 0.04) for (let x = -1; x <= 1; x += 0.04) { const xx = x + (R() - 0.5) * 0.034, yy = y + (R() - 0.5) * 0.034; if (xx * xx + yy * yy < 0.985) d.push([xx, yy, R()]); } return d; })();
 function sunDisk(c, t, cx, cy, R, a = 1) {
-  gl(c, cx, cy, R * 3.2, '#FF7A1A', 0.45 * a); gl(c, cx, cy, R * 1.8, '#FFB040', 0.55 * a);
-  c.save(); c.globalAlpha = a; c.beginPath(); c.arc(cx, cy, R, 0, TAU); c.clip();
-  const g = c.createRadialGradient(cx, cy, 0, cx, cy, R); g.addColorStop(0, '#FFD98A'); g.addColorStop(0.55, '#FFA733'); g.addColorStop(0.9, '#E8600E'); g.addColorStop(1, '#A8300A');
-  c.fillStyle = g; c.fillRect(cx - R, cy - R, 2 * R, 2 * R);
-  tiled(c, tex('gran'), t * 8, t * 3, R / 300, 0.9, 'multiply', t * 0.01, cx, cy);
-  tiled(c, tex('gran'), -t * 6, t * 9, R / 420, 0.5, 'overlay', -t * 0.012, cx, cy);
-  const lg = c.createRadialGradient(cx, cy, R * 0.55, cx, cy, R); lg.addColorStop(0, 'rgba(0,0,0,0)'); lg.addColorStop(1, 'rgba(90,20,0,0.55)'); c.fillStyle = lg; c.fillRect(cx - R, cy - R, 2 * R, 2 * R);
+  gl(c, cx, cy, R * 2.0, PAL.fus, 0.22 * a); gl(c, cx, cy, R * 1.25, '#FF9A3A', 0.18 * a);
+  c.save(); c.globalAlpha = a; c.beginPath(); c.arc(cx, cy, R, 0, TAU); c.fillStyle = rgba('#3A2210', 0.9); c.fill(); c.restore();
+  c.save(); c.globalCompositeOperation = 'lighter';
+  for (const [x, y, ph] of SUNDOTS) { const d = Math.hypot(x, y), boil = 0.5 + 0.5 * Math.sin(t * (1.1 + ph) + ph * 20), b = (1 - 0.65 * d * d) * (0.35 + 0.65 * boil);
+    c.globalAlpha = a * b * 0.8; c.fillStyle = b > 0.75 ? PAL.fusHot : PAL.fus; c.beginPath(); c.arc(cx + x * R, cy + y * R, 1.4 + 2.8 * b * (0.6 + 0.4 * ph), 0, TAU); c.fill(); }
   c.restore();
-  // prominences
-  c.save(); c.globalCompositeOperation = 'lighter'; c.globalAlpha = 0.5 * a;
-  for (let k = 0; k < 5; k++) { const ang = -2.4 + k * 1.2 + 0.05 * Math.sin(t * 0.5 + k), h = R * (0.12 + 0.06 * Math.sin(t * 0.8 + k * 2)), w = 0.18;
-    c.beginPath(); for (let i = 0; i <= 20; i++) { const q = i / 20, aa = ang - w / 2 + w * q, rr = R + h * Math.sin(q * Math.PI); const x = cx + rr * Math.cos(aa), y = cy + rr * Math.sin(aa); i ? c.lineTo(x, y) : c.moveTo(x, y); }
-    c.strokeStyle = 'rgba(255,110,40,0.25)'; c.lineWidth = 26; c.stroke(); c.strokeStyle = 'rgba(255,150,80,0.45)'; c.lineWidth = 9; c.stroke(); }
+  ringFx(c, cx, cy, R, PAL.fus, 0.8 * a, 3); ringFx(c, cx, cy, R * 1.06, PAL.fus, 0.25 * a, 1.5);
+  c.save(); c.globalAlpha = 0.6 * a; c.strokeStyle = PAL.fus; c.lineWidth = 2;
+  for (let k = 0; k < 5; k++) { const ang = -2.4 + k * 1.2 + 0.05 * Math.sin(t * 0.5 + k), h = R * (0.1 + 0.05 * Math.sin(t * 0.8 + k * 2)), w = 0.16;
+    c.beginPath(); for (let i = 0; i <= 24; i++) { const q = i / 24, aa = ang - w / 2 + w * q, rr = R + h * Math.sin(q * Math.PI); const x = cx + rr * Math.cos(aa), y = cy + rr * Math.sin(aa); i ? c.lineTo(x, y) : c.moveTo(x, y); } c.stroke(); }
   c.restore();
 }
 function sunScene(stage, t, P) {
   const c = stage.ctx, u = t - P.toSun;
-  bgSpace(c, t);
-  const R = lerp(420, 500, smooth(u / 6)), cy = lerp(1500, 860, easeOut(u / 1.6));
+  seriesBg(c, '#3A2A1E', 0.1); dust(c, t);
+  const R = lerp(380, 420, smooth(u / 6)), cy = lerp(1500, 880, easeOut(u / 1.4));
   sunDisk(c, t, 540, cy, R);
-  // light leaving: mass → light ribbons
-  c.save(); c.globalCompositeOperation = 'lighter';
-  for (let k = 0; k < 14; k++) { const ang = k / 14 * TAU + t * 0.05, q = ((t * 0.5 + k * 0.37) % 1); const r0 = R * 1.05 + q * 600; gl(c, 540 + r0 * Math.cos(ang), cy + r0 * Math.sin(ang), 40, '#FFE6B0', 0.6 * (1 - q)); }
-  c.restore();
-  finish(stage, t, {bloom: 0.4, wide: 0.35, thr: 3.2});
-  const n = fadeIn(t, P.mt3 - 0.15, 0.4) * fadeOut(t, P.end, 0.1);
-  big(stage, '400만 톤', 540, cy - 40, 170, '#FFFFFF', n, {shadow: 'rgba(80,20,0,0.95)'});
-  label(stage, '1초마다 · 질량 → 빛', 540, cy + 80, n, {size: 40, color: '#FFF1D6', weight: 700});
-  const fi = smooth(u / 0.5); if (fi < 1) { c.fillStyle = rgba('#FFF2DC', (1 - fi) * 0.8); c.fillRect(0, 0, W, H); }
+  for (let k = 0; k < 20; k++) { const ang = k / 20 * TAU + 0.1, q = ((t * 0.45 + k * 0.37) % 1), r0 = R * 1.08 + q * 520, r1 = r0 + 60;
+    trail(c, [540 + r0 * Math.cos(ang), cy + r0 * Math.sin(ang)], [540 + r1 * Math.cos(ang), cy + r1 * Math.sin(ang)], 0.8 * (1 - q), 2, PAL.fusHot); }
+  const n = fadeIn(t, P.mt3 - 0.15, 0.4);
+  big(stage, '400만 톤', 540, cy - 30, 160, '#FFFFFF', n); label(stage, '1초마다 · 질량 → 빛', 540, cy + 90, n, {size: 38, color: PAL.fusHot});
+  const fi = smooth(u / 0.5); if (fi < 1) { c.fillStyle = rgba('#060607', 1 - fi); c.fillRect(0, 0, W, H); }
 }
 
 // ------------------------------------------------------------------ origin (1938 / 1939 / 1920)
-function cellDivide(c, cx, cy, R, q, t) {                                    // translucent cell pinching in two
+function cellDivide(c, cx, cy, R, q, t) {                                    // line drawing of a cell pinching in two
   const d = R * 0.95 * smooth(q), pinch = smooth(q);
-  c.save();
   for (const s of [-1, 1]) {
     const x = cx + s * d * 0.55, r = R * (1 - 0.18 * pinch);
-    const g = c.createRadialGradient(x - r * 0.3, cy - r * 0.3, r * 0.1, x, cy, r); g.addColorStop(0, rgba('#9FF3D6', 0.32)); g.addColorStop(0.8, rgba(PAL.cell, 0.16)); g.addColorStop(1, rgba(PAL.cell, 0.55));
-    c.beginPath(); c.ellipse(x, cy, r * (1 + 0.15 * (1 - pinch)), r, 0, 0, TAU); c.fillStyle = g; c.fill(); c.strokeStyle = rgba('#B8FFE8', 0.6); c.lineWidth = 3; c.stroke();
-    const R2 = rng(s > 0 ? 8 : 9); for (let i = 0; i < 9; i++) circle(c, x + (R2() - 0.5) * r * 1.2, cy + (R2() - 0.5) * r * 1.2, 4 + R2() * 7, rgba('#CFFFF0', 0.35));
-    circle(c, x + s * 4, cy - 6, r * 0.28, rgba('#3FA7FF', 0.45)); gl(c, x, cy, r * 0.5, '#7FFFD0', 0.12);
+    c.beginPath(); c.ellipse(x, cy, r * (1 + 0.15 * (1 - pinch)), r, 0, 0, TAU); c.fillStyle = rgba(PAL.cell, 0.06); c.fill(); c.strokeStyle = rgba(PAL.cell, 0.9); c.lineWidth = 2.5; c.stroke();
+    c.beginPath(); c.arc(x + s * 4, cy - 6, r * 0.28, 0, TAU); c.strokeStyle = rgba(PAL.cell, 0.7); c.lineWidth = 2; c.stroke();
+    const R2 = rng(s > 0 ? 8 : 9); for (let i = 0; i < 10; i++) circle(c, x + (R2() - 0.5) * r * 1.2, cy + (R2() - 0.5) * r * 1.2, 2.5 + R2() * 3, rgba(PAL.cell, 0.6));
   }
-  c.restore();
 }
 function originScene(stage, t, ctx) {
   const c = stage.ctx, P = plan(ctx.tl); P._tl = ctx.tl;
   const s5 = ctx.tl.at('s05') - 0.6, s6 = ctx.tl.at('s06') - 0.6;
   if (t < s5) {
-    bgLab(c, t);
-    big(stage, '1938', 540, 760, 420, '#FFFFFF', 0.07, {shadow: null});
-    const z = 1 + 0.08 * smooth((t - ctx.scene.start) / 8); c.save(); zoomAbout(c, 540, 760, z); shake(c, t, P.snap4);
-    const u = (t - P.snap4) * 0.12;
+    seriesBg(c, '#2A3240', 0.12, 540, 760); dust(c, t);
+    big(stage, '1938', 540, 760, 400, '#FFFFFF', 0.06, {shadow: null});
+    const z = 1 + 0.08 * smooth((t - ctx.scene.start) / 8); c.save(); zoomAbout(c, 540, 760, z); shake(c, t, P.snap4, 5);
+    const u = (t - P.snap4) * 0.12, yaw = 0.2 + 0.03 * (t - ctx.scene.start);
     if (u <= 0) {
       const wob = t > P.n4hit ? 0.06 + 0.1 * smooth((t - P.n4hit) / 1.2) : 0;
-      fissionDraw(c, 540, 760, 22, t > P.n4hit ? 0.25 * smooth((t - P.n4hit) / 1.5) : 0, -1, t, {yaw: 0.2 + 0.03 * (t - ctx.scene.start), pitch: 0.25, wob, wph: t * 10, glowCol: '#9AB8FF'});
-      if (t > P.n4 - 0.2 && t < P.n4hit) { const q = (t - (P.n4 - 0.2)) / (P.n4hit - P.n4 + 0.2); streak(c, [lerp(-80, 330, q) - 120, 760 - 80 + 60 * q], [lerp(-80, 330, q), 760 - 80 + 80 * q], 18, PAL.fisHot, 1); }
-    } else {
-      fissionDraw(c, 540, 760, 22, 1, u, t, {yaw: 0.2 + 0.03 * (t - ctx.scene.start), pitch: 0.25, glowCol: '#9AB8FF'});
-    }
+      fissionDraw(c, 540, 760, 22, t > P.n4hit ? 0.25 * smooth((t - P.n4hit) / 1.5) : 0, -1, t, {yaw, pitch: 0.25, wob, wph: t * 10});
+      if (t > P.n4 - 0.2 && t < P.n4hit) { const q = (t - (P.n4 - 0.2)) / (P.n4hit - P.n4 + 0.2), hx = lerp(-60, 330, q), hy = lerp(620, 735, q); streak(c, [hx - 110, hy - 32], [hx, hy], 18); }
+    } else fissionDraw(c, 540, 760, 22, 1, u, t, {yaw, pitch: 0.25, age: t - P.snap4});
     c.restore();
-    finish(stage, t, {bloom: 0.65});
     const la = fadeIn(t, P.snap4 + 0.6, 0.4) * fadeOut(t, s5, 0.3), su = Math.max(0, (t - P.snap4) * 0.12), sep = (2.2 + 26 * su + 4.5) * 22 * (1 + 0.08 * smooth((t - ctx.scene.start) / 8));
-    label(stage, '바륨 Ba', clamp(540 - sep, 170, 900), 960, la, {size: 40, weight: 700, color: '#FFD9C8'}); label(stage, '크립톤 Kr', clamp(540 + sep, 170, 900), 560, la, {size: 40, weight: 700, color: '#D6E8FF'});
-    label(stage, '우라늄 U', 540, 1050, fadeIn(t, P.u4 - 0.2) * fadeOut(t, P.snap4, 0.3), {size: 40, weight: 700});
-    const fi = smooth((t - ctx.scene.start) / 0.4); if (fi < 1) { c.fillStyle = rgba('#000000', 1 - fi); c.fillRect(0, 0, W, H); }
+    label(stage, '바륨 Ba', clamp(540 - sep, 170, 900), 960, la, {size: 40, color: '#F6DABA'}); label(stage, '크립톤 Kr', clamp(540 + sep, 170, 900), 560, la, {size: 40, color: '#E6EBEE'});
+    label(stage, '우라늄 U', 540, 1050, fadeIn(t, P.u4 - 0.2) * fadeOut(t, P.snap4, 0.3), {size: 40});
+    const fi = smooth((t - ctx.scene.start) / 0.4); if (fi < 1) { c.fillStyle = rgba('#060607', 1 - fi); c.fillRect(0, 0, W, H); }
     return;
   }
   if (t < s6) {
-    bgLab(c, t);
-    gl(c, 540, 520, 600, PAL.cell, 0.12); gl(c, 540, 1080, 600, PAL.fis, 0.15);
+    seriesBg(c, '#24302C', 0.12, 540, 800); dust(c, t);
     const q = smooth((t - (P.div5 - 0.8)) / 2.2);
-    cellDivide(c, 540, 520, 170, q, t);
-    fissionDraw(c, 540, 1060, 13, Math.min(1, q * 1.4), q > 0.72 ? (q - 0.72) * 0.5 : -1, t, {yaw: 0.2, pitch: 0.2, glowCol: '#9AB8FF'});
-    finish(stage, t, {bloom: 0.55});
-    label(stage, '세포 분열', 540, 760, fadeIn(t, P.cell5 - 0.2), {size: 38, color: '#B8FFE8', weight: 700});
-    big(stage, 'fission', 540, 840, 92, '#FFFFFF', fadeIn(t, P.name5 - 0.3, 0.4), {role: 'display'});
-    label(stage, '핵분열', 540, 1280, fadeIn(t, P.name5), {size: 38, color: '#D6E8FF', weight: 700});
-    const fi = smooth((t - s5) / 0.4); if (fi < 1) { c.fillStyle = rgba('#000000', 1 - fi); c.fillRect(0, 0, W, H); }
+    c.save(); zoomAbout(c, 540, 800, 1 + 0.05 * smooth((t - s5) / 6));
+    cellDivide(c, 540, 520, 180, q, t);
+    fissionDraw(c, 540, 1070, 14, Math.min(1, q * 1.4), q > 0.72 ? (q - 0.72) * 0.5 : -1, t, {yaw: 0.2, pitch: 0.2, age: q > 0.72 ? (t - (P.div5 - 0.8 + 2.2 * 0.72)) : 0, ringR: 9});
+    c.restore();
+    label(stage, '세포 분열', 540, 755, fadeIn(t, P.cell5 - 0.2), {size: 38, color: PAL.cell});
+    big(stage, 'fission', 540, 845, 96, '#FFFFFF', fadeIn(t, P.name5 - 0.3, 0.4));
+    label(stage, '핵분열', 540, 1290, fadeIn(t, P.name5), {size: 38, color: PAL.fis});
+    const fi = smooth((t - s5) / 0.35); if (fi < 1) { c.fillStyle = rgba('#060607', 1 - fi); c.fillRect(0, 0, W, H); }
     return;
   }
-  // 1920 Eddington: 4 protons fuse inside the Sun
-  bgSunPlasma(c, t);
-  const z = 1 + 0.12 * smooth((t - s6) / 8); c.save(); zoomAbout(c, 540, 820, z);
-  const q = smooth((t - (P.h6 - 0.3)) / Math.max(0.4, P.fuse6 - P.h6 + 0.3)), fu = t - P.fuse6;
-  if (fu < 0) for (let k = 0; k < 4; k++) { const a = k / 4 * TAU + t * 0.6, r = lerp(360, 60, q); light(c, 'H', 540 + r * Math.cos(a), 820 + r * Math.sin(a) * 0.8, 62, t + k, {glow: 1.4, glowCol: '#FFB070'}); }
-  else { light(c, 'He', 540, 820, 62, t, {glow: 1.4, hot: 0.4 * Math.exp(-fu / 0.6)}); gl(c, 540, 820, 700 * (0.4 + fu * 0.6), '#FFE6B0', Math.exp(-fu / 0.5)); gl(c, 540, 820, 200, '#FFFFFF', Math.exp(-fu / 0.2));
-    c.save(); c.globalCompositeOperation = 'lighter'; for (let k = 0; k < 16; k++) { const a = k / 16 * TAU, r = 120 + fu * 520; gl(c, 540 + r * Math.cos(a), 820 + r * Math.sin(a), 50, '#FFE6B0', 0.7 * Math.exp(-fu / 1.2)); } c.restore(); }
+  // 1920 Eddington: 4 protons fuse inside the Sun (dot field of the hot core)
+  seriesBg(c, '#4A2A14', 0.2, 540, 820);
+  const R = rng(19); c.save(); c.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 220; i++) { const a0 = R() * TAU, r0 = 80 + R() * 620, sp = 0.15 + 0.3 * R(), x = 540 + r0 * Math.cos(a0 + t * sp * (R() > 0.5 ? 1 : -1)), y = 820 + r0 * 0.9 * Math.sin(a0 + t * sp); circle(c, x, y, 1.6 + 1.6 * R(), rgba(PAL.fus, 0.25 + 0.3 * R())); }
   c.restore();
-  finish(stage, t, {bloom: 0.6});
+  const z = 1 + 0.1 * smooth((t - s6) / 8); c.save(); zoomAbout(c, 540, 820, z);
+  const q = smooth((t - (P.h6 - 0.3)) / Math.max(0.4, P.fuse6 - P.h6 + 0.3)), fu = t - P.fuse6;
+  if (fu < 0) for (let k = 0; k < 4; k++) { const a = k / 4 * TAU + t * 0.6, r = lerp(360, 60, q); light(c, 'H', 540 + r * Math.cos(a), 820 + r * Math.sin(a) * 0.8, 46, t + k, {glow: 1}); }
+  else { light(c, 'He', 540, 820, 50, t, {glow: 1.3}); burst(c, 540, 820, fu, 260, PAL.fusHot);
+    for (let k = 0; k < 16; k++) { const a = k / 16 * TAU, r0 = 130 + fu * 420; trail(c, [540 + (r0 - 70) * Math.cos(a), 820 + (r0 - 70) * Math.sin(a)], [540 + r0 * Math.cos(a), 820 + r0 * Math.sin(a)], 0.9 * Math.exp(-fu / 1.4), 2.5, PAL.fusHot); } }
+  c.restore();
   big(stage, '1920', 540, 470, 150, '#FFFFFF', fadeIn(t, P.y20 - 0.2) * 0.9);
   big(stage, '−0.7%', 540, 1160, 120, PAL.fusHot, fadeIn(t, P.fuse6 + 0.4));
-  label(stage, '수소 4개 → 헬륨 1개, 그만큼 가벼워짐', 540, 1260, fadeIn(t, P.fuse6 + 0.6), {size: 34});
-  const fi = smooth((t - s6) / 0.4); if (fi < 1) { c.fillStyle = rgba('#FFE6C8', (1 - fi) * 0.7); c.fillRect(0, 0, W, H); }
+  label(stage, '수소 4개 → 헬륨 1개, 그만큼 가벼워짐', 540, 1265, fadeIn(t, P.fuse6 + 0.6), {size: 34});
+  const fi = smooth((t - s6) / 0.35); if (fi < 1) { c.fillStyle = rgba('#060607', 1 - fi); c.fillRect(0, 0, W, H); }
 }
 
 // ------------------------------------------------------------------ essence: binding + the valley
 const O16 = pack(16, 8, 16);
 function essenceScene(stage, t, ctx) {
-  const c = stage.ctx, P = plan(ctx.tl), s0 = ctx.scene.start, vIn = P.split8 - 0.9;
+  const P = plan(ctx.tl), s0 = ctx.scene.start, vIn = P.split8 - 0.9;
   if (t < vIn) { bindScene(stage, t, P, s0); return; }
-  valleyShot(stage, t, P, {from: vIn, glide: true});
+  valleyGraph(stage, t, P, {from: vIn, glide: true});
+  const fi = smooth((t - vIn) / 0.45); if (fi < 1) { stage.ctx.fillStyle = rgba('#060607', 1 - fi); stage.ctx.fillRect(0, 0, W, H); }
 }
-/** s07: 16 nucleons bind with pulsing strong-force links (hero, fills the width) → pull back onto a large balance */
 const FAR16 = (() => { const R = rng(4); return O16.pts.map(() => [(R() - 0.5) * 11, (R() - 0.5) * 17, (R() - 0.5) * 3]); })();
 function bindScene(stage, t, P, s0) {
   const c = stage.ctx;
-  bgFill(c, '#0D0A0C', '#040305'); gl(c, 540, 700, 1200, '#6A3A1E', 0.4); gl(c, 540, 700, 620, '#FF9A4A', 0.14);
-  tiled(c, tex('haze'), t * 18, t * 7, 3, 0.09, 'lighter');
-  const q = smooth((t - (P.pn7 - 0.6)) / Math.max(1.2, P.strong7 - P.pn7 + 1.4));          // assembly
-  const bal = easeInOut((t - (P.tight7 - 0.4)) / 1.3);                                  // pull back to the balance
-  const tilt = -0.13 * smooth((t - (P.tight7 + 0.7)) / 1.2) * (1 + 0.06 * Math.sin((t - P.tight7) * 5) * Math.exp(-(t - P.tight7 - 1.5)));
-  const zoom = 1 + 0.05 * smooth((t - s0) / 4) + 0.12 * smooth((t - (P.less7 - 0.3)) / 2);
+  seriesBg(c, '#3A2A1E', 0.14, 540, 720); dust(c, t);
+  const q = smooth((t - (P.pn7 - 0.6)) / Math.max(1.2, P.strong7 - P.pn7 + 1.4)), bal = easeInOut((t - (P.tight7 - 0.4)) / 1.3);
+  const tilt = -0.13 * smooth((t - (P.tight7 + 0.7)) / 1.2), zoom = 1 + 0.05 * smooth((t - s0) / 4) + 0.12 * smooth((t - (P.less7 - 0.3)) / 2);
   c.save(); zoomAbout(c, 540, lerp(720, 860, bal), zoom);
-  // balance (fades in as the camera pulls back)
   const fx = 540, fy = 760, Lb = 300, ex = Lb * Math.cos(tilt), ey = Lb * Math.sin(tilt), pans = [[fx - ex, fy - ey], [fx + ex, fy + ey]];
-  if (bal > 0.01) withAlpha(c, bal, () => {
-    c.save(); c.globalCompositeOperation = 'lighter'; const sg = c.createLinearGradient(0, 0, 0, 1330); sg.addColorStop(0, 'rgba(255,210,160,0.20)'); sg.addColorStop(1, 'rgba(255,210,160,0.03)');
-    c.fillStyle = sg; c.beginPath(); c.moveTo(440, 0); c.lineTo(640, 0); c.lineTo(1080, 1330); c.lineTo(0, 1330); c.closePath(); c.fill(); c.restore();
-    const flg = c.createLinearGradient(0, 1300, 0, H); flg.addColorStop(0, '#2A221C'); flg.addColorStop(1, '#0A0806'); c.fillStyle = flg; c.fillRect(0, 1300, W, H - 1300); gl(c, fx, 1310, 520, '#FFB070', 0.22);
-    const mg = c.createLinearGradient(0, fy, 0, 1300); mg.addColorStop(0, '#6C6A66'); mg.addColorStop(1, '#2A2826');
-    c.fillStyle = mg; c.beginPath(); c.moveTo(fx - 30, fy + 10); c.lineTo(fx + 30, fy + 10); c.lineTo(fx + 90, 1300); c.lineTo(fx - 90, 1300); c.closePath(); c.fill();
-    c.fillStyle = '#4A4642'; c.fillRect(fx - 240, 1294, 480, 30);
-    c.save(); c.translate(fx, fy); c.rotate(tilt); const bg = c.createLinearGradient(0, -12, 0, 12); bg.addColorStop(0, '#D8D2C8'); bg.addColorStop(1, '#6E6A64');
-    c.fillStyle = bg; c.fillRect(-Lb - 20, -10, 2 * Lb + 40, 20); c.restore(); circle(c, fx, fy, 22, '#B8B2A8'); circle(c, fx, fy, 9, '#4A4846');
-    for (const [px, py] of pans) { c.strokeStyle = 'rgba(220,214,205,0.75)'; c.lineWidth = 4; c.beginPath(); c.moveTo(px, py); c.lineTo(px - 135, py + 260); c.moveTo(px, py); c.lineTo(px + 135, py + 260); c.stroke();
-      const pg = c.createLinearGradient(0, py + 255, 0, py + 320); pg.addColorStop(0, '#EAE2D6'); pg.addColorStop(1, '#5E5A54');
-      c.fillStyle = pg; c.beginPath(); c.ellipse(px, py + 262, 150, 24, 0, 0, Math.PI); c.lineTo(px - 150, py + 262); c.fill(); c.beginPath(); c.ellipse(px, py + 262, 150, 18, 0, 0, TAU); c.fillStyle = rgba('#F6EFE4', 0.55); c.fill(); }
-    // loose pile on the left pan
-    const R = rng(12); const [lx, ly] = pans[0];
-    const pile = O16.pts.map((n, i) => ({p: [((i % 6) - 2.5) * 1.9 + (R() - 0.5) * 0.6, -1.0 - Math.floor(i / 6) * 1.8 + (R() - 0.5) * 0.3, R()], proton: n.proton}));
-    drawNucleons(c, pile, lx, ly + 236, 24, {R: 3, glow: 0.3, glowCol: '#FFB070', under: false});
+  if (bal > 0.01) withAlpha(c, bal, () => {                                  // line-drawn balance
+    c.strokeStyle = rgba(PAL.line, 0.85); c.lineWidth = 3; c.lineJoin = 'round';
+    c.beginPath(); c.moveTo(fx, fy + 12); c.lineTo(fx - 80, 1300); c.moveTo(fx, fy + 12); c.lineTo(fx + 80, 1300); c.moveTo(fx - 220, 1300); c.lineTo(fx + 220, 1300); c.stroke();
+    c.lineWidth = 4; c.beginPath(); c.moveTo(fx - ex - 14 * Math.cos(tilt), fy - ey - 14 * Math.sin(tilt)); c.lineTo(fx + ex + 14 * Math.cos(tilt), fy + ey + 14 * Math.sin(tilt)); c.stroke();
+    circle(c, fx, fy, 10, PAL.line); ringFx(c, fx, fy, 18, PAL.fus, 0.5, 2);
+    for (const [px, py] of pans) { c.strokeStyle = rgba(PAL.line, 0.7); c.lineWidth = 2; c.beginPath(); c.moveTo(px, py); c.lineTo(px - 135, py + 260); c.moveTo(px, py); c.lineTo(px + 135, py + 260); c.stroke();
+      c.strokeStyle = rgba(PAL.line, 0.9); c.lineWidth = 3; c.beginPath(); c.ellipse(px, py + 262, 150, 22, 0, 0, Math.PI); c.stroke(); c.beginPath(); c.moveTo(px - 150, py + 262); c.lineTo(px + 150, py + 262); c.stroke(); }
+    const R = rng(12), [lx, ly] = pans[0];
+    drawNucleons(c, O16.pts.map((n, i) => ({p: [((i % 6) - 2.5) * 1.9 + (R() - 0.5) * 0.6, -1.0 - Math.floor(i / 6) * 1.8 + (R() - 0.5) * 0.3, R()], proton: n.proton})), lx, ly + 236, 24, {R: 3, under: false});
   });
-  // the hero nucleus: big in the middle → onto the right pan
-  const [rx, ry] = pans[1], cx = lerp(540, rx, bal), cy = lerp(720, ry + 168, bal), s = lerp(92, 31, bal);
-  const list = O16.pts.map((n, i) => { const p = V.add(V.mul(FAR16[i], 1 - q), V.mul(n.p, q)); return {p: rotX(rotY(p, t * 0.35), 0.3), proton: n.proton}; });
-  if (q > 0.35) { c.save(); c.globalCompositeOperation = 'lighter';
+  const [rx, ry] = pans[1], cx = lerp(540, rx, bal), cy = lerp(720, ry + 168, bal), s = lerp(52, 31, bal);
+  const list = O16.pts.map((n, i) => ({p: rotX(rotY(V.add(V.mul(FAR16[i], 1 - q), V.mul(n.p, q)), t * 0.35), 0.3), proton: n.proton}));
+  if (q > 0.35) { c.save(); c.globalCompositeOperation = 'lighter'; c.lineCap = 'round';
     for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++) { const d = Math.hypot(...V.sub(list[i].p, list[j].p)); if (d < 2.4) {
-      const pulse = 0.55 + 0.45 * Math.sin(t * 9 + i * 1.7 + j * 2.3), a = clamp((q - 0.35) / 0.4) * pulse * (1 - 0.6 * bal);
-      const A = [cx + list[i].p[0] * s, cy + list[i].p[1] * s], B = [cx + list[j].p[0] * s, cy + list[j].p[1] * s];
-      c.strokeStyle = rgba('#FFC85A', 0.35 * a); c.lineWidth = s * 0.34; c.lineCap = 'round'; c.beginPath(); c.moveTo(...A); c.lineTo(...B); c.stroke();
-      c.strokeStyle = rgba('#FFF3D0', 0.7 * a); c.lineWidth = s * 0.1; c.beginPath(); c.moveTo(...A); c.lineTo(...B); c.stroke(); } }
+      const a = clamp((q - 0.35) / 0.4) * (0.45 + 0.55 * Math.sin(t * 9 + i * 1.7 + j * 2.3) ** 2) * (1 - 0.6 * bal);
+      c.strokeStyle = rgba(PAL.fus, 0.9 * a); c.lineWidth = Math.max(1.5, s * 0.05); c.beginPath(); c.moveTo(cx + list[i].p[0] * s, cy + list[i].p[1] * s); c.lineTo(cx + list[j].p[0] * s, cy + list[j].p[1] * s); c.stroke(); } }
     c.restore(); }
-  drawNucleons(c, list, cx, cy, s, {R: O16.Rb, glow: 0.5 + 0.8 * q, glowCol: '#FFC07A'});
-  for (const tb of P.bind7) { const a = t - tb; if (a > 0) gl(c, cx, cy, 700 * (0.4 + a) * (1 - 0.7 * bal), '#FFE6B0', 0.55 * Math.exp(-a / 0.35)); }
+  drawNucleons(c, list, cx, cy, s, {R: O16.Rb, glow: 0.6 + 0.6 * q});
+  for (const tb of P.bind7) burst(c, cx, cy, t - tb, 300 * (1 - 0.7 * bal), PAL.fusHot, 0.8);
   c.restore();
-  finish(stage, t, {bloom: 0.6});
-  label(stage, '강한 힘', 540, 1210, fadeIn(t, P.strong7 - 0.1) * fadeOut(t, P.tight7 - 0.3, 0.3), {size: 44, weight: 700, color: '#FFE0A0'});
+  label(stage, '강한 힘', 540, 1210, fadeIn(t, P.strong7 - 0.1) * fadeOut(t, P.tight7 - 0.3, 0.3), {size: 44, color: PAL.fusHot});
   const la = bal * fadeIn(t, P.tight7 + 0.3);
-  label(stage, '흩어진 16개', clamp(pans[0][0], 200, 880), 1110 + (pans[0][1] - fy) * zoom, la, {size: 36, weight: 700});
-  label(stage, '묶인 산소 16', clamp(pans[1][0], 200, 880), 1110 + (pans[1][1] - fy) * zoom, la, {size: 36, weight: 700, color: '#FFE0B0'});
+  label(stage, '흩어진 16개', clamp(pans[0][0], 200, 880), 1110 + (pans[0][1] - fy) * zoom, la, {size: 36});
+  label(stage, '묶인 산소 16', clamp(pans[1][0], 200, 880), 1110 + (pans[1][1] - fy) * zoom, la, {size: 36, color: PAL.fusHot});
   const n = fadeIn(t, P.less7 - 0.35, 0.4), nz = 1 + 0.15 * smooth((t - P.less7 + 0.35) / 2);
   c.save(); zoomAbout(c, 540, 420, nz); big(stage, '−0.85%', 540, 420, 180, PAL.fusHot, n); c.restore();
-  label(stage, '묶일수록 가볍다', 540, 545, n * fadeIn(t, P.less7), {size: 40, weight: 700});
-  const fi = smooth((t - s0) / 0.35); if (fi < 1) { c.fillStyle = rgba('#000', 1 - fi); c.fillRect(0, 0, W, H); }
-}
-/** the valley with fusion (left) and fission (right) runs; shared by essence and close */
-function valleyShot(stage, t, P, o) {
-  const c = stage.ctx, u = t - o.from;
-  bgFill(c, '#07080D', '#020203'); gl(c, 200, 300, 900, '#5A3010', 0.35); gl(c, 900, 500, 900, '#10305A', 0.35);
-  tiled(c, tex('haze'), t * 12, t * 4, 3.5, 0.06, 'lighter');
-  const key = o.glide ? [[o.from, 0, 23, 0], [P.fe9 - 0.6, 0, 23, 0], [P.fe9 + 0.6, 2.8, 16, 0], [P.u9 - 0.3, 2.8, 16, 0], [P.u9 + 0.9, 4.6, 15, 1.5], [P.h9 - 0.4, 4.6, 15, 1.5], [P.h9 + 0.8, -3.4, 15, 5], [o.from + 30, -3.4, 15, 5]] : [[o.from, -0.3, 23.5, 0], [o.from + 30, 0.3, 22.5, 0]];
-  let k = 0; while (k + 2 < key.length && t > key[k + 1][0]) k++;
-  const q = easeInOut((t - key[k][0]) / Math.max(1e-3, key[k + 1][0] - key[k][0])), tx = lerp(key[k][1], key[k + 1][1], q), dist = lerp(key[k][2], key[k + 1][2], q), side = lerp(key[k][3], key[k + 1][3], q);
-  const ty = lerp(VYx(clamp(tx, -5.6, 5.9)) + 1.3, 2.6, smooth((dist - 16) / 6));
-  const cam = cam3([tx - 0.6 + side + 0.6 * Math.sin(u * 0.2), ty + 0.6 + dist * 0.3, -dist], [tx, ty, 0.4], {fov: 0.8, cy: 900});
-  const vv = valley(stage, cam, t, {iron: 0.8 + 0.2 * Math.sin(t * 2)});
-  // fusion runs on the left slope: D + T at the top → He-4 down near A = 4 (repeat)
-  const runs = o.runs || [[P.vFuse8, 'fus'], [P.vSplit8, 'fis'], [P.vFuse, 'fus'], [P.vSplit, 'fis'], [P.vF21, 'fus'], [P.vS21, 'fis']];
-  for (const [t0, kind] of runs) {
-    const a = t - t0; if (a < -0.6 || a > 3.2) continue;
-    if (kind === 'fus') {
-      const q = clamp(a / 0.9), pD = vv.P(lerp(2, 3.6, q), -0.5), pT = vv.P(lerp(3, 3.7, q), 0.5), sc = clamp(pD[3] / 120, 0.4, 1.6);
-      if (a < 0.9) { light(c, 'D', pD[0], pD[1], 24 * sc, t, {glow: 1.3}); light(c, 'T', pT[0], pT[1], 24 * sc, t + 1, {glow: 1.3}); }
-      else { const he = vv.P(4, 0, 0.6), drop = clamp((a - 0.9) / 0.5), f = a - 0.9; light(c, 'He', he[0], he[1] - (1 - drop) * 30, 26 * sc, t, {glow: 1.5}); gl(c, he[0], he[1], 600 * sc * (0.4 + f), '#FFE6B0', 0.9 * Math.exp(-f / 0.5)); gl(c, he[0], he[1], 150 * sc, '#FFFFFF', Math.exp(-f / 0.2));
-        streak(c, [he[0] + Math.max(0, f - 0.15) * 700, he[1] - Math.max(0, f - 0.15) * 420], [he[0] + f * 700, he[1] - f * 420], 10, PAL.fisHot, Math.exp(-f / 0.9)); }
-    } else {
-      const pu = vv.P(235, 0), sc = clamp(pu[3] / 120, 0.5, 1.8);
-      if (a < 0.6) { c.save(); fissionDraw(c, pu[0], pu[1] - 20, 7 * sc, smooth(a / 0.6), -1, t, {yaw: t * 0.3, pitch: 0.2, wob: 0.05, wph: t * 12}); c.restore(); }
-      else { const q = smooth((a - 0.6) / 1.2), pk = vv.P(lerp(235, 92, q), 0.6), pb = vv.P(lerp(235, 141, q), -0.6), fl = a - 0.6;
-        nucleus(c, pack(92, 36, 92), pk[0], pk[1], 6 * sc, t, {glowCol: '#7FC0FF'}); nucleus(c, pack(141, 56, 141), pb[0], pb[1], 6.5 * sc, t, {glowCol: '#7FC0FF'});
-        gl(c, pu[0], pu[1], 380 * sc * (0.4 + fl), '#BFE6FF', 0.8 * Math.exp(-fl / 0.4)); gl(c, pu[0], pu[1], 100 * sc, '#FFFFFF', Math.exp(-fl / 0.15)); }
-    }
-  }
-  finish(stage, t, {bloom: 0.6, wide: 0.4});
-  const la = o.labels ?? 1;
-  const ph = vv.P(2, 0, 1.6), pf = vv.fe, pu = vv.P(235, 0, 1.4);
-  label(stage, '수소 H', clamp(ph[0], 170, 900), Math.max(360, ph[1] - 40), la * (ph[0] > -50 && ph[0] < W + 50 ? 1 : 0), {size: 38, weight: 700, color: '#FFE0B0'});
-  label(stage, '철 Fe', clamp(pf[0], 170, 900), pf[1] + 90, la * fadeIn(t, (P.fe9 ?? 0) - 0.3) * (o.glide ? 1 : 1), {size: 46, weight: 700, color: PAL.iron});
-  label(stage, '우라늄 U', clamp(pu[0], 170, 900), Math.max(360, pu[1] - 70), la * (pu[0] > -50 && pu[0] < W + 50 ? 1 : 0), {size: 38, weight: 700, color: '#CFE6FF'});
-  if (o.glide) { const fi = smooth(u / 0.5); if (fi < 1) { c.fillStyle = rgba('#000', 1 - fi); c.fillRect(0, 0, W, H); } }
+  label(stage, '묶일수록 가볍다', 540, 545, n * fadeIn(t, P.less7), {size: 40});
+  const fi = smooth((t - s0) / 0.35); if (fi < 1) { c.fillStyle = rgba('#060607', 1 - fi); c.fillRect(0, 0, W, H); }
 }
 
 // ------------------------------------------------------------------ fission: snap → reactor core → turbine → Cherenkov pool
-const RODS = (() => { const r = []; for (let i = -3; i <= 3; i++) for (let j = 0; j <= 3; j++) r.push([i * 0.9, j * 0.9]); return r; })();
-const CTRL = [[-2.25, 0.45], [-0.45, 0.45], [1.35, 0.45], [-1.35, 2.25], [0.45, 2.25], [2.25, 2.25]];
-function coreView(stage, t, P, u, a = 1) {
-  const c = stage.ctx, cam = cam3(orbit(-0.35 + u * 0.04, 0.42, 9.5, [0, 1.6, 1.35]), [0, 1.5, 1.35], {fov: 0.9, cy: 880});
-  bgPool(c, t, 0.35 + 0.25 * a, 540, 900);
-  const items = [];
-  for (const [x, z] of RODS) items.push({z: cam.P([x, 2, z])[2], draw: () => cyl(c, cam, x, z, 0.14, 0, 3.4, '#8EA2B8', 0.85, PAL.cher)});
-  const ins = P.rod(t);
-  for (const [x, z] of CTRL) items.push({z: cam.P([x, 2, z])[2] - 0.01, draw: () => cyl(c, cam, x, z, 0.12, 3.4 - ins * 3.4, 4.6, '#2A2E36', 1, null)});
-  items.sort((p, q) => q.z - p.z).forEach(i => i.draw());
-  // neutron generations: each streak lives one generation and ends in a flash (one fission)
-  const R = rng(9);
+// reactor core as a front elevation (line drawing, as in the series): fuel rods, control rods from above, neutron dots
+const FUEL = [...Array(8)].map((_, i) => 200 + i * 97), CTRLX = [0, 2, 4, 6].map(i => 200 + i * 97 + 48.5);
+const CORE = {x0: 130, x1: 950, y0: 470, y1: 1130, f0: 600, f1: 1090};
+function coreView(stage, t, P, u) {
+  const c = stage.ctx, ins = P.rod(t), z = 1 + 0.07 * smooth(u / 9);
+  seriesBg(c, '#1E3A5A', 0.14, 540, 820); dust(c, t, '#C8D4E8', 0.4);
+  c.save(); zoomAbout(c, 540, 800, z); c.translate(10 * Math.sin(u * 0.35), 0);
+  const {x0, x1, y0, y1, f0, f1} = CORE;
+  c.fillStyle = rgba(PAL.cher, 0.05); c.fillRect(x0, y0 + 60, x1 - x0, y1 - y0 - 60);
+  c.beginPath(); for (let x = x0; x <= x1; x += 10) { const y = y0 + 60 + 5 * Math.sin(x * 0.04 + t * 2); x === x0 ? c.moveTo(x, y) : c.lineTo(x, y); } c.strokeStyle = rgba(PAL.cher, 0.55); c.lineWidth = 1.5; c.stroke();
+  c.strokeStyle = rgba(PAL.line, 0.7); c.lineWidth = 2.5; c.beginPath(); c.moveTo(x0, y0); c.lineTo(x0, y1); c.lineTo(x1, y1); c.lineTo(x1, y0); c.stroke();
+  // fission flashes light the rod they happen in
+  const heat = FUEL.map(() => 0), hits = [];
   for (const [gi, g] of P.gens.entries()) {
-    const age = t - g.t; if (age < 0 || age > 0.62) continue;
+    const age = t - g.t; if (age < -0.01 || age > 1.6) continue;
     for (let k = 0; k < g.n; k++) {
-      const r1 = RODS[Math.floor(rand2(gi * 31 + k * 7) * RODS.length)], r2 = RODS[Math.floor(rand2(gi * 17 + k * 13 + 5) * RODS.length)];
-      const y1 = 0.4 + 2.6 * rand2(gi * 3 + k), y2 = 0.4 + 2.6 * rand2(gi * 5 + k * 11 + 1), q = clamp(age / 0.42);
-      const pa = cam.P([r1[0], y1, r1[1]]), pb = cam.P([lerp(r1[0], r2[0], q), lerp(y1, y2, q), lerp(r1[1], r2[1], q)]), pt = cam.P([lerp(r1[0], r2[0], Math.max(0, q - 0.35)), lerp(y1, y2, Math.max(0, q - 0.35)), lerp(r1[1], r2[1], Math.max(0, q - 0.35))]);
-      if (age < 0.42) streak(c, [pt[0], pt[1]], [pb[0], pb[1]], 9, PAL.fisHot, 0.95 * a);
-      else { const f = age - 0.42; gl(c, pb[0], pb[1], 120 * (0.4 + f * 3), '#FFFFFF', 0.8 * Math.exp(-f / 0.08) * a); gl(c, pb[0], pb[1], 60, PAL.fis, 0.7 * a); }
-      void pa; void R;
+      const i1 = Math.floor(rand2(gi * 31 + k * 7) * 8), i2 = (i1 + 1 + Math.floor(rand2(gi * 17 + k * 13 + 5) * 7)) % 8;
+      const y1 = f0 + 30 + (f1 - f0 - 60) * rand2(gi * 3 + k), y2 = f0 + 30 + (f1 - f0 - 60) * rand2(gi * 5 + k * 11 + 1);
+      hits.push({age, a: [FUEL[i1], y1], b: [FUEL[i2], y2]}); if (age > 0.42) heat[i2] = Math.max(heat[i2], Math.exp(-(age - 0.42) / 0.4));
     }
   }
-  return cam;
-}
-const rand2 = i => { const x = Math.sin(i * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); };
-function cyl(c, cam, x, z, r, y0, y1, col, a = 1, glowCol = null) {
-  const b0 = cam.P([x, y0, z]), b1 = cam.P([x, y1, z]); if (b0[2] < 0.2) return;
-  const w0 = r * b0[3], w1 = r * b1[3];
-  const g = c.createLinearGradient(b0[0] - w0, 0, b0[0] + w0, 0); g.addColorStop(0, mix(col, '#000000', 0.6)); g.addColorStop(0.35, mix(col, '#FFFFFF', 0.25)); g.addColorStop(0.6, col); g.addColorStop(1, mix(col, '#000000', 0.7));
-  c.save(); c.globalAlpha = a; c.beginPath(); c.moveTo(b0[0] - w0, b0[1]); c.lineTo(b1[0] - w1, b1[1]); c.lineTo(b1[0] + w1, b1[1]); c.lineTo(b0[0] + w0, b0[1]); c.closePath(); c.fillStyle = g; c.fill();
-  c.beginPath(); c.ellipse(b1[0], b1[1], w1, w1 * 0.35, 0, 0, TAU); c.fillStyle = mix(col, '#FFFFFF', 0.2); c.fill(); c.restore();
-  if (glowCol) { gl(c, (b0[0] + b1[0]) / 2, (b0[1] + b1[1]) / 2, Math.abs(b0[1] - b1[1]) * 0.45, glowCol, 0.12); }
+  FUEL.forEach((x, i) => { const w = 30;
+    c.fillStyle = rgba(PAL.p, 0.14 + 0.25 * heat[i]); c.fillRect(x - w / 2, f0, w, f1 - f0); c.strokeStyle = rgba(PAL.p, 0.9); c.lineWidth = 2; c.strokeRect(x - w / 2, f0, w, f1 - f0);
+    c.strokeStyle = rgba(PAL.p, 0.3); c.lineWidth = 1; for (let y = f0 + 35; y < f1; y += 35) { c.beginPath(); c.moveTo(x - w / 2 + 4, y); c.lineTo(x + w / 2 - 4, y); c.stroke(); } });
+  const yb = f0 - 20 + ins * (f1 - f0);
+  for (const x of CTRLX) { const w = 24; c.strokeStyle = rgba(PAL.line, 0.5); c.lineWidth = 1.5; c.beginPath(); c.moveTo(x, 330); c.lineTo(x, yb - 300); c.stroke();
+    c.fillStyle = 'rgba(40,42,48,0.95)'; c.fillRect(x - w / 2, yb - 300, w, 300); c.strokeStyle = rgba(PAL.line, 0.9); c.lineWidth = 2; c.strokeRect(x - w / 2, yb - 300, w, 300); }
+  for (const h of hits) {
+    if (h.age < 0.42) { const q = clamp(h.age / 0.42), qt = Math.max(0, q - 0.3), at = qq => [lerp(h.a[0], h.b[0], qq), lerp(h.a[1], h.b[1], qq)]; trail(c, at(qt), at(q), 0.9, 2); neutronDot(c, ...at(q), 5); }
+    else burst(c, h.b[0], h.b[1], h.age - 0.42, 34, PAL.fusHot, 0.7);
+  }
+  c.restore();
+  return z;
 }
 function turbine(c, cx, cy, R, t, a) {
-  const ang = t * 9, base = c.globalAlpha * a;
-  c.save(); c.globalAlpha = base;
-  gl(c, cx, cy, R * 1.8, '#FF9A4A', 0.25 * base);
-  for (let m = 0; m < 4; m++) {                                              // motion blur: a few rotated copies
-    c.save(); c.globalAlpha = base * (m === 0 ? 0.9 : 0.18); c.translate(cx, cy); c.rotate(ang - m * 0.05);
-    for (let k = 0; k < 26; k++) { c.rotate(TAU / 26); const g = c.createLinearGradient(0, R * 0.22, 0, R); g.addColorStop(0, '#5E6672'); g.addColorStop(0.5, '#C9D2DC'); g.addColorStop(1, '#7A8492');
-      c.beginPath(); c.moveTo(-R * 0.03, R * 0.22); c.quadraticCurveTo(R * 0.09, R * 0.6, R * 0.05, R); c.lineTo(R * 0.13, R); c.quadraticCurveTo(R * 0.15, R * 0.6, R * 0.05, R * 0.22); c.closePath(); c.fillStyle = g; c.fill(); }
-    c.restore();
-  }
-  const hg = c.createRadialGradient(cx - R * 0.08, cy - R * 0.08, 2, cx, cy, R * 0.24); hg.addColorStop(0, '#E8EEF4'); hg.addColorStop(1, '#4A525C'); circle(c, cx, cy, R * 0.23, hg);
+  const ang = t * 7;
+  c.save(); c.globalAlpha *= a; c.translate(cx, cy);
+  c.strokeStyle = rgba(PAL.line, 0.5); c.lineWidth = 2; c.beginPath(); c.arc(0, 0, R * 1.04, 0, TAU); c.stroke();
+  for (let m = 0; m < 3; m++) { c.save(); c.rotate(ang - m * 0.06); c.strokeStyle = rgba(PAL.line, m === 0 ? 0.9 : 0.2); c.lineWidth = m === 0 ? 2.5 : 2;
+    for (let k = 0; k < 24; k++) { c.rotate(TAU / 24); c.beginPath(); c.moveTo(0, R * 0.24); c.quadraticCurveTo(R * 0.12, R * 0.62, R * 0.06, R); c.stroke(); } c.restore(); }
+  c.beginPath(); c.arc(0, 0, R * 0.22, 0, TAU); c.fillStyle = '#111214'; c.fill(); c.strokeStyle = rgba(PAL.fus, 0.9); c.lineWidth = 3; c.stroke();
   c.restore();
+}
+const CAUSTIC = [...Array(7)].map((_, k) => ({y: 420 + k * 150, ph: k * 1.3, amp: 26 + 10 * (k % 3), f: 0.008 + 0.002 * (k % 4)}));
+function poolView(c, t, d) {
+  const cy = lerp(1500, 1000, d), s = lerp(0.6, 1, d);
+  const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#071420'); g.addColorStop(1, '#020509'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+  gl(c, 540, cy, 760, PAL.cher, 0.32); gl(c, 540, cy, 330, '#9FD8FF', 0.28);
+  c.save(); c.globalCompositeOperation = 'lighter'; c.lineWidth = 1.5;               // a few thin caustic lines
+  for (const L of CAUSTIC) { c.beginPath(); for (let x = -20; x <= W + 20; x += 18) { const y = L.y + L.amp * Math.sin(x * L.f + t * 0.9 + L.ph) + 12 * Math.sin(x * 0.021 - t * 0.6); x < 0 ? c.moveTo(x, y) : c.lineTo(x, y); } c.strokeStyle = rgba(PAL.cher, 0.16); c.stroke(); }
+  for (let k = 0; k < 14; k++) { const a = -Math.PI / 2 + (k - 6.5) * 0.11; c.strokeStyle = rgba(PAL.cher, 0.14); c.lineWidth = 2; c.beginPath(); c.moveTo(540 + Math.cos(a) * 200 * s, cy + Math.sin(a) * 200 * s); c.lineTo(540 + Math.cos(a) * 1100, cy + Math.sin(a) * 1100); c.stroke(); }
+  c.restore();
+  for (let i = -3; i <= 3; i++) for (let j = -3; j <= 3; j++) { if (Math.abs(i) + Math.abs(j) > 4) continue; const x = 540 + i * 62 * s, y = cy + j * 62 * s * 0.6;
+    c.strokeStyle = rgba('#9FD8FF', 0.8); c.lineWidth = 2; c.strokeRect(x - 22 * s, y - 14 * s, 44 * s, 28 * s); gl(c, x, y, 40 * s, PAL.cher, 0.25 + 0.08 * Math.sin(t * 3 + i + j)); }
+  const R = rng(21); for (let i = 0; i < 50; i++) { const sp = 0.3 + 0.7 * R(), q = ((t * 0.22 * sp + R()) % 1), x = 540 + (R() - 0.5) * 520 * (0.4 + q) + Math.sin(t * 2 + i) * 6, y = cy - q * 1050, r = 3 + 6 * R();
+    c.strokeStyle = rgba('#CFEFFF', 0.4 * (1 - q)); c.lineWidth = 1.5; c.beginPath(); c.arc(x, y, r, 0, TAU); c.stroke(); }
 }
 function fissionScene(stage, t, ctx) {
   const c = stage.ctx, P = plan(ctx.tl), s0 = ctx.scene.start;
-  if (t < P.core[0]) {                                                        // the snap, in declared slow motion
-    bgLab(c, t); gl(c, 540, 820, 1100, '#1E4A8A', 0.35);
-    const zz = 1 + 0.18 * smooth((t - s0) / (P.core[0] - s0)); c.save(); zoomAbout(c, 540, 800, zz); shake(c, t, P.snap, 9);
-    const u = (t - P.snap) * P.slowK;
+  if (t < P.core[0]) {
+    seriesBg(c, '#2A3240', 0.14, 540, 800); dust(c, t);
+    c.save(); zoomAbout(c, 540, 800, 1 + 0.18 * smooth((t - s0) / (P.core[0] - s0))); shake(c, t, P.snap, 6);
+    const u = (t - P.snap) * P.slowK, yaw = 0.25 + 0.03 * (t - s0);
     if (u <= 0) {
       const ab = t > P.absorb, e = ab ? 0.85 * smooth((t - (P.wob10 - 0.2)) / (P.snap - P.wob10 + 0.2)) : 0, wob = ab ? 0.05 + 0.1 * smooth((t - P.absorb) / 1.2) : 0;
-      fissionDraw(c, 540, 800, 27, e, -1, t, {yaw: 0.25 + 0.03 * (t - s0), pitch: 0.25, wob, wph: t * 11, glowCol: '#86B8FF'});
-      if (t > P.nIn && t < P.absorb) { const q = (t - P.nIn) / (P.absorb - P.nIn); streak(c, [lerp(-200, 330, q), lerp(300, 650, q)], [lerp(-60, 380, q), lerp(380, 690, q)], 22, PAL.fisHot, 1); }
-      if (ab) gl(c, 540, 800, 380, '#9FD0FF', 0.25 * Math.exp(-(t - P.absorb) / 0.4));
-    } else fissionDraw(c, 540, 800, 27, 1, u, t, {yaw: 0.25 + 0.03 * (t - s0), pitch: 0.25, glowCol: '#86B8FF'});
+      fissionDraw(c, 540, 800, 27, e, -1, t, {yaw, pitch: 0.25, wob, wph: t * 11});
+      if (t > P.nIn && t < P.absorb) { const q = (t - P.nIn) / (P.absorb - P.nIn), hx = lerp(-60, 380, q), hy = lerp(380, 690, q); streak(c, [hx - 130, hy - 92], [hx, hy], 22); }
+      if (ab) ringFx(c, 540, 800, 240 + 160 * (t - P.absorb), PAL.fis, 0.5 * Math.exp(-(t - P.absorb) / 0.5));
+    } else fissionDraw(c, 540, 800, 27, 1, u, t, {yaw, pitch: 0.25, age: t - P.snap, ringR: 13});
     c.restore();
-    finish(stage, t, {bloom: 0.7, wide: 0.45});
-    big(stage, '235', 760, 520, 110, '#CFE6FF', fadeIn(t, P.u10 - 0.2) * fadeOut(t, P.absorb, 0.4));
-    label(stage, '우라늄', 760, 610, fadeIn(t, P.u10 - 0.2) * fadeOut(t, P.absorb, 0.4), {size: 36, weight: 700});
-    label(stage, '느린 화면 · 실제로는 아주 짧은 순간', 540, 1270, fadeIn(t, P.wob10 - 0.2) * fadeOut(t, P.core[0] - 0.4), {size: 30, color: PAL.muted});
-    const fi = smooth((t - s0) / 0.4); if (fi < 1) { c.fillStyle = rgba('#000', 1 - fi); c.fillRect(0, 0, W, H); }
+    big(stage, '235', 770, 520, 110, '#E6EBEE', fadeIn(t, P.u10 - 0.2) * fadeOut(t, P.absorb, 0.4));
+    label(stage, '우라늄', 770, 610, fadeIn(t, P.u10 - 0.2) * fadeOut(t, P.absorb, 0.4), {size: 36});
+    label(stage, '느린 화면 · 실제로는 아주 짧은 순간', 540, 1270, fadeIn(t, P.wob10 - 0.2) * fadeOut(t, P.core[0] - 0.4), {size: 30, color: PAL.muted, weight: 500});
+    const fi = smooth((t - s0) / 0.4); if (fi < 1) { c.fillStyle = rgba('#060607', 1 - fi); c.fillRect(0, 0, W, H); }
     return;
   }
-  if (t < P.turbine) {                                                         // reactor core, control rods, k = 1
+  if (t < P.turbine) {
     const u = t - P.core[0];
     coreView(stage, t, P, u);
-    finish(stage, t, {bloom: 0.7, wide: 0.45});
-    const k = P.k(t), ka = fadeIn(t, P.core[0] + 0.5);
-    big(stage, `k = ${k.toFixed(2)}`, 540, 1180, 120, Math.abs(k - 1) < 0.02 ? '#BFE6FF' : k > 1 ? '#FFB07A' : '#9FB8D8', ka);
-    label(stage, Math.abs(k - 1) < 0.02 ? '분열 하나 → 다음 분열 하나' : k > 1 ? '늘어난다' : '줄어든다', 540, 1275, ka, {size: 36, weight: 700});
-    label(stage, '제어봉', 860, 430, fadeIn(t, P.rod11 - 0.3) * fadeOut(t, P.turbine - 0.3), {size: 34, color: '#C8CED8', weight: 700});
-    const fi = smooth(u / 0.5); if (fi < 1) { c.fillStyle = rgba('#000', 1 - fi); c.fillRect(0, 0, W, H); }
+    const k = P.k(t), ka = fadeIn(t, P.core[0] + 0.5), one = Math.abs(k - 1) < 0.02;
+    big(stage, `k = ${k.toFixed(2)}`, 540, 1255, 112, one ? PAL.fisHot : k > 1 ? PAL.fus : '#9FB8D8', ka);
+    label(stage, one ? '분열 하나 → 다음 분열 하나' : k > 1 ? '늘어난다' : '줄어든다', 540, 1345, ka, {size: 34});
+    label(stage, '제어봉', 540, 340, fadeIn(t, P.rod11 - 0.4) * fadeOut(t, P.turbine - 0.3), {size: 34, color: PAL.line});
+    label(stage, '연료봉', 540, 1165, ka * fadeOut(t, P.turbine - 0.3), {size: 32, color: PAL.p});
+    const fi = smooth(u / 0.5); if (fi < 1) { c.fillStyle = rgba('#060607', 1 - fi); c.fillRect(0, 0, W, H); }
     return;
   }
-  // turbine → dive into the pool (Cherenkov)
   const d = smooth((t - P.dive) / 1.0);
-  bgPool(c, t, 0.3 + 0.9 * d, 540, lerp(1500, 1050, d));
   if (d < 1) {
-    c.save(); c.globalAlpha = 1 - d;
-    bgFill(c, '#140E0A', '#06080C'); gl(c, 540, 700, 900, '#FF8A3A', 0.25);
-    const R = rng(12); c.save(); c.globalCompositeOperation = 'lighter';
-    for (let i = 0; i < 140; i++) { const q = ((t * 0.6 + R()) % 1), y = 700 + (R() - 0.5) * 380, x = lerp(-80, 420, q); gl(c, x, y + Math.sin(q * 6 + i) * 30, 50 + 60 * R(), '#E8EEF4', 0.10 * (1 - q)); }
+    seriesBg(c, '#3A2A1E', 0.14, 600, 720); dust(c, t);
+    c.save(); c.globalCompositeOperation = 'lighter'; const R = rng(12);
+    for (let i = 0; i < 90; i++) { const q = ((t * 0.6 + R()) % 1), y = 720 + (R() - 0.5) * 360, x = lerp(-60, 420, q); circle(c, x, y + Math.sin(q * 6 + i) * 24, 2 + 3 * R(), rgba('#D8D2C8', 0.35 * (1 - q))); }
     c.restore();
-    turbine(c, 600, 720, 300, t, 1);
-    c.restore();
+    turbine(c, 620, 720, 290, t, 1);
   }
-  if (d > 0) {                                                                 // looking down into the pool
-    const cy = lerp(1500, 1050, d), s = lerp(0.6, 1, d);
-    c.save(); c.globalAlpha = d;
-    for (let i = -3; i <= 3; i++) for (let j = -3; j <= 3; j++) { if (Math.abs(i) + Math.abs(j) > 4) continue; const x = 540 + i * 62 * s, y = cy + j * 62 * s * 0.6; rect(c, x - 22 * s, y - 14 * s, 44 * s, 28 * s, 4, '#0A2A4A', rgba('#8FD4FF', 0.6), 2); gl(c, x, y, 70 * s, '#BFE6FF', 0.35 + 0.1 * Math.sin(t * 3 + i + j)); }
-    c.save(); c.globalCompositeOperation = 'lighter';                        // god rays
-    for (let k = 0; k < 18; k++) { const a = -Math.PI / 2 + (k - 9) * 0.12 + 0.03 * Math.sin(t + k); const g = c.createLinearGradient(540, cy, 540 + Math.cos(a) * 1400, cy + Math.sin(a) * 1400); g.addColorStop(0, 'rgba(120,190,255,0.22)'); g.addColorStop(1, 'rgba(120,190,255,0)');
-      c.fillStyle = g; c.beginPath(); c.moveTo(540, cy); c.lineTo(540 + Math.cos(a - 0.03) * 1500, cy + Math.sin(a - 0.03) * 1500); c.lineTo(540 + Math.cos(a + 0.03) * 1500, cy + Math.sin(a + 0.03) * 1500); c.closePath(); c.fill(); }
-    c.restore();
-    const R = rng(21); for (let i = 0; i < 90; i++) { const sp = 0.3 + 0.7 * R(), q = ((t * 0.25 * sp + R()) % 1), x = 540 + (R() - 0.5) * 520 * (0.4 + q), y = cy - q * 1100, r = 3 + 7 * R();
-      c.strokeStyle = rgba('#CFEFFF', 0.45 * (1 - q)); c.lineWidth = 2; c.beginPath(); c.arc(x + Math.sin(t * 3 + i) * 8, y, r, 0, TAU); c.stroke(); circle(c, x - r * 0.3 + Math.sin(t * 3 + i) * 8, y - r * 0.3, r * 0.3, rgba('#FFFFFF', 0.5 * (1 - q))); }
-    c.restore();
-  }
-  finish(stage, t, {bloom: 0.75, wide: 0.5, thr: 2.0});
-  label(stage, '증기 → 터빈', 540, 1150, fadeIn(t, P.turb12 - 0.2) * (1 - d), {size: 38, weight: 700});
-  big(stage, '체렌코프 빛', 540, 520, 96, '#DFF3FF', fadeIn(t, P.blue12 - 0.2, 0.5) * fadeOut(t, ctx.scene.end - 0.4));
-  label(stage, '물속 빛보다 빠른 전자가 내는 푸른 빛', 540, 620, fadeIn(t, P.blue12 + 0.3, 0.5) * fadeOut(t, ctx.scene.end - 0.4), {size: 32});
+  if (d > 0) { c.save(); c.globalAlpha = d; poolView(c, t, d); c.restore(); }
+  label(stage, '증기 → 터빈', 540, 1150, fadeIn(t, P.turb12 - 0.2) * (1 - d), {size: 38});
+  big(stage, '체렌코프 빛', 540, 520, 92, '#DDF0FF', fadeIn(t, P.blue12 - 0.2, 0.5) * fadeOut(t, ctx.scene.end - 0.4));
+  label(stage, '물속 빛보다 빠른 전자가 내는 푸른 빛', 540, 620, fadeIn(t, P.blue12 + 0.3, 0.5) * fadeOut(t, ctx.scene.end - 0.4), {size: 32, weight: 500});
 }
 
-// ------------------------------------------------------------------ fusion: Coulomb wall → tokamak → KSTAR
+// ------------------------------------------------------------------ fusion: Coulomb hill (graph) → tokamak (wireframe) → KSTAR
 function tokamak(stage, t, cam, o = {}) {
-  const c = stage.ctx, R0 = 1, a = 0.32, kap = 1.35, A = o.plasma ?? 1, wob = o.wob || 0;
+  const c = stage.ctx, R0 = 1, a = 0.32, kap = 1.35, A = o.plasma ?? 1, wob = o.wob || 0, cz = cam.P([0, 0, 0])[2];
   const pt = (phi, th, r) => [(R0 + r * Math.cos(th)) * Math.cos(phi), r * Math.sin(th) * kap, (R0 + r * Math.cos(th)) * Math.sin(phi)];
-  const coil = (phi, front) => { const pts = []; for (let i = 0; i <= 48; i++) { const th = i / 48 * TAU; const p = [(R0 + 0.5 * Math.cos(th)) * Math.cos(phi), 0.72 * Math.sin(th), (R0 + 0.5 * Math.cos(th)) * Math.sin(phi)]; pts.push(cam.P(p)); }
-    const zc = cam.P(pt(phi, 0, 0))[2], isFront = zc < cam.P([0, 0, 0])[2]; if (isFront !== front) return;
-    const w = clamp(0.032 * pts[0][3], 3, 22);
-    c.beginPath(); pts.forEach((p, i) => (i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1]))); c.lineJoin = 'round';
-    c.strokeStyle = front ? 'rgba(92,64,46,0.62)' : 'rgba(70,50,38,0.9)'; c.lineWidth = w; c.stroke();
-    c.strokeStyle = front ? 'rgba(230,170,120,0.28)' : 'rgba(200,140,100,0.22)'; c.lineWidth = w * 0.28; c.stroke(); };
-  const vessel = front => { for (let k = 0; k < 24; k++) { const phi = k / 24 * TAU, zc = cam.P(pt(phi, 0, 0))[2], isFront = zc < cam.P([0, 0, 0])[2]; if (isFront !== front) continue;
-      c.beginPath(); for (let i = 0; i <= 36; i++) { const p = cam.P(pt(phi, i / 36 * TAU, 0.42)); i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1]); } c.strokeStyle = rgba('#9FB0C4', front ? 0.22 : 0.12); c.lineWidth = 2; c.stroke(); }
-    for (const th of [0, Math.PI / 2, Math.PI, -Math.PI / 2]) { c.beginPath(); let first = true; for (let i = 0; i <= 96; i++) { const phi = i / 96 * TAU, p = cam.P(pt(phi, th, 0.42)), fr = cam.P(pt(phi, 0, 0))[2] < cam.P([0, 0, 0])[2]; if (fr !== front) { first = true; continue; } first ? c.moveTo(p[0], p[1]) : c.lineTo(p[0], p[1]); first = false; } c.strokeStyle = rgba('#9FB0C4', front ? 0.3 : 0.15); c.lineWidth = 2.5; c.stroke(); } };
-  for (let k = 0; k < 12; k++) coil(k / 12 * TAU + 0.13, false);
-  vessel(false);
-  // plasma: particles streaming along helical field lines
-  if (A > 0.003) {
-    c.save(); c.globalCompositeOperation = 'lighter';
-    for (let k = 0; k < 160; k++) { const phi = k / 160 * TAU, p = cam.P(pt(phi, 0, 0)); if (p[2] > 0.1) { gl(c, p[0], p[1], 0.3 * p[3], PAL.plasma, 0.07 * A); gl(c, p[0], p[1], 0.12 * p[3], '#FFE0F0', 0.06 * A); } }
-    const R = rng(33), N = o.n ?? 900;
+  const front = phi => cam.P(pt(phi, 0, 0))[2] < cz;
+  const coil = (phi, fr) => { if (front(phi) !== fr) return; c.beginPath(); for (let i = 0; i <= 48; i++) { const th = i / 48 * TAU, p = cam.P([(R0 + 0.52 * Math.cos(th)) * Math.cos(phi), 0.74 * Math.sin(th), (R0 + 0.52 * Math.cos(th)) * Math.sin(phi)]); i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1]); }
+    c.strokeStyle = rgba('#B08A66', 0.4); c.lineWidth = 2; c.stroke(); };
+  const vessel = fr => { c.lineWidth = 1.5;
+    for (let k = 0; k < 16; k++) { const phi = k / 16 * TAU + 0.2; if (front(phi) !== fr) continue; c.beginPath(); for (let i = 0; i <= 36; i++) { const p = cam.P(pt(phi, i / 36 * TAU, 0.42)); i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1]); } c.strokeStyle = rgba('#A09A90', fr ? 0.2 : 0.1); c.stroke(); }
+    for (const th of [0, Math.PI / 2, Math.PI, -Math.PI / 2]) { c.beginPath(); let first = true; for (let i = 0; i <= 120; i++) { const phi = i / 120 * TAU; if (front(phi) !== fr) { first = true; continue; } const p = cam.P(pt(phi, th, 0.42)); first ? c.moveTo(p[0], p[1]) : c.lineTo(p[0], p[1]); first = false; } c.strokeStyle = rgba('#A09A90', fr ? 0.4 : 0.16); c.stroke(); } };
+    vessel(false);
+  if (A > 0.003) {                                                            // plasma: short streams of dots along the field
+    c.save(); c.globalCompositeOperation = 'lighter'; c.lineCap = 'round';
+    const R = rng(33), N = o.n ?? 1300, dt = 0.16;
     for (let i = 0; i < N; i++) {
-      const r = a * Math.sqrt(R()) * (1 + wob * 0.6 * Math.sin(t * 9 + i)), phi0 = R() * TAU, th0 = R() * TAU, q = 1 + 2 * (r / a) ** 2, v = 0.9 + 0.3 * R();
-      const phi = phi0 + t * v * (o.speed ?? 0.55), th = th0 + t * v / q * 2.2 + wob * Math.sin(phi * 3 + t * 6), p = cam.P(pt(phi, th, r));
-      if (p[2] < 0.1) continue;
-      const hot = 1 - r / a, sz = clamp(p[3] * (0.028 + 0.034 * hot), 4, 34), col = hot > 0.6 ? '#FFE0F0' : hot > 0.3 ? PAL.plasma : PAL.plasma2;
-      c.globalAlpha = clamp(A * (0.3 + 0.38 * hot)); c.drawImage(G(col), p[0] - sz, p[1] - sz, 2 * sz, 2 * sz);
+      const rr = a * Math.sqrt(R()), phi0 = R() * TAU, th0 = R() * TAU, q = 1 + 2 * (rr / a) ** 2, v = 0.9 + 0.3 * R(), jit = R();
+      const at = tt => { const r = rr * (1 + wob * 0.6 * Math.sin(tt * 9 + i)), phi = phi0 + tt * v * 0.55, th = th0 + (phi - phi0) / q + wob * Math.sin(phi * 3 + tt * 6); return cam.P(pt(phi, th, r)); };
+      const p = at(t), p0 = at(t - dt); if (p[2] < 0.1) continue; const back = p[2] > cz ? 0.45 : 1;
+      const hot = 1 - rr / a, col = hot > 0.6 ? PAL.fusHot : PAL.plasma, al = clamp(A * back * (0.45 + 0.5 * hot) * (0.6 + 0.4 * jit)), sz = clamp(p[3] * (0.005 + 0.004 * hot), 1.4, 4);
+      c.strokeStyle = rgba(col, al * 0.55); c.lineWidth = sz; c.beginPath(); c.moveTo(p0[0], p0[1]); c.lineTo(p[0], p[1]); c.stroke();
+      c.fillStyle = rgba(col, al); c.beginPath(); c.arc(p[0], p[1], sz * 0.9, 0, TAU); c.fill();
     }
     c.restore();
-    const cc = cam.P([0, 0, 0]); gl(c, cc[0], cc[1], 480, PAL.plasma, 0.12 * A);
+    const cc = cam.P([0, 0, 0]); gl(c, cc[0], cc[1], 420, PAL.plasma, 0.1 * A);
   }
-  // helical field lines (a few)
-  for (let L = 0; L < 5; L++) { c.beginPath(); let first = true; for (let i = 0; i <= 600; i++) { const phi = i / 600 * TAU * 3 + L * 0.4 + t * 0.3, th = phi / 3 * 1 + L * 1.25, p = cam.P(pt(phi, th, 0.36)); if (p[2] < 0.1) { first = true; continue; } first ? c.moveTo(p[0], p[1]) : c.lineTo(p[0], p[1]); first = false; }
-    c.strokeStyle = rgba('#7FE8FF', 0.22 * (o.field ?? 1)); c.lineWidth = 2; c.stroke(); }
+  for (let L = 0; L < 10; L++) {                                              // helical field lines on the plasma edge (q = 3: a third of a turn per lap)
+    let prev = null; c.lineWidth = 1.5;
+    for (let i = 0; i <= 160; i++) { const phi = i / 160 * TAU, th = L / 10 * TAU + phi / 3 + t * 0.25, p = cam.P(pt(phi, th, 0.37)), fr = p[2] < cz;
+      if (prev) { c.strokeStyle = rgba(PAL.fis, (fr ? 0.38 : 0.1) * (o.field ?? 1)); c.beginPath(); c.moveTo(prev[0], prev[1]); c.lineTo(p[0], p[1]); c.stroke(); } prev = p; } }
   vessel(true);
-  for (let k = 0; k < 12; k++) coil(k / 12 * TAU + 0.13, true);
+  for (let k = 0; k < 8; k++) coil(k / 8 * TAU + 0.13, true);
 }
+const HILL = {x0: 150, x1: 930, yb: 1240, top: 900, r0: 0.08};
+const hillX = r => HILL.x0 + r * (HILL.x1 - HILL.x0), hillU = r => Math.min(1, HILL.r0 / Math.max(r, 1e-3)), hillY = U => HILL.yb - U * (HILL.yb - HILL.top);
 function fusionScene(stage, t, ctx) {
   const c = stage.ctx, P = plan(ctx.tl), s0 = ctx.scene.start, tokIn = P.donut14 - 0.6;
   if (t < tokIn) {
-    bgPlasma(c, t);
+    seriesBg(c, '#1E2A40', 0.14, 540, 760); dust(c, t);
     const T = lerp(1e7, 1.05e8, smooth((t - P.heat[0]) / (P.heat[1] - P.heat[0])));
-    // attempt 1 (cold): approach, slow down, bounce; attempt 2 (hot): collide and fuse
-    const z = 1 + 0.1 * smooth((t - s0) / 6); c.save(); zoomAbout(c, 540, 800, z); shake(c, t, P.fuse13, 6);
-    const tb = P.bounce13, a1 = t - (tb - 1.0);
-    const arcs = g => { if (g > 260) return; const k = (260 - g) / 260; c.save(); c.globalCompositeOperation = 'lighter';
-      for (let j = -3; j <= 3; j++) { c.beginPath(); c.moveTo(540 - g + 40, 800 + j * 22); c.quadraticCurveTo(540, 800 + j * 22 + j * 60 * (0.6 + k), 540 + g - 40, 800 + j * 22); c.strokeStyle = rgba('#FF9AD0', 0.22 * k); c.lineWidth = 3; c.stroke(); }
-      gl(c, 540, 800, 160 + 120 * k, '#FF7FC0', 0.25 * k); c.restore(); };
-    if (t < P.fuse13 - 1.1) {
-      const g = a1 < 1.0 ? lerp(330, 120, easeOut(a1 / 1.0)) : lerp(120, 300, easeIn(clamp((a1 - 1.0) / 1.2)));
-      arcs(g); light(c, 'D', 540 - g, 800, 58, t, {glow: 1.3}); light(c, 'T', 540 + g, 800, 58, t + 1, {glow: 1.3});
-    } else {
-      const a2 = t - (P.fuse13 - 1.1);
-      if (a2 < 1.1) { const g = lerp(300, 55, easeIn(a2 / 1.1)); arcs(g); light(c, 'D', 540 - g, 800, 58, t, {glow: 1.6}); light(c, 'T', 540 + g, 800, 58, t + 1, {glow: 1.6}); for (let k = 1; k < 6; k++) { gl(c, 540 - g - k * 46, 800, 40, '#FFC0E0', 0.3 / k); gl(c, 540 + g + k * 46, 800, 40, '#FFC0E0', 0.3 / k); } }
-      else { const f = a2 - 1.1; light(c, 'He', 540 - f * 90, 800 - f * 40, 60, t, {glow: 1.8, hot: 0.6 * Math.exp(-f / 0.6)}); gl(c, 540, 800, 900 * (0.3 + f), '#FFE6B0', Math.exp(-f / 0.45)); gl(c, 540, 800, 240, '#FFFFFF', Math.exp(-f / 0.15));
-        streak(c, [540 + Math.max(0, f - 0.12) * 1100, 800 + Math.max(0, f - 0.12) * 430], [540 + f * 1100, 800 + f * 430], 18, PAL.fisHot, Math.exp(-f / 2)); }
-    }
+    // separation r(t): attempt 1 (cold, E = 0.3) turns back; attempt 2 (hot, E = 0.92) reaches r0 and fuses
+    const a1 = t - (P.bounce13 - 1.0), a2 = t - (P.fuse13 - 1.1), E1 = 0.3, E2 = 0.92, rT = HILL.r0 / E1;
+    let r, E, phase;
+    if (a2 < 0) { r = a1 < 1.0 ? lerp(1, rT, easeOut(clamp(a1 / 1.0))) : lerp(rT, 0.9, easeIn(clamp((a1 - 1.0) / 1.2))); E = E1; phase = 1; }
+    else if (a2 < 1.1) { r = lerp(0.9, HILL.r0, easeIn(a2 / 1.1)); E = E2; phase = 2; } else { r = HILL.r0; E = E2; phase = 3; }
+    c.save(); zoomAbout(c, 540, 800, 1 + 0.08 * smooth((t - s0) / 6)); shake(c, t, P.fuse13, 4);
+    // nuclei
+    const g = 60 + r * 300;
+    if (phase < 3) { light(c, 'D', 540 - g, 640, 40, t, {glow: 1}); light(c, 'T', 540 + g, 640, 40, t + 1, {glow: 1}); if (r < 0.5) { c.save(); c.globalCompositeOperation = 'lighter'; for (let j = -2; j <= 2; j++) { c.beginPath(); c.moveTo(540 - g + 60, 640 + j * 20); c.quadraticCurveTo(540, 640 + j * 20 + j * 46, 540 + g - 60, 640 + j * 20); c.strokeStyle = rgba(PAL.fis, 0.3 * (1 - r / 0.5)); c.lineWidth = 1.5; c.stroke(); } c.restore(); } }
+    else { const f = a2 - 1.1; light(c, 'He', 540 - f * 80, 640 - f * 30, 42, t, {glow: 1.3}); burst(c, 540, 640, f, 330, PAL.fusHot); streak(c, [540 + Math.max(0, f - 0.15) * 900, 640 + Math.max(0, f - 0.15) * 300], [540 + f * 900, 640 + f * 300], 18); }
+    // the hill graph
+    c.strokeStyle = rgba(PAL.line, 0.7); c.lineWidth = 2; c.beginPath(); c.moveTo(HILL.x0, HILL.top - 60); c.lineTo(HILL.x0, HILL.yb + 70); c.lineTo(HILL.x1 + 10, HILL.yb + 70); c.stroke();
+    c.save(); c.beginPath(); c.moveTo(hillX(0), hillY(-0.18)); c.lineTo(hillX(HILL.r0), hillY(-0.18)); c.lineTo(hillX(HILL.r0), hillY(1)); for (let i = 1; i <= 120; i++) { const rr = HILL.r0 + (1 - HILL.r0) * (i / 120) ** 1.6; c.lineTo(hillX(rr), hillY(hillU(rr))); }
+    c.strokeStyle = rgba(PAL.fus, 0.16); c.lineWidth = 10; c.stroke(); c.strokeStyle = rgba(PAL.fus, 0.95); c.lineWidth = 3; c.stroke(); c.restore();
+    const xr = hillX(Math.max(r, HILL.r0)), yE = hillY(E), turn = phase === 1 ? hillX(rT) : hillX(HILL.r0);
+    c.save(); c.setLineDash([10, 8]); c.strokeStyle = rgba(phase === 1 ? PAL.fis : PAL.fusHot, 0.8); c.lineWidth = 2; c.beginPath(); c.moveTo(turn, yE); c.lineTo(HILL.x1, yE); c.stroke(); c.restore();
+    if (phase < 3) { gl(c, xr, yE, 30, phase === 1 ? PAL.fis : PAL.fusHot, 0.8); circle(c, xr, yE, 8, '#FFFFFF'); }
+    if (phase === 1 && Math.abs(r - rT) < 0.03) ringFx(c, xr, yE, 26, PAL.fis, 0.7);
     c.restore();
-    finish(stage, t, {bloom: 0.7, wide: 0.45});
-    const ta = fadeIn(t, P.heat[0] - 0.2, 0.3);
-    big(stage, T >= 1e8 ? '1억 °C' : `${(Math.round(T / 1e6) * 100).toLocaleString('en-US')}만 °C`, 540, 470, 150, T >= 1e8 ? '#FFFFFF' : '#FFC6E2', ta);
-    label(stage, '같은 전기끼리 밀어냄', 540, 1080, fadeIn(t, P.push13 - 0.1) * fadeOut(t, P.heat[0] + 0.6), {size: 36, weight: 700});
-    label(stage, '중수소 + 삼중수소 → 헬륨 + 중성자', 540, 1080, fadeIn(t, P.fuse13 + 0.3) * fadeOut(t, tokIn - 0.2), {size: 34, weight: 700});
-    const fi = smooth((t - s0) / 0.4); if (fi < 1) { c.fillStyle = rgba('#000', 1 - fi); c.fillRect(0, 0, W, H); }
+    big(stage, T >= 1e8 ? '1억 °C' : `${(Math.round(T / 1e6) * 100).toLocaleString('en-US')}만 °C`, 540, 410, 140, T >= 1e8 ? '#FFFFFF' : '#C8D8F0', fadeIn(t, P.heat[0] - 0.2, 0.3));
+    label(stage, '밀어내는 힘의 언덕', 300, HILL.top - 30, fadeIn(t, s0 + 0.3), {size: 32, align: 'left', color: PAL.fus});
+    label(stage, '중수소 + 삼중수소 → 헬륨 + 중성자', 540, 800, fadeIn(t, P.fuse13 + 0.3) * fadeOut(t, tokIn - 0.2), {size: 34});
+    const fi = smooth((t - s0) / 0.4); if (fi < 1) { c.fillStyle = rgba('#060607', 1 - fi); c.fillRect(0, 0, W, H); }
     return;
   }
   const u = t - tokIn;
-  bgFill(c, '#07050C', '#020104'); gl(c, 540, 860, 1300, '#3A1A50', 0.45); tiled(c, tex('haze'), t * 10, t * 5, 3.5, 0.06, 'lighter');
-  const cam = cam3(orbit(0.3 + u * 0.09, lerp(0.8, 0.5, smooth(u / 5)), lerp(6.0, 4.7, smooth(u / 8))), [0, -0.05, 0], {fov: 0.95, cy: 800});
+  seriesBg(c, '#2A2238', 0.14, 540, 800); dust(c, t);
+  const cam = cam3(orbit(0.3 + u * 0.09, lerp(0.85, 0.5, smooth(u / 5)), lerp(7.6, 6.2, smooth(u / 8))), [0, -0.05, 0], {fov: 0.95, cy: 790});
   tokamak(stage, t, cam, {plasma: smooth(u / 0.8), field: fadeIn(t, P.mag14 - 0.2)});
-  finish(stage, t, {bloom: 0.8, wide: 0.5, thr: 2.0});
-  label(stage, '플라스마 · 벽에 닿지 않게', 540, 1250, fadeIn(t, P.wall14 - 0.2) * fadeOut(t, P.kstar15 - 0.6), {size: 36, weight: 700});
+  label(stage, '플라스마 · 벽에 닿지 않게', 540, 1250, fadeIn(t, P.wall14 - 0.2) * fadeOut(t, P.kstar15 - 0.6), {size: 36});
   const ka = fadeIn(t, P.deg15 - 0.2, 0.4);
-  big(stage, '1억 °C', 330, 1250, 108, '#FFE6F2', ka);
+  big(stage, '1억 °C', 330, 1250, 108, '#FFFFFF', ka);
   const sec = clamp((t - P.timer[0]) / (P.timer[1] - P.timer[0])) * 48;
-  if (t > P.timer[0] - 0.3) {
-    const tx = 800, ty = 1250, r = 88, a2 = fadeIn(t, P.timer[0] - 0.3);
-    withAlpha(c, a2, () => { c.strokeStyle = 'rgba(255,255,255,0.18)'; c.lineWidth = 10; c.beginPath(); c.arc(tx, ty, r, 0, TAU); c.stroke(); c.strokeStyle = PAL.plasma; c.lineCap = 'round'; c.beginPath(); c.arc(tx, ty, r, -Math.PI / 2, -Math.PI / 2 + TAU * sec / 48); c.stroke(); });
-    big(stage, `${Math.floor(sec)}초`, tx, ty, 64, '#FFFFFF', a2);
-  }
+  if (t > P.timer[0] - 0.3) { const tx = 800, ty = 1250, r = 86, a2 = fadeIn(t, P.timer[0] - 0.3);
+    withAlpha(c, a2, () => { c.strokeStyle = rgba(PAL.grid, 1); c.lineWidth = 6; c.beginPath(); c.arc(tx, ty, r, 0, TAU); c.stroke(); c.strokeStyle = PAL.fus; c.lineCap = 'round'; c.beginPath(); c.arc(tx, ty, r, -Math.PI / 2, -Math.PI / 2 + TAU * sec / 48); c.stroke(); });
+    big(stage, `${Math.floor(sec)}초`, tx, ty, 60, '#FFFFFF', a2); }
 }
-const bumpQ = q => Math.sin(clamp(q) * Math.PI);
 
-// ------------------------------------------------------------------ compare: ×4 columns, what remains, ITER (full-bleed, camera-move transitions)
-function fuelShot(stage, t, P, s0) {
-  const c = stage.ctx, H1 = 300, g1 = smooth((t - P.cols) / 2.0), g4 = smooth((t - P.cols) / 3.4), h1 = H1 * g1, h4 = 4 * H1 * g4;
-  const y0 = 1330, camY = Math.max(0, h4 - 880), yb = y0 + camY;
-  bgFill(c, '#0B0E16', '#05060A');
-  gl(c, 300, yb - h1, 760, '#2E7DFF', 0.35 * g1); gl(c, 780, yb - h4, 980, '#FF9A3A', 0.45 * g4); gl(c, 780, yb - h4 * 0.5, 900, '#FFB04A', 0.2 * g4);
-  tiled(c, tex('haze'), t * 16, -camY * 0.4 + t * 6, 3.4, 0.10 + 0.08 * g4, 'lighter');
-  tiled(c, tex('haze'), -t * 10, -camY * 0.7, 2.2, 0.06 + 0.05 * g4, 'lighter', 0.6);
-  // lit floor with reflections
-  const fy = yb + 26;
-  if (fy < H) { const fg = c.createLinearGradient(0, fy, 0, H); fg.addColorStop(0, '#2A2A2E'); fg.addColorStop(1, '#0A0A0C'); c.fillStyle = fg; c.fillRect(0, fy, W, H - fy);
-    c.save(); c.beginPath(); c.rect(0, fy, W, H - fy); c.clip(); c.globalAlpha = 0.25; c.translate(0, 2 * fy); c.scale(1, -1);
-    column(c, t, 300, yb, h1, '#BFE6FF', PAL.fis, 70); column(c, t, 780, yb, h4, '#FFF1D6', PAL.fus, 78); c.restore();
-    for (let k = -8; k <= 8; k++) { c.strokeStyle = 'rgba(255,255,255,0.05)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(540 + k * 40, fy); c.lineTo(540 + k * 260, H); c.stroke(); }
-    gl(c, 300, fy, 260, PAL.fis, 0.3 * (0.3 + g1)); gl(c, 780, fy, 300, PAL.fus, 0.35 * (0.3 + g4)); }
-  for (const [x, col] of [[300, PAL.fis], [780, PAL.fus]]) pellet(c, x, yb, col);
-  column(c, t, 300, yb, h1, '#BFE6FF', PAL.fis, 70); column(c, t, 780, yb, h4, '#FFF1D6', PAL.fus, 78);
-  for (let k = 1; k <= 3; k++) if (h4 > H1 * k + 10) { const y = yb - H1 * k; c.strokeStyle = 'rgba(255,240,220,0.45)'; c.lineWidth = 3; c.setLineDash([12, 10]); c.beginPath(); c.moveTo(680, y); c.lineTo(880, y); c.stroke(); c.setLineDash([]); }
-  return {yb, h1, h4};
-}
-function pellet(c, x, yb, col) {
-  const w = 62, h = 44;
-  const g = c.createLinearGradient(x - w, 0, x + w, 0); g.addColorStop(0, '#3A3C42'); g.addColorStop(0.4, '#9EA4AE'); g.addColorStop(0.7, '#5E626A'); g.addColorStop(1, '#2A2C30');
-  c.fillStyle = g; c.fillRect(x - w, yb - h, 2 * w, h); c.beginPath(); c.ellipse(x, yb, w, 12, 0, 0, Math.PI); c.fill();
-  c.beginPath(); c.ellipse(x, yb - h, w, 12, 0, 0, TAU); c.fillStyle = mix(col, '#FFFFFF', 0.6); c.fill(); gl(c, x, yb - h, 120, col, 0.6);
-}
-function column(c, t, x, yb, h, core, edge, w) {
-  if (h <= 1) return; const yt = yb - h;
-  c.save(); c.globalCompositeOperation = 'lighter';
-  let g = c.createLinearGradient(x - w * 2, 0, x + w * 2, 0); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(0.5, rgba(edge, 0.3)); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.fillRect(x - w * 2, yt, w * 4, h);
-  g = c.createLinearGradient(x - w * 0.55, 0, x + w * 0.55, 0); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(0.5, rgba(core, 0.85)); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.fillRect(x - w * 0.55, yt, w * 1.1, h);
-  for (let i = 0; i < 46; i++) { const ph = (t * 0.55 + i / 46) % 1, y = yb - ph * h, xx = x + Math.sin(i * 2.1 + t * 2.4) * w * 0.4; c.globalAlpha = 0.55 * (1 - ph * 0.7); c.drawImage(G(core), xx - 16, y - 16, 32, 32); }
-  c.restore();
-  gl(c, x, yt, w * 3, edge, 0.75); gl(c, x, yt, w * 1.1, '#FFFFFF', 0.85);
+// ------------------------------------------------------------------ compare: ×4 bars, what remains, ITER (camera-move transitions)
+function barsShot(stage, t, P, s0) {
+  const c = stage.ctx, H1 = 210, g1 = smooth((t - P.cols) / 1.8), g4 = smooth((t - P.cols) / 3.2), yb = 1240;
+  seriesBg(c, '#2A2A30', 0.12); dust(c, t);
+  grid(c, 120, 300, 960, yb, 105, 0.25);
+  c.strokeStyle = rgba(PAL.line, 0.8); c.lineWidth = 2.5; c.beginPath(); c.moveTo(120, yb); c.lineTo(960, yb); c.stroke();
+  const bar = (x, h, col, w = 200) => { if (h <= 1) return; c.fillStyle = rgba(col, 0.18); c.fillRect(x - w / 2, yb - h, w, h); c.strokeStyle = rgba(col, 0.95); c.lineWidth = 2.5; c.strokeRect(x - w / 2, yb - h, w, h);
+    gl(c, x, yb - h, 120, col, 0.5); c.strokeStyle = '#FFFFFF'; c.lineWidth = 3; c.beginPath(); c.moveTo(x - w / 2, yb - h); c.lineTo(x + w / 2, yb - h); c.stroke();
+    const R = rng(x); c.save(); c.globalCompositeOperation = 'lighter'; for (let i = 0; i < 26; i++) { const ph = (t * 0.5 + R()) % 1, y = yb - ph * h, xx = x + (R() - 0.5) * w * 0.8; circle(c, xx, y, 2 + 2 * R(), rgba(col, 0.6 * (1 - ph * 0.6))); } c.restore(); };
+  bar(330, H1 * g1, PAL.fis); bar(750, 4 * H1 * g4, PAL.fus);
+  for (let k = 1; k <= 3; k++) if (4 * H1 * g4 > H1 * k + 6) { const y = yb - H1 * k; c.save(); c.setLineDash([10, 8]); c.strokeStyle = rgba(PAL.fusHot, 0.55); c.lineWidth = 2; c.beginPath(); c.moveTo(640, y); c.lineTo(860, y); c.stroke(); c.restore(); }
+  for (const [x, col] of [[330, PAL.fis], [750, PAL.fus]]) { c.strokeStyle = rgba(col, 0.9); c.lineWidth = 2; c.strokeRect(x - 26, yb + 14, 52, 30); }
+  return {yb};
 }
 const ASM = (() => { const r = []; for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) r.push([i, j, 1.6 + 2.6 * rand2(i * 13 + j * 7), rand2(i * 3 + j * 17) * TAU]); return r; })();
 function wasteShot(stage, t, P) {
   const c = stage.ctx;
-  // left half: spent fuel in a deep blue pool (long-lived, slowly flickering)
-  c.save(); c.beginPath(); c.rect(0, 0, 540, H); c.clip();
-  bgFill(c, '#021630', '#00060E'); gl(c, 270, 860, 900, '#1C6DFF', 0.55); gl(c, 270, 860, 420, '#5FB8FF', 0.45);
-  tiled(c, tex('caustic'), t * 20, t * 9, 3.0, 0.12, 'lighter', 0.3, 270, 900); tiled(c, tex('caustic'), -t * 13, t * 16, 4.0, 0.08, 'lighter', -0.5, 270, 900);
-  c.save(); c.globalCompositeOperation = 'lighter';
-  for (let k = 0; k < 9; k++) { const x0 = 270 + (k - 4) * 34, x1 = 270 + (k - 4) * 90 + 16 * Math.sin(t * 0.6 + k); const g = c.createLinearGradient(0, 860, 0, 120); g.addColorStop(0, 'rgba(120,190,255,0.2)'); g.addColorStop(1, 'rgba(120,190,255,0)'); c.fillStyle = g; c.beginPath(); c.moveTo(x0 - 10, 860); c.lineTo(x0 + 10, 860); c.lineTo(x1 + 26, 120); c.lineTo(x1 - 26, 120); c.closePath(); c.fill(); }
-  c.restore();
-  const ox = 270, oy = 880;                                                  // the assembly seen from above at an angle
-  const P2 = (i, j) => { const u = (i - 3.5) / 4, v = (j - 3.5) / 4, persp = 1 + v * 0.18; return [ox + u * 200 * persp, oy - 60 + v * 150]; };
-  const corners = [P2(-0.7, -0.7), P2(7.7, -0.7), P2(7.7, 7.7), P2(-0.7, 7.7)];
-  c.beginPath(); corners.forEach((p, k) => (k ? c.lineTo(...p) : c.moveTo(...p))); c.closePath(); c.fillStyle = rgba('#0A1A2C', 0.6); c.fill(); c.strokeStyle = rgba('#9FC8E8', 0.45); c.lineWidth = 3; c.stroke();
-  for (const [i, j, per, ph] of ASM.slice().sort((p, q) => p[1] - q[1])) { const [x, y] = P2(i, j), a = 0.55 + 0.45 * (0.5 + 0.5 * Math.sin(t * TAU / per + ph)), hR = 70 + j * 4, w = 10 + j * 0.6;
-    const rg = c.createLinearGradient(x - w, 0, x + w, 0); rg.addColorStop(0, '#16283C'); rg.addColorStop(0.45, '#6F8CA8'); rg.addColorStop(1, '#14222F'); c.fillStyle = rg; c.fillRect(x - w, y, 2 * w, hR);
-    c.beginPath(); c.ellipse(x, y, w, w * 0.4, 0, 0, TAU); c.fillStyle = rgba('#DDF4FF', 0.4 + 0.5 * a); c.fill(); gl(c, x, y, 46, '#7FC8FF', 0.5 * a); gl(c, x, y + hR * 0.5, 40, '#3D9BFF', 0.18 * a); }
-  const R = rng(61); for (let i = 0; i < 26; i++) { const q = ((t * 0.16 * (0.4 + R()) + R()) % 1), x = ox + (R() - 0.5) * 360 + Math.sin(t * 2 + i) * 6, y = oy - q * 760, rr = 3 + 5 * R(); c.strokeStyle = rgba('#CFEFFF', 0.4 * (1 - q)); c.lineWidth = 1.5; c.beginPath(); c.arc(x, y, rr, 0, TAU); c.stroke(); }
-  c.restore();
-  // right half: helium nuclei drifting up out of a plasma glow
-  c.save(); c.beginPath(); c.rect(540, 0, 540, H); c.clip();
-  bgFill(c, '#170622', '#06020A'); gl(c, 810, 1150, 900, '#C0409A', 0.5); gl(c, 810, 1250, 420, '#FFB0E0', 0.35); tiled(c, tex('haze'), t * 22, -t * 30, 3, 0.14, 'lighter', 0.2, 810, 900);
-  for (let i = 0; i < 10; i++) { const ph = (t * 0.16 + i / 10) % 1, x = 810 + Math.sin(i * 2.3 + t * 0.8) * 140, y = 1250 - ph * 1050; light(c, 'He', x, y, 34, t + i, {glow: 1.3, glowCol: '#FFB0D0', alpha: smooth(ph / 0.1) * (1 - smooth((ph - 0.78) / 0.22))}); }
-  c.restore();
-  c.save(); c.globalCompositeOperation = 'lighter'; const sg = c.createLinearGradient(520, 0, 560, 0); sg.addColorStop(0, 'rgba(255,255,255,0)'); sg.addColorStop(0.5, 'rgba(230,220,255,0.35)'); sg.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = sg; c.fillRect(520, 0, 40, H); c.restore();
+  seriesBg(c, '#2A3240', 0.12); dust(c, t);
+  // left: spent fuel assembly in a pool (line icon) with slow decay glints
+  const ox = 270, oy = 820;
+  c.strokeStyle = rgba(PAL.line, 0.6); c.lineWidth = 2; c.strokeRect(70, 520, 400, 620);
+  c.beginPath(); for (let x = 70; x <= 470; x += 10) { const y = 560 + 6 * Math.sin(x * 0.05 + t * 2); x === 70 ? c.moveTo(x, y) : c.lineTo(x, y); } c.strokeStyle = rgba(PAL.cher, 0.7); c.stroke();
+  gl(c, ox, oy, 260, PAL.cher, 0.14);
+  for (const [i, j, per, ph] of ASM) { const x = ox - 140 + i * 40, y = oy - 140 + j * 40, a = 0.5 + 0.5 * Math.sin(t * TAU / per + ph);
+    c.strokeStyle = rgba('#9FD8FF', 0.7); c.lineWidth = 1.5; c.strokeRect(x - 13, y - 13, 26, 26); if (a > 0.8) { gl(c, x, y, 26, '#C8FFE0', (a - 0.8) * 3); circle(c, x, y, 3, rgba('#E8FFF0', (a - 0.8) * 4)); } }
+  // right: plasma ring icon and helium nuclei rising away
+  c.save(); c.translate(810, 1140); c.scale(1, 0.32); c.strokeStyle = rgba(PAL.plasma, 0.8); c.lineWidth = 2.5; c.beginPath(); c.arc(0, 0, 150, 0, TAU); c.stroke(); c.restore();
+  const R = rng(3); for (let i = 0; i < 70; i++) { const a = R() * TAU + t * 0.8, x = 810 + 150 * Math.cos(a), y = 1140 + 48 * Math.sin(a); circle(c, x, y, 2 + R() * 1.5, rgba(PAL.plasma, 0.6)); }
+  for (let i = 0; i < 8; i++) { const ph = (t * 0.16 + i / 8) % 1, x = 810 + Math.sin(i * 2.3 + t * 0.8) * 110, y = 1100 - ph * 760; light(c, 'He', x, y, 26, t + i, {glow: 0.8, alpha: smooth(ph / 0.1) * (1 - smooth((ph - 0.78) / 0.22))}); }
+  c.strokeStyle = rgba(PAL.line, 0.3); c.lineWidth = 1.5; c.beginPath(); c.moveTo(540, 420); c.lineTo(540, 1300); c.stroke();
 }
 function iterShot(stage, t, P, u) {
   const c = stage.ctx;
-  bgFill(c, '#0C1018', '#030406');
-  c.save(); c.globalCompositeOperation = 'lighter';                         // hall: wall light strips, ceiling lamps, light cones
-  gl(c, 540, 600, 1100, '#2A3E66', 0.6); for (let k = -5; k <= 5; k++) { const x = 540 + k * 104, g = c.createLinearGradient(0, 120, 0, 1080); g.addColorStop(0, 'rgba(170,200,255,0.22)'); g.addColorStop(1, 'rgba(170,200,255,0.05)'); c.fillStyle = g; c.fillRect(x - 6, 120, 12, 960); gl(c, x, 150, 80, '#DCE8FF', 0.5); }
-  for (let k = -3; k <= 3; k++) { const x = 540 + k * 170; const g = c.createLinearGradient(0, 140, 0, 1150); g.addColorStop(0, 'rgba(200,220,255,0.16)'); g.addColorStop(1, 'rgba(200,220,255,0)'); c.fillStyle = g; c.beginPath(); c.moveTo(x - 20, 140); c.lineTo(x + 20, 140); c.lineTo(x + 140, 1150); c.lineTo(x - 140, 1150); c.closePath(); c.fill(); }
-  c.restore();
-  const fy = 1090, fg = c.createLinearGradient(0, fy, 0, H); fg.addColorStop(0, '#1C2230'); fg.addColorStop(1, '#07090D'); c.fillStyle = fg; c.fillRect(0, fy, W, H - fy);
-  for (let k = -10; k <= 10; k++) { c.strokeStyle = 'rgba(160,190,230,0.07)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(540 + k * 30, fy); c.lineTo(540 + k * 240, H); c.stroke(); }
-  for (let r = 1; r < 9; r++) { const y = fy + (H - fy) * (r / 9) ** 1.6; c.strokeStyle = 'rgba(160,190,230,0.06)'; c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke(); }
-  gl(c, 540, fy + 40, 600, '#6A8AC8', 0.25);
-  // pedestal + tokamak
-  const cam = cam3(orbit(-0.5 + u * 0.05, 0.42, lerp(5.6, 5.0, smooth(u / 8))), [0, 0.15, 0], {fov: 0.95, cy: 760});
-  const b0 = cam.P([0, -0.75, 0]), b1 = cam.P([0, -2.2, 0]), rw = 0.55 * b0[3];
-  const pg = c.createLinearGradient(b0[0] - rw, 0, b0[0] + rw, 0); pg.addColorStop(0, '#1A1E26'); pg.addColorStop(0.4, '#4A5262'); pg.addColorStop(1, '#14171D');
-  c.fillStyle = pg; c.fillRect(b0[0] - rw, b0[1], 2 * rw, Math.min(fy, b1[1]) - b0[1]); c.beginPath(); c.ellipse(b0[0], b0[1], rw, rw * 0.25, 0, 0, TAU); c.fillStyle = '#2E3440'; c.fill();
-  tokamak(stage, t, cam, {plasma: 0.32 + 0.1 * Math.sin(t * 1.3), field: 0.6, n: 600});
-  // people for scale (tiny silhouettes on the floor) and a height bar
-  const top = cam.P([0, 0.85, 0])[1], hpx = fy - top, ph = hpx * 1.8 / 30;
-  for (const x of [250, 286]) { c.fillStyle = '#2A3040'; c.beginPath(); c.arc(x, fy - ph * 0.88, ph * 0.12, 0, TAU); c.fill(); rect(c, x - ph * 0.14, fy - ph * 0.76, ph * 0.28, ph * 0.76, ph * 0.08, '#2A3040'); gl(c, x, fy - ph * 0.5, ph * 1.4, '#8FB0E8', 0.12); }
-  c.strokeStyle = 'rgba(255,240,220,0.7)'; c.lineWidth = 3; c.beginPath(); c.moveTo(110, fy); c.lineTo(110, top); c.moveTo(96, fy); c.lineTo(124, fy); c.moveTo(96, top); c.lineTo(124, top); c.stroke();
-  return {top, fy};
+  seriesBg(c, '#2A3240', 0.14, 540, 760); dust(c, t);
+  const fy = 1150; grid(c, 60, fy, 1020, fy + 1, 60, 0); c.strokeStyle = rgba(PAL.line, 0.5); c.lineWidth = 2; c.beginPath(); c.moveTo(60, fy); c.lineTo(1020, fy); c.stroke();
+  for (let k = -8; k <= 8; k++) { c.strokeStyle = rgba(PAL.grid, 0.5); c.lineWidth = 1; c.beginPath(); c.moveTo(540 + k * 40, fy); c.lineTo(540 + k * 120, fy + 300); c.stroke(); }
+  const cam = cam3(orbit(-0.5 + u * 0.05, 0.42, lerp(8.6, 7.8, smooth(u / 8))), [0, 0.1, 0], {fov: 0.95, cy: 720});
+  // cryostat outline (thin cylinder) around the torus
+  const cr = 1.62, cyl = (y, fr) => { c.beginPath(); let first = true; for (let i = 0; i <= 96; i++) { const ph = i / 96 * TAU, p = cam.P([cr * Math.cos(ph), y, cr * Math.sin(ph)]), isF = cam.P([cr * Math.cos(ph), 0, cr * Math.sin(ph)])[2] < cam.P([0, 0, 0])[2]; if (isF !== fr) { first = true; continue; } first ? c.moveTo(p[0], p[1]) : c.lineTo(p[0], p[1]); first = false; } c.strokeStyle = rgba(PAL.line, fr ? 0.45 : 0.2); c.lineWidth = 1.8; c.stroke(); };
+  cyl(-0.95, false); cyl(0.95, false);
+  tokamak(stage, t, cam, {plasma: 0.3 + 0.1 * Math.sin(t * 1.3), field: 0.6, n: 800});
+  cyl(-0.95, true); cyl(0.95, true);
+  for (const s of [-1, 1]) { const a = cam.P([s * cr, -0.95, 0]), b = cam.P([s * cr, 0.95, 0]); c.strokeStyle = rgba(PAL.line, 0.45); c.lineWidth = 1.8; c.beginPath(); c.moveTo(a[0], a[1]); c.lineTo(b[0], b[1]); c.stroke(); }
+  const top = cam.P([0, 0.95, 0])[1] - 20, bot = Math.min(fy, cam.P([0, -0.95, 0])[1] + 20), hpx = bot - top, ph = hpx * 1.8 / 30;
+  for (const x of [262, 300]) { c.strokeStyle = rgba(PAL.line, 0.9); c.lineWidth = 2; c.beginPath(); c.arc(x, bot - ph * 0.86, ph * 0.12, 0, TAU); c.stroke(); c.beginPath(); c.moveTo(x, bot - ph * 0.74); c.lineTo(x, bot - ph * 0.3); c.lineTo(x - ph * 0.12, bot); c.moveTo(x, bot - ph * 0.3); c.lineTo(x + ph * 0.12, bot); c.stroke(); }
+  c.strokeStyle = rgba(PAL.fusHot, 0.85); c.lineWidth = 2.5; c.beginPath(); c.moveTo(110, bot); c.lineTo(110, top); c.moveTo(96, bot); c.lineTo(124, bot); c.moveTo(96, top); c.lineTo(124, top); c.stroke();
+  return {top};
 }
 function compareScene(stage, t, ctx) {
   const c = stage.ctx, P = plan(ctx.tl), s0 = ctx.scene.start, T1 = ctx.tl.at('s17') - 0.6, T2 = ctx.tl.at('s18') - 0.6;
   const w1 = [T1 - 0.3, T1 + 0.35], w2 = [T2 - 0.35, T2 + 0.5];
-  if (t < w1[1]) {                                                           // fuel columns (+ whip pan right into the pool / plasma split)
+  if (t < w1[1]) {
     const k = t > w1[0] ? easeInOut((t - w1[0]) / (w1[1] - w1[0])) : 0, dx = k * W;
-    const zs = 1.06 - 0.06 * smooth((t - s0) / 1.6);
-    c.save(); c.translate(-dx, 0); zoomAbout(c, 540, 900, zs); const F = fuelShot(stage, t, P, s0); c.restore();
-    if (k > 0) { c.save(); c.translate(W - dx, 0); wasteShot(stage, t, P); c.restore(); whipBlur(c, k); }
-    finish(stage, t, {bloom: 0.65, wide: 0.4});
+    c.save(); c.translate(-dx, 0); zoomAbout(c, 540, 900, 1.06 - 0.06 * smooth((t - s0) / 1.6)); const B = barsShot(stage, t, P, s0); c.restore();
+    if (k > 0) { c.save(); c.translate(W - dx, 0); wasteShot(stage, t, P); c.restore(); }
     const la = 1 - k;
-    label(stage, '핵분열', 300 - dx, Math.min(1250, F.yb - F.h1 * 0.5), fadeIn(t, s0 + 0.4) * la, {size: 40, weight: 700, color: '#CFE6FF'});
-    label(stage, '핵융합', 780 - dx, Math.min(1250, F.yb - 120), fadeIn(t, s0 + 0.4) * la, {size: 40, weight: 700, color: '#FFE0B0'});
-    big(stage, '× 4', 330 - dx, 560, 170, PAL.fusHot, fadeIn(t, P.x4in, 0.4) * la);
-    if (k > 0) { label(stage, '오래 남는 방사성 폐기물', 270 + W - dx, 1250, fadeIn(t, P.long17 - 0.2), {size: 32, weight: 700, color: '#D6EEFF'}); }
+    label(stage, '핵분열', 330 - dx, B.yb + 90, fadeIn(t, s0 + 0.4) * la, {size: 38, color: PAL.fis});
+    label(stage, '핵융합', 750 - dx, B.yb + 90, fadeIn(t, s0 + 0.4) * la, {size: 38, color: PAL.fus});
+    big(stage, '× 4', 330 - dx, 600, 170, PAL.fusHot, fadeIn(t, P.x4in, 0.4) * la);
+    if (k > 0) label(stage, '오래 남는 방사성 폐기물', 270 + W - dx, 1220, fadeIn(t, P.long17 - 0.2), {size: 32, color: '#D6EEFF'});
     return;
   }
-  if (t < w2[1]) {                                                           // spent fuel vs helium (+ push into the plasma → ITER hall)
+  if (t < w2[1]) {
     const k = t > w2[0] ? easeInOut((t - w2[0]) / (w2[1] - w2[0])) : 0;
-    if (k > 0) { const u = t - (T2 - 0.35); iterShot(stage, t, P, u); }
+    if (k > 0) iterShot(stage, t, P, t - (T2 - 0.35));
     c.save(); c.globalAlpha = 1 - k; zoomAbout(c, 810, 900, 1 + 0.035 * smooth((t - T1) / 6) + 1.4 * easeIn(k)); wasteShot(stage, t, P); c.restore();
-    finish(stage, t, {bloom: 0.65, wide: 0.4});
     const la = 1 - k;
-    label(stage, '오래 남는 방사성 폐기물', 270, 1250, fadeIn(t, P.long17 - 0.2) * la, {size: 32, weight: 700, color: '#D6EEFF'});
-    label(stage, '사용후 연료 · 물속 저장', 270, 1305, fadeIn(t, P.long17) * la, {size: 30, color: PAL.muted});
-    big(stage, '헬륨', 810, 1250, 72, '#FFE0F0', fadeIn(t, P.he17 - 0.2) * la);
+    label(stage, '오래 남는 방사성 폐기물', 270, 1220, fadeIn(t, P.long17 - 0.2) * la, {size: 32, color: '#D6EEFF'});
+    label(stage, '사용후 연료 · 물속 저장', 270, 1272, fadeIn(t, P.long17) * la, {size: 30, color: PAL.muted, weight: 500});
+    big(stage, '헬륨', 810, 1250, 72, PAL.fusHot, fadeIn(t, P.he17 - 0.2) * la);
     return;
   }
-  const u = t - (T2 - 0.35), I = iterShot(stage, t, P, u);
-  finish(stage, t, {bloom: 0.6});
-  label(stage, '높이 약 30 m', 132, I.top - 34, fadeIn(t, T2 + 0.4), {size: 30, weight: 700, align: 'left'});
-  big(stage, '2034', 300, 1240, 116, '#FFFFFF', fadeIn(t, P.yrs - 0.3)); label(stage, '연구 운전 시작', 300, 1325, fadeIn(t, P.yrs - 0.1), {size: 34, weight: 700});
-  big(stage, '2039', 780, 1240, 116, PAL.fusHot, fadeIn(t, P.yrs + 0.5)); label(stage, '중수소·삼중수소', 780, 1325, fadeIn(t, P.yrs + 0.7), {size: 34, weight: 700});
-}
-function whipBlur(c, k) {                                                   // horizontal speed streaks during a whip pan
-  const a = Math.sin(k * Math.PI); if (a <= 0.01) return;
-  c.save(); c.globalCompositeOperation = 'lighter'; const R = rng(5);
-  for (let i = 0; i < 40; i++) { const y = R() * H, x = R() * W, L = 200 + 500 * R(); const g = c.createLinearGradient(x, 0, x + L, 0); g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(0.5, `rgba(220,230,255,${0.12 * a})`); g.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = g; c.fillRect(x, y, L, 2 + 3 * R()); }
-  c.restore();
+  const I = iterShot(stage, t, P, t - (T2 - 0.35));
+  label(stage, '높이 약 30 m', 132, I.top - 34, fadeIn(t, T2 + 0.4), {size: 30, align: 'left', color: PAL.fusHot});
+  big(stage, '2034', 300, 1250, 116, '#FFFFFF', fadeIn(t, P.yrs - 0.3)); label(stage, '연구 운전 시작', 300, 1335, fadeIn(t, P.yrs - 0.1), {size: 34});
+  big(stage, '2039', 780, 1250, 116, PAL.fusHot, fadeIn(t, P.yrs + 0.5)); label(stage, '중수소·삼중수소', 780, 1335, fadeIn(t, P.yrs + 0.7), {size: 34});
 }
 
-// ------------------------------------------------------------------ myth: confinement lost → plasma cools and stops
+// ------------------------------------------------------------------ myth: confinement lost → plasma dots dim out
 function mythScene(stage, t, ctx) {
   const c = stage.ctx, P = plan(ctx.tl), u = t - ctx.scene.start;
-  bgFill(c, '#07050C', '#020104'); gl(c, 540, 860, 1200, '#3A1A50', 0.4 * P.plasmaA(t) + 0.1);
-  const cam = cam3(orbit(0.9 + u * 0.06, 0.55, lerp(5.2, 4.4, smooth(u / 12))), [0, -0.05, 0], {fov: 0.95, cy: 800});
+  seriesBg(c, '#2A2238', 0.14 * (0.4 + 0.6 * P.plasmaA(t)), 540, 800); dust(c, t);
+  const cam = cam3(orbit(0.9 + u * 0.06, 0.55, lerp(6.6, 5.8, smooth(u / 12))), [0, -0.05, 0], {fov: 0.95, cy: 790});
   const wob = t > P.wobble ? smooth((t - P.wobble) / 0.6) : 0;
   tokamak(stage, t, cam, {plasma: P.plasmaA(t), wob, field: 1});
-  if (t > P.wobble && t < P.dead) { const R = rng(Math.floor(t * 20)); for (let i = 0; i < 6; i++) { const ang = R() * TAU, p = cam.P([1.35 * Math.cos(ang), (R() - 0.5) * 0.4, 1.35 * Math.sin(ang)]); gl(c, p[0], p[1], 40, '#FFD0A0', 0.6 * P.plasmaA(t)); } }
-  finish(stage, t, {bloom: 0.75, wide: 0.45});
-  big(stage, '연료 1 g 미만', 540, 1210, 100, '#FFFFFF', fadeIn(t, P.gram20 - 0.2));
-  label(stage, '식으면 반응이 바로 멈춘다', 540, 1300, fadeIn(t, P.cool20), {size: 36, weight: 700, color: '#FFD8EE'});
-  const fi = smooth(u / 0.4); if (fi < 1) { c.fillStyle = rgba('#000', 1 - fi); c.fillRect(0, 0, W, H); }
+  if (t > P.wobble && t < P.dead) { const R = rng(Math.floor(t * 20)); for (let i = 0; i < 5; i++) { const ang = R() * TAU, p = cam.P([1.35 * Math.cos(ang), (R() - 0.5) * 0.4, 1.35 * Math.sin(ang)]); gl(c, p[0], p[1], 24, PAL.fusHot, 0.6 * P.plasmaA(t)); circle(c, p[0], p[1], 3, rgba('#FFFFFF', 0.8 * P.plasmaA(t))); } }
+  big(stage, '연료 1 g 미만', 540, 1250, 100, '#FFFFFF', fadeIn(t, P.gram20 - 0.2));
+  label(stage, '식으면 반응이 바로 멈춘다', 540, 1340, fadeIn(t, P.cool20), {size: 36, color: PAL.fusHot});
+  const fi = smooth(u / 0.4); if (fi < 1) { c.fillStyle = rgba('#060607', 1 - fi); c.fillRect(0, 0, W, H); }
 }
 
 // ------------------------------------------------------------------ close: valley, then the poster returns
 function closeScene(stage, t, ctx) {
   const c = stage.ctx, P = plan(ctx.tl);
-  if (t < P.poster + 0.5) valleyShot(stage, t, P, {from: ctx.scene.start, wide: true, runs: [[P.vF21, 'fus'], [P.vS21, 'fis']], labels: fadeOut(t, P.poster - 0.3, 0.3)});
-  if (t >= P.poster) { const a = smooth((t - P.poster) / 0.6); c.save(); c.globalAlpha = a; posterPicture(stage, t, P, 0.12 + 0.02 * Math.sin(t)); c.restore(); if (a >= 1) finish(stage, t, {bloom: 0.7, wide: 0.45}); }
+  if (t < P.poster + 0.5) valleyGraph(stage, t, P, {from: ctx.scene.start, runs: [[P.vF21, 'fus'], [P.vS21, 'fis']], labels: fadeOut(t, P.poster - 0.3, 0.3)});
+  if (t >= P.poster) { const a = smooth((t - P.poster) / 0.6); c.save(); c.globalAlpha = a; posterPicture(stage, t, P, 0.12 + 0.02 * Math.sin(t), 0.16 + 0.05 * Math.sin(t * 2)); c.restore(); }
 }
 
 // =====================================================================================================
@@ -1188,13 +996,13 @@ export function soundEvents(tl) {
   chirp('plasma', P.donut14, P.timer[1] + 0.5, () => 98, tt => 0.25 + 0.05 * Math.sin((tt - P.donut14) * 2.4), -38, '플라스마가 고리 속을 돎 → 낮고 고른 맥동');
   ticks('timer', [0, 1, 2, 3, 4, 5, 6, 7, 8].map(k => P.timer[0] + k * (P.timer[1] - P.timer[0]) / 8), 131, -38, '48초 시계가 돎 (6초마다 틱)', {decay: 0.06});
   // compare
-  swell('cols', P.cols, [98, 147], '같은 무게의 두 연료에서 빛 기둥이 솟음', {dur: 2.2, gain: -33});
+  swell('cols', P.cols, [98, 147], '같은 무게의 두 연료에서 나오는 에너지: 막대 두 개가 솟음', {dur: 2.2, gain: -33});
   tick('x4', P.x4in, 131, -32, '"× 4"', {decay: 0.18});
   whoosh('whip17', tl.at('s17') - 0.9, 0.65, 90, 260, '카메라가 옆으로 빠르게 넘어감: 물속 사용후 연료 | 플라스마 속 헬륨', -35);
   tick('waste', P.waste, 82, -35, '오래 남는 폐기물 (느린 깜빡임)', {decay: 0.25});
   tick('helium', P.heUp, 196, -35, '헬륨이 떠오름', {decay: 0.1});
-  whoosh('push18', tl.at('s18') - 0.95, 0.85, 80, 200, '플라스마 쪽으로 밀고 들어가 ITER 홀로', -35);
-  swell('iter', P.iterIn, [82, 123], 'ITER 홀의 거대한 토카막', {dur: 1.6, gain: -34});
+  whoosh('push18', tl.at('s18') - 0.95, 0.85, 80, 200, '헬륨 쪽으로 밀고 들어가 ITER 선화로', -35);
+  swell('iter', P.iterIn, [82, 123], 'ITER: 사람 키와 비교한 거대한 토카막 선화', {dur: 1.6, gain: -34});
   ticks('years', [P.yrs - 0.3, P.yrs + 0.5], [131, 165], -34, '"2034" · "2039"', {decay: 0.14});
   // myth
   chirp('myth_plasma', tl.scene('myth').start, P.dead, () => 98, tt => 0.3 * P.plasmaA(tt), -36, '고리 속 플라스마의 낮은 맥동 → 식으면서 사라짐');
