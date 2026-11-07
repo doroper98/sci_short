@@ -17,7 +17,7 @@ python3 -m venv ~/.venv-scishort
 
 - Python 3.13.17에서 확인했습니다. `pyworld==0.3.5`는 3.13 휠이 없어 소스로 빌드되며(C 컴파일러 필요), import 때 `pkg_resources`를 쓰므로 `setuptools<81`을 고정했습니다.
 - `torch==2.8.0`/`torchaudio==2.8.0` 고정: torchaudio 2.9에서 `forced_align`이 제거됩니다. requirements의 `--extra-index-url`로 CPU 휠(약 185 MB)을 받습니다. 이 인덱스가 없으면 리눅스에서는 CUDA 휠(수 GB)이 설치됩니다.
-- **Claude 클라우드 샌드박스:** `download.pytorch.org/whl/cpu/torch/` 인덱스는 휠 링크를 `download-r2.pytorch.org`로 주며, 이 호스트는 막혀 있습니다. 같은 경로를 `download.pytorch.org`에서 받으면 됩니다. 인덱스에 적힌 sha256을 확인한 뒤 로컬 휠을 설치합니다.
+- **네트워크가 제한된 환경에서만:** `download.pytorch.org/whl/cpu/torch/` 인덱스는 휠 링크를 `download-r2.pytorch.org`로 주는데, 그 호스트가 막혀 있으면 pip 설치가 실패합니다. 그때는 같은 경로를 `download.pytorch.org`에서 받아 로컬 휠로 설치합니다(인덱스의 sha256 대조). **2026-11-07 현재 `sci_shorts` 환경은 제한이 없어 이 우회가 필요 없습니다**(`docs/NETWORK_AND_ASSETS.md`).
 
   ```bash
   D=$(mktemp -d); cd "$D"

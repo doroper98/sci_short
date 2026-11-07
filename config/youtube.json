@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "_purpose": "publish/youtube.py 가 읽는 채널 공통 설정. 비밀값(YT_CLIENT_ID·YT_CLIENT_SECRET·YT_REFRESH_TOKEN)은 여기 두지 않고 환경 변수로만 준다. '_' 로 시작하는 키는 설명이다.",
+
+  "privacy_status": "private",
+  "_privacy_status": "private 만 허용한다. 공개 전환은 사용자가 YouTube Studio 에서 직접 누른다.",
+
+  "category_id": "27",
+  "_category_id": "27 = 교육(Education), 28 = 과학기술(Science & Technology). 채널 성격에 맞게 바꿀 수 있다.",
+
+  "default_language": "ko",
+  "caption_language": "ko",
+  "caption_name": "한국어",
+
+  "contains_synthetic_media": true,
+  "_contains_synthetic_media": "AI 합성 내레이션(Supertonic 3)을 쓰므로 status.containsSyntheticMedia 를 켠다. 편마다 meta.json 으로 바꿀 수 있다.",
+
+  "made_for_kids": false,
+  "_made_for_kids": "status.selfDeclaredMadeForKids(아동용 콘텐츠 자가 선언). 2026-11-07 사용자 결정: 아동용 아님. 이 채널의 주 시청자는 약 11~16세이며 13세 미만 어린이를 주 대상으로 하지 않는다. null 로 되돌리면 업로드를 거부한다. 편별로 바꾸려면 meta.json 의 made_for_kids. 판단 기준은 docs/YOUTUBE_UPLOAD.md '아동용 여부'.",
+
+  "channel_id": null,
+  "_channel_id": "python -m publish.youtube --whoami 로 확인한 채널 ID(UC...). 넣어 두면 토큰이 다른 채널을 가리킬 때 업로드를 막는다. null 이면 확인만 하고 기록에 남긴다.",
+
+  "tags": [],
+  "_tags": "모든 편에 덧붙이는 공통 태그. 편별 태그는 finals/<ep>/upload.md 의 '태그'에서 읽는다(합계 500자 한도). 비워 두면 upload.md 그대로.",
+
+  "upload_captions": false,
+  "_upload_captions": "2026-11-03 사용자 결정: 자막은 화면에 새겨져 있어 SRT 를 올리지 않는다. 올리려면 true 또는 --caption.",
+
+  "upload_thumbnail": true,
+  "_upload_thumbnail": "thumbnail.jpg(없으면 poster.jpg = 0초 프레임)를 thumbnails.set 으로 설정한다. 채널이 맞춤 썸네일을 못 쓰면 경고로 남기고 영상은 그대로 둔다.",
+  "thumbnail_max_bytes": 2097152,
+
+  "shorts_max_sec": 180,
+  "_shorts_max_sec": "세로·정방형이고 이 길이 이하면 유튜브가 쇼츠로 분류한다(2024-10-15 이후 3분). 넘으면 --not-shorts 없이는 올리지 않는다.",
+
+  "chunk_mb": 8,
+  "timeout_sec": 120,
+  "tries": 5,
+  "_tries": "5xx·네트워크 오류 재시도 상한(지수 대기). 4xx 는 재시도하지 않는다."
+}

@@ -29,6 +29,8 @@ episodes/<slug>/run.sh                               # narrate → stills → re
 
 가상환경과 설치 방법은 [pipeline/narration/README.md](pipeline/narration/README.md)와 [pipeline/README.md](pipeline/README.md)에 있습니다.
 
+완성 쇼츠를 채널에 **비공개로 자동 업로드**하는 체계가 있습니다(공개 전환은 사용자). → [자동 업로드](docs/YOUTUBE_AUTO_UPLOAD.md)
+
 ## 확정된 기준
 
 - **음성**: Supertonic 3 남성 M3 + MMS 강제 정렬 + `니다` 문장 끝 억양 보정. `doroper98/osint_generator`와 같은 코드·모델 파일이며, 이 프로젝트는 속도 0.85·끝 하강 6반음으로 조정했습니다(프리셋은 2026-10-31~11-05 F4, 2026-11-06부터 다시 남성 M3)(`config/voice-overrides.json`). 내레이션은 합니다체.

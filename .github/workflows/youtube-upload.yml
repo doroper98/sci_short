@@ -1,0 +1,96 @@
+# 완성 쇼츠(finals/<NN>-<slug>/)를 유튜브에 **비공개**로 올리는 자동화.
+# - main 에 finals/** 변경이 들어오면(PR 병합 = 업로드 승인) 그 push 에서 **바뀐 폴더만** 올린다.
+#   백로그 13편이 한 번에 올라가는 일을 막기 위해 전체(--all)는 수동 실행(all=true)에서만 허용한다.
+# - 결과: finals/<ep>/youtube_upload.json 을 main 에 커밋하고 '공개 전환 대기' 이슈를 만든다. 공개 전환은 사람이 Studio 에서 한다.
+# - 비밀값: 저장소 Settings → Secrets and variables → Actions 에 YT_CLIENT_ID · YT_CLIENT_SECRET · YT_REFRESH_TOKEN.
+name: youtube-upload
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "finals/**"
+  workflow_dispatch:
+    inputs:
+      episode:
+        description: "올릴 폴더 하나 (예: finals/14-foo)"
+        required: false
+        default: ""
+      all:
+        description: "finals 전체에서 미업로드분 모두 (백로그 일괄 업로드 — 이미 손으로 올린 편은 먼저 --mark-uploaded)"
+        type: boolean
+        default: false
+      dry_run:
+        description: "검증만 하고 올리지 않음"
+        type: boolean
+        default: false
+
+concurrency:
+  group: youtube-upload
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      PYTHONUTF8: "1"
+      EPISODE: ${{ inputs.episode }}
+      ALL: ${{ inputs.all }}
+      DRY_RUN: ${{ inputs.dry_run }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: ffprobe 설치 (영상 규격 검사)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+      - name: 단위 시험
+        run: python -m unittest discover -s tests -q
+      - name: 대상 결정
+        id: targets
+        run: |
+          : > targets.txt
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ -n "$EPISODE" ]; then echo "$EPISODE" > targets.txt
+            elif [ "$ALL" = "true" ]; then echo "--all" > targets.txt
+            else echo "::error::episode 를 적거나 all=true 를 켜십시오"; exit 1; fi
+          else
+            python .github/scripts/changed_finals.py "${{ github.event.before }}" "${{ github.sha }}" > targets.txt
+          fi
+          echo "대상:"; cat targets.txt
+          echo "count=$(grep -c . targets.txt || true)" >> "$GITHUB_OUTPUT"
+      - name: 업로드 (항상 비공개)
+        if: ${{ steps.targets.outputs.count != '0' }}
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: |
+          mapfile -t ARGS < targets.txt
+          if [ "$DRY_RUN" = "true" ]; then ARGS+=(--dry-run); fi
+          python -m publish.youtube "${ARGS[@]}" --report upload-report.json
+      - name: 대상 없음
+        if: ${{ steps.targets.outputs.count == '0' }}
+        run: echo "이 push 에서 바뀐 finals 폴더가 없습니다(기록 커밋 등). 할 일 없음." >> "$GITHUB_STEP_SUMMARY"
+      - name: 업로드 기록 커밋 (youtube_upload.json)
+        if: ${{ always() && env.DRY_RUN != 'true' && steps.targets.outputs.count != '0' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- finals/*/youtube_upload.json 2>/dev/null || true
+          if git diff --cached --quiet; then echo "기록 변경 없음"; exit 0; fi
+          git commit -m "publish: 유튜브 비공개 업로드 기록 [skip ci]"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+      - name: 결과 요약 · 공개 전환 대기 이슈
+        if: ${{ always() && steps.targets.outputs.count != '0' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python .github/scripts/youtube_report.py report upload-report.json

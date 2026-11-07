@@ -1,0 +1,55 @@
+# 업로드 도구 시험 + 이 변경에서 바뀐 finals 에피소드의 사전 검증(dry-run, 비밀값 불필요).
+# PR 에서 제목 길이·설명 바이트·쇼츠 규격·아동용 선언 누락을 미리 잡는다.
+# push 는 main 에서만 돈다(직전 커밋 대비). 작업 분기는 pull_request 실행(기준 = base 분기)만 쓴다 —
+# 분기 push 에서 직전 커밋을 기준으로 삼으면 main 을 병합한 커밋이 main 의 finals 전부를 "바뀐 편"으로 보기 때문.
+name: ci
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "publish/**"
+      - "tests/**"
+      - "config/youtube.json"
+      - "finals/**"
+      - ".github/**"
+  pull_request:
+    paths:
+      - "publish/**"
+      - "tests/**"
+      - "config/youtube.json"
+      - "finals/**"
+      - ".github/**"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: ffprobe 설치
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+      - name: 단위 시험
+        run: python -m unittest discover -s tests -v
+      - name: 바뀐 finals 에피소드 사전 검증 (dry-run)
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch --quiet --depth=1 origin "${{ github.base_ref }}"
+            BASE=FETCH_HEAD            # PR: base 분기 끝과 비교
+          else
+            BASE="${{ github.event.before }}"   # main push: 직전 상태와 비교
+          fi
+          python .github/scripts/changed_finals.py "$BASE" HEAD > targets.txt
+          if ! grep -q . targets.txt; then echo "바뀐 finals 에피소드 없음 — dry-run 생략"; exit 0; fi
+          mapfile -t ARGS < targets.txt
+          python -m publish.youtube "${ARGS[@]}" --dry-run

@@ -25,6 +25,15 @@
 - 길이는 대본과 관찰 시간으로 맞춥니다. 음성을 가속하지 않습니다.
 - 공통 도구는 `pipeline/`에 있고 에피소드별 코드는 `episodes/<slug>/`에 둡니다. 세 편 이상에서 반복이 확인된 것만 `pipeline/`으로 올립니다.
 
+## 유튜브 업로드 체계
+
+- 완성 쇼츠는 기존 규약대로 `finals/<번호>-<slug>/`(mp4·`upload.md`·썸네일)에 두면 됩니다. PR 이 main 에 병합되면 `publish/youtube.py`(GitHub Actions)가 그 편을 **비공개**로만 올립니다. 공개 전환은 사용자가 직접 합니다. 코드·설정 어디에서도 public·unlisted 로 바꾸지 마세요.
+- `upload.md` 의 제목·설명·태그가 그대로 올라갑니다(인스타그램 설명 블록은 유튜브에 올라가지 않습니다). 제목 100자, 설명 UTF-8 5000바이트, `<` `>` 금지.
+- 비밀값 `YT_CLIENT_ID`·`YT_CLIENT_SECRET`·`YT_REFRESH_TOKEN` 은 환경 변수(GitHub Secrets, 클라우드 환경, `.env`)에만 둡니다. 저장소·로그·커밋·채팅에 값을 남기지 마세요.
+- 리프레시 토큰은 OAuth 앱을 프로덕션으로 게시한 뒤 받은 **장기 토큰**만 씁니다. 테스트 상태의 7일 토큰으로 운영하지 마세요.
+- `config/youtube.json` 의 `channel_id` 는 사용자 결정 사항입니다. 임의로 채우지 마세요. `made_for_kids` 는 2026-11-07 사용자 결정으로 `false` 입니다.
+- 실제 업로드 시험은 사용자 허락 뒤 비공개 1건으로 합니다. 절차는 `docs/YOUTUBE_AUTO_UPLOAD.md`.
+
 ## 참고자료 사용
 
 - 초기 원본 7개, 천둥 참고 영상, 2026-10-30 추가한 장치 해부도 5편(9~13번)은 `references/videos/`, 원래 이름과 해시는 `references/manifest.json`에 있습니다.

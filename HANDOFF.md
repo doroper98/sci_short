@@ -5,6 +5,30 @@
 
 기록일: 2026-10-16, Asia/Seoul. 대상 저장소: https://github.com/doroper98/sci_short
 
+## 2026-11-07: 유튜브 비공개 자동 업로드 체계 (`publish/`, `.github/`)
+
+사용자 요청(2026-11-05): "우리 유튜브 채널에 자동으로 쇼츠를 올릴 수 있는 체계를 구성해봐. 비공개로 올리고 내가 공개로 전환하는 형태로."
+설계 출처는 `osint_generator` 의 유튜브 업로드 연동(2026-11-03)이며, 이 저장소에 맞게 독립 도구로 옮겼습니다.
+**새 입력 규약을 만들지 않았습니다.** 기존 `finals/<번호>-<slug>/` 와 `upload.md`, `docs/YOUTUBE_UPLOAD.md` 의 공통 설정을 그대로 읽습니다.
+
+- `publish/youtube.py` — 비공개 전용 업로더 CLI(표준 라이브러리만). 재개 가능 업로드, `thumbnails.set`, 선택 자막, md5 멱등 기록(`finals/<ep>/youtube_upload.json`), 업로드 전 채널 확인(`channel_id`), 제목·설명·태그·쇼츠 규격 사전 검증. `--dry-run` `--all` `--list` `--whoami` `--mark-uploaded`.
+- `publish/oauth.py` — 루프백 OAuth(PKCE) 리프레시 토큰 1회 발급. **프로덕션 게시 확인 없이는 발급 거부**(7일 만료 토큰 방지).
+- Actions: `youtube-upload`(main 의 `finals/**` 변경 → **그 push 에서 바뀐 편만** 업로드 → 기록 커밋 → "공개 전환 대기" 이슈. 전체는 수동 `all=true` 에서만, 백로그 일괄 사고 방지), `youtube-token-check`(주간), `ci`(단위 시험 + 바뀐 편 dry-run).
+- `docs/YOUTUBE_AUTO_UPLOAD.md` 신설, `docs/youtube-app/`(OAuth 앱 게시용 홈페이지·개인정보처리방침, GitHub Pages 용).
+- 사용자 결정: `made_for_kids: false`(아동용 아님, 2026-11-07). `privacy_status` 는 private 만 로드됩니다.
+- 시험: 단위 시험 41건 통과. **main 의 실제 21편 `upload.md` 와 mp4 로 `--all --dry-run` 전편 통과(오류 0).** `upload.md` 의 '인스타그램(릴스) 설명' 블록은 유튜브 설명에 섞이지 않음을 확인했습니다.
+- **미수행: 실제 업로드 0건.** 비밀값이 없어 API 실응답을 보지 못했습니다.
+
+남은 사용자 작업: ① 이 PR 병합 ② Settings → Pages 를 `main`/`docs` 로 켜기 ③ 구글 인증 플랫폼 브랜딩에 Pages 주소 입력 후 프로덕션 게시 ④ `python -m publish.oauth --production` 으로 토큰 발급 ⑤ 저장소 Secrets 에 `YT_CLIENT_ID`·`YT_CLIENT_SECRET`·`YT_REFRESH_TOKEN` 저장. 그 뒤 비공개 1건 시험.
+`youtube.upload` 은 구글의 민감한 범위라 미심사 앱은 신규 사용자 100명 상한이 붙습니다. 1인용이라 무관하며 심사는 받지 않아도 됩니다.
+
+**인스타그램은 포함하지 않았습니다.** 인스타 게시 API 에는 비공개·초안 상태가 없어(메타 공식 문서 확인, 2026-11-07) "비공개로 올리고 사람이 공개"를 재현할 수 없습니다. `finals/INSTAGRAM.md` 의 설명문은 사람이 붙여 넣는 용도입니다.
+
+### 2026-11-07: 네트워크 제한 해제
+
+사용자가 환경 설정에서 `sci_shorts` 의 네트워크 제한을 해제했습니다(Unrestricted). 같은 날 실측해 `docs/NETWORK_AND_ASSETS.md` 를 사실에 맞췄습니다.
+막혀 있던 `download-r2.pytorch.org`·`us.aws.cdn.hf.co`·`archive.org`·`api.github.com` 이 모두 열렸습니다. torch 휠 수동 설치 우회가 더는 필요 없습니다. 배경음악 기본 꺼짐은 2026-10-31 결정대로 유지합니다.
+
 ## 2026-10-30: 제작 스킬 고도화 — 표준 음성 복원, 공통 파이프라인, 3분 쇼츠 기준
 
 사용자 지시 요약: (1) osint_generator와 같은 목소리(튜닝 포함)가 나오지 않는 문제 해결, (2) 어떤 과학·공학 주제든 지시 후 약 1시간 안에 완성되는 스킬, (3) 장치 해부도 참고 영상(9~13번)의 메커니즘적 자세함 + 수정 영상의 배경지식 + 소화할 수 있는 호흡, (4) 최대 **3분**(처음 2분에서 변경), 세로 쇼츠, 11~16세 대상, 유치하지 않게, (5) 르포 보고서(`agents_reviewer`) 글꼴 체계.

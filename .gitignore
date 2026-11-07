@@ -35,3 +35,7 @@ node_modules/
 /assets/generated/**/*.mp4
 /assets/generated/**/*.png
 /assets/generated/**/*.jpg
+
+# 유튜브 업로드 자동화 산출물
+upload-report.json
+whoami-report.json
