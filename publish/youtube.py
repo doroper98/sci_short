@@ -59,6 +59,7 @@ UPLOAD_URL = "https://www.googleapis.com/upload/youtube/v3/videos"
 CAPTIONS_URL = "https://www.googleapis.com/upload/youtube/v3/captions"
 CHANNELS_URL = "https://www.googleapis.com/youtube/v3/channels"
 THUMBNAILS_URL = "https://www.googleapis.com/upload/youtube/v3/thumbnails/set"
+VIDEOS_URL = "https://www.googleapis.com/youtube/v3/videos"
 WATCH_URL_PREFIX = "https://youtu.be/"
 STUDIO_URL = "https://studio.youtube.com/video/{video_id}/edit"
 
@@ -144,6 +145,8 @@ class Config:
     chunk_mb: int = 8
     timeout_sec: float = 120
     tries: int = 5
+    processing_wait_sec: float = 1200  # 쇼츠 맞춤 썸네일은 처리 완료 뒤에만 적용된다 — 처리 완료를 이만큼 기다린다
+    processing_poll_sec: float = 15
     schema_version: int = 1
 
 
@@ -575,6 +578,41 @@ def upload_caption(send: Transport, cfg: Config, token: str, video_id: str, srt:
     return str(cid)
 
 
+def wait_processed(send: Transport, token: str, video_id: str, *, timeout_sec: float, poll_sec: float,
+                   sleep: Callable[[float], None] = time.sleep, log: Callable[[str], None] = lambda s: None) -> str:
+    """videos.list(part=processingDetails) 로 유튜브의 영상 처리가 끝날 때까지 기다린다. 한 번에 할당량 1단위.
+
+    공식 문서(thumbnails.set): 쇼츠의 맞춤 썸네일은 processingDetails.processingStatus 가 succeeded 가 된 뒤에
+    지정해야 한다. 그 전에 지정하면 적용되지 않을 수 있다(2026-11-07 첫 업로드에서 실제로 중간 장면이 썸네일이 됨).
+    youtube.readonly 범위로 읽는다(영상 주인에게만 보이는 정보)."""
+    url = VIDEOS_URL + "?" + urllib.parse.urlencode({"part": "processingDetails", "id": video_id})
+    waited, polls, last = 0.0, 0, "?"
+    while True:
+        try:
+            r = send("GET", url, {"Authorization": f"Bearer {token}"}, None)
+            if r.status == 200:
+                items = r.json().get("items") or []
+                pd = (items[0].get("processingDetails") or {}) if items else {}
+                last = str(pd.get("processingStatus") or ("not-found" if not items else "?"))
+                if last == "succeeded":
+                    return last
+                if last in ("failed", "terminated"):
+                    raise UploadError(f"유튜브 영상 처리 {last} {pd.get('processingFailureReason', '')}".strip())
+            elif r.status in RETRY_STATUS:
+                last = f"HTTP {r.status}"
+            else:
+                raise _api_error(r, "영상 처리 상태 확인")
+        except TransportError as ex:
+            last = str(ex)
+        if waited >= timeout_sec:
+            raise UploadError(f"영상 처리 대기 {timeout_sec:.0f}초 초과(마지막 상태 {last})")
+        if polls % 4 == 0:
+            log(f"영상 처리 대기 중 — {last} ({waited:.0f}초)")
+        sleep(poll_sec)
+        waited += poll_sec
+        polls += 1
+
+
 def upload_thumbnail(send: Transport, token: str, video_id: str, image: Path) -> None:
     """thumbnails.set — 채널이 맞춤 썸네일을 쓸 수 있어야 한다(전화 인증). 할당량 50단위."""
     ctype = "image/png" if image.suffix.lower() == ".png" else "image/jpeg"
@@ -609,6 +647,8 @@ class Record:
     caption_error: str | None = None
     thumbnail_file: str | None = None
     thumbnail_error: str | None = None
+    thumbnail_after_processing: bool | None = None   # True = 처리 완료 뒤에 지정(쇼츠에 적용되는 조건). None = 옛 기록
+    thumbnail_set_at: str | None = None
     number: int | None = None
     slug: str = ""
     source: str = "api"                   # api(이 도구가 올림) · manual(손으로 올린 것을 --mark-uploaded 로 기록)
@@ -645,6 +685,29 @@ def _log(msg: str) -> None:
     print(f"[youtube] {msg}", file=sys.stderr, flush=True)
 
 
+def _now() -> str:
+    return dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
+
+
+def apply_thumbnail(send: Transport, cfg: Config, token: str, rec: Record, image: Path, res: dict[str, Any],
+                    sleep: Callable[[float], None] = time.sleep) -> bool:
+    """처리 완료를 기다린 뒤 썸네일을 지정하고 기록(rec)을 고친다. 실패는 경고로 남기고 False."""
+    try:
+        wait_processed(send, token, rec.video_id, timeout_sec=cfg.processing_wait_sec,
+                       poll_sec=cfg.processing_poll_sec, sleep=sleep, log=_log)
+        upload_thumbnail(send, token, rec.video_id, image)
+    except (UploadError, TransportError) as ex:
+        rec.thumbnail_error = str(ex)
+        res["warnings"].append(f"썸네일 설정 실패(영상은 그대로 — 같은 편을 다시 실행하면 다시 시도합니다. "
+                               f"끝내 안 되면 유튜브 휴대전화 앱에서 첫 프레임을 고르십시오): {ex}")
+        _log(res["warnings"][-1])
+        return False
+    rec.thumbnail_file, rec.thumbnail_error = image.name, None
+    rec.thumbnail_after_processing, rec.thumbnail_set_at = True, _now()
+    _log(f"썸네일 설정 완료(영상 처리 완료 뒤) {image.name}")
+    return True
+
+
 def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport | None = None,
                     env: dict[str, str] | None = None, caption: bool | None = None, thumbnail: bool | None = None,
                     synthetic: bool | None = None, made_for_kids: bool | None = None, not_shorts: bool = False,
@@ -678,6 +741,25 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
                 res.update(status="skipped", video_id=prev.video_id, url=prev.url, studio_url=prev.studio_url)
                 res["warnings"].append(f"이미 올린 영상(md5 {md5[:8]}, {prev.source}) — {prev.url} · 다시 올리지 않음")
                 _log(res["warnings"][-1])
+                if ep.thumbnail is not None and prev.source == "api" and not prev.thumbnail_after_processing:
+                    # 처리 완료 전에 썸네일을 지정한 옛 기록 → 영상은 두고 썸네일만 다시 지정한다
+                    if dry_run:
+                        res["warnings"].append("썸네일을 영상 처리 완료 뒤 다시 지정해야 합니다 — dry-run 이라 하지 않음")
+                        return res
+                    try:
+                        tx = send or urllib_transport(cfg.timeout_sec)
+                        token = access_token(tx, read_secrets(env))
+                        ch = my_channel(tx, token)
+                        if ch["id"] != prev.channel_id or (cfg.channel_id and ch["id"] != cfg.channel_id):
+                            raise UploadError(f"토큰 채널({ch['title']} {ch['id']})이 기록 채널({prev.channel_id})과 다릅니다")
+                    except (UploadError, TransportError) as ex:
+                        res["warnings"].append(f"썸네일 다시 지정 못 함: {ex}")
+                        _log(res["warnings"][-1])
+                        return res
+                    res["thumbnail_repaired"] = apply_thumbnail(tx, cfg, token, prev, ep.thumbnail, res, sleep)
+                    write_record(dir_, prev)
+                    if res["thumbnail_repaired"]:
+                        res["warnings"].append(f"썸네일 다시 지정 완료({ep.thumbnail.name}, 영상 처리 완료 뒤)")
                 return res
             if not allow_reupload:
                 raise UploadError(f"기록({RECORD_NAME})이 있는데 영상 파일이 바뀌었습니다(md5 {prev.video_md5[:8]}→{md5[:8]}). "
@@ -696,7 +778,7 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
         _log(f"채널: {ch['title']} ({ch['id']})")
         vid = upload_video(tx, cfg, token, ep.video, meta, sleep=sleep, log=_log)
         rec = Record(video_id=vid, url=WATCH_URL_PREFIX + vid, studio_url=STUDIO_URL.format(video_id=vid),
-                     uploaded_at=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), privacy_status="private",
+                     uploaded_at=_now(), privacy_status="private",
                      channel_id=ch["id"], channel_title=ch["title"], video_file=ep.video.name, video_bytes=size, video_md5=md5,
                      title=meta.title, description_bytes=_nbytes(meta.description),
                      contains_synthetic_media=meta.contains_synthetic_media, made_for_kids=meta.made_for_kids,
@@ -705,14 +787,7 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
         write_record(dir_, rec)   # 자막·썸네일이 실패해도 영상 기록은 남는다
         _log(f"영상 업로드 완료(비공개) {rec.url} · Studio {rec.studio_url}")
         if ep.thumbnail is not None:
-            try:
-                upload_thumbnail(tx, token, vid, ep.thumbnail)
-                rec.thumbnail_file = ep.thumbnail.name
-                _log(f"썸네일 설정 완료 {ep.thumbnail.name}")
-            except (UploadError, TransportError) as ex:
-                rec.thumbnail_error = str(ex)
-                res["warnings"].append(f"썸네일 설정 실패(영상은 올라감 — Studio 에서 직접 고르십시오): {ex}")
-                _log(res["warnings"][-1])
+            apply_thumbnail(tx, cfg, token, rec, ep.thumbnail, res, sleep)
             write_record(dir_, rec)
         if ep.srt is not None:
             try:

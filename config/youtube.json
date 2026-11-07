@@ -30,6 +30,9 @@
   "upload_thumbnail": true,
   "_upload_thumbnail": "thumbnail.jpg(없으면 poster.jpg = 0초 프레임)를 thumbnails.set 으로 설정한다. 채널이 맞춤 썸네일을 못 쓰면 경고로 남기고 영상은 그대로 둔다.",
   "thumbnail_max_bytes": 2097152,
+  "processing_wait_sec": 1200,
+  "processing_poll_sec": 15,
+  "_processing_wait_sec": "쇼츠 맞춤 썸네일은 유튜브의 영상 처리가 끝난 뒤(processingStatus = succeeded) 지정해야 적용된다(thumbnails.set 공식 문서). 업로드 뒤 이 시간까지 15초마다 확인하고 썸네일을 지정한다. 2026-11-07 첫 업로드에서 처리 전에 지정해 중간 장면이 썸네일이 된 일로 추가. 시간을 넘기면 경고로 남기고, 같은 편을 다시 실행하면 썸네일만 다시 지정한다.",
 
   "shorts_max_sec": 180,
   "_shorts_max_sec": "세로·정방형이고 이 길이 이하면 유튜브가 쇼츠로 분류한다(2024-10-15 이후 3분). 넘으면 --not-shorts 없이는 올리지 않는다.",

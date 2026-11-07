@@ -68,6 +68,11 @@ def load(path: str) -> dict | None:
         return None
 
 
+def cell(text: str) -> str:
+    """표 칸 안의 글. 제목의 '|'(예: "질문? | 부제")가 칸을 나누지 않게 이스케이프하고 줄바꿈을 없앤다."""
+    return str(text).replace("|", "\\|").replace("\n", " ")
+
+
 def cmd_report(path: str) -> int:
     data = load(path)
     if data is None:
@@ -83,9 +88,9 @@ def cmd_report(path: str) -> int:
              f"업로드 {c.get('uploaded', 0)} · 건너뜀 {c.get('skipped', 0)} · dry-run {c.get('dry-run', 0)} · 오류 {c.get('error', 0)}", "",
              "| 폴더 | 상태 | 제목 | 링크 | 비고 |", "|---|---|---|---|---|"]
     for r in data["results"]:
-        note = r.get("error") or " / ".join(r.get("warnings", []))
+        note = cell(r.get("error") or " / ".join(r.get("warnings", [])))
         link = f"[youtu.be]({r['url']}) · [Studio]({r['studio_url']})" if r.get("url") else ""
-        lines.append(f"| `{r['dir']}` | {r['status']} | {r.get('title', '')} | {link} | {note} |")
+        lines.append(f"| `{r['dir']}` | {r['status']} | {cell(r.get('title', ''))} | {link} | {note} |")
     summary("\n".join(lines))
 
     ensure_labels()

@@ -15,7 +15,7 @@
 [승인]  사용자가 PR 을 main 에 병합  ← 이것이 "올려도 된다"는 신호
    ▼
 [자동]  GitHub Actions youtube-upload — 그 push 에서 바뀐 finals 폴더만
-        토큰 갱신 → 채널 확인(channel_id) → 재개 가능 업로드(비공개) → 썸네일 → (선택) 자막
+        토큰 갱신 → 채널 확인(channel_id) → 재개 가능 업로드(비공개) → 영상 처리 완료 대기 → 썸네일 → (선택) 자막
         → finals/<ep>/youtube_upload.json 커밋 → 이슈 "공개 전환 대기: <제목> (<video id>)"
    ▼
 [사람]  YouTube Studio 에서 확인 → 공개(또는 예약 공개) → 고정 댓글·관련 동영상(upload.md) → 이슈 닫기
@@ -159,6 +159,9 @@ python -m publish.youtube finals/13-gamma-ray-burst --env-file .env   # 비공�
 - **수동 실행.** Actions → youtube-upload → Run workflow. `episode` 한 폴더, 또는 `all=true`. `dry_run` 으로 검증만.
 - **멱등.** `youtube_upload.json` 이 있고 md5 가 같으면 건너뜁니다. 재실행이 안전합니다.
 - **자막·썸네일 실패**는 영상 기록을 남기고 경고로 보고합니다(영상은 올라간 상태).
+- **썸네일은 영상 처리가 끝난 뒤 지정합니다.** 공식 문서(thumbnails.set)에 따르면 쇼츠의 맞춤 썸네일은 `processingDetails.processingStatus` 가 `succeeded` 가 된 뒤 지정해야 적용됩니다. 업로더는 업로드 뒤 `videos.list(part=processingDetails)` 를 15초마다 보고(최대 `processing_wait_sec` 1200초, 1회 1단위) 썸네일을 지정합니다. 2026-11-07 첫 업로드(04편)는 처리 전에 지정해 유튜브가 중간 장면을 썸네일로 골랐습니다.
+- **썸네일만 다시 지정.** 기록의 `thumbnail_after_processing` 이 true 가 아닌 편(옛 기록·처리 대기 초과)은, 같은 편을 다시 실행하면 영상은 두고 썸네일만 다시 지정합니다. 수동 실행에서 `episode` 에 그 폴더를 적거나, 그 폴더를 바꾼 PR 을 병합하면 됩니다. 손으로 올린 편(`source: manual`)은 건드리지 않습니다.
+- **API 로 안 될 때.** 처리 완료 뒤 지정해도 쇼츠에 맞춤 썸네일이 보이지 않으면 유튜브 휴대전화 앱 → 영상 수정 → 썸네일에서 첫 프레임을 고릅니다. 이 채널의 썸네일은 0초 프레임과 같은 그림이라 결과가 같습니다.
 - **쇼츠 분류.** 세로·정방형이고 180초 이하면 유튜브가 자동으로 쇼츠로 분류합니다. 13편 모두 1080×1920, 160~179초입니다.
 - **할당량(2026-11-03 공식 문서 확인).** videos.insert 는 별도 버킷 하루 100회. captions.insert 400단위, thumbnails.set 50단위, channels.list 1단위(기본 하루 10,000단위). 초과 시 `quotaExceeded` 로 멈추고 태평양 시간 자정(KST 오후 4~5시) 뒤 다시 됩니다.
 - **로컬·클라우드 세션에서 직접** 올릴 수도 있습니다: `python -m publish.youtube finals/<ep> --env-file .env`.
@@ -185,6 +188,8 @@ python -m publish.youtube finals/13-gamma-ray-burst --env-file .env   # 비공�
 | `토큰이 가리키는 채널 … 다릅니다` | 토큰을 받을 때 다른 채널을 골랐음. 다시 발급하거나 `channel_id` 수정 |
 | `made_for_kids … 정해지지 않았습니다` | `config/youtube.json` 의 `made_for_kids` 를 true/false 로 |
 | `썸네일 설정 실패 … forbidden` | 채널 전화 인증(맞춤 썸네일 권한) 필요. Studio 에서 직접 고르거나 `upload_thumbnail: false` |
+| 쇼츠 썸네일이 중간 장면 | 처리 완료 전에 지정된 것. 같은 편을 다시 실행하면 썸네일만 다시 지정(위 '운영'). 그래도 안 되면 휴대전화 앱에서 첫 프레임 선택 |
+| `영상 처리 대기 … 초과` | 유튜브 처리가 늦음. 영상은 올라감. 나중에 같은 편을 다시 실행 |
 | `HTTP 401/403 insufficientPermissions` | 범위 부족. 위 '토큰 발급'대로 다시 받습니다(youtube.upload + youtube.readonly) |
 | `자막 업로드 실패 … force-ssl` | 의도된 동작입니다. 자막 업로드 권한은 받지 않습니다('권한' 절) |
 | `quotaExceeded` / `uploadLimitExceeded` | 하루 한도. 다음 날 다시 |
@@ -193,9 +198,8 @@ python -m publish.youtube finals/13-gamma-ray-burst --env-file .env   # 비공�
 
 ## 미시험 · 미결
 
-- **실제 업로드 0건.** 가짜 전송으로 흐름(토큰→채널→세션→308 재개→200→썸네일→자막)을 시험했고, 실제 API 응답은 아직 보지 못했습니다. main 의 실제 21편 영상·`upload.md` 로 dry-run 은 통과했습니다.
+- **실제 업로드 1건(2026-11-07, 04편 `dbnYxnEgtpo`).** 병합 push → 바뀐 편 선택 → 채널 확인 → 비공개 업로드 → 기록 커밋 → 이슈까지 실제로 확인했습니다. 썸네일은 처리 전에 지정되어 적용되지 않았고, 처리 완료 대기를 넣어 고쳤습니다. 쇼츠에서 API 썸네일이 실제로 보이는지는 다시 지정한 뒤 확인합니다.
 - 남은 사용자 결정: 이미 손으로 올린 편의 목록(`--mark-uploaded` 로 등록). `channel_id` 는 2026-11-07 에 과학쑛츠로 정해졌습니다.
-- 남은 사용자 작업: PR 병합 → GitHub Pages 켜기 → 구글 브랜딩·게시 → 토큰 발급 → Secrets 저장.
 - 맞춤 썸네일은 채널 권한(전화 인증)에 따라 실패할 수 있습니다. 실패해도 영상은 올라가고 경고로 남습니다.
 - 고정 댓글·관련 동영상·재생목록·예약 공개는 범위에 넣지 않았습니다. `upload.md` 에 적힌 고정 댓글은 사람이 답니다.
 - **인스타그램 업로드는 포함되어 있지 않습니다.** 인스타 게시 API 에는 비공개·초안 상태가 없어 "비공개로 올리고 사람이 공개"를 재현할 수 없습니다. `finals/INSTAGRAM.md` 의 설명문은 사람이 붙여 넣는 용도입니다.
