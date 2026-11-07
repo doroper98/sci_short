@@ -12,12 +12,13 @@
 export class Fluid {
   constructor(cfg) {
     this.cfg = {nx: 128, ny: 256, axi: false, B: 0.002, W: 0, eps: 0.08, sor: 40, omega: 1.85, velDamp: 1, thDamp: 1, sDamp: 1, dDamp: 1,
-      g1: 0, g2: 0, jt: 1e9, ckEvery: 25, tracers: 0, lid: true, visc: 0, kappa: 0, kappaD: null, axisDamp: 0, ...cfg};
+      g1: 0, g2: 0, jt: 1e9, ckEvery: 25, tracers: 0, lid: true, visc: 0, kappa: 0, kappaD: null, axisDamp: 0, mat: 0, ...cfg};
     const {nx, ny} = this.cfg;
     Object.assign(this, {nx, ny, n: nx * ny, axi: !!this.cfg.axi});
     this.u = new Float32Array((nx + 1) * ny); this.u0 = new Float32Array((nx + 1) * ny);
     this.v = new Float32Array(nx * (ny + 1)); this.v0 = new Float32Array(nx * (ny + 1));
-    for (const k of ['th', 's', 'd', 'a0', 'a1', 'a2', 'p', 'div', 'w', 'aw', 'fx', 'fy']) this[k] = new Float32Array(nx * ny);
+    for (const k of ['th', 's', 'd', 'a0', 'a1', 'a2', 'p', 'div', 'w', 'aw', 'fx', 'fy', 'ar', 'az', 'br', 'bz']) this[k] = new Float32Array(nx * ny);
+    this.fields = ['u', 'v', 'th', 's', 'd', 'p', 'tx', 'ty', 'tage', 'tk', ...(this.cfg.mat ? ['ar', 'az', 'br', 'bz'] : [])];
     this.thAmb = new Float32Array(ny + 1);   // at face heights y = j
     for (let j = 0; j <= ny; j++) this.thAmb[j] = this.ambAt(j);
     this.aR = new Float32Array(nx); this.aL = new Float32Array(nx);
@@ -36,13 +37,20 @@ export class Fluid {
     this.u.fill(0); this.v.fill(0); this.s.fill(0); this.d.fill(0); this.p.fill(0);
     for (let j = 0; j < this.ny; j++) this.th.fill(this.ambAt(j + 0.5), j * this.nx, (j + 1) * this.nx);
     this.stepNo = 0; this.cks.clear();
+    if (this.cfg.mat) { this.resetMat('a'); this.resetMat('b'); }
     this.cfg.init?.(this);
     this.cfg.initTracers?.(this);
     this.checkpoint();
   }
-  static FIELDS = ['u', 'v', 'th', 's', 'd', 'p', 'tx', 'ty', 'tage', 'tk'];
-  checkpoint() { if (!this.cks.has(this.stepNo)) this.cks.set(this.stepNo, Object.fromEntries(Fluid.FIELDS.map(f => [f, this[f].slice()]))); }
-  restore(k) { const c = this.cks.get(k); for (const f of Fluid.FIELDS) this[f].set(c[f]); this.stepNo = k; }
+  checkpoint() { if (!this.cks.has(this.stepNo)) this.cks.set(this.stepNo, Object.fromEntries(this.fields.map(f => [f, this[f].slice()]))); }
+  restore(k) { const c = this.cks.get(k); for (const f of this.fields) this[f].set(c[f]); this.stepNo = k; }
+  /** material (texture) coordinates: identity map, then carried by the flow; two layers reset half a period apart */
+  resetMat(layer) {
+    const {nx, ny} = this, R = this[layer + 'r'], Z = this[layer + 'z'], off = layer === 'a' ? 0 : 517.3;
+    for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) { R[i + j * nx] = i + 0.5 + off; Z[i + j * nx] = j + 0.5 - off * 0.37; }
+  }
+  /** blend weights of the two material layers at the current step (sum = 1; a layer has weight 0 when it is reset) */
+  matWeights() { const T = this.cfg.mat, ph = (this.stepNo % T) / T, wa = Math.sin(Math.PI * ph) ** 2; return [wa, 1 - wa]; }
   /** bring the state to step k (forward, or back through the nearest checkpoint) */
   goto(k) {
     k = Math.max(0, Math.round(k));
@@ -184,6 +192,7 @@ export class Fluid {
     this.project();
     { const {u, v} = this, L = 2.0; for (let k = 0; k < u.length; k++) u[k] = u[k] > L ? L : u[k] < -L ? -L : u[k]; for (let k = 0; k < v.length; k++) v[k] = v[k] > L ? L : v[k] < -L ? -L : v[k]; }
     this.advectMC(this.th); this.advectMC(this.s); this.advectMC(this.d);
+    if (c.mat) { this.advectC(this.a0, this.ar, 1); this.ar.set(this.a0); this.advectC(this.a0, this.az, 1); this.az.set(this.a0); this.advectC(this.a0, this.br, 1); this.br.set(this.a0); this.advectC(this.a0, this.bz, 1); this.bz.set(this.a0); }
     if (c.kappa > 0) { this.diffuse(this.th, this.nx, this.ny, c.kappa, this.a0); this.diffuse(this.s, this.nx, this.ny, c.kappa, this.a0); this.diffuse(this.d, this.nx, this.ny, c.kappaD ?? c.kappa, this.a0); }
     if (c.thDamp !== 1) { const {th, nx} = this; for (let k = 0; k < this.n; k++) { const ta = this.ambAt(((k / nx) | 0) + 0.5); th[k] = ta + (th[k] - ta) * c.thDamp; } }
     if (c.sDamp !== 1) { const s = this.s; for (let k = 0; k < this.n; k++) s[k] *= c.sDamp; }
@@ -199,6 +208,7 @@ export class Fluid {
       c.respawn?.(this);
     }
     this.stepNo++;
+    if (c.mat) { const T = c.mat; if (this.stepNo % T === 0) this.resetMat('a'); if ((this.stepNo + T / 2) % T === 0) this.resetMat('b'); }
     if (this.stepNo % c.ckEvery === 0) this.checkpoint();
   }
   /** smoke-weighted mean vertical speed (cells/step) */

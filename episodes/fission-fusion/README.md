@@ -10,7 +10,8 @@
 | `script.json` | 문장 21개, 장면 8개 (고치지 않음) |
 | `scenes.mjs` | 모형(원자핵 채움, 액체방울 분열, 결합 에너지 골짜기, 원자로 개체 수, 토카막) + 그림 도구(스프라이트·텍스처·블룸·3D 카메라) + 장면 + `--emit-sound` |
 | `sound.json` | **생성 파일**: `node episodes/fission-fusion/scenes.mjs --emit-sound`가 씀 |
-| `render.mjs`, `run.sh` | 스캐폴드 그대로 |
+| `render.mjs` | 스캐폴드에서 한 줄만 바꿈: `renderVideo`에 `crf: 20`(빛 번짐·입자가 많은 화면이라 CRF 18이면 95 MB → 64 MB로 줄임, 파이프라인 기본값은 그대로) |
+| `run.sh` | 스캐폴드 그대로 |
 
 ```bash
 node episodes/fission-fusion/scenes.mjs --emit-sound          # 타임라인·모형이 바뀌면 먼저 (낡으면 렌더가 경고)
@@ -51,3 +52,7 @@ SKIP_NARRATE=1 episodes/fission-fusion/run.sh stills render sfx mix finish valid
 ## 단순화
 
 핵자는 구슬이 아니며 크기·색·배치는 설명용입니다. 액체방울 분열, 원자로 개체 수, 토카막 자기장·입자는 설명 모형입니다. 골짜기는 실측 B/A를 부드럽게 이은 곡선을 입체 띠로 그린 것입니다. 체렌코프 빛은 물에 잠긴 연구용 원자로와 사용후연료 저장조에서 실제로 보이는 현상입니다. 화면에 각주는 없습니다.
+
+## 결과
+
+19/19 PASS, 165.45초, −14.03 LUFS, 사건 50개, 64.3 MB. 렌더 약 10 fps(4 vCPU를 다른 편과 나눠 쓰며 459~532초). 청취·휴대전화 재생은 하지 않았습니다.

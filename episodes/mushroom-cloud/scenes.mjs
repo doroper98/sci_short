@@ -26,58 +26,66 @@ export const events = [];
 // =====================================================================================================
 // Model
 // =====================================================================================================
-export const KM = 0.064;                 // km per cell
-export const JT = 150;                   // tropopause row (≈ 9.6 km)
-export const SEC_PER_STEP = 1.5;         // real seconds per simulation step (main cloud): top passes 10 km at ≈ step 165 ≈ 4 min
-const NX = 128, NY = 256;
-const bubbleInit = (f, {r0, cy, dth, smoke = 1, dust = 0.25, dustR = 90}) => {
+export const KM = 0.064;                 // km per cell of the 128 × 256 sims (volcano, wildfire)
+export const KMM = 16.4 / 384;           // km per cell of the 192 × 384 main cloud (≈ 43 m)
+export const JT = 150;                   // tropopause row, 128-grid (≈ 9.6 km)
+export const JTM = 225;                  // tropopause row, main grid (≈ 9.6 km)
+export const SC = 2 / 3;                 // main-grid cell size relative to the 128 grid (px-per-cell factors)
+export const SEC_PER_STEP = 1.5;         // real seconds per simulation step (main cloud)
+const NX = 128, NY = 256, NXM = 192, NYM = 384;
+const bubbleInit = (f, {r0, cy, dth, smoke = 1, dust = 0.25, dustR = 90, dustRows = 2}) => {
   for (let j = 0; j < f.ny; j++) for (let i = 0; i < f.nx; i++) {
     const k = i + j * f.nx, r = Math.hypot(i + 0.5, j + 0.5 - cy) / r0;
     if (r < 1.25) { const q = r < 0.75 ? 1 : 1 - (r - 0.75) / 0.5; f.th[k] += dth * q; f.s[k] = Math.max(f.s[k], smoke * q); }
-    if (j < 2 && i < dustR) f.d[k] = dust;
+    if (j < dustRows && i < dustR) f.d[k] = dust;
   }
 };
+// The main cloud runs on a 1.5× finer grid than the first version: same physical domain (8.2 km × 16.4 km) and time step,
+// so speeds in cells/step and the buoyancy coefficient scale by 1.5 and the stratification per cell by 1/1.5.
 const CFG = {
-  main: {axi: true, nx: NX, ny: NY, B: 0.002, eps: 0.05, visc: 0.1, kappa: 0.04, kappaD: 0.07, axisDamp: 0.25, g1: 0.02, g2: 0.6, jt: JT, ground: 0.95, tracers: 2400,
-    init: f => bubbleInit(f, {r0: 25, cy: 20, dth: 16, dust: 0.45, dustR: 100}),
-    sources(f) { for (let i = 0; i < f.nx; i++) f.d[i] = Math.min(1.6, f.d[i] + 0.09 * Math.abs(f.u[i])); },
+  main: {axi: true, nx: NXM, ny: NYM, B: 0.003, eps: 0.06, visc: 0.1, kappa: 0.03, kappaD: 0.05, axisDamp: 0.25, g1: 0.02 / 1.5, g2: 0.4, jt: JTM, ground: 0.95, tracers: 2400, sor: 50, mat: 36,
+    init: f => bubbleInit(f, {r0: 37.5, cy: 30, dth: 16, dust: 0.45, dustR: 150, dustRows: 3}),
+    sources(f) { for (let i = 0; i < f.nx; i++) f.d[i] = Math.min(1.6, f.d[i] + 0.06 * Math.abs(f.u[i])); },
     initTracers(f) {
       const R = rng(1945);
       for (let q = 0; q < f.nt; q++) {
-        if (q < 1400) { f.tx[q] = R() * 48; f.ty[q] = R() * 46; f.tk[q] = 0; }       // around and inside the fireball
-        else { f.tx[q] = 4 + R() * 104; f.ty[q] = 0.3 + R() * 2.2; f.tk[q] = 1; }   // ground layer (afterwinds, dust)
+        if (q < 1400) { f.tx[q] = R() * 72; f.ty[q] = R() * 69; f.tk[q] = 0; }        // around and inside the fireball
+        else { f.tx[q] = 6 + R() * 156; f.ty[q] = 0.45 + R() * 3.3; f.tk[q] = 1; }   // ground layer (afterwinds, dust)
       }
     },
     respawn(f) {   // dust tracers that have risen high go back to the ground at a fresh radius (deterministic)
-      for (let q = 1400; q < f.nt; q++) if (f.ty[q] > 120 || f.tx[q] > 120) { f.tx[q] = 20 + 90 * rand(q * 7.13 + f.stepNo * 0.917); f.ty[q] = 0.4 + 1.8 * rand(q * 3.7 + f.stepNo * 1.31); f.tage[q] = 0; }
+      for (let q = 1400; q < f.nt; q++) if (f.ty[q] > 180 || f.tx[q] > 180) { f.tx[q] = 30 + 135 * rand(q * 7.13 + f.stepNo * 0.917); f.ty[q] = 0.6 + 2.7 * rand(q * 3.7 + f.stepNo * 1.31); f.tage[q] = 0; }
     }},
   volc: {axi: true, nx: NX, ny: NY, B: 0.002, eps: 0.05, visc: 0.1, kappa: 0.04, g1: 0.02, g2: 0.6, jt: JT - 20, ground: 0.9,
-    sources(f) {   // continuous vent: hot ash-laden gas pushed up through a narrow vent
+    sources(f) {   // continuous vent: hot ash-laden gas pushed up through the vent
       for (let j = 0; j < 4; j++) for (let i = 0; i < 15; i++) {
         const k = i + j * f.nx, q = 1 - (i / 15) ** 2; f.th[k] = Math.max(f.th[k], f.ambAt(j + 0.5) + 17 * q); f.s[k] = Math.max(f.s[k], q);
         f.v[i + (j + 1) * f.nx] = Math.max(f.v[i + (j + 1) * f.nx], 1.1 * q);
       }
     }},
   fire: {axi: true, nx: NX, ny: NY, B: 0.002, eps: 0.07, visc: 0.08, kappa: 0.035, g1: 0.02, g2: 0.6, jt: JT, ground: 0.95,
-    sources(f) {   // wide burning ground: flickering heat and smoke along a ring of forest
+    sources(f) {   // burning forest: flickering heat concentrated toward the middle (a uniform hot sheet would just sit in balance)
       const st = f.stepNo;
       for (let j = 0; j < 3; j++) for (let i = 0; i < 46; i++) { const fl = 0.65 + 0.35 * Math.sin(i * 0.9 + st * 0.11) * Math.sin(i * 0.37 - st * 0.07), q = (1 - (i / 46) ** 2) * fl, k = i + j * f.nx;
         f.th[k] = Math.max(f.th[k], f.ambAt(j + 0.5) + 14 * q); f.s[k] = Math.max(f.s[k], 0.8 * q); }
     }},
-  ink: {axi: true, nx: NX, ny: NY, B: 0, W: 0.03, eps: 0.1, visc: 0.05, kappa: 0.005, g1: 0, g2: 0, ground: 1,
-    init: f => { for (let j = 0; j < f.ny; j++) for (let i = 0; i < f.nx; i++) { const k = i + j * f.nx, r = Math.hypot(i + 0.5, j + 0.5 - 228) / 17;
+  ink: {axi: true, nx: NXM, ny: NYM, B: 0, W: 0.045, eps: 0.1, visc: 0.05, kappa: 0.003, g1: 0, g2: 0, ground: 1, sor: 50,
+    init: f => { for (let j = 0; j < f.ny; j++) for (let i = 0; i < f.nx; i++) { const k = i + j * f.nx, r = Math.hypot(i + 0.5, j + 0.5 - 342) / 25.5;
       if (r < 1.2) f.s[k] = r < 0.8 ? 1 : 1 - (r - 0.8) / 0.4; } }},
 };
 const SIMS = {};
 export const sim = name => (SIMS[name] ||= new Fluid(CFG[name]));
-const PJ = new Projector(NX, NY);
+const PJS = {};
+const projector = (nx, ny) => (PJS[nx + 'x' + ny] ||= new Projector(nx, ny));
 const PROJ = {};
 /** projected fields of a sim at its current step (cached per sim + step) */
 function projected(name) {
-  const f = sim(name), c = (PROJ[name] ||= {step: -1, S: new Float32Array(2 * NX * NY), D: new Float32Array(2 * NX * NY), H: new Float32Array(2 * NX * NY), tmp: new Float32Array(NX * NY)});
+  const f = sim(name), n2 = 2 * f.nx * f.ny;
+  const c = (PROJ[name] ||= {step: -1, S: new Float32Array(n2), D: new Float32Array(n2), H: new Float32Array(n2), tmp: new Float32Array(f.nx * f.ny)});
   if (c.step === f.stepNo) return c;
+  const PJ = projector(f.nx, f.ny);
   PJ.run(f.s, c.S); PJ.run(f.d, c.D);
-  for (let j = 0; j < NY; j++) { const amb = f.ambAt(j + 0.5); for (let i = 0; i < NX; i++) { const k = i + j * NX; c.tmp[k] = f.s[k] * Math.max(0, f.th[k] - amb); } }
+  for (let j = 0; j < f.ny; j++) { const amb = f.ambAt(j + 0.5); for (let i = 0; i < f.nx; i++) { const k = i + j * f.nx; c.tmp[k] = f.s[k] * Math.max(0, f.th[k] - amb); } }
   PJ.run(c.tmp, c.H); c.step = f.stepNo;
   return c;
 }
@@ -94,11 +102,11 @@ export function plan(tl) {
   P.reach10 = W_(tl, 's02', '십킬로미터', 0.3);
   P.s03 = S('s03'); P.hookEnd = tl.scene('hook').end;
   // hook: sim step as a function of time (fast at first, slow growth)
-  P.STEP10 = 165; P.HOOK_END_STEP = 300;
+  P.STEP10 = 180; P.HOOK_END_STEP = 320;
   P.hookStep = t => t < P.flash ? 0 : t < P.reach10 ? P.STEP10 * ((t - P.flash) / (P.reach10 - P.flash)) ** 0.9 : P.STEP10 + (P.HOOK_END_STEP - P.STEP10) * clamp((t - P.reach10) / (P.hookEnd - 0.3 - P.reach10));
   P.speedup = (P.HOOK_END_STEP * SEC_PER_STEP) / (P.hookEnd - 0.3 - P.flash);
   P.poster = W_(tl, 's20', '버섯구름은', -0.15);
-  P.POSTER_STEP = 215;
+  P.POSTER_STEP = 235;
   P.pine = W_(tl, 's04', '소나무에', -0.2);
   P.split = S('s05');
   P.balloon = W_(tl, 's06', '열기구처럼', -0.1);
@@ -139,85 +147,123 @@ function heatCol(q) {
 }
 
 // =====================================================================================================
-// Volumetric cloud renderer
+// Volumetric cloud renderer (v2: cubic reconstruction, billow lobes carried by the flow, lit relief, under-light)
 // =====================================================================================================
-const UP = 3, RW = 2 * NX * UP, RH = NY * UP;
-const CR = {tau: new Float32Array(RW * RH), dfr: new Float32Array(RW * RH), heat: new Float32Array(RW * RH),
-  cv: createCanvas(RW, RH), em: createCanvas(RW, RH), bl: createCanvas(RW / 2, RH / 2)};
-CR.cc = CR.cv.getContext('2d'); CR.ec = CR.em.getContext('2d'); CR.bc = CR.bl.getContext('2d');
-CR.img = CR.cc.createImageData(RW, RH); CR.eimg = CR.ec.createImageData(RW, RH);
-const STYLE0 = {kS: 0.22, kD: 0.26, albS: [0.86, 0.80, 0.74], albD: [0.66, 0.50, 0.37], amb: [0.36, 0.36, 0.55], sun: [1.75, 1.12, 0.74],
-  L: [0.86, -0.5], lightK: 0.075, aoK: 0.06, warp: 1.6, emitRows: 1e9, glowAge: 60, emitFloor: 0, detail: 0.75, detailScale: 0.16, drift: 0, emit: 1, heatMax: 9, cond: null, flip: false, ink: false};
-/** draw the sim `name` (at its current step) into the screen box: axis at x = cx, ground (row 0) at y = gy, ppc px per cell */
+const BUFS = {};
+/** per (grid size, upsampling) work buffers */
+function bufs(W2, H, UP) {
+  const key = `${W2}x${H}x${UP}`; if (BUFS[key]) return BUFS[key];
+  const BW = W2 * UP, BH = H * UP, n = BW * BH;
+  const o = {BW, BH, UP, W2, H, s: new Float32Array(n), d: new Float32Array(n), h: new Float32Array(n), rho: new Float32Array(n), al: new Float32Array(n),
+    tmp: new Float32Array(H * BW), mar: new Float32Array(W2 * H), maz: new Float32Array(W2 * H), mbr: new Float32Array(W2 * H), mbz: new Float32Array(W2 * H),
+    cv: createCanvas(BW, BH), em: createCanvas(BW, BH), bl: createCanvas(BW >> 1, BH >> 1)};
+  o.cc = o.cv.getContext('2d'); o.ec = o.em.getContext('2d'); o.bc = o.bl.getContext('2d'); o.img = o.cc.createImageData(BW, BH); o.eimg = o.ec.createImageData(BW, BH);
+  // Catmull-Rom taps for each buffer column / row phase
+  const taps = (N, G) => { const I = new Int32Array(N * 4), Wt = new Float32Array(N * 4);
+    for (let p = 0; p < N; p++) { const x = (p + 0.5) / UP - 0.5, i = Math.floor(x), t = x - i, t2 = t * t, t3 = t2 * t;
+      const w = [-0.5 * t3 + t2 - 0.5 * t, 1.5 * t3 - 2.5 * t2 + 1, -1.5 * t3 + 2 * t2 + 0.5 * t, 0.5 * t3 - 0.5 * t2];
+      for (let q = 0; q < 4; q++) { I[p * 4 + q] = Math.min(G - 1, Math.max(0, i - 1 + q)); Wt[p * 4 + q] = w[q]; } }
+    return {I, Wt}; };
+  o.tx = taps(BW, W2); o.ty = taps(BH, H);
+  return (BUFS[key] = o);
+}
+/** separable Catmull-Rom upsample of grid field F (W2 × H, row 0 = bottom) into dst (BW × BH, row 0 = top) inside the box */
+function upsample(B, F, dst, bx0, bx1, by0, by1, j0, j1) {
+  const {BW, BH, W2, tmp} = B, {I: XI, Wt: XW} = B.tx, {I: YI, Wt: YW} = B.ty;
+  for (let j = j0; j <= j1; j++) { const o = j * W2, r = j * BW; for (let bx = bx0; bx < bx1; bx++) { const q = bx * 4;
+    tmp[r + bx] = F[o + XI[q]] * XW[q] + F[o + XI[q + 1]] * XW[q + 1] + F[o + XI[q + 2]] * XW[q + 2] + F[o + XI[q + 3]] * XW[q + 3]; } }
+  for (let by = by0; by < by1; by++) { const q = (BH - 1 - by) * 4, r0 = YI[q] * BW, r1 = YI[q + 1] * BW, r2 = YI[q + 2] * BW, r3 = YI[q + 3] * BW, w0 = YW[q], w1 = YW[q + 1], w2 = YW[q + 2], w3 = YW[q + 3], o = by * BW;
+    for (let bx = bx0; bx < bx1; bx++) { const v = tmp[r0 + bx] * w0 + tmp[r1 + bx] * w1 + tmp[r2 + bx] * w2 + tmp[r3 + bx] * w3; dst[o + bx] = v > 0 ? v : 0; } }
+}
+/** billow (|noise|-style) lobes: rounded bumps with creases between them */
+const billow = (x, y) => { let a = 0;
+  a += 0.55 * (1 - Math.abs(2 * vnoise(x, y) - 1));
+  a += 0.30 * (1 - Math.abs(2 * vnoise(x * 2.03 + 17.3, y * 2.03 - 5.1) - 1));
+  a += 0.15 * (1 - Math.abs(2 * vnoise(x * 4.1 - 9.7, y * 4.1 + 31.2) - 1));
+  return a; };
+const STYLE0 = {kS: 0.22, kD: 0.26, albS: [0.88, 0.82, 0.76], albD: [0.68, 0.52, 0.39], amb: [0.34, 0.36, 0.56], sun: [1.7, 1.1, 0.72], under: [0.75, 0.42, 0.24], underI: 1,
+  L: [0.86, -0.5], lz: 0.55, lightK: 0.09, aoK: 0.07, ubK: 0.12, relief: 1.7, edge0: 0.06, edge1: 0.5, billowAmp: 1.5, billowFreq: null,
+  glowAge: 60, emitFloor: 0, emitRows: 1e9, emit: 1, heatMax: 9, cond: null, drift: 0};
+/** draw sim `name` (at its current step): axis at x = cx, ground (row 0) at y = gy, ppc screen px per cell */
 function drawCloud(stage, name, {cx, gy, ppc, alpha = 1, ...st} = {}) {
-  const S = {...STYLE0, ...st}, P = projected(name), {tau, dfr, heat} = CR, W2 = 2 * NX;
-  // bounding rows/cols with material
-  let jmin = NY, jmax = -1, cmin = W2, cmax = -1;
-  for (let j = 0; j < NY; j++) { const o = j * W2; for (let x = 0; x < W2; x++) if (P.S[o + x] + P.D[o + x] > 0.02) { if (j < jmin) jmin = j; if (j > jmax) jmax = j; if (x < cmin) cmin = x; if (x > cmax) cmax = x; } }
+  const S = {...STYLE0, ...st}, f = sim(name), P = projected(name), nx = f.nx, H = f.ny, W2 = 2 * nx;
+  const UP = clamp(Math.round(ppc * 0.75), 2, 4), B = bufs(W2, H, UP), {BW, BH} = B;
+  // material box (grid), then buffer box
+  let jmin = H, jmax = -1, cmin = W2, cmax = -1;
+  for (let j = 0; j < H; j++) { const o = j * W2; for (let x = 0; x < W2; x++) if (P.S[o + x] + P.D[o + x] > 0.02) { if (j < jmin) jmin = j; if (j > jmax) jmax = j; if (x < cmin) cmin = x; if (x > cmax) cmax = x; } }
   if (jmax < 0) return;
-  jmin = Math.max(0, jmin - 2); jmax = Math.min(NY - 1, jmax + 2); cmin = Math.max(0, cmin - 2); cmax = Math.min(W2 - 1, cmax + 2);
-  const py0 = Math.max(0, (NY - 1 - jmax) * UP - 2), py1 = Math.min(RH, (NY - jmin) * UP + 2), px0 = Math.max(0, cmin * UP - 2), px1 = Math.min(RW, (cmax + 1) * UP + 2);
-  const samp = (F, X, Y) => {   // projected grid sample at (column X, row Y) in cell units (centres at +0.5)
-    let x = X - 0.5, y = Y - 0.5; x = x < 0 ? 0 : x > W2 - 1.001 ? W2 - 1.001 : x; y = y < 0 ? 0 : y > NY - 1.001 ? NY - 1.001 : y;
-    const i = x | 0, j = y | 0, a = x - i, b = y - j, k = i + j * W2;
-    return (F[k] * (1 - a) + F[k + 1] * a) * (1 - b) + (F[k + W2] * (1 - a) + F[k + W2 + 1] * a) * b;
-  };
-  tau.fill(0, py0 * RW, py1 * RW);
-  const ds = S.detailScale, dr = S.drift, wp = S.warp;
-  for (let py = py0; py < py1; py++) {
-    const Y0 = (RH - 0.5 - py) / UP, o = py * RW;
-    for (let px = px0; px < px1; px++) {
-      const X0 = (px + 0.5) / UP;
-      const s0 = samp(P.S, X0, Y0), d0 = samp(P.D, X0, Y0);
-      if (S.kS * s0 + S.kD * d0 < 2e-3) { tau[o + px] = 0; continue; }
-      // domain warp → billowy edges; fbm → cauliflower detail (texture only)
-      const wx = (vnoise((X0 - NX) * 0.13 + 5.2, (Y0 - dr) * 0.13) - 0.5) * 2 * wp, wy = (vnoise((X0 - NX) * 0.13 - 7.7, (Y0 - dr) * 0.13 + 3.1) - 0.5) * 2 * wp;
-      const X = X0 + wx, Y = Y0 + wy, s = samp(P.S, X, Y), d = samp(P.D, X, Y);
-      let t = S.kS * s + S.kD * d;
-      if (t < 1e-4) { tau[o + px] = 0; continue; }
-      const n = fbm((X0 - NX) * ds + 31, (Y0 - dr) * ds);
-      t *= Math.max(0, 1 - S.detail * 0.6 + S.detail * 1.2 * n);
-      tau[o + px] = t; dfr[o + px] = d * S.kD / (S.kS * s + S.kD * d + 1e-6);
-      heat[o + px] = s > 1e-3 ? samp(P.H, X, Y) / s : 0;
+  jmin = Math.max(0, jmin - 3); jmax = Math.min(H - 1, jmax + 3); cmin = Math.max(0, cmin - 3); cmax = Math.min(W2 - 1, cmax + 3);
+  const by0 = Math.max(0, (H - 1 - jmax) * UP), by1 = Math.min(BH, (H - jmin) * UP), bx0 = Math.max(0, cmin * UP), bx1 = Math.min(BW, (cmax + 1) * UP);
+  const J0 = Math.max(0, jmin - 2), J1 = Math.min(H - 1, jmax + 2);
+  upsample(B, P.S, B.s, bx0, bx1, by0, by1, J0, J1); upsample(B, P.D, B.d, bx0, bx1, by0, by1, J0, J1);
+  const glowK = S.emit * (Math.exp(-f.stepNo / S.glowAge) + S.emitFloor);
+  if (glowK > 0.01) upsample(B, P.H, B.h, bx0, bx1, by0, by1, J0, J1);
+  // material coordinates of the slice r = |X| (mirrored); without them (mat = 0) the lobes are anchored to the grid with a drift
+  const mat = !!f.cfg.mat, [wa, wb] = mat ? f.matWeights() : [1, 0];
+  if (mat) for (let j = J0; j <= J1; j++) for (let x = cmin; x <= cmax; x++) { const i = x < nx ? nx - 1 - x : x - nx, k = i + j * nx, q = x + j * W2;
+    B.mar[q] = f.ar[k]; B.maz[q] = f.az[k]; B.mbr[q] = f.br[k]; B.mbz[q] = f.bz[k]; }
+  const bil = (A, X, Y) => { let x = X - 0.5, y = Y - 0.5; x = x < 0 ? 0 : x > W2 - 1.001 ? W2 - 1.001 : x; y = y < 0 ? 0 : y > H - 1.001 ? H - 1.001 : y;
+    const i = x | 0, j = y | 0, a = x - i, b = y - j, k = i + j * W2; return (A[k] * (1 - a) + A[k + 1] * a) * (1 - b) + (A[k + W2] * (1 - a) + A[k + W2 + 1] * a) * b; };
+  const fq = S.billowFreq ?? (nx >= 192 ? 0.075 : 0.11), {rho, al} = B, e0 = S.edge0, e1 = S.edge1;
+  for (let by = by0; by < by1; by++) {
+    const Y = (BH - by - 0.5) / UP, o = by * BW;
+    for (let bx = bx0; bx < bx1; bx++) {
+      const k = o + bx, t = S.kS * B.s[k] + S.kD * B.d[k];
+      if (t < 0.004) { rho[k] = 0; al[k] = 0; continue; }
+      const X = (bx + 0.5) / UP;
+      let bb;
+      if (mat) {
+        const ra = bil(B.mar, X, Y) * fq, za = bil(B.maz, X, Y) * fq, rb = bil(B.mbr, X, Y) * fq + 37.1, zb = bil(B.mbz, X, Y) * fq - 11.3, side = smooth((X - nx + 6) / 12);
+        const bR = side > 0 ? wa * billow(ra, za) + wb * billow(rb, zb) : 0, bL = side < 1 ? wa * billow(ra + 211.7, za + 53.9) + wb * billow(rb + 211.7, zb + 53.9) : 0;
+        bb = 0.75 * (bL + (bR - bL) * side) + 0.25 * billow((X - nx) * fq * 1.7 + 91.3, Y * fq * 1.7 - 17.9);
+      } else bb = billow((X - nx) * fq + 3.3, (Y - S.drift) * fq);
+      const r = t * (1 - 0.5 * S.billowAmp + S.billowAmp * bb);
+      rho[k] = r; const q = clamp((r - e0) / (e1 - e0)); al[k] = q * q * (3 - 2 * q);
     }
   }
-  const D = CR.img.data, E = CR.eimg.data, [lx, ly] = S.L, step = 3;
-  D.fill(0); E.fill(0);
-  let anyEm = false; const age = sim(name).stepNo, glowK = S.emit * (Math.exp(-age / S.glowAge) + S.emitFloor);
-  for (let py = py0; py < py1; py++) {
-    const o = py * RW;
-    for (let px = px0; px < px1; px++) {
-      const t = tau[o + px]; if (t <= 0) continue;
-      const a = 1 - Math.exp(-1.6 * t * t / (0.35 + t));
-      let sl = 0; for (let k = 1; k <= 8; k++) { const x = (px + lx * step * k) | 0, y = (py + ly * step * k) | 0; if (x < 0 || x >= RW || y < 0 || y >= RH) break; sl += tau[x + y * RW]; }
-      let sa = 0; for (let k = 1; k <= 4; k++) { const y = py - 7 * k; if (y < 0) break; sa += tau[px + y * RW]; }
-      const Tl = Math.exp(-S.lightK * sl), Ta = Math.exp(-S.aoK * sa);
-      const df = dfr[o + px], Y = (RH - 0.5 - py) / UP;
-      let ar = lerp(S.albS[0], S.albD[0], df), ag = lerp(S.albS[1], S.albD[1], df), ab = lerp(S.albS[2], S.albD[2], df);
-      if (S.cond) { const c = S.cond(Y) * (1 - df); ar = lerp(ar, 1.12, c); ag = lerp(ag, 1.12, c); ab = lerp(ab, 1.2, c); }
-      const amb = 0.3 + 0.7 * Ta;
-      let r = ar * (S.amb[0] * amb + S.sun[0] * Tl), g = ag * (S.amb[1] * amb + S.sun[1] * Tl), b = ab * (S.amb[2] * amb + S.sun[2] * Tl);
-      const q = (py * RW + px) * 4;
-      D[q] = Math.min(255, r * 255 * a); D[q + 1] = Math.min(255, g * 255 * a); D[q + 2] = Math.min(255, b * 255 * a); D[q + 3] = a * 255;
-      const h = heat[o + px];
-      if (glowK > 0.01 && h > 0.25 && Y < S.emitRows) {
-        const hq = clamp(h / S.heatMax), c = heatCol(hq * (0.55 + 0.45 * Math.exp(-age / S.glowAge))), I = glowK * a * hq ** 1.2 * 1.4 * (S.emitRows < 1e8 ? 1 - smooth(Y / S.emitRows) : 1);
-        E[q] = Math.min(255, c[0] * I * 255); E[q + 1] = Math.min(255, c[1] * I * 255); E[q + 2] = Math.min(255, c[2] * I * 255); E[q + 3] = 255; anyEm = true;
+  // lighting
+  const D = B.img.data, E = B.eimg.data, [lx, ly] = S.L, ll = Math.hypot(lx, ly, S.lz), L3 = [lx / ll, ly / ll, S.lz / ll], st2 = 2 * UP, stL = 2 * UP;
+  for (let by = by0; by < by1; by++) D.fill(0, (by * BW + bx0) * 4, (by * BW + bx1) * 4);
+  let anyEm = false;
+  if (glowK > 0.01) for (let by = by0; by < by1; by++) E.fill(0, (by * BW + bx0) * 4, (by * BW + bx1) * 4);
+  for (let by = by0; by < by1; by++) {
+    const o = by * BW, Y = (BH - by - 0.5) / UP;
+    for (let bx = bx0; bx < bx1; bx++) {
+      const k = o + bx, a = al[k]; if (a < 0.003) continue;
+      const r0 = rho[k];
+      const gx = (bx + st2 < BW ? rho[k + st2] : r0) - (bx - st2 >= 0 ? rho[k - st2] : r0), gy = (by + st2 < BH ? rho[k + st2 * BW] : r0) - (by - st2 >= 0 ? rho[k - st2 * BW] : r0);
+      let nX = -gx * S.relief, nY = -gy * S.relief, nZ = 1; const nl = Math.hypot(nX, nY, nZ); nX /= nl; nY /= nl; nZ /= nl;
+      const lam = Math.max(0, nX * L3[0] + nY * L3[1] + nZ * L3[2]);
+      let sl = 0; for (let m = 1; m <= 8; m++) { const x = (bx + lx * stL * m) | 0, y = (by + ly * stL * m) | 0; if (x < 0 || x >= BW || y < 0 || y >= BH) break; sl += rho[x + y * BW]; }
+      let sa = 0; for (let m = 1; m <= 5; m++) { const y = by - m * 5 * UP; if (y < 0) break; sa += rho[bx + y * BW]; }
+      let sb = 0; for (let m = 1; m <= 5; m++) { const y = by + m * 5 * UP; if (y >= BH) break; sb += rho[bx + y * BW]; }
+      const Tl = Math.exp(-S.lightK * sl), Ta = Math.exp(-S.aoK * sa), Tb = Math.exp(-S.ubK * sb);
+      const dfr = B.d[k] * S.kD / (S.kS * B.s[k] + S.kD * B.d[k] + 1e-6);
+      let ar = lerp(S.albS[0], S.albD[0], dfr), ag = lerp(S.albS[1], S.albD[1], dfr), ab = lerp(S.albS[2], S.albD[2], dfr);
+      if (S.cond) { const c = S.cond(Y) * (1 - dfr); ar = lerp(ar, 1.1, c); ag = lerp(ag, 1.1, c); ab = lerp(ab, 1.18, c); }
+      const sunK = Tl * (0.3 + 0.7 * lam), ambK = 0.22 + 0.78 * Ta, undK = S.underI * Tb * (1 - 0.6 * Ta) * (0.5 + 0.5 * (1 - lam));
+      const R = ar * (S.amb[0] * ambK + S.sun[0] * sunK + S.under[0] * undK), G = ag * (S.amb[1] * ambK + S.sun[1] * sunK + S.under[1] * undK), Bc = ab * (S.amb[2] * ambK + S.sun[2] * sunK + S.under[2] * undK);
+      const q = k * 4;
+      D[q] = Math.min(255, R * 255 * a); D[q + 1] = Math.min(255, G * 255 * a); D[q + 2] = Math.min(255, Bc * 255 * a); D[q + 3] = a * 255;
+      if (glowK > 0.01 && Y < S.emitRows) {
+        const sv = B.s[k], h = sv > 1e-3 ? B.h[k] / sv : 0;
+        if (h > 0.25) { const hq = clamp(h / S.heatMax), c = heatCol(hq * (0.55 + 0.45 * Math.exp(-f.stepNo / S.glowAge))), I = glowK * a * hq ** 1.2 * 1.4 * (S.emitRows < 1e8 ? 1 - smooth(Y / S.emitRows) : 1);
+          E[q] = Math.min(255, c[0] * I * 255); E[q + 1] = Math.min(255, c[1] * I * 255); E[q + 2] = Math.min(255, c[2] * I * 255); E[q + 3] = 255; anyEm = true; }
       }
     }
   }
-  CR.cc.putImageData(CR.img, 0, 0);
-  const c = stage.ctx, w = W2 * ppc, h = NY * ppc, x0 = cx - NX * ppc, y0 = gy - h;
+  B.cc.putImageData(B.img, 0, 0, bx0, by0, bx1 - bx0, by1 - by0);
+  const c = stage.ctx, w = W2 * ppc, h = H * ppc, x0 = cx - nx * ppc, y0 = gy - h;
   c.save(); c.globalAlpha *= alpha; c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
-  if (S.flip) { c.translate(0, 2 * gy - h); c.scale(1, -1); c.translate(0, -(gy - h)); }
-  c.drawImage(CR.cv, x0, y0, w, h);
+  const sx = w / BW, sy = h / BH;
+  c.drawImage(B.cv, bx0, by0, bx1 - bx0, by1 - by0, x0 + bx0 * sx, y0 + by0 * sy, (bx1 - bx0) * sx, (by1 - by0) * sy);
   if (anyEm) {
-    CR.ec.putImageData(CR.eimg, 0, 0);
+    B.ec.putImageData(B.eimg, 0, 0, bx0, by0, bx1 - bx0, by1 - by0);
     c.globalCompositeOperation = 'lighter';
-    c.drawImage(CR.em, x0, y0, w, h);
-    CR.bc.clearRect(0, 0, RW / 2, RH / 2); CR.bc.filter = 'blur(9px)'; CR.bc.drawImage(CR.em, 0, 0, RW / 2, RH / 2); CR.bc.filter = 'none';
-    c.globalAlpha *= 0.9; c.drawImage(CR.bl, x0, y0, w, h);
-    c.globalAlpha *= 0.6; c.filter = 'blur(28px)'; c.drawImage(CR.bl, x0, y0, w, h); c.filter = 'none';
+    c.drawImage(B.em, bx0, by0, bx1 - bx0, by1 - by0, x0 + bx0 * sx, y0 + by0 * sy, (bx1 - bx0) * sx, (by1 - by0) * sy);
+    B.bc.clearRect(0, 0, BW >> 1, BH >> 1); B.bc.filter = `blur(${3 * UP}px)`; B.bc.drawImage(B.em, 0, 0, BW >> 1, BH >> 1); B.bc.filter = 'none';
+    c.globalAlpha *= 0.9; c.drawImage(B.bl, x0, y0, w, h);
+    c.globalAlpha *= 0.6; c.filter = 'blur(28px)'; c.drawImage(B.bl, x0, y0, w, h); c.filter = 'none';
   }
   c.restore();
 }
@@ -364,7 +410,7 @@ function posterFrame(stage, P, push = 0) {
   if (!POSTER_FIT) { f.goto(P.POSTER_STEP); POSTER_FIT = fitPpc('main', HY, {yTop: 330, wFrac: 0.9, max: 9}); }
   f.goto(P.POSTER_STEP);
   duskSky(stage, HY, {glow: {x: 540, I: 0.16}});
-  drawCloud(stage, 'main', {cx: 540, gy: HY + 6, ppc: POSTER_FIT * (1 + push), emit: 0, drift: P.POSTER_STEP * 0.35});
+  drawCloud(stage, 'main', {cx: 540, gy: HY + 6, ppc: POSTER_FIT * (1 + push), emit: 0});
 }
 
 // ------------------------------------------------------------------ hook: poster → flash → the first test cloud grows
@@ -375,15 +421,15 @@ function hook(stage, t, p, ctx) {
   sim('main').goto(step);
   const g = smooth((t - P.flash) / (P.hookEnd - P.flash));
   const hy = lerp(1610, HY, easeInOut(g));
-  const ppc = Math.min(12, smoothCam('hook', t, fitPpc('main', hy, {yTop: 430, max: 12})));
+  const ppc = Math.min(8, smoothCam('hook', t, fitPpc('main', hy, {yTop: 430, max: 8})));
   const [sx, sy] = shake(t, P.flash, 7);
   c.save(); c.translate(sx, sy);
   const hot = Math.exp(-(t - P.flash) / 2.2);
   duskSky(stage, hy, {glow: {x: 540, I: hot * 1.2 + 0.12}});
-  drawCloud(stage, 'main', {cx: 540, gy: hy + 6, ppc, emit: 1, drift: step * 0.35});
+  drawCloud(stage, 'main', {cx: 540, gy: hy + 6, ppc, emit: 1});
   c.restore();
   flash(stage, Math.exp(-(t - P.flash) / 0.16) * 1.1);
-  const a = fadeIn(t, P.reach10 - 1.4, 0.5) * fadeOut(t, P.s03 + 1.4, 0.5), y = hy + 6 - (10 / KM) * ppc;
+  const a = fadeIn(t, P.reach10 - 1.4, 0.5) * fadeOut(t, P.s03 + 1.4, 0.5), y = hy + 6 - (10 / KMM) * ppc;
   if (a > 0 && y > 330) withAlpha(c, a, () => { c.setLineDash([16, 12]); line(c, [[60, y], [1020, y]], 'rgba(255,214,170,0.8)', 3); c.setLineDash([]); tag(stage, '10 km', 880, y - 36, {size: 38, color: '#FFD9A8'}); });
   const b = fadeIn(t, P.s03 - 0.2, 0.5) * fadeOut(t, P.hookEnd - 0.45, 0.35);
   if (b > 0) bigNum(stage, `+${(step * SEC_PER_STEP / 60).toFixed(1)}분`, 540, 470, {a: b, size: 110, sub: `폭발 뒤 흐른 시간 · 약 ${Math.round(P.speedup)}배 빠르게`});
@@ -465,7 +511,7 @@ function origin(stage, t, p, ctx) {
   // split: nuclear (left) | volcano (right) — each shot rendered full-frame offscreen, centre strips side by side
   const q = smooth((t - P.split + 0.3) / 0.8);
   const A = offStage(ctx, 'L'), B = offStage(ctx, 'R');
-  if (A._key !== 'split') { background(A); sim('main').goto(230); duskSky(A, HY, {glow: {x: 540, I: 0.15}}); drawCloud(A, 'main', {cx: 540, gy: HY + 6, ppc: 3.9, emit: 0, drift: 80}); A._key = 'split'; }
+  if (A._key !== 'split') { background(A); sim('main').goto(plan(ctx.tl).POSTER_STEP + 10); duskSky(A, HY, {glow: {x: 540, I: 0.15}}); drawCloud(A, 'main', {cx: 540, gy: HY + 6, ppc: 3.9 * SC, emit: 0}); A._key = 'split'; }
   background(B); volcanoShot(B, t, P, {ppc: 3.6});
   if (q < 1) { volcanoShot(stage, t, P); }
   half(stage, A, -1, q); half(stage, B, 1, q); seam(stage, q);
@@ -492,10 +538,10 @@ function essence(stage, t, p, ctx) {
   const P = plan(ctx.tl), sc = ctx.scene, c = stage.ctx;
   const step = lerp(2, 125, easeInOut(clamp((t - sc.start) / (sc.end - sc.start))) ** 0.9);
   sim('main').goto(step);
-  const ppc = 12.5 - 3.5 * smooth((t - P.key) / 4), cr = centroidRow('main');
+  const ppc = (12.5 - 3.5 * smooth((t - P.key) / 4)) * SC, cr = centroidRow('main');
   const yc = 980, gy = yc + cr * ppc;
   duskSky(stage, Math.min(2400, gy), {glow: {x: 540, I: 0.25}});
-  drawCloud(stage, 'main', {cx: 540, gy: gy + 6, ppc, emit: 0.85, glowAge: 220, drift: step * 0.35});
+  drawCloud(stage, 'main', {cx: 540, gy: gy + 6, ppc, emit: 0.85, glowAge: 220});
   // molecules: hot inside (sparse, fast), cold outside (dense, slow)
   const m = fadeIn(t, sc.start + 0.3, 0.6) * fadeOut(t, P.key + 0.6, 0.6);
   if (m > 0) {
@@ -516,19 +562,25 @@ function essence(stage, t, p, ctx) {
 }
 
 // ------------------------------------------------------------------ ring: cross-section with tracers → 3D vortex ring
-const SL = {cv: createCanvas(2 * NX, NY)}; SL.c = SL.cv.getContext('2d'); SL.img = SL.c.createImageData(2 * NX, NY);
+const SLB = {};
+/** the cut through the axis: smoke concentration coloured by heat, cubic-upsampled, with a soft glow */
 function drawSlice(stage, name, {cx, gy, ppc, a = 1}) {
-  const f = sim(name), D = SL.img.data; D.fill(0);
-  for (let j = 0; j < NY; j++) { const amb = f.ambAt(j + 0.5); for (let i = 0; i < NX; i++) {
-    const k = i + j * NX, s = f.s[k], h = Math.max(0, f.th[k] - amb) / 9, al = 1 - Math.exp(-s * 2.2);
-    if (al < 0.01) continue;
-    const hc = heatCol(clamp(h)), r = lerp(0.55, hc[0], clamp(h * 1.4)), g = lerp(0.62, hc[1], clamp(h * 1.4)), b = lerp(0.85, hc[2], clamp(h * 1.4));
-    for (const x of [NX + i, NX - 1 - i]) { const q = (x + (NY - 1 - j) * 2 * NX) * 4; D[q] = r * 255 * al; D[q + 1] = g * 255 * al; D[q + 2] = b * 255 * al; D[q + 3] = al * 255; }
-  } }
-  SL.c.putImageData(SL.img, 0, 0);
-  const c = stage.ctx; c.save(); c.globalAlpha *= a; c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
-  c.drawImage(SL.cv, cx - NX * ppc, gy - NY * ppc, 2 * NX * ppc, NY * ppc);
-  c.globalCompositeOperation = 'lighter'; c.filter = 'blur(14px)'; c.globalAlpha *= 0.5; c.drawImage(SL.cv, cx - NX * ppc, gy - NY * ppc, 2 * NX * ppc, NY * ppc); c.filter = 'none';
+  const f = sim(name), nx = f.nx, H = f.ny, W2 = 2 * nx, UP = 2, B = bufs(W2, H, UP), {BW, BH} = B;
+  const G = (SLB[name] ||= {s: new Float32Array(W2 * H), h: new Float32Array(W2 * H)});
+  for (let j = 0; j < H; j++) { const amb = f.ambAt(j + 0.5); for (let i = 0; i < nx; i++) { const k = i + j * nx, v = f.s[k], hv = Math.max(0, f.th[k] - amb) / 9;
+    G.s[nx + i + j * W2] = v; G.s[nx - 1 - i + j * W2] = v; G.h[nx + i + j * W2] = hv; G.h[nx - 1 - i + j * W2] = hv; } }
+  upsample(B, G.s, B.s, 0, BW, 0, BH, 0, H - 1); upsample(B, G.h, B.h, 0, BW, 0, BH, 0, H - 1);
+  const D = B.img.data; D.fill(0);
+  for (let k = 0; k < BW * BH; k++) {
+    const sv = B.s[k]; if (sv < 0.01) continue;
+    const al = 1 - Math.exp(-sv * 2.6), h = clamp(B.h[k] * 1.4), hc = heatCol(clamp(B.h[k])), r = lerp(0.55, hc[0], h), g = lerp(0.62, hc[1], h), b = lerp(0.85, hc[2], h), q = k * 4;
+    D[q] = r * 255 * al; D[q + 1] = g * 255 * al; D[q + 2] = b * 255 * al; D[q + 3] = al * 255;
+  }
+  B.cc.putImageData(B.img, 0, 0);
+  const c = stage.ctx, x0 = cx - nx * ppc, y0 = gy - H * ppc, w = W2 * ppc, h = H * ppc;
+  c.save(); c.globalAlpha *= a; c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
+  c.drawImage(B.cv, x0, y0, w, h);
+  c.globalCompositeOperation = 'lighter'; c.filter = 'blur(14px)'; c.globalAlpha *= 0.45; c.drawImage(B.cv, x0, y0, w, h); c.filter = 'none';
   c.restore();
 }
 function drawTracers(stage, name, {cx, gy, ppc, a = 1, kind = 0, len = 7, col = null, depth = 0}) {
@@ -592,13 +644,14 @@ function torusShot(stage, t, t0, a) {
 function ring(stage, t, p, ctx) {
   const P = plan(ctx.tl), sc = ctx.scene, c = stage.ctx;
   const tTor = P.donut;
-  if (t < tTor + 0.5) {
+  if (t < tTor + 0.6) {
+    if (t > tTor - 0.1) { c.save(); c.globalAlpha = 1 - smooth((t - tTor + 0.1) / 0.3); c.translate(540, 900); c.scale(1 + 0.25 * smooth((t - tTor + 0.1) / 0.5), 1 + 0.25 * smooth((t - tTor + 0.1) / 0.5)); c.translate(-540, -900); }
     const step = lerp(30, 175, clamp((t - sc.start) / (tTor - sc.start)) ** 0.95);
     sim('main').goto(step);
-    const ppc = 8.6, cr = centroidRow('main'), gy = 980 + cr * ppc;
+    const ppc = 8.6 * SC, cr = centroidRow('main'), gy = 980 + cr * ppc;
     const g = c.createRadialGradient(540, 900, 100, 540, 900, 1200); g.addColorStop(0, '#16153A'); g.addColorStop(1, '#04050E'); c.fillStyle = g; c.fillRect(0, 0, 1080, 1920);
     // faint section grid (this is a cut through the middle)
-    c.globalAlpha = 0.12; for (let x = 0; x <= 1080; x += 60) line(c, [[x, 0], [x, 1920]], '#8FA6FF', 1); for (let y = 0; y <= 1920; y += 60) line(c, [[0, y], [1080, y]], '#8FA6FF', 1); c.globalAlpha = 1;
+    withAlpha(c, 0.12, () => { for (let x = 0; x <= 1080; x += 60) line(c, [[x, 0], [x, 1920]], '#8FA6FF', 1); for (let y = 0; y <= 1920; y += 60) line(c, [[0, y], [1080, y]], '#8FA6FF', 1); });
     drawSlice(stage, 'main', {cx: 540, gy, ppc});
     drawTracers(stage, 'main', {cx: 540, gy, ppc, kind: 0, len: 9});
     tag(stage, '단면 · 가운데를 자른 모습', 540, 410, {size: 34, color: '#C8D4FF'});
@@ -606,14 +659,14 @@ function ring(stage, t, p, ctx) {
     const f = sim('main'), yb = cr, vC = f.sampleV(1, yb), R = f.spread(0.15), vE = f.sampleV(R * 0.92, yb);
     const ac = fadeIn(t, P.center, 0.4) * fadeOut(t, P.roll, 0.4), ae = fadeIn(t, P.edge, 0.4) * fadeOut(t, P.roll, 0.4);
     const ys = gy - yb * ppc + 60;
-    if (ac > 0) arrowUp(stage, 540, ys, ys - vC * 260, 12, 'rgba(255,214,150,0.95)', ac);
-    if (ae > 0) for (const sd of [-1, 1]) arrowUp(stage, 540 + sd * R * 0.92 * ppc, ys, ys - Math.max(0.05, vE) * 260, 9, 'rgba(170,205,255,0.95)', ae);
-    if (ac > 0) tag(stage, '빠르게', 540, ys - vC * 260 - 60, {a: ac, size: 34, color: '#FFE0B0'});
+    if (ac > 0) arrowUp(stage, 540, ys, ys - vC * 175, 12, 'rgba(255,214,150,0.95)', ac);
+    if (ae > 0) for (const sd of [-1, 1]) arrowUp(stage, 540 + sd * R * 0.92 * ppc, ys, ys - Math.max(0.05, vE) * 175, 9, 'rgba(170,205,255,0.95)', ae);
+    if (ac > 0) tag(stage, '빠르게', 540, ys - vC * 175 - 60, {a: ac, size: 34, color: '#FFE0B0'});
     if (ae > 0) tag(stage, '느리게', 540 + R * 0.92 * ppc, ys + 54, {a: ae, size: 34, color: '#CFE0FF'});
     // roll-up arrows around the vortex cores
     const ar = fadeIn(t, P.roll, 0.4) * fadeOut(t, tTor + 0.2, 0.3);
     if (ar > 0) {
-      let best = 0, bi = 0, bj = 0; for (let j = 2; j < NY - 2; j++) for (let i = 2; i < NX - 2; i++) { const w = Math.abs(f.w[i + j * NX]) * f.s[i + j * NX]; if (w > best) { best = w; bi = i; bj = j; } }
+      let best = 0, bi = 0, bj = 0; for (let j = 2; j < f.ny - 2; j++) for (let i = 2; i < f.nx - 2; i++) { const w = Math.abs(f.w[i + j * f.nx]) * f.s[i + j * f.nx]; if (w > best) { best = w; bi = i; bj = j; } }
       for (const sd of [-1, 1]) {
         const x0 = 540 + sd * (bi + 0.5) * ppc, y0 = gy - (bj + 0.5) * ppc, rr = 70, ph = -t * 2.2 * sd;
         const pts = []; for (let k = 0; k <= 26; k++) { const an = ph + sd * (k / 26) * 4.8; pts.push([x0 + rr * Math.cos(an), y0 + rr * Math.sin(an)]); }
@@ -622,9 +675,10 @@ function ring(stage, t, p, ctx) {
       }
       tag(stage, '말려 내려감', 540, 1290, {a: ar, size: 38, color: '#FFE6C8'});
     }
+    if (t > tTor - 0.1) c.restore();
   }
-  if (t >= tTor - 0.1) {
-    const a = smooth((t - tTor + 0.1) / 0.7);
+  if (t >= tTor + 0.15) {
+    const a = smooth((t - tTor - 0.15) / 0.45);
     torusShot(stage, t, tTor - 0.1, a);
     tag(stage, '도넛 모양 소용돌이 고리', 540, 410, {a: a * fadeIn(t, tTor + 0.5, 0.5), size: 38, color: '#FFE0B0'});
   }
@@ -635,18 +689,18 @@ function stem(stage, t, p, ctx) {
   const P = plan(ctx.tl), sc = ctx.scene, c = stage.ctx;
   const step = lerp(150, 330, clamp((t - sc.start) / (sc.end - sc.start)));
   sim('main').goto(step);
-  const hy = 1640, ppc = smoothCam('stem', t, fitPpc('main', hy, {yTop: 320, max: 7.5}) * (1 + 0.05 * smooth((t - sc.start) / 12)));
+  const hy = 1640, ppc = smoothCam('stem', t, fitPpc('main', hy, {yTop: 320, max: 5}) * (1 + 0.05 * smooth((t - sc.start) / 12)));
   duskSky(stage, hy, {glow: {x: 540, I: 0.15}});
-  drawCloud(stage, 'main', {cx: 540, gy: hy + 6, ppc, emit: 0.6, drift: step * 0.35});
+  drawCloud(stage, 'main', {cx: 540, gy: hy + 6, ppc, emit: 0.6});
   // dust tracers in perspective on the ground plane (depth → lower and bigger)
   const da = fadeIn(t, sc.start + 0.2, 0.5);
   const f = sim('main');
   c.save(); c.globalCompositeOperation = 'lighter';
   for (let q = 1400; q < f.nt; q++) {
     const r = f.tx[q], y = f.ty[q], phi = rand(q * 2.91) * TAU, X = r * Math.cos(phi), Z = r * Math.sin(phi);
-    const x = 540 + X * ppc * (1 + Z / 300), yy = hy + 6 - y * ppc + Z * ppc * 0.16, sz = 2.2 + 2.2 * (1 + Z / 128);
+    const x = 540 + X * ppc * (1 + Z / 450), yy = hy + 6 - y * ppc + Z * ppc * 0.16, sz = 2.0 + 2.0 * (1 + Z / 192);
     if (yy > 1930 || yy < 200) continue;
-    c.globalAlpha = da * clamp(0.2 + 0.6 * (1 - y / 120)); c.fillStyle = '#E8B07A'; c.fillRect(x - sz / 2, yy - sz / 2, sz, sz);
+    c.globalAlpha = da * clamp(0.2 + 0.6 * (1 - y / 180)); c.fillStyle = '#E8B07A'; c.fillRect(x - sz / 2, yy - sz / 2, sz, sz);
   }
   c.restore();
   // inflow arrows on the ground (from all sides toward the stem)
@@ -670,11 +724,11 @@ function cap(stage, t, p, ctx) {
   const P = plan(ctx.tl), sc = ctx.scene, c = stage.ctx;
   const k = t < P.tropo ? lerp(150, 235, clamp((t - sc.start) / (P.tropo - sc.start))) : t < P.spread ? lerp(235, 300, clamp((t - P.tropo) / (P.spread - P.tropo))) : t < P.cond - 0.4 ? lerp(300, 470, clamp((t - P.spread) / (P.cond - 0.4 - P.spread))) : lerp(470, 560, clamp((t - P.cond + 0.4) / (sc.end - P.cond + 0.4)));
   sim('main').goto(k);
-  const hy = HY, ppc = smoothCam('cap', t, fitPpc('main', hy, {yTop: 340, wFrac: 0.92, max: 7}));
+  const hy = HY, ppc = smoothCam('cap', t, fitPpc('main', hy, {yTop: 340, wFrac: 0.92, max: 5}));
   const cond = smooth((t - P.cond + 0.3) / 2.2);
   duskSky(stage, hy, {glow: {x: 540, I: 0.12}});
-  drawCloud(stage, 'main', {cx: 540, gy: hy + 6, ppc, emit: 0.6, drift: k * 0.35, cond: cond > 0 ? Y => cond * smooth((Y - 125) / 35) : null});
-  const yT = hy + 6 - JT * ppc;
+  drawCloud(stage, 'main', {cx: 540, gy: hy + 6, ppc, emit: 0.6, cond: cond > 0 ? Y => cond * smooth((Y - 188) / 52) : null});
+  const yT = hy + 6 - JTM * ppc;
   // tropopause band
   const ta = fadeIn(t, P.tropo, 0.6);
   if (ta > 0) withAlpha(c, ta, () => {
@@ -685,7 +739,7 @@ function cap(stage, t, p, ctx) {
   // temperature–height overlay (left): air temperature vs the rising parcel
   const ga = fadeIn(t, P.tropo + 0.6, 0.6) * fadeOut(t, P.capW + 0.8, 0.6);
   if (ga > 0) {
-    const zMax = Math.min(13, (hy + 6 - 360) / ppc * KM), xT = T => 110 + (T + 60) / 160 * 400, yZ = z => hy + 6 - (z / KM) * ppc;
+    const zMax = Math.min(13, (hy + 6 - 360) / ppc * KMM), xT = T => 110 + (T + 60) / 160 * 400, yZ = z => hy + 6 - (z / KMM) * ppc;
     const amb = z => z < 10 ? 30 - 6.5 * z : -35 + 1.0 * (z - 10), parcel = z => z < 10 ? amb(z) + 70 * (1 - z / 10) ** 1.6 : amb(z) - 6 * (z - 10);
     withAlpha(c, ga, () => {
       const g = c.createLinearGradient(60, 0, 520, 0); g.addColorStop(0, 'rgba(4,6,18,0.62)'); g.addColorStop(1, 'rgba(4,6,18,0)'); c.fillStyle = g; c.fillRect(60, yZ(zMax), 460, yZ(0) - yZ(zMax));
@@ -698,7 +752,7 @@ function cap(stage, t, p, ctx) {
   }
   // spreading arrows
   const sa = fadeIn(t, P.spread, 0.4) * fadeOut(t, P.cond - 0.3, 0.4);
-  if (sa > 0) { const f = sim('main'), R = f.spread(0.03, JT - 30) * ppc, yy = hy + 6 - (f.topRow(0.03) - 14) * ppc, ph = (t * 0.8) % 1;
+  if (sa > 0) { const f = sim('main'), R = f.spread(0.03, JTM - 45) * ppc, yy = hy + 6 - (f.topRow(0.03) - 21) * ppc, ph = (t * 0.8) % 1;
     for (const sd of [-1, 1]) withAlpha(c, sa, () => { const x0 = 540 + sd * (R * 0.55 + ph * 120); line(c, [[x0, yy], [x0 + sd * 90, yy]], 'rgba(255,236,210,0.95)', 7, {cap: 'butt'}); poly(c, [[x0 + sd * 120, yy], [x0 + sd * 86, yy - 18], [x0 + sd * 86, yy + 18]], 'rgba(255,236,210,0.95)'); });
     tag(stage, '갓 · 옆으로 퍼짐', 540, yy - 70, {a: sa, size: 38, color: '#FFE6C8'}); }
   if (cond > 0) tag(stage, '수증기 → 물방울 · 하얀 갓', 540, 430, {a: cond * fadeOut(t, sc.end - 0.4, 0.3), size: 36, color: '#EAF4FF'});
@@ -707,7 +761,7 @@ function cap(stage, t, p, ctx) {
 // ------------------------------------------------------------------ cases: wildfire → ink drop in water → mirror
 const FOREST = (() => { const o = []; for (let x = -20; x <= 1100; x += 9) o.push([x, 22 + 36 * vnoise(x * 0.05, 1) + 26 * (vnoise(x * 0.23, 4) > 0.55 ? 1 : 0)]); return o; })();
 function fireShot(stage, t, P, sc) {
-  const c = stage.ctx, step = lerp(260, 540, clamp((t - sc.start) / (P.ink - sc.start + 1.5)));
+  const c = stage.ctx, step = lerp(260, 470, clamp((t - sc.start) / (P.ink - sc.start + 1.5)));
   sim('fire').goto(step);
   const hy = 1600;
   const g = c.createLinearGradient(0, 0, 0, hy); g.addColorStop(0, '#05050E'); g.addColorStop(0.6, '#1C1026'); g.addColorStop(1, '#5A1E14'); c.fillStyle = g; c.fillRect(0, 0, 1080, hy);
@@ -735,24 +789,32 @@ function inkShot(stage, t, t0, sc, o = {}) {
   c.save(); c.globalAlpha = 0.12; for (let k = 0; k < 14; k++) { const y = 340 + k * 24, ph = t * 0.8 + k; line(c, Array.from({length: 28}, (_, m) => [m * 40, y + 6 * Math.sin(m * 0.7 + ph)]), '#FFFFFF', 2); } c.restore();
   { const hb = c.createLinearGradient(0, 0, 0, 340); hb.addColorStop(0, 'rgba(6,20,34,0.78)'); hb.addColorStop(0.7, 'rgba(6,20,34,0.45)'); hb.addColorStop(1, 'rgba(6,20,34,0)'); c.fillStyle = hb; c.fillRect(0, 0, 1080, 340); }
   for (let q = 0; q < 40; q++) { const u = (t * (0.06 + rand(q) * 0.08) + rand(q * 9)) % 1, x = rand(q * 4.4) * 1080 + 8 * Math.sin(t * 3 + q), y = 1880 - u * 1600; withAlpha(c, 0.45 * (1 - u), () => { c.strokeStyle = 'rgba(255,255,255,0.9)'; c.lineWidth = 2; c.beginPath(); c.arc(x, y, 3 + 4 * rand(q * 2), 0, TAU); c.stroke(); }); }
-  const ppc = o.ppc || 7.4, top = 236 - 10 * ppc;
-  drawInk(stage, {cx: 540, gy: top + NY * ppc, ppc});
+  const ppc = (o.ppc || 7.4) * SC, top = 236 - 15 * ppc;
+  drawInk(stage, {cx: 540, gy: top + sim('ink').ny * ppc, ppc});
   return {ppc};
 }
-const IK = {cv: createCanvas(2 * NX, NY)}; IK.c = IK.cv.getContext('2d'); IK.img = IK.c.createImageData(2 * NX, NY);
-/** the ink drop as a thin vertical slice through its axis (as in a thin tank): violet core, magenta rims, soft glow */
+const IKG = {};
+/** the ink drop as a thin slice through its axis (a thin glass tank): crisp cubic reconstruction, violet core, magenta sheets */
 function drawInk(stage, {cx, gy, ppc}) {
-  const f = sim('ink'), D = IK.img.data; D.fill(0);
-  for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++) {
-    const s = f.s[i + j * NX]; if (s < 0.003) continue;
-    const a = 1 - Math.exp(-s * 7), q = clamp(s * 2.2), r = lerp(0.78, 0.16, q), g = lerp(0.22, 0.04, q), b = lerp(0.72, 0.42, q);
-    for (const x of [NX + i, NX - 1 - i]) { const k = (x + (NY - 1 - j) * 2 * NX) * 4; D[k] = r * 255 * a; D[k + 1] = g * 255 * a; D[k + 2] = b * 255 * a; D[k + 3] = a * 245; }
+  const f = sim('ink'), nx = f.nx, H = f.ny, W2 = 2 * nx, UP = clamp(Math.round(ppc * 0.8), 2, 4), B = bufs(W2, H, UP), {BW, BH} = B;
+  const G = (IKG.s ||= new Float32Array(W2 * H));
+  let jmin = H, jmax = -1;
+  for (let j = 0; j < H; j++) for (let i = 0; i < nx; i++) { const v = f.s[i + j * nx]; G[nx + i + j * W2] = v; G[nx - 1 - i + j * W2] = v; if (v > 0.003) { if (j < jmin) jmin = j; if (j > jmax) jmax = j; } }
+  if (jmax < 0) return;
+  jmin = Math.max(0, jmin - 3); jmax = Math.min(H - 1, jmax + 3);
+  const by0 = (H - 1 - jmax) * UP, by1 = (H - jmin) * UP;
+  upsample(B, G, B.s, 0, BW, by0, by1, Math.max(0, jmin - 2), Math.min(H - 1, jmax + 2));
+  const D = B.img.data; D.fill(0, by0 * BW * 4, by1 * BW * 4);
+  for (let by = by0; by < by1; by++) for (let bx = 0; bx < BW; bx++) {
+    const k = by * BW + bx, sv = B.s[k]; if (sv < 0.004) continue;
+    const a = clamp(1 - Math.exp(-sv * 9)), q = clamp(sv * 2.4), r = lerp(0.82, 0.14, q), g = lerp(0.24, 0.03, q), b = lerp(0.76, 0.40, q), o = k * 4;
+    D[o] = r * 255 * a; D[o + 1] = g * 255 * a; D[o + 2] = b * 255 * a; D[o + 3] = a * 250;
   }
-  IK.c.putImageData(IK.img, 0, 0);
-  const c = stage.ctx, x0 = cx - NX * ppc, y0 = gy - NY * ppc, w = 2 * NX * ppc, h = NY * ppc;
+  B.cc.putImageData(B.img, 0, 0, 0, by0, BW, by1 - by0);
+  const c = stage.ctx, x0 = cx - nx * ppc, y0 = gy - H * ppc, w = W2 * ppc, h = H * ppc, sy = h / BH;
   c.save(); c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
-  c.globalAlpha = 0.35; c.filter = 'blur(12px)'; c.drawImage(IK.cv, x0, y0, w, h); c.filter = 'none';
-  c.globalAlpha = 1; c.drawImage(IK.cv, x0, y0, w, h);
+  c.globalAlpha = 0.28; c.filter = 'blur(8px)'; c.drawImage(B.cv, 0, by0, BW, by1 - by0, x0, y0 + by0 * sy, w, (by1 - by0) * sy); c.filter = 'none';
+  c.globalAlpha = 1; c.drawImage(B.cv, 0, by0, BW, by1 - by0, x0, y0 + by0 * sy, w, (by1 - by0) * sy);
   c.restore();
 }
 function cases(stage, t, p, ctx) {
@@ -768,7 +830,7 @@ function cases(stage, t, p, ctx) {
   // mirror: nuclear (left, rising) | ink (right, sinking)
   const q = smooth((t - P.mirror + 0.3) / 0.8);
   const A = offStage(ctx, 'L'), B = offStage(ctx, 'R');
-  if (A._key !== 'mirror') { background(A); sim('main').goto(215); duskSky(A, HY, {glow: {x: 540, I: 0.15}}); drawCloud(A, 'main', {cx: 540, gy: HY + 6, ppc: 4.0, emit: 0, drift: 75}); A._key = 'mirror'; }
+  if (A._key !== 'mirror') { background(A); sim('main').goto(plan(ctx.tl).POSTER_STEP); duskSky(A, HY, {glow: {x: 540, I: 0.15}}); drawCloud(A, 'main', {cx: 540, gy: HY + 6, ppc: 4.0 * SC, emit: 0}); A._key = 'mirror'; }
   background(B); inkShot(B, t, P.ink - 0.25, {end: P.mirror + 6}, {ppc: 5.2});
   if (q < 1) inkShot(stage, t, P.ink - 0.25, {end: P.mirror + 6});
   half(stage, A, -1, q); half(stage, B, 1, q); seam(stage, q);
@@ -785,7 +847,7 @@ function myth(stage, t, p, ctx) {
   const tAfter = P.after - 0.4;
   const step = t < tAfter ? 0 : lerp(0, 200, clamp((t - tAfter) / (sc.end - tAfter)) ** 0.9);
   sim('main').goto(step);
-  const ppc = 4.2;
+  const ppc = 4.2 * SC;
   const [sx, sy] = shake(t, P.shock, 5);
   c.save(); c.translate(sx, sy);
   const hot = t < P.shock ? 0 : Math.exp(-(t - P.shock) / 3);
@@ -926,3 +988,5 @@ if (isMain && process.argv.includes('--emit-sound')) {
   fs.writeFileSync(soundFile, txt + '\n');
   console.log(`events: ${sound.events.length}; flash ${plan(tl).flash.toFixed(2)} s, rumble delay ${(OBS_KM * 1000 / 343 / plan(tl).speedup).toFixed(2)} s, speed-up ×${plan(tl).speedup.toFixed(1)}`);
 }
+
+export function __posterTest(stage, k) { sim('main').goto(k); background(stage); duskSky(stage, HY, {glow: {x: 540, I: 0.16}}); drawCloud(stage, 'main', {cx: 540, gy: HY + 6, ppc: fitPpc('main', HY, {yTop: 330, wFrac: 0.9, max: 9}), emit: 0}); }
