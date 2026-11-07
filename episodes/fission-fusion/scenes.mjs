@@ -230,21 +230,27 @@ function fissionDraw(c, cx, cy, s, e, u, t, o = {}) {
     const fl = Math.exp(-u / 0.06) + 0.25 * Math.exp(-u / 0.5);
     gl(c, cx, cy, s * 7 * (0.6 + u * 2), '#FFFFFF', fl * 0.7); gl(c, cx, cy, s * 20 * (0.6 + u), PAL.fis, fl * 0.5);
     const at = d => FIS.dirs.map(v => { const p = rotX(rotY(V.mul(v, d), yaw), pitch); return [cx + p[0] * s, cy + p[1] * s]; });
-    const hd = 1.5 + 60 * u, pos = at(hd), tail = at(Math.max(1.5, hd - 7));
+    const hd = 1.5 + 60 * u, pos = at(hd), tail = at(Math.max(1.2, hd - 6.5));
     pos.forEach((p, k) => streak(c, tail[k], p, s * 0.9, PAL.fisHot, 1));
     return pos;
   }
   return [];
 }
 /** bright moving particle with a fading trail from a → b (b = head) */
-function streak(c, a, b, r, col, alpha = 1) {
+function streak(c, a, b, r, col, alpha = 1) {                              // tapered comet: bright head, fading tail, soft blur
   if (alpha <= 0) return;
+  const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L, px = -uy, py = ux;
   c.save(); c.globalCompositeOperation = 'lighter';
-  const g = c.createLinearGradient(a[0], a[1], b[0], b[1]); g.addColorStop(0, rgba(col, 0)); g.addColorStop(1, rgba(col, 0.85 * alpha));
-  c.strokeStyle = g; c.lineCap = 'round'; c.lineWidth = r * 0.9; c.beginPath(); c.moveTo(a[0], a[1]); c.lineTo(b[0], b[1]); c.stroke();
-  c.lineWidth = r * 0.35; c.strokeStyle = rgba('#FFFFFF', 0.8 * alpha); c.beginPath(); c.moveTo(lerp(a[0], b[0], 0.6), lerp(a[1], b[1], 0.6)); c.lineTo(b[0], b[1]); c.stroke();
+  const taper = (w, col2, aMax, start = 0) => {
+    const sx = a[0] + dx * start, sy = a[1] + dy * start, g = c.createLinearGradient(sx, sy, b[0], b[1]);
+    g.addColorStop(0, rgba(col2, 0)); g.addColorStop(0.65, rgba(col2, aMax * 0.35)); g.addColorStop(1, rgba(col2, aMax));
+    c.fillStyle = g; c.beginPath(); c.moveTo(sx, sy); c.lineTo(b[0] + px * w / 2, b[1] + py * w / 2);
+    c.quadraticCurveTo(b[0] + ux * w * 0.8, b[1] + uy * w * 0.8, b[0] - px * w / 2, b[1] - py * w / 2); c.closePath(); c.fill(); };
+  taper(r * 2.4, col, 0.22 * alpha);
+  taper(r * 1.1, col, 0.75 * alpha, 0.15);
+  taper(r * 0.45, '#FFFFFF', 0.95 * alpha, 0.45);
   c.restore();
-  gl(c, b[0], b[1], r * 3.2, col, alpha); gl(c, b[0], b[1], r * 1.1, '#FFFFFF', alpha);
+  gl(c, b[0] - ux * r * 0.3, b[1] - uy * r * 0.3, r * 1.9, col, 0.75 * alpha); gl(c, b[0], b[1], r * 0.75, '#FFFFFF', 0.9 * alpha);
 }
 /** small light nucleus (D, T, He-4) drawn from explicit nucleon offsets */
 const LIGHT = {
@@ -313,11 +319,28 @@ function valley(stage, cam, t, o = {}) {
 // Backgrounds
 // =====================================================================================================
 function bgFill(c, top, bot) { const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, top); g.addColorStop(1, bot); c.fillStyle = g; c.fillRect(0, 0, W, H); }
-function bgDual(c, t) {                                                     // warm (fusion) above, blue (fission) below
-  bgFill(c, '#1A0B06', '#030A16');
+function bgDual(c, t) {                                                     // warm (fusion) above, blue (fission/reactor) below
+  bgFill(c, '#1A0B06', '#02101F');
   gl(c, 540, -120, 1300, '#FF7A2A', 0.55); gl(c, 980, 260, 700, '#FFB04A', 0.25);
-  gl(c, 540, 2050, 1300, '#1E78FF', 0.5); gl(c, 120, 1500, 700, '#3D9BFF', 0.2);
+  gl(c, 540, 2100, 1500, '#1E78FF', 0.75); gl(c, 540, 2000, 760, '#4FB0FF', 0.6); gl(c, 120, 1500, 700, '#3D9BFF', 0.2);
   tiled(c, tex('haze'), t * 14, t * 6, 4, 0.08, 'lighter');
+  c.save(); const m = c.createLinearGradient(0, 1150, 0, 1500); m.addColorStop(0, 'rgba(0,0,0,0)'); m.addColorStop(1, 'rgba(0,0,0,1)');
+  c.beginPath(); c.rect(0, 1150, W, H - 1150); c.clip();
+  tiled(c, tex('caustic'), t * 18, t * 9, 3.0, 0.13, 'lighter', 0.3, 540, 1700);
+  tiled(c, tex('caustic'), -t * 12, t * 14, 4.0, 0.08, 'lighter', -0.5, 540, 1700);
+  c.globalCompositeOperation = 'lighter';
+  for (let k = 0; k < 13; k++) {                                            // light shafts rising from the core
+    const x0 = 540 + (k - 6) * 70, sway = 22 * Math.sin(t * 0.7 + k * 1.7), x1 = 540 + (k - 6) * 120 + sway;
+    const g = c.createLinearGradient(0, 1920, 0, 1150); g.addColorStop(0, `rgba(110,185,255,${0.16 + 0.05 * Math.sin(t * 1.3 + k)})`); g.addColorStop(1, 'rgba(110,185,255,0)');
+    c.fillStyle = g; c.beginPath(); c.moveTo(x0 - 14, 1920); c.lineTo(x0 + 14, 1920); c.lineTo(x1 + 30, 1150); c.lineTo(x1 - 30, 1150); c.closePath(); c.fill();
+  }
+  for (let r = 0; r < 3; r++) for (let k = -7; k <= 7; k++) {                // fuel-rod tops glowing at the bottom edge
+    const sc = 0.7 + r * 0.25, x = 540 + k * 62 * sc, y = 1760 + r * 62, a = 0.35 + 0.12 * Math.sin(t * 2 + k * 0.7 + r);
+    gl(c, x, y, 40 * sc, '#8FD0FF', a * 0.55); gl(c, x, y, 14 * sc, '#E8F6FF', a * 0.6);
+  }
+  const R = rng(31); for (let i = 0; i < 40; i++) { const sp = 0.3 + 0.7 * R(), q = ((t * 0.18 * sp + R()) % 1), x = 120 + R() * 840 + Math.sin(t * 2 + i) * 6, y = 1920 - q * 760, rr = 3 + 6 * R();
+    c.strokeStyle = rgba('#CFEFFF', 0.35 * (1 - q)); c.lineWidth = 1.5; c.beginPath(); c.arc(x, y, rr, 0, TAU); c.stroke(); }
+  c.restore();
 }
 function bgSunPlasma(c, t, a = 1) {
   bgFill(c, '#1E0602', '#0A0200');
@@ -676,23 +699,61 @@ function originScene(stage, t, ctx) {
 const O16 = pack(16, 8, 16);
 function essenceScene(stage, t, ctx) {
   const c = stage.ctx, P = plan(ctx.tl), s0 = ctx.scene.start, vIn = P.split8 - 0.9;
-  if (t < vIn) {
-    bgFill(c, '#0A0C12', '#030305'); gl(c, 540, 760, 900, '#3A2A50', 0.4); tiled(c, tex('haze'), t * 18, t * 7, 3, 0.07, 'lighter');
-    const q = smooth((t - (P.pn7 - 0.3)) / Math.max(1, P.tight7 - P.pn7 + 0.6)), R = rng(4);
-    const list = O16.pts.map((n, i) => { const far = [(R() - 0.5) * 30, (R() - 0.5) * 40, (R() - 0.5) * 8]; const p = V.add(V.mul(far, 1 - q), V.mul(n.p, q)); return {p: rotX(rotY(p, t * 0.3), 0.3), proton: n.proton}; });
-    const s = 44, cx = 540, cy = 770;
-    // bonds (strong force) flicker when close
-    if (q > 0.6) { c.save(); c.globalCompositeOperation = 'lighter'; for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++) { const d = Math.hypot(...V.sub(list[i].p, list[j].p)); if (d < 2.3) { const a = (q - 0.6) / 0.4 * 0.5 * (0.6 + 0.4 * Math.sin(t * 13 + i * 3 + j)); c.strokeStyle = rgba('#FFE08A', a); c.lineWidth = 6; c.beginPath(); c.moveTo(cx + list[i].p[0] * s, cy + list[i].p[1] * s); c.lineTo(cx + list[j].p[0] * s, cy + list[j].p[1] * s); c.stroke(); } } c.restore(); }
-    drawNucleons(c, list, cx, cy, s, {R: O16.Rb, glow: 0.6 + q, glowCol: '#FFC07A'});
-    for (const tb of P.bind7) { const a = t - tb; if (a > 0) gl(c, cx, cy, 500 * (0.5 + a), '#FFE6B0', 0.6 * Math.exp(-a / 0.35)); }
-    finish(stage, t, {bloom: 0.6});
-    const n = fadeIn(t, P.less7 - 0.2);
-    big(stage, '질량 −0.8%', 540, 1180, 110, PAL.fusHot, n);
-    label(stage, '산소 16 · 떨어진 핵자 16개보다 가볍다', 540, 1280, n, {size: 34});
-    const fi = smooth((t - s0) / 0.4); if (fi < 1) { c.fillStyle = rgba('#000', 1 - fi); c.fillRect(0, 0, W, H); }
-    return;
-  }
+  if (t < vIn) { bindScene(stage, t, P, s0); return; }
   valleyShot(stage, t, P, {from: vIn, glide: true});
+}
+/** s07: 16 nucleons bind with pulsing strong-force links (hero, fills the width) → pull back onto a large balance */
+const FAR16 = (() => { const R = rng(4); return O16.pts.map(() => [(R() - 0.5) * 11, (R() - 0.5) * 17, (R() - 0.5) * 3]); })();
+function bindScene(stage, t, P, s0) {
+  const c = stage.ctx;
+  bgFill(c, '#0D0A0C', '#040305'); gl(c, 540, 700, 1200, '#6A3A1E', 0.4); gl(c, 540, 700, 620, '#FF9A4A', 0.14);
+  tiled(c, tex('haze'), t * 18, t * 7, 3, 0.09, 'lighter');
+  const q = smooth((t - (P.pn7 - 0.6)) / Math.max(1.2, P.strong7 - P.pn7 + 1.4));          // assembly
+  const bal = easeInOut((t - (P.tight7 - 0.4)) / 1.3);                                  // pull back to the balance
+  const tilt = -0.13 * smooth((t - (P.tight7 + 0.7)) / 1.2) * (1 + 0.06 * Math.sin((t - P.tight7) * 5) * Math.exp(-(t - P.tight7 - 1.5)));
+  const zoom = 1 + 0.05 * smooth((t - s0) / 4) + 0.12 * smooth((t - (P.less7 - 0.3)) / 2);
+  c.save(); zoomAbout(c, 540, lerp(720, 860, bal), zoom);
+  // balance (fades in as the camera pulls back)
+  const fx = 540, fy = 760, Lb = 300, ex = Lb * Math.cos(tilt), ey = Lb * Math.sin(tilt), pans = [[fx - ex, fy - ey], [fx + ex, fy + ey]];
+  if (bal > 0.01) withAlpha(c, bal, () => {
+    c.save(); c.globalCompositeOperation = 'lighter'; const sg = c.createLinearGradient(0, 0, 0, 1330); sg.addColorStop(0, 'rgba(255,210,160,0.20)'); sg.addColorStop(1, 'rgba(255,210,160,0.03)');
+    c.fillStyle = sg; c.beginPath(); c.moveTo(440, 0); c.lineTo(640, 0); c.lineTo(1080, 1330); c.lineTo(0, 1330); c.closePath(); c.fill(); c.restore();
+    const flg = c.createLinearGradient(0, 1300, 0, H); flg.addColorStop(0, '#2A221C'); flg.addColorStop(1, '#0A0806'); c.fillStyle = flg; c.fillRect(0, 1300, W, H - 1300); gl(c, fx, 1310, 520, '#FFB070', 0.22);
+    const mg = c.createLinearGradient(0, fy, 0, 1300); mg.addColorStop(0, '#6C6A66'); mg.addColorStop(1, '#2A2826');
+    c.fillStyle = mg; c.beginPath(); c.moveTo(fx - 30, fy + 10); c.lineTo(fx + 30, fy + 10); c.lineTo(fx + 90, 1300); c.lineTo(fx - 90, 1300); c.closePath(); c.fill();
+    c.fillStyle = '#4A4642'; c.fillRect(fx - 240, 1294, 480, 30);
+    c.save(); c.translate(fx, fy); c.rotate(tilt); const bg = c.createLinearGradient(0, -12, 0, 12); bg.addColorStop(0, '#D8D2C8'); bg.addColorStop(1, '#6E6A64');
+    c.fillStyle = bg; c.fillRect(-Lb - 20, -10, 2 * Lb + 40, 20); c.restore(); circle(c, fx, fy, 22, '#B8B2A8'); circle(c, fx, fy, 9, '#4A4846');
+    for (const [px, py] of pans) { c.strokeStyle = 'rgba(220,214,205,0.75)'; c.lineWidth = 4; c.beginPath(); c.moveTo(px, py); c.lineTo(px - 135, py + 260); c.moveTo(px, py); c.lineTo(px + 135, py + 260); c.stroke();
+      const pg = c.createLinearGradient(0, py + 255, 0, py + 320); pg.addColorStop(0, '#EAE2D6'); pg.addColorStop(1, '#5E5A54');
+      c.fillStyle = pg; c.beginPath(); c.ellipse(px, py + 262, 150, 24, 0, 0, Math.PI); c.lineTo(px - 150, py + 262); c.fill(); c.beginPath(); c.ellipse(px, py + 262, 150, 18, 0, 0, TAU); c.fillStyle = rgba('#F6EFE4', 0.55); c.fill(); }
+    // loose pile on the left pan
+    const R = rng(12); const [lx, ly] = pans[0];
+    const pile = O16.pts.map((n, i) => ({p: [((i % 6) - 2.5) * 1.9 + (R() - 0.5) * 0.6, -1.0 - Math.floor(i / 6) * 1.8 + (R() - 0.5) * 0.3, R()], proton: n.proton}));
+    drawNucleons(c, pile, lx, ly + 236, 24, {R: 3, glow: 0.3, glowCol: '#FFB070', under: false});
+  });
+  // the hero nucleus: big in the middle → onto the right pan
+  const [rx, ry] = pans[1], cx = lerp(540, rx, bal), cy = lerp(720, ry + 168, bal), s = lerp(92, 31, bal);
+  const list = O16.pts.map((n, i) => { const p = V.add(V.mul(FAR16[i], 1 - q), V.mul(n.p, q)); return {p: rotX(rotY(p, t * 0.35), 0.3), proton: n.proton}; });
+  if (q > 0.35) { c.save(); c.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++) { const d = Math.hypot(...V.sub(list[i].p, list[j].p)); if (d < 2.4) {
+      const pulse = 0.55 + 0.45 * Math.sin(t * 9 + i * 1.7 + j * 2.3), a = clamp((q - 0.35) / 0.4) * pulse * (1 - 0.6 * bal);
+      const A = [cx + list[i].p[0] * s, cy + list[i].p[1] * s], B = [cx + list[j].p[0] * s, cy + list[j].p[1] * s];
+      c.strokeStyle = rgba('#FFC85A', 0.35 * a); c.lineWidth = s * 0.34; c.lineCap = 'round'; c.beginPath(); c.moveTo(...A); c.lineTo(...B); c.stroke();
+      c.strokeStyle = rgba('#FFF3D0', 0.7 * a); c.lineWidth = s * 0.1; c.beginPath(); c.moveTo(...A); c.lineTo(...B); c.stroke(); } }
+    c.restore(); }
+  drawNucleons(c, list, cx, cy, s, {R: O16.Rb, glow: 0.5 + 0.8 * q, glowCol: '#FFC07A'});
+  for (const tb of P.bind7) { const a = t - tb; if (a > 0) gl(c, cx, cy, 700 * (0.4 + a) * (1 - 0.7 * bal), '#FFE6B0', 0.55 * Math.exp(-a / 0.35)); }
+  c.restore();
+  finish(stage, t, {bloom: 0.6});
+  label(stage, '강한 힘', 540, 1210, fadeIn(t, P.strong7 - 0.1) * fadeOut(t, P.tight7 - 0.3, 0.3), {size: 44, weight: 700, color: '#FFE0A0'});
+  const la = bal * fadeIn(t, P.tight7 + 0.3);
+  label(stage, '흩어진 16개', clamp(pans[0][0], 200, 880), 1110 + (pans[0][1] - fy) * zoom, la, {size: 36, weight: 700});
+  label(stage, '묶인 산소 16', clamp(pans[1][0], 200, 880), 1110 + (pans[1][1] - fy) * zoom, la, {size: 36, weight: 700, color: '#FFE0B0'});
+  const n = fadeIn(t, P.less7 - 0.35, 0.4), nz = 1 + 0.15 * smooth((t - P.less7 + 0.35) / 2);
+  c.save(); zoomAbout(c, 540, 420, nz); big(stage, '−0.85%', 540, 420, 180, PAL.fusHot, n); c.restore();
+  label(stage, '묶일수록 가볍다', 540, 545, n * fadeIn(t, P.less7), {size: 40, weight: 700});
+  const fi = smooth((t - s0) / 0.35); if (fi < 1) { c.fillStyle = rgba('#000', 1 - fi); c.fillRect(0, 0, W, H); }
 }
 /** the valley with fusion (left) and fission (right) runs; shared by essence and close */
 function valleyShot(stage, t, P, o) {
@@ -922,47 +983,128 @@ function fusionScene(stage, t, ctx) {
 }
 const bumpQ = q => Math.sin(clamp(q) * Math.PI);
 
-// ------------------------------------------------------------------ compare: ×4 columns, what remains, ITER
+// ------------------------------------------------------------------ compare: ×4 columns, what remains, ITER (full-bleed, camera-move transitions)
+function fuelShot(stage, t, P, s0) {
+  const c = stage.ctx, H1 = 300, g1 = smooth((t - P.cols) / 2.0), g4 = smooth((t - P.cols) / 3.4), h1 = H1 * g1, h4 = 4 * H1 * g4;
+  const y0 = 1330, camY = Math.max(0, h4 - 880), yb = y0 + camY;
+  bgFill(c, '#0B0E16', '#05060A');
+  gl(c, 300, yb - h1, 760, '#2E7DFF', 0.35 * g1); gl(c, 780, yb - h4, 980, '#FF9A3A', 0.45 * g4); gl(c, 780, yb - h4 * 0.5, 900, '#FFB04A', 0.2 * g4);
+  tiled(c, tex('haze'), t * 16, -camY * 0.4 + t * 6, 3.4, 0.10 + 0.08 * g4, 'lighter');
+  tiled(c, tex('haze'), -t * 10, -camY * 0.7, 2.2, 0.06 + 0.05 * g4, 'lighter', 0.6);
+  // lit floor with reflections
+  const fy = yb + 26;
+  if (fy < H) { const fg = c.createLinearGradient(0, fy, 0, H); fg.addColorStop(0, '#2A2A2E'); fg.addColorStop(1, '#0A0A0C'); c.fillStyle = fg; c.fillRect(0, fy, W, H - fy);
+    c.save(); c.beginPath(); c.rect(0, fy, W, H - fy); c.clip(); c.globalAlpha = 0.25; c.translate(0, 2 * fy); c.scale(1, -1);
+    column(c, t, 300, yb, h1, '#BFE6FF', PAL.fis, 70); column(c, t, 780, yb, h4, '#FFF1D6', PAL.fus, 78); c.restore();
+    for (let k = -8; k <= 8; k++) { c.strokeStyle = 'rgba(255,255,255,0.05)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(540 + k * 40, fy); c.lineTo(540 + k * 260, H); c.stroke(); }
+    gl(c, 300, fy, 260, PAL.fis, 0.3 * (0.3 + g1)); gl(c, 780, fy, 300, PAL.fus, 0.35 * (0.3 + g4)); }
+  for (const [x, col] of [[300, PAL.fis], [780, PAL.fus]]) pellet(c, x, yb, col);
+  column(c, t, 300, yb, h1, '#BFE6FF', PAL.fis, 70); column(c, t, 780, yb, h4, '#FFF1D6', PAL.fus, 78);
+  for (let k = 1; k <= 3; k++) if (h4 > H1 * k + 10) { const y = yb - H1 * k; c.strokeStyle = 'rgba(255,240,220,0.45)'; c.lineWidth = 3; c.setLineDash([12, 10]); c.beginPath(); c.moveTo(680, y); c.lineTo(880, y); c.stroke(); c.setLineDash([]); }
+  return {yb, h1, h4};
+}
+function pellet(c, x, yb, col) {
+  const w = 62, h = 44;
+  const g = c.createLinearGradient(x - w, 0, x + w, 0); g.addColorStop(0, '#3A3C42'); g.addColorStop(0.4, '#9EA4AE'); g.addColorStop(0.7, '#5E626A'); g.addColorStop(1, '#2A2C30');
+  c.fillStyle = g; c.fillRect(x - w, yb - h, 2 * w, h); c.beginPath(); c.ellipse(x, yb, w, 12, 0, 0, Math.PI); c.fill();
+  c.beginPath(); c.ellipse(x, yb - h, w, 12, 0, 0, TAU); c.fillStyle = mix(col, '#FFFFFF', 0.6); c.fill(); gl(c, x, yb - h, 120, col, 0.6);
+}
+function column(c, t, x, yb, h, core, edge, w) {
+  if (h <= 1) return; const yt = yb - h;
+  c.save(); c.globalCompositeOperation = 'lighter';
+  let g = c.createLinearGradient(x - w * 2, 0, x + w * 2, 0); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(0.5, rgba(edge, 0.3)); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.fillRect(x - w * 2, yt, w * 4, h);
+  g = c.createLinearGradient(x - w * 0.55, 0, x + w * 0.55, 0); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(0.5, rgba(core, 0.85)); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.fillRect(x - w * 0.55, yt, w * 1.1, h);
+  for (let i = 0; i < 46; i++) { const ph = (t * 0.55 + i / 46) % 1, y = yb - ph * h, xx = x + Math.sin(i * 2.1 + t * 2.4) * w * 0.4; c.globalAlpha = 0.55 * (1 - ph * 0.7); c.drawImage(G(core), xx - 16, y - 16, 32, 32); }
+  c.restore();
+  gl(c, x, yt, w * 3, edge, 0.75); gl(c, x, yt, w * 1.1, '#FFFFFF', 0.85);
+}
+const ASM = (() => { const r = []; for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) r.push([i, j, 1.6 + 2.6 * rand2(i * 13 + j * 7), rand2(i * 3 + j * 17) * TAU]); return r; })();
+function wasteShot(stage, t, P) {
+  const c = stage.ctx;
+  // left half: spent fuel in a deep blue pool (long-lived, slowly flickering)
+  c.save(); c.beginPath(); c.rect(0, 0, 540, H); c.clip();
+  bgFill(c, '#021630', '#00060E'); gl(c, 270, 860, 900, '#1C6DFF', 0.55); gl(c, 270, 860, 420, '#5FB8FF', 0.45);
+  tiled(c, tex('caustic'), t * 20, t * 9, 3.0, 0.12, 'lighter', 0.3, 270, 900); tiled(c, tex('caustic'), -t * 13, t * 16, 4.0, 0.08, 'lighter', -0.5, 270, 900);
+  c.save(); c.globalCompositeOperation = 'lighter';
+  for (let k = 0; k < 9; k++) { const x0 = 270 + (k - 4) * 34, x1 = 270 + (k - 4) * 90 + 16 * Math.sin(t * 0.6 + k); const g = c.createLinearGradient(0, 860, 0, 120); g.addColorStop(0, 'rgba(120,190,255,0.2)'); g.addColorStop(1, 'rgba(120,190,255,0)'); c.fillStyle = g; c.beginPath(); c.moveTo(x0 - 10, 860); c.lineTo(x0 + 10, 860); c.lineTo(x1 + 26, 120); c.lineTo(x1 - 26, 120); c.closePath(); c.fill(); }
+  c.restore();
+  const ox = 270, oy = 880;                                                  // the assembly seen from above at an angle
+  const P2 = (i, j) => { const u = (i - 3.5) / 4, v = (j - 3.5) / 4, persp = 1 + v * 0.18; return [ox + u * 200 * persp, oy - 60 + v * 150]; };
+  const corners = [P2(-0.7, -0.7), P2(7.7, -0.7), P2(7.7, 7.7), P2(-0.7, 7.7)];
+  c.beginPath(); corners.forEach((p, k) => (k ? c.lineTo(...p) : c.moveTo(...p))); c.closePath(); c.fillStyle = rgba('#0A1A2C', 0.6); c.fill(); c.strokeStyle = rgba('#9FC8E8', 0.45); c.lineWidth = 3; c.stroke();
+  for (const [i, j, per, ph] of ASM.slice().sort((p, q) => p[1] - q[1])) { const [x, y] = P2(i, j), a = 0.55 + 0.45 * (0.5 + 0.5 * Math.sin(t * TAU / per + ph)), hR = 70 + j * 4, w = 10 + j * 0.6;
+    const rg = c.createLinearGradient(x - w, 0, x + w, 0); rg.addColorStop(0, '#16283C'); rg.addColorStop(0.45, '#6F8CA8'); rg.addColorStop(1, '#14222F'); c.fillStyle = rg; c.fillRect(x - w, y, 2 * w, hR);
+    c.beginPath(); c.ellipse(x, y, w, w * 0.4, 0, 0, TAU); c.fillStyle = rgba('#DDF4FF', 0.4 + 0.5 * a); c.fill(); gl(c, x, y, 46, '#7FC8FF', 0.5 * a); gl(c, x, y + hR * 0.5, 40, '#3D9BFF', 0.18 * a); }
+  const R = rng(61); for (let i = 0; i < 26; i++) { const q = ((t * 0.16 * (0.4 + R()) + R()) % 1), x = ox + (R() - 0.5) * 360 + Math.sin(t * 2 + i) * 6, y = oy - q * 760, rr = 3 + 5 * R(); c.strokeStyle = rgba('#CFEFFF', 0.4 * (1 - q)); c.lineWidth = 1.5; c.beginPath(); c.arc(x, y, rr, 0, TAU); c.stroke(); }
+  c.restore();
+  // right half: helium nuclei drifting up out of a plasma glow
+  c.save(); c.beginPath(); c.rect(540, 0, 540, H); c.clip();
+  bgFill(c, '#170622', '#06020A'); gl(c, 810, 1150, 900, '#C0409A', 0.5); gl(c, 810, 1250, 420, '#FFB0E0', 0.35); tiled(c, tex('haze'), t * 22, -t * 30, 3, 0.14, 'lighter', 0.2, 810, 900);
+  for (let i = 0; i < 10; i++) { const ph = (t * 0.16 + i / 10) % 1, x = 810 + Math.sin(i * 2.3 + t * 0.8) * 140, y = 1250 - ph * 1050; light(c, 'He', x, y, 34, t + i, {glow: 1.3, glowCol: '#FFB0D0', alpha: smooth(ph / 0.1) * (1 - smooth((ph - 0.78) / 0.22))}); }
+  c.restore();
+  c.save(); c.globalCompositeOperation = 'lighter'; const sg = c.createLinearGradient(520, 0, 560, 0); sg.addColorStop(0, 'rgba(255,255,255,0)'); sg.addColorStop(0.5, 'rgba(230,220,255,0.35)'); sg.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = sg; c.fillRect(520, 0, 40, H); c.restore();
+}
+function iterShot(stage, t, P, u) {
+  const c = stage.ctx;
+  bgFill(c, '#0C1018', '#030406');
+  c.save(); c.globalCompositeOperation = 'lighter';                         // hall: wall light strips, ceiling lamps, light cones
+  gl(c, 540, 600, 1100, '#2A3E66', 0.6); for (let k = -5; k <= 5; k++) { const x = 540 + k * 104, g = c.createLinearGradient(0, 120, 0, 1080); g.addColorStop(0, 'rgba(170,200,255,0.22)'); g.addColorStop(1, 'rgba(170,200,255,0.05)'); c.fillStyle = g; c.fillRect(x - 6, 120, 12, 960); gl(c, x, 150, 80, '#DCE8FF', 0.5); }
+  for (let k = -3; k <= 3; k++) { const x = 540 + k * 170; const g = c.createLinearGradient(0, 140, 0, 1150); g.addColorStop(0, 'rgba(200,220,255,0.16)'); g.addColorStop(1, 'rgba(200,220,255,0)'); c.fillStyle = g; c.beginPath(); c.moveTo(x - 20, 140); c.lineTo(x + 20, 140); c.lineTo(x + 140, 1150); c.lineTo(x - 140, 1150); c.closePath(); c.fill(); }
+  c.restore();
+  const fy = 1090, fg = c.createLinearGradient(0, fy, 0, H); fg.addColorStop(0, '#1C2230'); fg.addColorStop(1, '#07090D'); c.fillStyle = fg; c.fillRect(0, fy, W, H - fy);
+  for (let k = -10; k <= 10; k++) { c.strokeStyle = 'rgba(160,190,230,0.07)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(540 + k * 30, fy); c.lineTo(540 + k * 240, H); c.stroke(); }
+  for (let r = 1; r < 9; r++) { const y = fy + (H - fy) * (r / 9) ** 1.6; c.strokeStyle = 'rgba(160,190,230,0.06)'; c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke(); }
+  gl(c, 540, fy + 40, 600, '#6A8AC8', 0.25);
+  // pedestal + tokamak
+  const cam = cam3(orbit(-0.5 + u * 0.05, 0.42, lerp(5.6, 5.0, smooth(u / 8))), [0, 0.15, 0], {fov: 0.95, cy: 760});
+  const b0 = cam.P([0, -0.75, 0]), b1 = cam.P([0, -2.2, 0]), rw = 0.55 * b0[3];
+  const pg = c.createLinearGradient(b0[0] - rw, 0, b0[0] + rw, 0); pg.addColorStop(0, '#1A1E26'); pg.addColorStop(0.4, '#4A5262'); pg.addColorStop(1, '#14171D');
+  c.fillStyle = pg; c.fillRect(b0[0] - rw, b0[1], 2 * rw, Math.min(fy, b1[1]) - b0[1]); c.beginPath(); c.ellipse(b0[0], b0[1], rw, rw * 0.25, 0, 0, TAU); c.fillStyle = '#2E3440'; c.fill();
+  tokamak(stage, t, cam, {plasma: 0.32 + 0.1 * Math.sin(t * 1.3), field: 0.6, n: 600});
+  // people for scale (tiny silhouettes on the floor) and a height bar
+  const top = cam.P([0, 0.85, 0])[1], hpx = fy - top, ph = hpx * 1.8 / 30;
+  for (const x of [250, 286]) { c.fillStyle = '#2A3040'; c.beginPath(); c.arc(x, fy - ph * 0.88, ph * 0.12, 0, TAU); c.fill(); rect(c, x - ph * 0.14, fy - ph * 0.76, ph * 0.28, ph * 0.76, ph * 0.08, '#2A3040'); gl(c, x, fy - ph * 0.5, ph * 1.4, '#8FB0E8', 0.12); }
+  c.strokeStyle = 'rgba(255,240,220,0.7)'; c.lineWidth = 3; c.beginPath(); c.moveTo(110, fy); c.lineTo(110, top); c.moveTo(96, fy); c.lineTo(124, fy); c.moveTo(96, top); c.lineTo(124, top); c.stroke();
+  return {top, fy};
+}
 function compareScene(stage, t, ctx) {
-  const c = stage.ctx, P = plan(ctx.tl), s0 = ctx.scene.start, s17 = ctx.tl.at('s17') - 0.6, s18 = ctx.tl.at('s18') - 0.6;
-  if (t < s17) {
-    bgFill(c, '#08090D', '#020203'); gl(c, 300, 1250, 700, '#1E4A8A', 0.35); gl(c, 780, 1250, 700, '#8A4A10', 0.35);
-    const g = smooth((t - P.cols) / 2.2), fb = 1300, h1 = 230 * g, h4 = 920 * smooth((t - P.cols) / 2.6);
-    // pellets
-    for (const [x, col] of [[300, PAL.fis], [780, PAL.fus]]) { rect(c, x - 60, fb - 20, 120, 50, 8, '#2A2E36', rgba(col, 0.8), 2); gl(c, x, fb, 160, col, 0.4); }
-    const col = (x, h, cA, cB) => { if (h <= 0) return; c.save(); c.globalCompositeOperation = 'lighter'; const gr = c.createLinearGradient(0, fb, 0, fb - h); gr.addColorStop(0, rgba(cA, 0.9)); gr.addColorStop(1, rgba(cB, 0.15)); c.fillStyle = gr; c.fillRect(x - 70, fb - h, 140, h);
-      const gr2 = c.createLinearGradient(x - 120, 0, x + 120, 0); gr2.addColorStop(0, 'rgba(0,0,0,0)'); gr2.addColorStop(0.5, rgba(cB, 0.25)); gr2.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = gr2; c.fillRect(x - 120, fb - h, 240, h); c.restore(); gl(c, x, fb - h, 160, '#FFFFFF', 0.6); };
-    col(300, h1, '#8FD4FF', PAL.fis); col(780, h4, '#FFE6B0', PAL.fus);
-    for (let k = 1; k <= 3; k++) if (h4 > 230 * k) { c.strokeStyle = 'rgba(255,255,255,0.35)'; c.lineWidth = 3; c.setLineDash([10, 10]); c.beginPath(); c.moveTo(690, fb - 230 * k); c.lineTo(870, fb - 230 * k); c.stroke(); c.setLineDash([]); }
-    finish(stage, t, {bloom: 0.65});
-    label(stage, '핵분열', 300, fb + 70, fadeIn(t, s0), {size: 38, weight: 700, color: '#CFE6FF'}); label(stage, '핵융합', 780, fb + 70, fadeIn(t, s0), {size: 38, weight: 700, color: '#FFE0B0'});
-    big(stage, '× 4', 300, 620, 160, PAL.fusHot, fadeIn(t, P.x4in, 0.4));
-    const fi = smooth((t - s0) / 0.4); if (fi < 1) { c.fillStyle = rgba('#000', 1 - fi); c.fillRect(0, 0, W, H); }
+  const c = stage.ctx, P = plan(ctx.tl), s0 = ctx.scene.start, T1 = ctx.tl.at('s17') - 0.6, T2 = ctx.tl.at('s18') - 0.6;
+  const w1 = [T1 - 0.3, T1 + 0.35], w2 = [T2 - 0.35, T2 + 0.5];
+  if (t < w1[1]) {                                                           // fuel columns (+ whip pan right into the pool / plasma split)
+    const k = t > w1[0] ? easeInOut((t - w1[0]) / (w1[1] - w1[0])) : 0, dx = k * W;
+    const zs = 1.06 - 0.06 * smooth((t - s0) / 1.6);
+    c.save(); c.translate(-dx, 0); zoomAbout(c, 540, 900, zs); const F = fuelShot(stage, t, P, s0); c.restore();
+    if (k > 0) { c.save(); c.translate(W - dx, 0); wasteShot(stage, t, P); c.restore(); whipBlur(c, k); }
+    finish(stage, t, {bloom: 0.65, wide: 0.4});
+    const la = 1 - k;
+    label(stage, '핵분열', 300 - dx, Math.min(1250, F.yb - F.h1 * 0.5), fadeIn(t, s0 + 0.4) * la, {size: 40, weight: 700, color: '#CFE6FF'});
+    label(stage, '핵융합', 780 - dx, Math.min(1250, F.yb - 120), fadeIn(t, s0 + 0.4) * la, {size: 40, weight: 700, color: '#FFE0B0'});
+    big(stage, '× 4', 330 - dx, 560, 170, PAL.fusHot, fadeIn(t, P.x4in, 0.4) * la);
+    if (k > 0) { label(stage, '오래 남는 방사성 폐기물', 270 + W - dx, 1250, fadeIn(t, P.long17 - 0.2), {size: 32, weight: 700, color: '#D6EEFF'}); }
     return;
   }
-  if (t < s18) {
-    bgFill(c, '#08090D', '#020203'); gl(c, 280, 900, 650, '#2A5A3A', 0.3); gl(c, 800, 700, 650, '#7A5A20', 0.25);
-    // left: long-lived fission waste glowing on and off in a canister
-    const cx = 290, cy = 880; rect(c, cx - 190, cy - 300, 380, 600, 30, '#1A1E24', rgba('#8FA0B0', 0.5), 3);
-    const R = rng(55); for (let i = 0; i < 26; i++) { const x = cx + (R() - 0.5) * 290, y = cy + (R() - 0.5) * 500, n = R() > 0.5 ? pack(92, 36, 92) : pack(141, 56, 141), on = 0.5 + 0.5 * Math.sin(t * (0.6 + R()) + i * 2);
-      nucleus(c, n, x, y, 2.4, t + i, {glow: 0.3}); gl(c, x, y, 80, '#C8FF8A', 0.3 * on); }
-    // right: helium nuclei rising away
-    for (let i = 0; i < 9; i++) { const ph = (t * 0.18 + i / 9) % 1, x = 790 + Math.sin(i * 2.3 + t) * 110, y = 1250 - ph * 950; light(c, 'He', x, y, 32, t + i, {glow: 1.2, alpha: 1 - smooth((ph - 0.75) / 0.25)}); }
-    finish(stage, t, {bloom: 0.6});
-    label(stage, '오래 남는 방사성 폐기물', 280, 1290, fadeIn(t, P.long17 - 0.2), {size: 32, weight: 700, color: '#D8FFB8'});
-    label(stage, '헬륨', 800, 1290, fadeIn(t, P.he17 - 0.2), {size: 40, weight: 700, color: '#FFE0B0'});
-    const fi = smooth((t - s17) / 0.4); if (fi < 1) { c.fillStyle = rgba('#000', 1 - fi); c.fillRect(0, 0, W, H); }
+  if (t < w2[1]) {                                                           // spent fuel vs helium (+ push into the plasma → ITER hall)
+    const k = t > w2[0] ? easeInOut((t - w2[0]) / (w2[1] - w2[0])) : 0;
+    if (k > 0) { const u = t - (T2 - 0.35); iterShot(stage, t, P, u); }
+    c.save(); c.globalAlpha = 1 - k; zoomAbout(c, 810, 900, 1 + 0.035 * smooth((t - T1) / 6) + 1.4 * easeIn(k)); wasteShot(stage, t, P); c.restore();
+    finish(stage, t, {bloom: 0.65, wide: 0.4});
+    const la = 1 - k;
+    label(stage, '오래 남는 방사성 폐기물', 270, 1250, fadeIn(t, P.long17 - 0.2) * la, {size: 32, weight: 700, color: '#D6EEFF'});
+    label(stage, '사용후 연료 · 물속 저장', 270, 1305, fadeIn(t, P.long17) * la, {size: 30, color: PAL.muted});
+    big(stage, '헬륨', 810, 1250, 72, '#FFE0F0', fadeIn(t, P.he17 - 0.2) * la);
     return;
   }
-  // ITER: a big tokamak (dim, not yet burning) and the schedule
-  const u = t - s18;
-  bgFill(c, '#06080C', '#020203'); gl(c, 540, 820, 1200, '#2A3A5A', 0.4);
-  const cam = cam3(orbit(-0.5 + u * 0.05, 0.62, 5.6), [0, -0.05, 0], {fov: 0.95, cy: 760});
-  tokamak(stage, t, cam, {plasma: 0.25 + 0.15 * Math.sin(t * 1.3), field: 0.7, n: 600});
+  const u = t - (T2 - 0.35), I = iterShot(stage, t, P, u);
   finish(stage, t, {bloom: 0.6});
-  big(stage, '2034', 300, 1210, 116, '#FFFFFF', fadeIn(t, P.yrs - 0.3)); label(stage, '연구 운전 시작', 300, 1300, fadeIn(t, P.yrs - 0.1), {size: 34, weight: 700});
-  big(stage, '2039', 780, 1210, 116, PAL.fusHot, fadeIn(t, P.yrs + 0.5)); label(stage, '중수소·삼중수소', 780, 1300, fadeIn(t, P.yrs + 0.7), {size: 34, weight: 700});
-  const fi = smooth(u / 0.4); if (fi < 1) { c.fillStyle = rgba('#000', 1 - fi); c.fillRect(0, 0, W, H); }
+  label(stage, '높이 약 30 m', 132, I.top - 34, fadeIn(t, T2 + 0.4), {size: 30, weight: 700, align: 'left'});
+  big(stage, '2034', 300, 1240, 116, '#FFFFFF', fadeIn(t, P.yrs - 0.3)); label(stage, '연구 운전 시작', 300, 1325, fadeIn(t, P.yrs - 0.1), {size: 34, weight: 700});
+  big(stage, '2039', 780, 1240, 116, PAL.fusHot, fadeIn(t, P.yrs + 0.5)); label(stage, '중수소·삼중수소', 780, 1325, fadeIn(t, P.yrs + 0.7), {size: 34, weight: 700});
+}
+function whipBlur(c, k) {                                                   // horizontal speed streaks during a whip pan
+  const a = Math.sin(k * Math.PI); if (a <= 0.01) return;
+  c.save(); c.globalCompositeOperation = 'lighter'; const R = rng(5);
+  for (let i = 0; i < 40; i++) { const y = R() * H, x = R() * W, L = 200 + 500 * R(); const g = c.createLinearGradient(x, 0, x + L, 0); g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(0.5, `rgba(220,230,255,${0.12 * a})`); g.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = g; c.fillRect(x, y, L, 2 + 3 * R()); }
+  c.restore();
 }
 
 // ------------------------------------------------------------------ myth: confinement lost → plasma cools and stops
@@ -1019,7 +1161,8 @@ export function soundEvents(tl) {
   swell('he6', P.fuse6, [131, 196, 262], '수소 원자핵 넷이 헬륨 하나로 합쳐지며 빛 (융합: 따뜻한 화음)', {dur: 1.6, gain: -31});
   // essence
   ticks('bind', P.bind7, [98, 110, 131], -33, '핵자들이 강한 힘으로 묶일 때의 섬광 (세 번)', {decay: 0.14});
-  tick('mass', P.less7, 82, -34, '"질량 −0.8%"', {decay: 0.18});
+  swell('balance', P.tight7 + 0.7, [73, 110], '저울: 흩어진 16개 쪽이 내려감 (기울기 과장)', {dur: 1.4, gain: -34});
+  tick('mass', P.less7, 82, -34, '"−0.85%" (산소 16)', {decay: 0.18});
   const vr = [[P.vFuse8, 'fus'], [P.vSplit8, 'fis'], [P.vFuse, 'fus'], [P.vSplit, 'fis'], [P.vF21, 'fus'], [P.vS21, 'fis']];
   for (const [k, [t0, kind]] of vr.entries()) {
     if (kind === 'fus') chirp(`valley_fus${k}`, t0 + 0.6, t0 + 1.6, tt => lerp(330, 110, smooth((tt - t0 - 0.6) / 0.9)), () => 0.35, -34, '골짜기 왼쪽: 중수소 + 삼중수소가 합쳐져 헬륨으로 크게 내려감 → 높이만큼 크게 내려가는 음 (330 → 110 Hz)');
@@ -1047,9 +1190,11 @@ export function soundEvents(tl) {
   // compare
   swell('cols', P.cols, [98, 147], '같은 무게의 두 연료에서 빛 기둥이 솟음', {dur: 2.2, gain: -33});
   tick('x4', P.x4in, 131, -32, '"× 4"', {decay: 0.18});
+  whoosh('whip17', tl.at('s17') - 0.9, 0.65, 90, 260, '카메라가 옆으로 빠르게 넘어감: 물속 사용후 연료 | 플라스마 속 헬륨', -35);
   tick('waste', P.waste, 82, -35, '오래 남는 폐기물 (느린 깜빡임)', {decay: 0.25});
   tick('helium', P.heUp, 196, -35, '헬륨이 떠오름', {decay: 0.1});
-  swell('iter', P.iterIn, [82, 123], 'ITER', {dur: 1.6, gain: -34});
+  whoosh('push18', tl.at('s18') - 0.95, 0.85, 80, 200, '플라스마 쪽으로 밀고 들어가 ITER 홀로', -35);
+  swell('iter', P.iterIn, [82, 123], 'ITER 홀의 거대한 토카막', {dur: 1.6, gain: -34});
   ticks('years', [P.yrs - 0.3, P.yrs + 0.5], [131, 165], -34, '"2034" · "2039"', {decay: 0.14});
   // myth
   chirp('myth_plasma', tl.scene('myth').start, P.dead, () => 98, tt => 0.3 * P.plasmaA(tt), -36, '고리 속 플라스마의 낮은 맥동 → 식으면서 사라짐');

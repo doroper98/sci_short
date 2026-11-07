@@ -24,7 +24,7 @@ function frame(t) {
 fs.mkdirSync(out, {recursive: true});
 fs.writeFileSync(path.join(out, 'events.json'), JSON.stringify({duration: tl.duration, events}, null, 1));
 if (process.argv.includes('--video')) {
-  await kit.renderVideo({stage, duration: tl.duration, frame, out: path.join(out, 'visual.mp4'), crf: 20});   // episode-local: CRF 20 (glow/particle-heavy frames; keeps the file well under GitHub's 100 MB)
+  await kit.renderVideo({stage, duration: tl.duration, frame, out: path.join(out, 'visual.mp4'), crf: 24});   // episode-local: CRF 24 (glow/particle-heavy frames; keeps the file under ~45 MB; banding checked on Cherenkov/plasma crops)
 } else {
   const times = tl.scenes.flatMap(s => [{t: s.start + Math.min(0.6, (s.end - s.start) / 3), label: s.id + '-start'}, {t: (s.start + s.end) / 2, label: s.id + '-mid'}])
     .concat(events.map(e => ({t: Math.min(tl.duration - 0.01, e.time + 0.12), label: 'event-' + e.id}))).sort((a, b) => a.t - b.t);

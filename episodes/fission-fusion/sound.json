@@ -431,6 +431,19 @@
       "means": "핵자들이 강한 힘으로 묶일 때의 섬광 (세 번)"
     },
     {
+      "id": "balance",
+      "at": 52.168,
+      "kind": "swell",
+      "params": {
+        "freqs": [73, 110],
+        "dur": 1.4,
+        "attack": 0.4,
+        "gain_db": -34,
+        "cutoff": 700
+      },
+      "means": "저울: 흩어진 16개 쪽이 내려감 (기울기 과장)"
+    },
+    {
       "id": "mass",
       "at": 53.532,
       "kind": "tick",
@@ -440,7 +453,7 @@
         "gain_db": -34,
         "click": 0
       },
-      "means": "\"질량 −0.8%\""
+      "means": "\"−0.85%\" (산소 16)"
     },
     {
       "id": "valley_fis1",
@@ -1819,6 +1832,19 @@
       "means": "\"× 4\""
     },
     {
+      "id": "whip17",
+      "at": 123.692,
+      "kind": "whoosh",
+      "params": {
+        "dur": 0.65,
+        "f_start": 90,
+        "f_end": 260,
+        "q": 1.6,
+        "gain_db": -35
+      },
+      "means": "카메라가 옆으로 빠르게 넘어감: 물속 사용후 연료 | 플라스마 속 헬륨"
+    },
+    {
       "id": "waste",
       "at": 125.319,
       "kind": "tick",
@@ -1843,6 +1869,19 @@
       "means": "헬륨이 떠오름"
     },
     {
+      "id": "push18",
+      "at": 132.372,
+      "kind": "whoosh",
+      "params": {
+        "dur": 0.85,
+        "f_start": 80,
+        "f_end": 200,
+        "q": 1.6,
+        "gain_db": -35
+      },
+      "means": "플라스마 쪽으로 밀고 들어가 ITER 홀로"
+    },
+    {
       "id": "iter",
       "at": 137.861,
       "kind": "swell",
@@ -1853,7 +1892,7 @@
         "gain_db": -34,
         "cutoff": 700
       },
-      "means": "ITER"
+      "means": "ITER 홀의 거대한 토카막"
     },
     {
       "id": "years",
