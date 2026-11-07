@@ -65,6 +65,7 @@
 1. 프로젝트 선택(A: 기존 / B: 새 프로젝트). `console.cloud.google.com/apis/library/youtube.googleapis.com` 에서 **YouTube Data API v3 사용**.
 2. Google 인증 플랫폼 → **브랜딩**: 앱 이름, 지원 이메일, 앱 홈페이지, 개인정보처리방침, 승인된 도메인.
    - 저장소 Settings → Pages → Deploy from a branch, `main` / `/docs` 로 배포한 뒤:
+     (`docs/.nojekyll` 이 있어야 밑줄로 시작하는 `_style.css` 가 404 가 되지 않습니다. 이미 넣어 두었습니다.)
      - 앱 홈페이지 `https://doroper98.github.io/sci_short/youtube-app/`
      - 개인정보처리방침 `https://doroper98.github.io/sci_short/youtube-app/privacy.html`
      - 승인된 도메인 `doroper98.github.io`
