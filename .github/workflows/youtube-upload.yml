@@ -106,11 +106,13 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- finals/*/youtube_upload.json finals/*/instagram_post.json 2>/dev/null || true
-          if git diff --cached --quiet; then echo "기록 변경 없음"; exit 0; fi
+          MISSING=0
+          python .github/scripts/stage_records.py upload-report.json instagram-report.json || MISSING=1
+          if git diff --cached --quiet; then echo "기록 변경 없음"; exit $MISSING; fi
           git commit -m "publish: 유튜브·인스타 업로드 기록 [skip ci]"
           git pull --rebase origin "$GITHUB_REF_NAME"
           git push origin "HEAD:$GITHUB_REF_NAME"
+          exit $MISSING
       - name: 결과 요약 · 공개 전환 대기 이슈
         if: ${{ always() && steps.targets.outcome == 'success' && steps.targets.outputs.count != '0' }}
         env:
