@@ -160,7 +160,7 @@ class ConfigTest(unittest.TestCase):
     def test_repo_config_loads_and_follows_user_decisions(self) -> None:
         cfg = yu.load_config()
         self.assertEqual(cfg.privacy_status, "private")
-        self.assertIsNone(cfg.made_for_kids, "저장소 기본 설정은 아동용 선언을 비워 두어 사용자가 정하게 한다")
+        self.assertIs(cfg.made_for_kids, False, "2026-11-07 사용자 결정: 아동용 아님")
         self.assertTrue(cfg.contains_synthetic_media)
         self.assertFalse(cfg.upload_captions, "2026-11-03 결정: SRT 는 기본 올리지 않음")
         self.assertTrue(cfg.upload_thumbnail)

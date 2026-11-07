@@ -91,7 +91,7 @@ python -m publish.oauth --production --write-env .env
 
 | 키 | 결정 |
 |---|---|
-| `made_for_kids` | **반드시 true/false.** null 이면 업로드를 거부합니다. 판단 기준은 [공통 설정 '아동용 여부'](YOUTUBE_UPLOAD.md). 편마다 `meta.json` 으로 바꿀 수 있습니다 |
+| `made_for_kids` | **2026-11-07 사용자 결정: `false`(아동용 아님).** 주 시청자가 약 11~16세이고 13세 미만 어린이를 주 대상으로 하지 않기 때문입니다. null 로 두면 업로드를 거부합니다. 편마다 `meta.json` 으로 바꿀 수 있습니다 |
 | `channel_id` | 토큰 발급 때 나온 UC… 값. 다른 채널로 올라가는 사고를 막습니다 |
 | `category_id` | 27 교육(공통 설정과 같음) |
 | `upload_captions` | false(공통 설정: SRT 는 올리지 않음). 편별 `--caption` 가능 |
@@ -157,7 +157,7 @@ python -m publish.youtube finals/13-gamma-ray-burst --env-file .env   # 비공�
 ## 미시험 · 미결
 
 - **실제 업로드 0건.** 가짜 전송으로 흐름(토큰→채널→세션→308 재개→200→썸네일→자막)을 시험했고, 실제 API 응답은 아직 보지 못했습니다. 실제 13편 영상·`upload.md` 로 dry-run 은 통과했습니다.
-- `made_for_kids`, `channel_id`, Google 프로젝트 재사용(A/B), 이미 손으로 올린 편의 목록은 사용자 결정·확인 대기입니다.
+- `channel_id`, Google 프로젝트 재사용(A/B), 이미 손으로 올린 편의 목록은 사용자 결정·확인 대기입니다. `made_for_kids` 는 2026-11-07 에 `false` 로 정해졌습니다.
 - 맞춤 썸네일은 채널 권한에 따라 실패할 수 있습니다(경고로 남김).
 - 고정 댓글·관련 동영상·재생목록·예약 공개(`publishAt`)는 범위에 넣지 않았습니다. 필요하면 다음 작업으로 분리합니다.
 - Actions 의 기록 커밋은 main 보호 규칙이 없다는 전제입니다.
