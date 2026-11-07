@@ -339,6 +339,23 @@
       "episode_code": "episodes/atomic-bomb",
       "upload_info": "finals/20-atomic-bomb/upload.md",
       "thumbnail": "0초 프레임(눈부신 불덩이 둘레로 두 갈래씩 갈라지는 중성자 빛줄기와 충격파 고리, 흰 질문 \"히로시마 원폭, 에너지가 된 질량은?\"과 큰 호박색 답 \"단 0.7그램\")"
+    },
+    {
+      "number": 21,
+      "slug": "hydrogen-bomb",
+      "title": "수소폭탄은 왜 더 강할까 — 핵융합",
+      "status": "final",
+      "folder": "finals/21-hydrogen-bomb",
+      "video": "finals/21-hydrogen-bomb/hydrogen-bomb.mp4",
+      "duration_sec": 163.6,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 15121280,
+      "sha256": "c7e89abc84d7c81ea4f38405ecfe0043050dade0b0e1f82bf8a51e1e5d389a3d",
+      "video_date": "uncommitted",
+      "episode_code": "episodes/hydrogen-bomb",
+      "upload_info": "finals/21-hydrogen-bomb/upload.md",
+      "thumbnail": "0초 프레임(수평선 위 불덩이와 대기층 선을 뚫고 오른 버섯구름, 흰 질문 \"가장 큰 수소폭탄의 위력은?\"과 큰 주황 답 \"히로시마의 3천 배\")"
     }
   ],
   "legacy": [

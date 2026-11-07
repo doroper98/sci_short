@@ -49,8 +49,9 @@
 | 18 | 섭씨, 화씨, 켈빈 — 온도를 재는 세 눈금 | 157.6초 | [18-temperature-scales/](18-temperature-scales/) | [upload.md](18-temperature-scales/upload.md) | 2026-11-06 |
 | 19 | 머리가 발보다 빨리 늙는다 — 중력과 시간 | 157.2초 | [19-gravity-time/](19-gravity-time/) | [upload.md](19-gravity-time/upload.md) | 2026-11-06 |
 | 20 | 원자폭탄은 어떻게 터질까 — 핵분열 연쇄반응 | 170.3초 | [20-atomic-bomb/](20-atomic-bomb/) | [upload.md](20-atomic-bomb/upload.md) | 2026-11-07 |
+| 21 | 수소폭탄은 왜 더 강할까 — 핵융합 | 163.6초 | [21-hydrogen-bomb/](21-hydrogen-bomb/) | [upload.md](21-hydrogen-bomb/upload.md) | uncommitted |
 
-합계 20편, 56.8분, 434 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
+합계 21편, 59.5분, 449 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
 <!-- catalog:end -->
 
 ## 이전 작품 (`legacy/`)

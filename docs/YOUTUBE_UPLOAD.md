@@ -44,6 +44,7 @@
 | 18 | 화씨 100도면 물이 끓을까 | [finals/18-temperature-scales/upload.md](../finals/18-temperature-scales/upload.md) |
 | 19 | 머리와 발, 어디가 더 빨리 늙을까 | [finals/19-gravity-time/upload.md](../finals/19-gravity-time/upload.md) |
 | 20 | 히로시마 원폭, 에너지가 된 질량은 | [finals/20-atomic-bomb/upload.md](../finals/20-atomic-bomb/upload.md) |
+| 21 | 가장 큰 수소폭탄의 위력은 | [finals/21-hydrogen-bomb/upload.md](../finals/21-hydrogen-bomb/upload.md) |
 
 ## 이전 작품
 
