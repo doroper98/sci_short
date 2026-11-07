@@ -1,0 +1,12 @@
+{
+  "_about": "첫 프레임 썸네일 포스터(2026-11-07 소급 적용, pipeline/render/posterintro.mjs). q = 흰 질문, a = 큰 강조색 답, key = 그림 시각·크롭(pipeline/render/thumbnail.mjs 옵션)",
+  "q": "LIGO가 잰 길이 변화는?",
+  "a": "양성자의 수백분의 1",
+  "accent": "#7FE3FF",
+  "key": {
+    "t": 95,
+    "crop": "50,280,980,540",
+    "cy": 620,
+    "hide_text_below": 34
+  }
+}

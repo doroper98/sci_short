@@ -1244,7 +1244,7 @@ export const scenes = {
 };
 
 /** Drawn after the scene, before captions. */
-export function overlays(stage, t, ctx) {
+function baseOverlays(stage, t, ctx) {
   const L = titleList(ctx.scene.id, ctx.tl), a = smooth(ctx.scene.p / 0.04);
   let k = 0; while (k + 1 < L.length && t >= L[k + 1][0]) k++;
   const q = k > 0 ? smooth((t - L[k][0]) / 0.5) : 1, prev = L[Math.max(0, k - 1)], cur = L[k];
@@ -1365,3 +1365,8 @@ if (isMain && process.argv.includes('--emit-sound')) {
   console.log(`noon alt ${H_JUN.toFixed(2)} / ${H_DEC.toFixed(2)} / ${H_MAR.toFixed(2)}; shadow ${shadowLen(H_JUN).toFixed(3)} / ${shadowLen(H_DEC).toFixed(3)} (×${(shadowLen(H_DEC) / shadowLen(H_JUN)).toFixed(2)}); spread ×${(spreadOf(H_DEC) / spreadOf(H_JUN)).toFixed(3)}`);
   console.log(`day ${dayLen(D_JUN).toFixed(2)} / ${dayLen(D_DEC).toFixed(2)} h; Q ${Q_JUN.toFixed(1)} / ${Q_DEC.toFixed(1)} (×${(Q_JUN / Q_DEC).toFixed(2)}); Qmean ${Q_MEAN.toFixed(1)}; dist effect ${DIST_EFFECT.toFixed(4)}; Sydney noon ${noonAlt(D_DEC + 3, SYDNEY.lat).toFixed(1)}° day ${dayLen(D_DEC + 3, SYDNEY.lat).toFixed(2)} h`);
 }
+
+// First frame = thumbnail (2026-11-07 retrofit, user request): poster 0–0.9 s, morph away 0.9–1.7 s, back at the last
+// sentence. Config and key picture: episodes/seasons/poster.json, poster-key.jpg (pipeline/render/posterintro.mjs).
+import {posterIntro} from '../../pipeline/render/posterintro.mjs';
+export const overlays = await posterIntro(baseOverlays, {slug: 'seasons'});

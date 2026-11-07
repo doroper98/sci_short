@@ -1095,7 +1095,7 @@ function miniLoop(stage, t, cx, cy, R, a = 1, hi = 0) {
 }
 
 /** Drawn after the scene, before captions. */
-export function overlays(stage, t, ctx) {
+function baseOverlays(stage, t, ctx) {
   const id = ctx.scene.id, tl = ctx.tl;
   let [kicker, title] = titles[id] || ['', ''];
   if (id === 'elnino' && t >= tl.at('s09') - 0.3) [kicker, title] = ['메커니즘 ③ 되먹임', '약한 바람이 바다를 더 데운다'];
@@ -1178,3 +1178,8 @@ if (isMain && process.argv.includes('--emit-sound')) {
   const S = schedule(tl);
   console.log(`events: ${sound.events.length}; El Niño ramp ${S.a.toFixed(2)}–${S.b.toFixed(2)} s, La Niña ramp ${S.c.toFixed(2)}–${S.d.toFixed(2)} s; +0.5 at ${crossTime(S, 1).toFixed(2)} s, −0.5 at ${crossTime(S, -1).toFixed(2)} s; rain ticks ${sound.events.find(e => e.id === 'rain').params.layers.length}`);
 }
+
+// First frame = thumbnail (2026-11-07 retrofit, user request): poster 0–0.9 s, morph away 0.9–1.7 s, back at the last
+// sentence. Config and key picture: episodes/el-nino-la-nina/poster.json, poster-key.jpg (pipeline/render/posterintro.mjs).
+import {posterIntro} from '../../pipeline/render/posterintro.mjs';
+export const overlays = await posterIntro(baseOverlays, {slug: 'el-nino-la-nina'});

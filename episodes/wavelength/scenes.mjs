@@ -1368,7 +1368,7 @@ function viperCard(stage, t, ctx, x) {
 }
 
 /** Drawn after the scene, before captions. */
-export function overlays(stage, t, ctx) {
+function baseOverlays(stage, t, ctx) {
   const id = ctx.scene.id, tl = ctx.tl;
   let [kicker, title] = titles[id] || ['', ''];
   if (id === 'essence' && t >= tl.at('s06') - 0.3) [kicker, title] = ['본질 · c = λ × f, E = hc / λ', '짧을수록 더 자주, 더 세게'];
@@ -1479,3 +1479,8 @@ if (isMain && process.argv.includes('--emit-sound')) {
   const m = model(tl);
   console.log(`events: ${sound.events.length}; λ keys ${m.keys.length}; crest ticks ${m.crests.length} (${m.crests[0].toFixed(2)}–${m.crests[m.crests.length - 1].toFixed(2)} s); scatter blue ${sound.events.find(e => e.id === 'scat_blue').params.layers.length}, red ${sound.events.find(e => e.id === 'scat_red').params.layers.length}`);
 }
+
+// First frame = thumbnail (2026-11-07 retrofit, user request): poster 0–0.9 s, morph away 0.9–1.7 s, back at the last
+// sentence. Config and key picture: episodes/wavelength/poster.json, poster-key.jpg (pipeline/render/posterintro.mjs).
+import {posterIntro} from '../../pipeline/render/posterintro.mjs';
+export const overlays = await posterIntro(baseOverlays, {slug: 'wavelength'});

@@ -1,0 +1,11 @@
+{
+  "_about": "첫 프레임 썸네일 포스터(2026-11-07 소급 적용, pipeline/render/posterintro.mjs). q = 흰 질문, a = 큰 강조색 답, key = 그림 시각·크롭(pipeline/render/thumbnail.mjs 옵션)",
+  "q": "무역풍은 왜 동쪽에서 불까?",
+  "a": "자전이 바람을 휜다",
+  "accent": "#8FE388",
+  "key": {
+    "t": 125,
+    "crop": "120,260,640,520",
+    "cy": 600
+  }
+}
