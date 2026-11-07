@@ -154,6 +154,7 @@ python -m publish.youtube finals/13-gamma-ray-burst --env-file .env   # 비공�
 
 ## 운영
 
+- **자동 대상 = 22번 이상 새 편**(2026-11-07). push 자동 실행은 `--auto` 로 돌며 `auto_from_number`(22) 미만 편은 건너뜁니다. 01~21 은 손으로 올린 편이 섞여 있어, 그 폴더를 고친 PR 이 병합돼도 다시 올라가지 않게 했습니다. 옛 편은 `meta.json` 의 `auto_publish: true` 또는 수동 실행(episode 지정)으로 올립니다. 같은 병합에서 인스타 릴스도 게시됩니다([인스타 릴스 자동 게시](INSTAGRAM_AUTO_POST.md)).
 - **승인 신호 = main 병합.** 새 편의 `finals/<NN>-<slug>/` 가 들어온 PR 을 병합하면 Actions 가 그 편만 올립니다. 같은 폴더를 덮어써 다시 만든 편은 md5 가 달라져 멈추며, 새 영상으로 올리려면 수동 실행 전에 `youtube_upload.json` 을 지우거나 `--allow-reupload` 를 씁니다(이전 영상은 유튜브에 남음).
 - **공개 전환 = 이슈 처리.** 업로드마다 `youtube-review` 라벨 이슈가 생깁니다. Studio 에서 확인·공개하고 `upload.md` 의 고정 댓글·관련 동영상을 넣은 뒤 닫습니다.
 - **수동 실행.** Actions → youtube-upload → Run workflow. `episode` 한 폴더, 또는 `all=true`. `dry_run` 으로 검증만.

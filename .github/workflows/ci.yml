@@ -11,6 +11,7 @@ on:
       - "publish/**"
       - "tests/**"
       - "config/youtube.json"
+      - "config/instagram.json"
       - "finals/**"
       - ".github/**"
   pull_request:
@@ -18,6 +19,7 @@ on:
       - "publish/**"
       - "tests/**"
       - "config/youtube.json"
+      - "config/instagram.json"
       - "finals/**"
       - ".github/**"
 
@@ -53,3 +55,6 @@ jobs:
           if ! grep -q . targets.txt; then echo "바뀐 finals 에피소드 없음 — dry-run 생략"; exit 0; fi
           mapfile -t ARGS < targets.txt
           python -m publish.youtube "${ARGS[@]}" --dry-run
+          python -m publish.instagram "${ARGS[@]}" --dry-run    # 인스타 설명 규칙(해시태그 5개 이내, AI 안내 금지)·릴스 규격
+          echo "병합 시 자동 대상(22번 이상 또는 meta.json auto_publish):"
+          python -m publish.instagram "${ARGS[@]}" --dry-run --auto | tail -1

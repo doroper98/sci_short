@@ -1,8 +1,11 @@
-# 완성 쇼츠(finals/<NN>-<slug>/)를 유튜브에 **비공개**로 올리는 자동화.
-# - main 에 finals/** 변경이 들어오면(PR 병합 = 업로드 승인) 그 push 에서 **바뀐 폴더만** 올린다.
-#   백로그 13편이 한 번에 올라가는 일을 막기 위해 전체(--all)는 수동 실행(all=true)에서만 허용한다.
-# - 결과: finals/<ep>/youtube_upload.json 을 main 에 커밋하고 '공개 전환 대기' 이슈를 만든다. 공개 전환은 사람이 Studio 에서 한다.
-# - 비밀값: 저장소 Settings → Secrets and variables → Actions 에 YT_CLIENT_ID · YT_CLIENT_SECRET · YT_REFRESH_TOKEN.
+# 완성 쇼츠(finals/<NN>-<slug>/)를 유튜브에 **비공개**로 올리고 인스타 릴스에 게시하는 자동화.
+# - main 에 finals/** 변경이 들어오면(PR 병합 = 업로드 승인) 그 push 에서 **바뀐 폴더만** 처리한다.
+#   push 자동 실행은 22번 이상 새 편만(--auto, config auto_from_number). 01~21 은 손으로 올린 편이 섞여 있다.
+#   전체(--all)는 수동 실행(all=true)에서 유튜브만 허용한다. 인스타는 전체 게시를 하지 않는다.
+# - 인스타(2026-11-07 사용자 결정 "병합 즉시 양쪽"): 게시 API 에 비공개가 없어 **즉시 공개**된다.
+#   IG_ACCESS_TOKEN 비밀값이 없으면 인스타 단계는 건너뛴다. 수동 실행은 instagram 을 켠 때만 게시한다.
+# - 결과: finals/<ep>/youtube_upload.json · instagram_post.json 을 main 에 커밋하고 '공개 전환 대기' 이슈를 만든다.
+# - 비밀값: Settings → Secrets and variables → Actions 에 YT_CLIENT_ID · YT_CLIENT_SECRET · YT_REFRESH_TOKEN · IG_ACCESS_TOKEN.
 name: youtube-upload
 
 on:
@@ -24,6 +27,10 @@ on:
         description: "검증만 하고 올리지 않음"
         type: boolean
         default: false
+      instagram:
+        description: "인스타 릴스에도 게시 (즉시 공개 · episode 하나일 때만)"
+        type: boolean
+        default: false
 
 concurrency:
   group: youtube-upload
@@ -42,6 +49,7 @@ jobs:
       EPISODE: ${{ inputs.episode }}
       ALL: ${{ inputs.all }}
       DRY_RUN: ${{ inputs.dry_run }}
+      IG_DISPATCH: ${{ inputs.instagram }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -75,22 +83,36 @@ jobs:
         run: |
           mapfile -t ARGS < targets.txt
           if [ "$DRY_RUN" = "true" ]; then ARGS+=(--dry-run); fi
+          if [ "${{ github.event_name }}" = "push" ]; then ARGS+=(--auto); fi
           python -m publish.youtube "${ARGS[@]}" --report upload-report.json
+      - name: 인스타 릴스 게시 (즉시 공개)
+        if: ${{ always() && steps.targets.outcome == 'success' && steps.targets.outputs.count != '0' }}
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+        run: |
+          skip() { printf '## 인스타 릴스\n%s\n' "$1" >> "$GITHUB_STEP_SUMMARY"; echo "$1"; exit 0; }
+          mapfile -t ARGS < targets.txt
+          if [ "${ARGS[0]}" = "--all" ]; then skip "인스타는 전체 게시를 하지 않습니다 — 건너뜀"; fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "$IG_DISPATCH" != "true" ]; then skip "수동 실행에서 instagram 을 켜지 않아 건너뜀"; fi
+          if [ -z "$IG_ACCESS_TOKEN" ] && [ "$DRY_RUN" != "true" ]; then skip "IG_ACCESS_TOKEN 비밀값이 없어 건너뜀(인스타 연결 전)"; fi
+          if [ "${{ github.event_name }}" = "push" ]; then ARGS+=(--auto); fi
+          if [ "$DRY_RUN" = "true" ]; then ARGS+=(--dry-run); fi
+          python -m publish.instagram "${ARGS[@]}" --report instagram-report.json
       - name: 대상 없음
         if: ${{ steps.targets.outputs.count == '0' }}
         run: echo "이 push 에서 바뀐 finals 폴더가 없습니다(기록 커밋 등). 할 일 없음." >> "$GITHUB_STEP_SUMMARY"
-      - name: 업로드 기록 커밋 (youtube_upload.json)
-        if: ${{ always() && env.DRY_RUN != 'true' && steps.targets.outputs.count != '0' }}
+      - name: 기록 커밋 (youtube_upload.json · instagram_post.json)
+        if: ${{ always() && env.DRY_RUN != 'true' && steps.targets.outcome == 'success' && steps.targets.outputs.count != '0' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- finals/*/youtube_upload.json 2>/dev/null || true
+          git add -- finals/*/youtube_upload.json finals/*/instagram_post.json 2>/dev/null || true
           if git diff --cached --quiet; then echo "기록 변경 없음"; exit 0; fi
-          git commit -m "publish: 유튜브 비공개 업로드 기록 [skip ci]"
+          git commit -m "publish: 유튜브·인스타 업로드 기록 [skip ci]"
           git pull --rebase origin "$GITHUB_REF_NAME"
           git push origin "HEAD:$GITHUB_REF_NAME"
       - name: 결과 요약 · 공개 전환 대기 이슈
-        if: ${{ always() && steps.targets.outputs.count != '0' }}
+        if: ${{ always() && steps.targets.outcome == 'success' && steps.targets.outputs.count != '0' }}
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python .github/scripts/youtube_report.py report upload-report.json
+        run: python .github/scripts/youtube_report.py report upload-report.json instagram-report.json

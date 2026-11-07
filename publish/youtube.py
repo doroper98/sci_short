@@ -70,7 +70,8 @@ FORBIDDEN_CHARS: tuple[str, str] = ("<", ">")
 CHUNK_UNIT = 256 * 1024        # 재개 가능 업로드 조각은 256 KiB 배수(API 규약)
 MB = 1024 * 1024
 RETRY_STATUS: frozenset[int] = frozenset({500, 502, 503, 504})
-META_KEYS: frozenset[str] = frozenset({"tags", "made_for_kids", "contains_synthetic_media", "category_id", "caption", "thumbnail", "video"})
+META_KEYS: frozenset[str] = frozenset({"tags", "made_for_kids", "contains_synthetic_media", "category_id", "caption", "thumbnail", "video",
+                                       "auto_publish", "instagram"})   # auto_publish·instagram: 자동 대상 지정(publish/instagram.py 와 공용)
 TOKEN_EXPIRED_HINT = ("리프레시 토큰이 만료되거나 철회되었습니다(invalid_grant). OAuth 앱이 '테스트 중'이면 7일마다 만료됩니다. "
                       "앱을 프로덕션으로 게시한 뒤 `python -m publish.oauth` 로 새 토큰을 받아 YT_REFRESH_TOKEN 을 바꾸십시오(docs/YOUTUBE_AUTO_UPLOAD.md).")
 
@@ -145,6 +146,7 @@ class Config:
     chunk_mb: int = 8
     timeout_sec: float = 120
     tries: int = 5
+    auto_from_number: int = 22         # push 자동 실행(--auto)은 이 번호 이상 새 편만. 01~21 은 손으로 올린 편이 섞여 있음
     processing_wait_sec: float = 1200  # 쇼츠 맞춤 썸네일은 처리 완료 뒤에만 적용된다 — 처리 완료를 이만큼 기다린다
     processing_poll_sec: float = 15
     schema_version: int = 1
@@ -205,7 +207,7 @@ def load_meta(dir_: Path) -> dict[str, Any]:
     unknown = set(meta) - META_KEYS
     if unknown:
         raise UploadError(f"{p}: 모르는 키 {', '.join(sorted(unknown))} — 허용: {', '.join(sorted(META_KEYS))}")
-    for key in ("made_for_kids", "contains_synthetic_media", "caption", "thumbnail"):
+    for key in ("made_for_kids", "contains_synthetic_media", "caption", "thumbnail", "auto_publish", "instagram"):
         if key in meta and not isinstance(meta[key], bool):
             raise UploadError(f"{p}: {key} 는 true/false 여야 합니다")
     if "tags" in meta and not (isinstance(meta["tags"], list) and all(isinstance(t, str) for t in meta["tags"])):
@@ -711,13 +713,22 @@ def apply_thumbnail(send: Transport, cfg: Config, token: str, rec: Record, image
 def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport | None = None,
                     env: dict[str, str] | None = None, caption: bool | None = None, thumbnail: bool | None = None,
                     synthetic: bool | None = None, made_for_kids: bool | None = None, not_shorts: bool = False,
-                    allow_reupload: bool = False, sleep: Callable[[float], None] = time.sleep) -> dict[str, Any]:
-    """에피소드 하나. 결과 dict 의 status: uploaded · skipped · dry-run · error."""
+                    allow_reupload: bool = False, sleep: Callable[[float], None] = time.sleep, auto: bool = False) -> dict[str, Any]:
+    """에피소드 하나. 결과 dict 의 status: uploaded · skipped · dry-run · error.
+
+    auto=True(push 자동 실행): 번호가 cfg.auto_from_number 이상이거나 meta.json auto_publish=true 인 편만 처리한다.
+    01~21 은 손으로 올린 편이 섞여 있어, 폴더를 고친 PR 이 병합돼도 다시 올라가지 않게 한다(2026-11-07)."""
     res: dict[str, Any] = {"dir": _rel(dir_), "status": "error", "warnings": []}
     try:
         ep = load_episode(dir_, caption=cfg.upload_captions if caption is None else caption,
                           thumbnail=cfg.upload_thumbnail if thumbnail is None else thumbnail)
         res.update(number=ep.number, slug=ep.slug)
+        if auto and not (ep.meta.get("auto_publish") is True or (ep.number is not None and ep.number >= cfg.auto_from_number)):
+            res["status"] = "skipped"
+            res["warnings"].append(f"자동 대상 아님(번호 {ep.number} < {cfg.auto_from_number}, meta.json auto_publish 없음) — "
+                                   "옛 편은 수동 실행(episode 지정)으로만 올립니다")
+            _log(f"{_rel(dir_)}: {res['warnings'][-1]}")
+            return res
         meta = build_metadata(ep, cfg, synthetic=synthetic, made_for_kids=made_for_kids)
         res["title"] = meta.title
         errs = validate_metadata(meta)
@@ -887,6 +898,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--made-for-kids", choices=("yes", "no"), help="아동용 자가 선언(기본 config/meta.json)")
     ap.add_argument("--not-shorts", action="store_true", help="쇼츠 규격(세로·길이)에 어긋나도 일반 영상으로 올린다")
     ap.add_argument("--allow-reupload", action="store_true", help="기록이 있는데 영상이 바뀐 경우에도 새로 올린다")
+    ap.add_argument("--auto", action="store_true", help="push 자동 실행: auto_from_number 이상(또는 meta.json auto_publish) 편만")
     ap.add_argument("--env-file", type=Path, help="KEY=VALUE 파일(.env)에서 비밀값을 읽는다")
     ap.add_argument("--report", type=Path, help="결과 JSON 을 이 파일에도 쓴다(GitHub Actions 용)")
     a = ap.parse_args(argv)
@@ -925,7 +937,7 @@ def main(argv: list[str] | None = None) -> int:
             results = [process_episode(d, cfg, dry_run=a.dry_run, caption=caption, thumbnail=False if a.no_thumbnail else None,
                                        synthetic=None if a.synthetic_media is None else a.synthetic_media == "yes",
                                        made_for_kids=None if a.made_for_kids is None else a.made_for_kids == "yes",
-                                       not_shorts=a.not_shorts, allow_reupload=a.allow_reupload, env=env) for d in dirs]
+                                       not_shorts=a.not_shorts, allow_reupload=a.allow_reupload, env=env, auto=a.auto) for d in dirs]
             counts = {s: sum(1 for r in results if r["status"] == s) for s in ("uploaded", "skipped", "dry-run", "error")}
             out = {"ok": counts["error"] == 0, "counts": counts, "results": results}
             if not dirs:
