@@ -43,7 +43,10 @@ GitHub Secrets 에 오래 두는 토큰이 새면 채널 영상을 지울 수 �
 수동 실행 버튼 대신 **운영 경로 그대로** 시험했다. PR #14 에 `finals/04-wavelength/README.md` 업로드 안내 한 줄을 넣고, 사용자 "병합해" 로 병합 → push 가 `youtube-upload` 를 일으켰다(실행 42348411418, 성공).
 - 대상 결정: `changed_finals.py` 가 04편 하나만 골랐다.
 - 채널 확인: `과학쑛츠 (UCZJSpmlBYUthLg0PSWcbU6w)` — 잠긴 `channel_id` 와 일치.
-- 영상: **`dbnYxnEgtpo`** 비공개, 21.9MB 를 약 3초에 올림. 썸네일 `thumbnail.jpg` 설정 성공(맞춤 썸네일 권한 있음).
+- 영상: **`dbnYxnEgtpo`** 비공개, 21.9MB 를 약 3초에 올림.
+- **썸네일은 적용되지 않았다.** `thumbnails.set` 은 200 으로 받아들였지만, 사용자가 스튜디오에서 중간 장면이 썸네일인 것을 확인했다("썸네일은 영상의 맨 첫 프레임을 그냥 쓰기로 했는데, 영상 중간의 장면이 썸네일로 지정 되어 있네?"). 원인: 업로드 4초 뒤, 영상 처리가 끝나기 전에 지정했다. 공식 문서(thumbnails.set)는 쇼츠의 맞춤 썸네일을 `processingStatus = succeeded` 뒤에 지정하라고 하며, 그 전이면 적용되지 않을 수 있다고 적는다.
+- 고침: 업로드 뒤 처리 완료를 기다려(`videos.list part=processingDetails`, 15초 간격, 최대 1200초) 썸네일을 지정한다. 기록에 `thumbnail_after_processing`·`thumbnail_set_at` 을 남긴다. 그 값이 true 가 아닌 옛 기록은 같은 편을 다시 실행하면 영상은 두고 썸네일만 다시 지정한다. 04편은 README 의 업로드 안내를 고쳐 병합 push 로 다시 지정한다.
+- 아직 모름: 처리 완료 뒤 지정한 API 썸네일이 쇼츠에서 실제로 보이는지. 안 보이면 유튜브 휴대전화 앱에서 첫 프레임을 고른다(썸네일 = 0초 프레임이라 결과가 같다).
 - 기록 `finals/04-wavelength/youtube_upload.json` 이 봇 커밋(29bcf29, `[skip ci]`)으로 main 에 들어갔다. 이슈 #15 "공개 전환 대기" 생성.
 - 외부 확인: oEmbed 가 403(공개 아님)을 돌려준다. 로그의 비밀값은 `***` 로 가려졌다.
 - 고친 것: 결과 요약 표에서 제목의 `|` 가 칸을 나누던 문제(`youtube_report.py` 의 `cell()`).

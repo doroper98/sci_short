@@ -100,8 +100,9 @@ class FakeApi:
     """토큰 → 채널 → 업로드 세션 → 조각 PUT(첫 조각 308) → 썸네일 → 자막. 호출 순서와 본문을 기록한다."""
 
     def __init__(self, *, channel_id: str = "UC1", fail_put_once: bool = False, caption_fail: bool = False,
-                 thumb_fail: bool = False) -> None:
+                 thumb_fail: bool = False, processing: list[str] | None = None) -> None:
         self.calls: list[str] = []
+        self.processing = list(processing or ["succeeded"])   # videos.list 가 차례로 돌려줄 processingStatus(마지막 값 유지)
         self.bodies: dict[str, bytes] = {}
         self.channel_id = channel_id
         self.fail_put_once = fail_put_once
@@ -119,6 +120,11 @@ class FakeApi:
             self.calls.append("channel")
             assert headers["Authorization"] == "Bearer AT"
             return yu.Response(200, {}, json.dumps({"items": [{"id": self.channel_id, "snippet": {"title": "과학 채널"}}]}).encode())
+        if url.startswith(yu.VIDEOS_URL):
+            self.calls.append("processing")
+            assert method == "GET" and "part=processingDetails" in url and "id=VID123" in url
+            st = self.processing.pop(0) if len(self.processing) > 1 else self.processing[0]
+            return yu.Response(200, {}, json.dumps({"items": [{"id": "VID123", "processingDetails": {"processingStatus": st}}]}).encode())
         if url.startswith(yu.THUMBNAILS_URL):
             self.calls.append("thumbnail")
             self.bodies["thumbnail"] = data or b""
@@ -336,7 +342,8 @@ class UploadFlowTest(unittest.TestCase):
             ep = _episode(Path(d), video=b"\1" * (3 * yu.MB // 2))   # 1 MB 조각 × 2
             res = yu.process_episode(ep, _cfg(channel_id="UC1"), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
             self.assertEqual(res["status"], "uploaded", res)
-            self.assertEqual(api.calls, ["token", "channel", "start", "put", "put", "thumbnail"])   # 자막은 기본 안 올림
+            # 썸네일은 영상 처리 완료를 확인한 뒤에 지정한다(쇼츠 조건). 자막은 기본 안 올림
+            self.assertEqual(api.calls, ["token", "channel", "start", "put", "put", "processing", "thumbnail"])
             start_body = json.loads(api.bodies["start"])
             self.assertEqual(start_body["status"], {"privacyStatus": "private", "selfDeclaredMadeForKids": False,
                                                     "containsSyntheticMedia": True})
@@ -349,6 +356,78 @@ class UploadFlowTest(unittest.TestCase):
             self.assertEqual((rec.number, rec.slug, rec.source, rec.thumbnail_file), (1, "gravitational-waves", "api", "thumbnail.jpg"))
             self.assertEqual(rec.url, "https://youtu.be/VID123")
             self.assertEqual(rec.video_md5, yu.md5_file(ep / "gravitational-waves.mp4"))
+            self.assertTrue(rec.thumbnail_after_processing)
+            self.assertIsNotNone(rec.thumbnail_set_at)
+
+    def test_thumbnail_waits_until_processing_succeeded(self) -> None:
+        api = FakeApi(processing=["uploaded", "processing", "processing", "succeeded"])
+        slept: list[float] = []
+        with tempfile.TemporaryDirectory() as d:
+            ep = _episode(Path(d))
+            res = yu.process_episode(ep, _cfg(), dry_run=False, send=api, env=ENV, sleep=slept.append)
+            self.assertEqual(res["status"], "uploaded", res)
+            self.assertEqual(api.calls[-5:], ["processing"] * 4 + ["thumbnail"])
+            self.assertEqual(slept, [15, 15, 15])
+
+    def test_processing_timeout_keeps_video_and_warns(self) -> None:
+        api = FakeApi(processing=["processing"])
+        with tempfile.TemporaryDirectory() as d:
+            ep = _episode(Path(d))
+            res = yu.process_episode(ep, _cfg(processing_wait_sec=60, processing_poll_sec=15), dry_run=False,
+                                     send=api, env=ENV, sleep=lambda s: None)
+            self.assertEqual(res["status"], "uploaded")
+            self.assertNotIn("thumbnail", api.calls)
+            self.assertEqual(api.calls.count("processing"), 5)    # 0·15·30·45·60초
+            rec = yu.read_record(ep)
+            self.assertIn("초과", rec.thumbnail_error)
+            self.assertFalse(rec.thumbnail_after_processing)
+            self.assertTrue(any("다시 실행하면 다시 시도" in w for w in res["warnings"]))
+
+    def test_processing_failed_is_reported(self) -> None:
+        api = FakeApi(processing=["failed"])
+        with tempfile.TemporaryDirectory() as d:
+            ep = _episode(Path(d))
+            res = yu.process_episode(ep, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+            self.assertEqual(res["status"], "uploaded")
+            self.assertIn("처리 failed", yu.read_record(ep).thumbnail_error)
+
+    def test_old_record_gets_thumbnail_reapplied_without_reupload(self) -> None:
+        """2026-11-07 04편: 처리 전에 썸네일을 지정한 옛 기록. 다시 실행하면 영상은 두고 썸네일만 다시 지정한다."""
+        api = FakeApi()
+        with tempfile.TemporaryDirectory() as d:
+            ep = _episode(Path(d))
+            yu.process_episode(ep, _cfg(channel_id="UC1"), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+            raw = json.loads((ep / yu.RECORD_NAME).read_text(encoding="utf-8"))
+            for k in ("thumbnail_after_processing", "thumbnail_set_at"):
+                raw.pop(k)                                             # 옛 스키마 그대로
+            (ep / yu.RECORD_NAME).write_text(json.dumps(raw, ensure_ascii=False), encoding="utf-8")
+            dry = yu.process_episode(ep, _cfg(channel_id="UC1"), dry_run=True, send=api, env={}, sleep=lambda s: None)
+            self.assertEqual(dry["status"], "skipped")
+            self.assertTrue(any("다시 지정해야" in w for w in dry["warnings"]))
+            api.calls.clear()
+            res = yu.process_episode(ep, _cfg(channel_id="UC1"), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+            self.assertEqual(res["status"], "skipped", res)
+            self.assertTrue(res["thumbnail_repaired"])
+            self.assertEqual(api.calls, ["token", "channel", "processing", "thumbnail"])   # 영상 업로드 없음
+            rec = yu.read_record(ep)
+            self.assertTrue(rec.thumbnail_after_processing)
+            self.assertEqual(rec.video_id, "VID123")
+            api.calls.clear()
+            again = yu.process_episode(ep, _cfg(channel_id="UC1"), dry_run=False, send=api, env={}, sleep=lambda s: None)
+            self.assertEqual((again["status"], api.calls), ("skipped", []))  # 고친 뒤에는 네트워크도 쓰지 않는다
+
+    def test_thumbnail_reapply_refuses_other_channel(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            ep = _episode(Path(d))
+            yu.process_episode(ep, _cfg(), dry_run=False, send=FakeApi(), env=ENV, sleep=lambda s: None)
+            rec = yu.read_record(ep)
+            rec.thumbnail_after_processing = None
+            yu.write_record(ep, rec)
+            other = FakeApi(channel_id="UC_OTHER")
+            res = yu.process_episode(ep, _cfg(), dry_run=False, send=other, env=ENV, sleep=lambda s: None)
+            self.assertEqual(res["status"], "skipped")
+            self.assertNotIn("thumbnail", other.calls)
+            self.assertTrue(any("다시 지정 못 함" in w for w in res["warnings"]))
 
     def test_caption_opt_in(self) -> None:
         api = FakeApi()
