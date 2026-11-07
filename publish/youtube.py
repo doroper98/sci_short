@@ -466,7 +466,7 @@ def _api_error(r: Response, what: str) -> UploadError:
     if {"quotaExceeded", "uploadLimitExceeded", "rateLimitExceeded"} & set(reasons):
         hint = " — 하루 할당량 소진. 태평양 시간 자정(한국 오후 4~5시) 이후 다시"
     elif r.status == 401:
-        hint = " — 액세스 토큰 거부. 범위(scope)에 youtube.upload·youtube.force-ssl 이 있는지 확인"
+        hint = " — 액세스 토큰 거부. 토큰 범위에 youtube.upload·youtube.readonly 가 있는지 확인"
     elif r.status == 403 and "insufficientPermissions" in reasons:
         hint = " — 토큰 범위 부족. python -m publish.oauth 로 다시 받으십시오"
     return UploadError(f"{what} 실패 HTTP {r.status} {','.join(x for x in reasons if x)} {msg}{hint}".strip())
@@ -563,7 +563,12 @@ def upload_caption(send: Transport, cfg: Config, token: str, video_id: str, srt:
     url = CAPTIONS_URL + "?" + urllib.parse.urlencode({"uploadType": "multipart", "part": "snippet"})
     r = send("POST", url, {"Authorization": f"Bearer {token}", "Content-Type": f"multipart/related; boundary={boundary}"}, body)
     if r.status != 200:
-        raise _api_error(r, "자막 업로드")
+        err = _api_error(r, "자막 업로드")
+        if r.status in (401, 403):
+            raise UploadError(f"{err} — 자막 업로드에는 youtube.force-ssl 권한이 필요한데, 이 체계는 그 권한을 "
+                              "받지 않습니다(영상 삭제까지 포함하는 권한이라 최소 권한 원칙으로 뺐습니다). "
+                              "자막은 화면에 새겨져 있어 기본적으로 올리지 않습니다. docs/YOUTUBE_AUTO_UPLOAD.md '권한'")
+        raise err
     cid = r.json().get("id")
     if not cid:
         raise UploadError("자막 응답에 id 가 없습니다")
