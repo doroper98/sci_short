@@ -6,11 +6,14 @@
 //    θ_amb rising slowly in the troposphere and steeply above the tropopause row JT (≈ 9.6 km) → the cap spreads there.
 //    Vorticity confinement, small viscosity and diffusion; MacCormack scalar advection. The same solver drives the
 //    volcano (continuous vent source), the wildfire (wide ground heat) and the ink drop (heavy blob, gravity reversed).
-//  - Rendering: line-of-sight projection of the axisymmetric fields (Projector) → optical depth; light marched toward a
-//    low sun on the right (self-shadowing), sky ambient from above, heat-weighted emission → incandescent ramp, bloom.
-//    Fine "billow" detail is value-noise drifting with the cloud (texture only, not physics).
-//  - Scale: 1 cell = 64 m (radius 128 cells = 8.2 km, height 256 rows = 16.4 km). Time: 1 step ≈ 0.6 s of real time
-//    (the cloud reaches ~10 km in ~250 steps ≈ 2.5 min; screen shows it in ~13 s → "약 12배 빠르게").
+//  - Rendering (v2): line-of-sight projection of the axisymmetric fields (Projector) → optical depth, Catmull-Rom
+//    upsampled to near screen resolution. Outline = blurred presence mask crossing a threshold set by the billow height
+//    (dome tops bulge out, creases cut in); billows = packed Worley domes anchored to the rising centroid that "boil"
+//    (old domes sink, new rise). Light: dome-height normals, 6-step march toward a low sun on the right (self-shadow),
+//    cool sky ambient from above, warm under-light from the stem/ground below; heat-weighted emission → incandescent
+//    ramp, bloom. Billows are texture only, not physics.
+//  - Scale: main cloud 192 × 384 cells, 1 cell ≈ 43 m (height 16.4 km); volcano/wildfire 128 × 256, 1 cell = 64 m.
+//    Time: 1 step ≈ 1.5 s of real time (top passes ~10 km near step 180 ≈ 4.5 min; the hook shows it ≈ 22× faster).
 //  - Shock wave (myth): an analytic hemispherical front, drawn ahead of the fireball; not part of the fluid model.
 //  - Sound: node episodes/mushroom-cloud/scenes.mjs --emit-sound writes sound.json from the same model and plan.
 import fs from 'node:fs'; import path from 'node:path'; import {fileURLToPath, pathToFileURL} from 'node:url'; import {createRequire} from 'node:module';
@@ -43,7 +46,7 @@ const bubbleInit = (f, {r0, cy, dth, smoke = 1, dust = 0.25, dustR = 90, dustRow
 // The main cloud runs on a 1.5× finer grid than the first version: same physical domain (8.2 km × 16.4 km) and time step,
 // so speeds in cells/step and the buoyancy coefficient scale by 1.5 and the stratification per cell by 1/1.5.
 const CFG = {
-  main: {axi: true, nx: NXM, ny: NYM, B: 0.003, eps: 0.06, visc: 0.1, kappa: 0.03, kappaD: 0.05, axisDamp: 0.25, g1: 0.02 / 1.5, g2: 0.4, jt: JTM, ground: 0.95, tracers: 2400, sor: 50, mat: 36,
+  main: {axi: true, nx: NXM, ny: NYM, B: 0.003, eps: 0.06, visc: 0.1, kappa: 0.03, kappaD: 0.05, axisDamp: 0.25, g1: 0.02 / 1.5, g2: 0.4, jt: JTM, ground: 0.95, tracers: 2400, sor: 50,
     init: f => bubbleInit(f, {r0: 37.5, cy: 30, dth: 16, dust: 0.45, dustR: 150, dustRows: 3}),
     sources(f) { for (let i = 0; i < f.nx; i++) f.d[i] = Math.min(1.6, f.d[i] + 0.06 * Math.abs(f.u[i])); },
     initTracers(f) {
@@ -78,15 +81,23 @@ export const sim = name => (SIMS[name] ||= new Fluid(CFG[name]));
 const PJS = {};
 const projector = (nx, ny) => (PJS[nx + 'x' + ny] ||= new Projector(nx, ny));
 const PROJ = {};
-/** projected fields of a sim at its current step (cached per sim + step) */
-function projected(name) {
+/** projected fields of a sim at its current step (cached per sim + step); rows without material are skipped,
+ *  the heat projection is only made when asked for (glowing scenes) */
+function projected(name, needHeat = false) {
   const f = sim(name), n2 = 2 * f.nx * f.ny;
-  const c = (PROJ[name] ||= {step: -1, S: new Float32Array(n2), D: new Float32Array(n2), H: new Float32Array(n2), tmp: new Float32Array(f.nx * f.ny)});
-  if (c.step === f.stepNo) return c;
+  const c = (PROJ[name] ||= {step: -1, hstep: -1, S: new Float32Array(n2), D: new Float32Array(n2), H: new Float32Array(n2), tmp: new Float32Array(f.nx * f.ny), j0: 0, j1: 0});
   const PJ = projector(f.nx, f.ny);
-  PJ.run(f.s, c.S); PJ.run(f.d, c.D);
-  for (let j = 0; j < f.ny; j++) { const amb = f.ambAt(j + 0.5); for (let i = 0; i < f.nx; i++) { const k = i + j * f.nx; c.tmp[k] = f.s[k] * Math.max(0, f.th[k] - amb); } }
-  PJ.run(c.tmp, c.H); c.step = f.stepNo;
+  if (c.step !== f.stepNo) {
+    let j0 = f.ny, j1 = -1;
+    for (let j = 0; j < f.ny; j++) { const o = j * f.nx; for (let i = 0; i < f.nx; i++) if (f.s[o + i] > 1e-3 || f.d[o + i] > 1e-3) { if (j < j0) j0 = j; j1 = j; break; } }
+    if (j1 < 0) { j0 = 0; j1 = 0; }
+    c.j0 = j0; c.j1 = j1;
+    PJ.run(f.s, c.S, j0, j1); PJ.run(f.d, c.D, j0, j1); c.step = f.stepNo;
+  }
+  if (needHeat && c.hstep !== f.stepNo) {
+    for (let j = c.j0; j <= c.j1; j++) { const amb = f.ambAt(j + 0.5); for (let i = 0; i < f.nx; i++) { const k = i + j * f.nx; c.tmp[k] = f.s[k] * Math.max(0, f.th[k] - amb); } }
+    PJ.run(c.tmp, c.H, c.j0, c.j1); c.hstep = f.stepNo;
+  }
   return c;
 }
 
@@ -154,7 +165,7 @@ const BUFS = {};
 function bufs(W2, H, UP) {
   const key = `${W2}x${H}x${UP}`; if (BUFS[key]) return BUFS[key];
   const BW = W2 * UP, BH = H * UP, n = BW * BH;
-  const o = {BW, BH, UP, W2, H, s: new Float32Array(n), d: new Float32Array(n), h: new Float32Array(n), rho: new Float32Array(n), al: new Float32Array(n),
+  const o = {BW, BH, UP, W2, H, s: new Float32Array(n), d: new Float32Array(n), h: new Float32Array(n), rho: new Float32Array(n), al: new Float32Array(n), hg: new Float32Array(n), bb: new Float32Array(n), t0: new Float32Array(n), tb: new Float32Array(n), t1: new Float32Array(n), m0: new Float32Array(n), mb: new Float32Array(n),
     tmp: new Float32Array(H * BW), mar: new Float32Array(W2 * H), maz: new Float32Array(W2 * H), mbr: new Float32Array(W2 * H), mbz: new Float32Array(W2 * H),
     cv: createCanvas(BW, BH), em: createCanvas(BW, BH), bl: createCanvas(BW >> 1, BH >> 1)};
   o.cc = o.cv.getContext('2d'); o.ec = o.em.getContext('2d'); o.bc = o.bl.getContext('2d'); o.img = o.cc.createImageData(BW, BH); o.eimg = o.ec.createImageData(BW, BH);
@@ -175,50 +186,80 @@ function upsample(B, F, dst, bx0, bx1, by0, by1, j0, j1) {
   for (let by = by0; by < by1; by++) { const q = (BH - 1 - by) * 4, r0 = YI[q] * BW, r1 = YI[q + 1] * BW, r2 = YI[q + 2] * BW, r3 = YI[q + 3] * BW, w0 = YW[q], w1 = YW[q + 1], w2 = YW[q + 2], w3 = YW[q + 3], o = by * BW;
     for (let bx = bx0; bx < bx1; bx++) { const v = tmp[r0 + bx] * w0 + tmp[r1 + bx] * w1 + tmp[r2 + bx] * w2 + tmp[r3 + bx] * w3; dst[o + bx] = v > 0 ? v : 0; } }
 }
-/** billow (|noise|-style) lobes: rounded bumps with creases between them */
-const billow = (x, y) => { let a = 0;
-  a += 0.55 * (1 - Math.abs(2 * vnoise(x, y) - 1));
-  a += 0.30 * (1 - Math.abs(2 * vnoise(x * 2.03 + 17.3, y * 2.03 - 5.1) - 1));
-  a += 0.15 * (1 - Math.abs(2 * vnoise(x * 4.1 - 9.7, y * 4.1 + 31.2) - 1));
-  return a; };
-const STYLE0 = {kS: 0.22, kD: 0.26, albS: [0.88, 0.82, 0.76], albD: [0.68, 0.52, 0.39], amb: [0.34, 0.36, 0.56], sun: [1.7, 1.1, 0.72], under: [0.75, 0.42, 0.24], underI: 1,
-  L: [0.86, -0.5], lz: 0.55, lightK: 0.09, aoK: 0.07, ubK: 0.12, relief: 1.7, edge0: 0.06, edge1: 0.5, billowAmp: 1.5, billowFreq: null,
+/** packed domes (cellular / Worley): each cell holds one jittered dome; the field is the highest dome over a point.
+ *  Two scales give cauliflower lobes: round tops, creases between them. */
+const DT = 256, DS = 16, DOME = (() => {   // per (cell, seed): jittered centre, radius², height
+  const n = DT * DT * DS, px = new Float32Array(n), py = new Float32Array(n), r2 = new Float32Array(n), hgt = new Float32Array(n);
+  const hh = (i, j, s) => { const a = Math.sin(i * 127.1 + j * 311.7 + s * 74.7) * 43758.5453; return a - Math.floor(a); };
+  for (let sd = 0; sd < DS; sd++) for (let j = 0; j < DT; j++) for (let i = 0; i < DT; i++) { const k = i + j * DT + sd * DT * DT;
+    px[k] = 0.15 + 0.7 * hh(i, j, sd); py[k] = 0.15 + 0.7 * hh(i, j, sd + 1.7); const r = 0.82 + 0.3 * hh(i, j, sd + 3.1); r2[k] = r * r; hgt[k] = 0.75 + 0.25 * hh(i, j, sd + 5.3); }
+  return {px, py, r2, hgt};
+})();
+function domes(x, y, seed) {
+  const xi = Math.floor(x), yi = Math.floor(y), so = (((seed % DS) + DS) % DS) * DT * DT, {px, py, r2, hgt} = DOME; let best = 0;
+  for (let dj = -1; dj <= 1; dj++) { const j = yi + dj, jo = (j & (DT - 1)) * DT + so;
+    for (let di = -1; di <= 1; di++) { const i = xi + di, k = (i & (DT - 1)) + jo, dx = x - i - px[k], dy = y - j - py[k], d2 = (dx * dx + dy * dy) / r2[k];
+      if (d2 < 1) { const v = Math.sqrt(1 - d2) * hgt[k]; if (v > best) best = v; } } }
+  return best;
+}
+const billow = (x, y, seed = 0) => 0.68 * domes(x, y, seed) + 0.32 * domes(x * 2.3 + 7.1, y * 2.3 - 3.9, seed + 7);
+const STYLE0 = {kS: 0.22, kD: 0.26, albS: [0.88, 0.82, 0.76], albD: [0.68, 0.52, 0.39], amb: [0.44, 0.44, 0.66], sun: [1.7, 1.1, 0.72], under: [0.75, 0.42, 0.24], underI: 1,
+  L: [0.86, -0.5], lz: 0.62, lightK: 0.022, aoK: 0.05, ubK: 0.08, relief: 18, edge0: 0.3, edge1: 0.42, satK: 0.35, covBase: 0.43, covLobe: 1.05, blurCells: 6, maskLo: 0.02, maskW: 0.2, maskCells: 4, thrHi: 0.8, thrLo: 0.12, thrW: 0.08, opK: 2.5, billowAmp: 1.2, billowFreq: null, lobe: 1.0, warp: 3.2, boilSteps: 45,
   glowAge: 60, emitFloor: 0, emitRows: 1e9, emit: 1, heatMax: 9, cond: null, drift: 0};
 /** draw sim `name` (at its current step): axis at x = cx, ground (row 0) at y = gy, ppc screen px per cell */
 function drawCloud(stage, name, {cx, gy, ppc, alpha = 1, ...st} = {}) {
-  const S = {...STYLE0, ...st}, f = sim(name), P = projected(name), nx = f.nx, H = f.ny, W2 = 2 * nx;
+  const S = {...STYLE0, ...st}, f = sim(name), nx = f.nx, H = f.ny, W2 = 2 * nx, glowK = S.emit * (Math.exp(-f.stepNo / S.glowAge) + S.emitFloor), P = projected(name, glowK > 0.01);
   const UP = clamp(Math.round(ppc * 0.75), 2, 4), B = bufs(W2, H, UP), {BW, BH} = B;
   // material box (grid), then buffer box
   let jmin = H, jmax = -1, cmin = W2, cmax = -1;
   for (let j = 0; j < H; j++) { const o = j * W2; for (let x = 0; x < W2; x++) if (P.S[o + x] + P.D[o + x] > 0.02) { if (j < jmin) jmin = j; if (j > jmax) jmax = j; if (x < cmin) cmin = x; if (x > cmax) cmax = x; } }
   if (jmax < 0) return;
-  jmin = Math.max(0, jmin - 3); jmax = Math.min(H - 1, jmax + 3); cmin = Math.max(0, cmin - 3); cmax = Math.min(W2 - 1, cmax + 3);
+  const pad = Math.ceil(S.blurCells + S.warp) + 5;   // the blurred, warped outline reaches past the material; do not clip it
+  jmin = Math.max(0, jmin - pad); jmax = Math.min(H - 1, jmax + pad); cmin = Math.max(0, cmin - pad); cmax = Math.min(W2 - 1, cmax + pad);
   const by0 = Math.max(0, (H - 1 - jmax) * UP), by1 = Math.min(BH, (H - jmin) * UP), bx0 = Math.max(0, cmin * UP), bx1 = Math.min(BW, (cmax + 1) * UP);
   const J0 = Math.max(0, jmin - 2), J1 = Math.min(H - 1, jmax + 2);
   upsample(B, P.S, B.s, bx0, bx1, by0, by1, J0, J1); upsample(B, P.D, B.d, bx0, bx1, by0, by1, J0, J1);
-  const glowK = S.emit * (Math.exp(-f.stepNo / S.glowAge) + S.emitFloor);
   if (glowK > 0.01) upsample(B, P.H, B.h, bx0, bx1, by0, by1, J0, J1);
-  // material coordinates of the slice r = |X| (mirrored); without them (mat = 0) the lobes are anchored to the grid with a drift
-  const mat = !!f.cfg.mat, [wa, wb] = mat ? f.matWeights() : [1, 0];
-  if (mat) for (let j = J0; j <= J1; j++) for (let x = cmin; x <= cmax; x++) { const i = x < nx ? nx - 1 - x : x - nx, k = i + j * nx, q = x + j * W2;
-    B.mar[q] = f.ar[k]; B.maz[q] = f.az[k]; B.mbr[q] = f.br[k]; B.mbz[q] = f.bz[k]; }
-  const bil = (A, X, Y) => { let x = X - 0.5, y = Y - 0.5; x = x < 0 ? 0 : x > W2 - 1.001 ? W2 - 1.001 : x; y = y < 0 ? 0 : y > H - 1.001 ? H - 1.001 : y;
-    const i = x | 0, j = y | 0, a = x - i, b = y - j, k = i + j * W2; return (A[k] * (1 - a) + A[k + 1] * a) * (1 - b) + (A[k + W2] * (1 - a) + A[k + W2 + 1] * a) * b; };
-  const fq = S.billowFreq ?? (nx >= 192 ? 0.075 : 0.11), {rho, al} = B, e0 = S.edge0, e1 = S.edge1;
+  // billow lobes: anchored to the cloud's rising centroid (they ride up with it) and "boiling" — cross-dissolving between
+  // independent noise seeds over time; a domain warp makes the silhouette lumpy. Texture only, not physics.
+  const cr = S.anchor === false ? 0 : centroidRow(name), ph = f.stepNo / S.boilSteps, p0 = Math.floor(ph), fr = smooth((ph - p0 - 0.5) / 0.5);
+  const o0x = rand(p0 * 3.1) * 400, o0y = rand(p0 * 7.7) * 400, o1x = rand((p0 + 1) * 3.1) * 400, o1y = rand((p0 + 1) * 7.7) * 400;
+  const w0 = Math.min(1, 2 * (1 - fr)), w1 = Math.min(1, 2 * fr), fq = S.billowFreq ?? (nx >= 192 ? 0.062 : 0.09), {rho, al} = B, e0 = S.edge0, e1 = S.edge1, wpx = S.warp * UP;
+  // lookups stay inside this draw's box: outside it the shared buffers still hold an earlier frame's data
+  const xL = bx0, xH = bx1 - 1.001, yL = by0, yH = by1 - 1.001;
+  const look = (A, x, y) => { x = x < xL ? xL : x > xH ? xH : x; y = y < yL ? yL : y > yH ? yH : y;
+    const i = x | 0, j = y | 0, a = x - i, b = y - j, k = i + j * BW; return (A[k] * (1 - a) + A[k + 1] * a) * (1 - b) + (A[k + BW] * (1 - a) + A[k + BW + 1] * a) * b; };
+  // thickness field (dust fades out high up), and a box-blurred copy that gives the outline a wide ramp for the lobes to cut into
+  const {t0, tb, t1} = B, R = Math.max(2, Math.round(S.blurCells * UP));
+  for (let by = by0; by < by1; by++) { const Y = (BH - by - 0.5) / UP, o = by * BW, dHi = 1 - 0.85 * smooth((Y - 0.25 * H) / (0.15 * H));
+    for (let bx = bx0; bx < bx1; bx++) t0[o + bx] = S.kS * B.s[o + bx] + S.kD * B.d[o + bx] * dHi; }
+  const box = (src, dst, R) => {
+    for (let by = by0; by < by1; by++) { const o = by * BW; let acc = 0, cnt = 0;   // horizontal box
+      for (let bx = bx0; bx < Math.min(bx1, bx0 + R); bx++) { acc += src[o + bx]; cnt++; }
+      for (let bx = bx0; bx < bx1; bx++) { const ad = bx + R, rm = bx - R - 1; if (ad < bx1) { acc += src[o + ad]; cnt++; } if (rm >= bx0) { acc -= src[o + rm]; cnt--; } t1[o + bx] = acc / cnt; } }
+    for (let bx = bx0; bx < bx1; bx++) { let acc = 0, cnt = 0;                     // vertical box
+      for (let by = by0; by < Math.min(by1, by0 + R); by++) { acc += t1[by * BW + bx]; cnt++; }
+      for (let by = by0; by < by1; by++) { const ad = by + R, rm = by - R - 1; if (ad < by1) { acc += t1[ad * BW + bx]; cnt++; } if (rm >= by0) { acc -= t1[rm * BW + bx]; cnt--; } dst[by * BW + bx] = acc / cnt; } } };
+  // tb: blurred thickness (opacity, relief); mb: blurred presence mask, a distance-like ramp of the same width whatever the
+  // thickness, so the lobes push the outline in and out by several cells even on a dense, flat-topped front
+  const {m0, mb} = B, mL = S.maskLo, mW = S.maskW;
+  for (let by = by0; by < by1; by++) { const o = by * BW; for (let bx = bx0; bx < bx1; bx++) { const q = (t0[o + bx] - mL) / mW; m0[o + bx] = q <= 0 ? 0 : q >= 1 ? 1 : q * q * (3 - 2 * q); } }
+  box(t0, tb, R); box(m0, mb, Math.max(2, Math.round(S.maskCells * UP)));
   for (let by = by0; by < by1; by++) {
-    const Y = (BH - by - 0.5) / UP, o = by * BW;
+    const Y = (BH - by - 0.5) / UP, o = by * BW, y = (Y - cr) * fq;
     for (let bx = bx0; bx < bx1; bx++) {
-      const k = o + bx, t = S.kS * B.s[k] + S.kD * B.d[k];
-      if (t < 0.004) { rho[k] = 0; al[k] = 0; continue; }
-      const X = (bx + 0.5) / UP;
-      let bb;
-      if (mat) {
-        const ra = bil(B.mar, X, Y) * fq, za = bil(B.maz, X, Y) * fq, rb = bil(B.mbr, X, Y) * fq + 37.1, zb = bil(B.mbz, X, Y) * fq - 11.3, side = smooth((X - nx + 6) / 12);
-        const bR = side > 0 ? wa * billow(ra, za) + wb * billow(rb, zb) : 0, bL = side < 1 ? wa * billow(ra + 211.7, za + 53.9) + wb * billow(rb + 211.7, zb + 53.9) : 0;
-        bb = 0.75 * (bL + (bR - bL) * side) + 0.25 * billow((X - nx) * fq * 1.7 + 91.3, Y * fq * 1.7 - 17.9);
-      } else bb = billow((X - nx) * fq + 3.3, (Y - S.drift) * fq);
-      const r = t * (1 - 0.5 * S.billowAmp + S.billowAmp * bb);
-      rho[k] = r; const q = clamp((r - e0) / (e1 - e0)); al[k] = q * q * (3 - 2 * q);
+      const k = o + bx;
+      if (tb[k] < 0.004 && t0[k] < 0.004 && mb[k] < 0.01) { rho[k] = 0; al[k] = 0; B.hg[k] = 0; continue; }
+      const x = ((bx + 0.5) / UP - nx) * fq;
+      const wx = (vnoise(x * 0.55 + 13.7, y * 0.55 + o0y * 0.01) - 0.5) * 2 * wpx, wy = (vnoise(x * 0.55 - 41.3, y * 0.55 + 7.1) - 0.5) * 2 * wpx;
+      const tw = look(tb, bx + wx, by + wy), mw = look(mb, bx + wx, by + wy);
+      // boil: old domes sink while new ones rise (max of the two sets) — a linear cross-fade would ghost double outlines
+      const bb = fr < 0.01 ? billow(x + o0x, y + o0y, p0) : fr > 0.99 ? billow(x + o1x, y + o1y, p0 + 1) : Math.max(w0 * billow(x + o0x, y + o0y, p0), w1 * billow(x + o1x, y + o1y, p0 + 1));
+      // outline = where the mask ramp passes a threshold set by the lobes: dome tops bulge out, creases cut in
+      const tn = tw / (tw + S.satK), thr = S.thrHi - (S.thrHi - S.thrLo) * clamp((bb - 0.25) / 0.7), op = Math.min(1, tn * S.opK);
+      rho[k] = t0[k] * (1 - 0.5 * S.billowAmp + S.billowAmp * bb * bb * 1.6);
+      const q = clamp((mw - thr) / S.thrW + 0.5); al[k] = q * q * (3 - 2 * q) * op;
+      B.hg[k] = 0.3 * tn + S.lobe * bb * tn; B.bb[k] = bb;
     }
   }
   // lighting
@@ -230,18 +271,18 @@ function drawCloud(stage, name, {cx, gy, ppc, alpha = 1, ...st} = {}) {
     const o = by * BW, Y = (BH - by - 0.5) / UP;
     for (let bx = bx0; bx < bx1; bx++) {
       const k = o + bx, a = al[k]; if (a < 0.003) continue;
-      const r0 = rho[k];
-      const gx = (bx + st2 < BW ? rho[k + st2] : r0) - (bx - st2 >= 0 ? rho[k - st2] : r0), gy = (by + st2 < BH ? rho[k + st2 * BW] : r0) - (by - st2 >= 0 ? rho[k - st2 * BW] : r0);
-      let nX = -gx * S.relief, nY = -gy * S.relief, nZ = 1; const nl = Math.hypot(nX, nY, nZ); nX /= nl; nY /= nl; nZ /= nl;
-      const lam = Math.max(0, nX * L3[0] + nY * L3[1] + nZ * L3[2]);
-      let sl = 0; for (let m = 1; m <= 8; m++) { const x = (bx + lx * stL * m) | 0, y = (by + ly * stL * m) | 0; if (x < 0 || x >= BW || y < 0 || y >= BH) break; sl += rho[x + y * BW]; }
-      let sa = 0; for (let m = 1; m <= 5; m++) { const y = by - m * 5 * UP; if (y < 0) break; sa += rho[bx + y * BW]; }
-      let sb = 0; for (let m = 1; m <= 5; m++) { const y = by + m * 5 * UP; if (y >= BH) break; sb += rho[bx + y * BW]; }
-      const Tl = Math.exp(-S.lightK * sl), Ta = Math.exp(-S.aoK * sa), Tb = Math.exp(-S.ubK * sb);
-      const dfr = B.d[k] * S.kD / (S.kS * B.s[k] + S.kD * B.d[k] + 1e-6);
+      const hg = B.hg, h0 = hg[k];
+      const gx = (bx + st2 < bx1 ? hg[k + st2] : h0) - (bx - st2 >= bx0 ? hg[k - st2] : h0), gy = (by + st2 < by1 ? hg[k + st2 * BW] : h0) - (by - st2 >= by0 ? hg[k - st2 * BW] : h0);
+      let nX = -gx * S.relief / UP, nY = -gy * S.relief / UP, nZ = 1; const nl = Math.hypot(nX, nY, nZ); nX /= nl; nY /= nl; nZ /= nl;   // screen y grows downward
+      const lam = Math.max(0, nX * L3[0] + nY * L3[1] + nZ * L3[2]), up = Math.max(0, -nY), down = Math.max(0, nY);
+      let sl = 0; for (let m = 1; m <= 6; m++) { const x = (bx + lx * stL * 1.33 * m) | 0, y = (by + ly * stL * 1.33 * m) | 0; if (x < bx0 || x >= bx1 || y < by0 || y >= by1) break; sl += rho[x + y * BW]; }
+      let sa = 0; for (let m = 1; m <= 5; m++) { const y = by - m * 5 * UP; if (y < by0) break; sa += rho[bx + y * BW]; }
+      let sb = 0; for (let m = 1; m <= 5; m++) { const y = by + m * 5 * UP; if (y >= by1) break; sb += rho[bx + y * BW]; }
+      const Tl = Math.exp(-S.lightK * sl), Ta = Math.exp(-S.aoK * sa), Tb = Math.exp(-S.ubK * sb), crease = 0.84 + 0.16 * B.bb[k];
+      const dfr = B.d[k] * S.kD / (S.kS * B.s[k] + S.kD * B.d[k] + 1e-6) * (1 - 0.8 * smooth((Y - 0.25 * H) / (0.15 * H)));
       let ar = lerp(S.albS[0], S.albD[0], dfr), ag = lerp(S.albS[1], S.albD[1], dfr), ab = lerp(S.albS[2], S.albD[2], dfr);
       if (S.cond) { const c = S.cond(Y) * (1 - dfr); ar = lerp(ar, 1.1, c); ag = lerp(ag, 1.1, c); ab = lerp(ab, 1.18, c); }
-      const sunK = Tl * (0.3 + 0.7 * lam), ambK = 0.22 + 0.78 * Ta, undK = S.underI * Tb * (1 - 0.6 * Ta) * (0.5 + 0.5 * (1 - lam));
+      const sunK = Math.sqrt(Tl) * lam * crease, ambK = (0.35 + 0.65 * Ta) * (0.3 + 0.5 * up + 0.3 * nZ) * crease, undK = S.underI * Tb * (0.25 + 0.75 * down) * (0.7 + 0.3 * (1 - Ta));
       const R = ar * (S.amb[0] * ambK + S.sun[0] * sunK + S.under[0] * undK), G = ag * (S.amb[1] * ambK + S.sun[1] * sunK + S.under[1] * undK), Bc = ab * (S.amb[2] * ambK + S.sun[2] * sunK + S.under[2] * undK);
       const q = k * 4;
       D[q] = Math.min(255, R * 255 * a); D[q + 1] = Math.min(255, G * 255 * a); D[q + 2] = Math.min(255, Bc * 255 * a); D[q + 3] = a * 255;
@@ -258,7 +299,7 @@ function drawCloud(stage, name, {cx, gy, ppc, alpha = 1, ...st} = {}) {
   const sx = w / BW, sy = h / BH;
   c.drawImage(B.cv, bx0, by0, bx1 - bx0, by1 - by0, x0 + bx0 * sx, y0 + by0 * sy, (bx1 - bx0) * sx, (by1 - by0) * sy);
   if (anyEm) {
-    B.ec.putImageData(B.eimg, 0, 0, bx0, by0, bx1 - bx0, by1 - by0);
+    B.ec.clearRect(0, 0, BW, BH); B.ec.putImageData(B.eimg, 0, 0, bx0, by0, bx1 - bx0, by1 - by0);   // whole canvas feeds the bloom: no stale glow
     c.globalCompositeOperation = 'lighter';
     c.drawImage(B.em, bx0, by0, bx1 - bx0, by1 - by0, x0 + bx0 * sx, y0 + by0 * sy, (bx1 - bx0) * sx, (by1 - by0) * sy);
     B.bc.clearRect(0, 0, BW >> 1, BH >> 1); B.bc.filter = `blur(${3 * UP}px)`; B.bc.drawImage(B.em, 0, 0, BW >> 1, BH >> 1); B.bc.filter = 'none';
@@ -272,6 +313,25 @@ function drawCloud(stage, name, {cx, gy, ppc, alpha = 1, ...st} = {}) {
 // Sky, ground, stars
 // =====================================================================================================
 const STARS = (() => { const R = rng(716), s = []; for (let i = 0; i < 260; i++) s.push({x: R() * 1080, y: R(), r: 0.5 + 1.5 * R() ** 3, a: 0.2 + 0.6 * R() ** 2}); return s; })();
+const MESAS = [{x: 150, w: 230, h: 34, far: true}, {x: 820, w: 300, h: 44, far: true}, {x: 1040, w: 160, h: 26, far: false}, {x: -20, w: 170, h: 24, far: false}];
+// wind ripples on the desert floor, in perspective: one overlay that depends only on (y − horizon), built once.
+// depth z = 520/(y − hy), lateral X = (x − 540)·z/900; asymmetric ripple profile (gentle stoss, steep lee) whose lee
+// faces catch the low light; contrast fades where a ripple period gets under ~3 px so the far floor does not alias.
+const RIPPLE = (() => { const W = 1080, RH = 2000, cv = createCanvas(W, RH), c = cv.getContext('2d'), img = c.createImageData(W, RH), D = img.data;
+  for (let r = 1; r < RH; r++) { const z = 520 / r, per = 0.11 * 520 / (z * z), con = smooth((per - 2.6) / 6) * clamp(1.25 - z / 26);
+    for (let x = 0; x < W; x++) { const X = (x - 540) * z / 900, q = (r * W + x) * 4,
+        patch = vnoise(X * 0.35 + 1.7, z * 0.22 + 4.4), dark = 0.2 * smooth((patch - 0.5) / 0.3) * clamp(1.4 - z / 14);
+      let lee = 0, sto = 0;
+      if (con > 0.002) { const pres = smooth((vnoise(X * 0.55 - 3.1, z * 0.16 + 9.2) - 0.3) / 0.35),
+          u = (z + 0.6 * vnoise(X * 0.8 + 5.3, z * 0.3) + 0.18 * vnoise(X * 3.1, z * 1.1) + (0.06 + 0.05 * vnoise(z * 0.2, 2.2)) * X) / (0.1 + 0.03 * vnoise(X * 0.4, z * 0.4)),
+          s = u - Math.floor(u);
+        lee = con * pres * (s > 0.74 ? smooth((s - 0.74) / 0.07) * (1 - smooth((s - 0.92) / 0.08)) : 0);
+        sto = con * pres * (s < 0.74 ? 0.3 + 0.7 * (1 - s / 0.74) : 0); }
+      const lit = lee > 0.6 * sto;
+      if (lit) { D[q] = 255; D[q + 1] = 170; D[q + 2] = 122; D[q + 3] = clamp(0.3 * lee) * 255; }
+      else { D[q] = 8; D[q + 1] = 5; D[q + 2] = 10; D[q + 3] = clamp(0.13 * sto + dark) * 255; } } }
+  c.putImageData(img, 0, 0); return cv; })();
+const STONES = (() => { const R = rng(99), o = []; for (let i = 0; i < 60; i++) o.push({x: (R() - 0.5) * 5, z: 1.2 + R() ** 1.4 * 14, s: 0.008 + 0.02 * R()}); return o.sort((a, b) => b.z - a.z); })();
 const RIDGE = (() => { const pts = []; for (let x = -40; x <= 1120; x += 12) pts.push([x, 0.5 * vnoise(x * 0.008, 3.1) + 0.35 * vnoise(x * 0.03, 9.7) + 0.15 * vnoise(x * 0.09, 1.3)]); return pts; })();
 /** dusk desert: horizon at screen y = hy. o.glow = {x, I} fireball light on the ground/sky */
 function duskSky(stage, hy, o = {}) {
@@ -283,17 +343,28 @@ function duskSky(stage, hy, o = {}) {
   c.globalAlpha = 1;
   // sun glow just below the horizon (right)
   glow(c, 900, hy + 20, 520, '#FF9A50', 0.32 * (o.sun ?? 1));
-  // distant ridge
-  const ridge = RIDGE.map(([x, n]) => [x, hy - 6 - 34 * n]);
-  poly(c, [[-40, hy + 2], ...ridge, [1120, hy + 2]], '#241B38');
-  // ground
+  // distant hills (irregular, hazy), lit edge toward the low sun on the right
+  for (const m of MESAS) {
+    const pts = [[m.x - m.w, hy + 2]];
+    for (let k = 0; k <= 16; k++) { const u = k / 16, x = m.x - m.w + 2 * m.w * u, prof = Math.sin(Math.PI * u) ** 0.6; pts.push([x, hy - m.h * prof * (0.75 + 0.25 * vnoise(x * 0.05 + m.x, 3.3))]); }
+    pts.push([m.x + m.w, hy + 2]);
+    poly(c, pts, m.far ? 'rgba(70,52,104,0.85)' : 'rgba(48,36,74,0.9)');
+  }
+  const ridge = RIDGE.map(([x, n]) => [x, hy - 3 - 12 * n]);
+  poly(c, [[-40, hy + 2], ...ridge, [1120, hy + 2]], '#1E1730');
+  // desert floor in perspective: warm near the horizon, dark in front, ripples and scattered stones that grow toward us
   const gg = c.createLinearGradient(0, hy, 0, H);
-  gg.addColorStop(0, '#5A3A3A'); gg.addColorStop(0.08, '#2C1D24'); gg.addColorStop(0.5, '#140F16'); gg.addColorStop(1, '#09070C');
+  gg.addColorStop(0, '#6A4440'); gg.addColorStop(0.06, '#3E2A2E'); gg.addColorStop(0.35, '#22171E'); gg.addColorStop(1, '#0E0A10');
   c.fillStyle = gg; c.fillRect(0, hy, W, H - hy);
-  // faint ground streaks (perspective)
-  c.globalAlpha = 0.18;
-  for (let k = 0; k < 14; k++) { const y = hy + 8 + (H - hy) * (k / 14) ** 2.2; line(c, [[0, y], [W, y + 2]], k % 2 ? '#3A2A30' : '#2A1E26', 1 + k * 0.25); }
-  c.globalAlpha = 1;
+  // sky reflection sheen near the horizon
+  const sh = c.createLinearGradient(0, hy, 0, hy + 90); sh.addColorStop(0, 'rgba(255,170,110,0.35)'); sh.addColorStop(1, 'rgba(255,170,110,0)'); c.fillStyle = sh; c.fillRect(0, hy, W, 90);
+  if (H - hy > 1) c.drawImage(RIPPLE, 0, 0, 1080, Math.min(2000, H - hy), 0, hy, W, Math.min(2000, H - hy));
+  for (const st of STONES) {
+    const y = hy + 520 / st.z; if (y > H + 30) continue;
+    const x = 540 + st.x * 900 / st.z, sz = st.s * 900 / st.z;
+    c.fillStyle = '#0A070C'; c.beginPath(); c.ellipse(x, y - sz * 0.35, sz, sz * 0.55, 0, Math.PI, TAU); c.fill();
+    c.fillStyle = 'rgba(255,150,100,0.25)'; c.beginPath(); c.ellipse(x + sz * 0.35, y - sz * 0.55, sz * 0.4, sz * 0.18, 0, Math.PI, TAU); c.fill();
+  }
   if (o.glow && o.glow.I > 0) {
     glow(c, o.glow.x, hy, 700, '#FFB060', 0.5 * o.glow.I);
     glow(c, o.glow.x, hy + 40, 420, '#FFD8A0', 0.35 * o.glow.I);
@@ -766,7 +837,7 @@ function fireShot(stage, t, P, sc) {
   const hy = 1600;
   const g = c.createLinearGradient(0, 0, 0, hy); g.addColorStop(0, '#05050E'); g.addColorStop(0.6, '#1C1026'); g.addColorStop(1, '#5A1E14'); c.fillStyle = g; c.fillRect(0, 0, 1080, hy);
   const ppc = smoothCam('fire', t, fitPpc('fire', hy, {yTop: 380, wFrac: 0.95, max: 11}));
-  drawCloud(stage, 'fire', {cx: 540, gy: hy + 4, ppc, kS: 0.26, albS: [0.55, 0.5, 0.48], amb: [0.16, 0.15, 0.24], sun: [1.9, 0.75, 0.32], L: [0.12, 0.99], lightK: 0.06, emit: 0.6, glowAge: 1e9, heatMax: 14, emitRows: 70, drift: step * 0.4,
+  drawCloud(stage, 'fire', {cx: 540, gy: hy + 4, ppc, kS: 0.26, albS: [0.55, 0.5, 0.48], amb: [0.16, 0.15, 0.24], sun: [1.9, 0.75, 0.32], L: [0.12, 0.99], lightK: 0.06, emit: 0.6, glowAge: 1e9, heatMax: 14, emitRows: 70, drift: step * 0.4, billowFreq: 0.15, relief: 34, blurCells: 4, maskCells: 3,
     cond: Y => smooth((Y - 120) / 40) * 0.6});
   // forest silhouette with flames
   c.save(); c.globalCompositeOperation = 'lighter';
@@ -989,4 +1060,3 @@ if (isMain && process.argv.includes('--emit-sound')) {
   console.log(`events: ${sound.events.length}; flash ${plan(tl).flash.toFixed(2)} s, rumble delay ${(OBS_KM * 1000 / 343 / plan(tl).speedup).toFixed(2)} s, speed-up ×${plan(tl).speedup.toFixed(1)}`);
 }
 
-export function __posterTest(stage, k) { sim('main').goto(k); background(stage); duskSky(stage, HY, {glow: {x: 540, I: 0.16}}); drawCloud(stage, 'main', {cx: 540, gy: HY + 6, ppc: fitPpc('main', HY, {yTop: 330, wFrac: 0.9, max: 9}), emit: 0}); }

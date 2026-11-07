@@ -243,11 +243,12 @@ export class Projector {
       this.tab.push({lo: Int32Array.from(lo), fr: Float32Array.from(fr)});
     }
   }
-  run(f, out = new Float32Array(2 * this.nx * this.ny)) {
+  run(f, out = new Float32Array(2 * this.nx * this.ny), j0 = 0, j1 = this.ny - 1) {
     const {nx, ny, tab} = this, W = 2 * nx;
+    if (j0 > 0) out.fill(0, 0, j0 * W); if (j1 < ny - 1) out.fill(0, (j1 + 1) * W);
     for (let a = 0; a < nx; a++) {
       const {lo, fr} = tab[a], m = lo.length;
-      for (let j = 0; j < ny; j++) {
+      for (let j = j0; j <= j1; j++) {
         const o = j * nx; let sum = 0;
         for (let q = 0; q < m; q++) { const i = o + lo[q]; sum += f[i] + (f[i + 1] - f[i]) * fr[q]; }
         sum *= 2; out[nx + a + j * W] = sum; out[nx - 1 - a + j * W] = sum;
