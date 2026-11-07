@@ -1,0 +1,13 @@
+{
+  "_about": "첫 프레임 썸네일 포스터(2026-11-07 소급 적용, pipeline/render/posterintro.mjs). q = 흰 질문, a = 큰 강조색 답, key = 그림 시각·크롭(pipeline/render/thumbnail.mjs 옵션)",
+  "q": "북극성은 영원할까?",
+  "a": "아니, 언젠가는 베가",
+  "accent": "#B9A6FF",
+  "key": {
+    "t": 7,
+    "crop": "190,290,700,980",
+    "cy": 600,
+    "maxh": 900,
+    "hide_text_below": 34
+  }
+}

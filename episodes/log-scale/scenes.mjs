@@ -910,7 +910,7 @@ export const scenes = {
 };
 
 /** Drawn after the scene, before captions. */
-export function overlays(stage, t, ctx) {
+function baseOverlays(stage, t, ctx) {
   const L = titleList(ctx.scene.id, ctx.tl), a = smooth(ctx.scene.p / 0.04) * fadeOut(t, ctx.scene.end - 0.42, 0.37);
   let k = 0; while (k + 1 < L.length && t >= L[k + 1][0]) k++;
   // title change: the old line fades out first, then the new one fades in (no overlapping glyphs)
@@ -1036,3 +1036,8 @@ if (isMain && process.argv.includes('--emit-sound')) {
   console.log(`check: ant/elephant ×${ANT_RATIO.toExponential(2)}; energy/step ×${energyRatio(1).toFixed(1)}; 30→60 dB ×${intensityRatio(30)}; loudness ×${loudRatio(30)}; pH 7→3 ×${hRatio(4)}; 0→120 dB ×${intensityRatio(120).toExponential(0)}; linear 1 mm → ${LINEAR_KM.toExponential(2)} km = ${(LINEAR_KM / MOON_KM).toFixed(2)} × Moon`);
   console.log(`pitch: step 0 ${stepPitch(0).toFixed(1)} Hz … step 4 ${stepPitch(4).toFixed(1)} … step 12 ${stepPitch(12).toFixed(1)} Hz; zoom decades ${P.ruler.decades.map(x => x.toFixed(2)).join(' ')}`);
 }
+
+// First frame = thumbnail (2026-11-07 retrofit, user request): poster 0–0.9 s, morph away 0.9–1.7 s, back at the last
+// sentence. Config and key picture: episodes/log-scale/poster.json, poster-key.jpg (pipeline/render/posterintro.mjs).
+import {posterIntro} from '../../pipeline/render/posterintro.mjs';
+export const overlays = await posterIntro(baseOverlays, {slug: 'log-scale'});

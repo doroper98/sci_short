@@ -29,29 +29,29 @@
 <!-- catalog:start -->
 | 번호 | 제목 | 길이 | 폴더 | 업로드 정보 | 영상 확정일 |
 |---|---|---|---|---|---|
-| 01 | 두 블랙홀의 마지막 춤, 중력파 | 177.3초 | [01-gravitational-waves/](01-gravitational-waves/) | [upload.md](01-gravitational-waves/upload.md) | 2026-10-31 |
-| 02 | LIGO는 어떻게 잴까 — 어둠 속의 작은 밝아짐 | 175.5초 | [02-ligo-how-it-works/](02-ligo-how-it-works/) | [upload.md](02-ligo-how-it-works/upload.md) | 2026-11-01 |
-| 03 | 엘니뇨와 라니냐 — 바람이 물을 밀고, 물이 바람을 만든다 | 178.0초 | [03-el-nino-la-nina/](03-el-nino-la-nina/) | [upload.md](03-el-nino-la-nina/upload.md) | 2026-11-01 |
-| 04 | 파장 — 전파에서 감마선까지, 다른 것은 길이 하나 | 176.6초 | [04-wavelength/](04-wavelength/) | [upload.md](04-wavelength/upload.md) | 2026-11-01 |
-| 05 | 지구를 두른 바람의 띠 — 무역풍·무풍대·편서풍 | 179.0초 | [05-global-winds/](05-global-winds/) | [upload.md](05-global-winds/upload.md) | 2026-11-02 |
-| 06 | 계절은 왜 생길까 — 거리가 아니라 기울기 | 160.0초 | [06-seasons/](06-seasons/) | [upload.md](06-seasons/upload.md) | 2026-11-02 |
-| 07 | 지구 자전축의 느린 원 — 세차운동과 장동 | 173.9초 | [07-precession/](07-precession/) | [upload.md](07-precession/upload.md) | 2026-11-03 |
-| 08 | 한 칸에 열 배 — 지진 규모·데시벨·pH와 로그 | 165.8초 | [08-log-scale/](08-log-scale/) | [upload.md](08-log-scale/upload.md) | 2026-11-03 |
+| 01 | 두 블랙홀의 마지막 춤, 중력파 | 177.3초 | [01-gravitational-waves/](01-gravitational-waves/) | [upload.md](01-gravitational-waves/upload.md) | 2026-11-07 |
+| 02 | LIGO는 어떻게 잴까 — 어둠 속의 작은 밝아짐 | 175.5초 | [02-ligo-how-it-works/](02-ligo-how-it-works/) | [upload.md](02-ligo-how-it-works/upload.md) | 2026-11-07 |
+| 03 | 엘니뇨와 라니냐 — 바람이 물을 밀고, 물이 바람을 만든다 | 178.0초 | [03-el-nino-la-nina/](03-el-nino-la-nina/) | [upload.md](03-el-nino-la-nina/upload.md) | 2026-11-07 |
+| 04 | 파장 — 전파에서 감마선까지, 다른 것은 길이 하나 | 176.6초 | [04-wavelength/](04-wavelength/) | [upload.md](04-wavelength/upload.md) | 2026-11-07 |
+| 05 | 지구를 두른 바람의 띠 — 무역풍·무풍대·편서풍 | 179.0초 | [05-global-winds/](05-global-winds/) | [upload.md](05-global-winds/upload.md) | 2026-11-07 |
+| 06 | 계절은 왜 생길까 — 거리가 아니라 기울기 | 160.0초 | [06-seasons/](06-seasons/) | [upload.md](06-seasons/upload.md) | 2026-11-07 |
+| 07 | 지구 자전축의 느린 원 — 세차운동과 장동 | 173.9초 | [07-precession/](07-precession/) | [upload.md](07-precession/upload.md) | 2026-11-07 |
+| 08 | 한 칸에 열 배 — 지진 규모·데시벨·pH와 로그 | 165.8초 | [08-log-scale/](08-log-scale/) | [upload.md](08-log-scale/upload.md) | 2026-11-07 |
 | 09 | 별은 왜 반짝일까 — 반짝임은 공기가 만든다 | 175.7초 | [09-twinkle/](09-twinkle/) | [upload.md](09-twinkle/upload.md) | 2026-11-05 |
 | 10 | 오로라는 왜 극지방에서만 보일까 | 161.3초 | [10-aurora/](10-aurora/) | [upload.md](10-aurora/upload.md) | 2026-11-05 |
 | 11 | 에딩턴 한계 — 빛이 별을 밀어낸다 | 171.5초 | [11-eddington-limit/](11-eddington-limit/) | [upload.md](11-eddington-limit/upload.md) | 2026-11-04 |
-| 12 | 퀘이사 — 별처럼 보인 블랙홀 | 174.3초 | [12-quasar/](12-quasar/) | [upload.md](12-quasar/upload.md) | 2026-11-05 |
+| 12 | 퀘이사 — 별처럼 보인 블랙홀 | 174.3초 | [12-quasar/](12-quasar/) | [upload.md](12-quasar/upload.md) | 2026-11-07 |
 | 13 | 감마선 폭발 — 우주에서 가장 밝은 섬광 | 175.5초 | [13-gamma-ray-burst/](13-gamma-ray-burst/) | [upload.md](13-gamma-ray-burst/upload.md) | 2026-11-05 |
 | 14 | 감기 주사는 왜 없을까 — 범인이 200가지 | 172.1초 | [14-cold-vaccine/](14-cold-vaccine/) | [upload.md](14-cold-vaccine/upload.md) | 2026-11-05 |
-| 15 | 사고도 없는데 왜 막힐까 — 유령 체증 | 175.9초 | [15-traffic-jam/](15-traffic-jam/) | [upload.md](15-traffic-jam/upload.md) | 2026-11-06 |
-| 16 | 얼마나 차가워질 수 있을까 — 절대영도 | 164.9초 | [16-absolute-zero/](16-absolute-zero/) | [upload.md](16-absolute-zero/upload.md) | 2026-11-06 |
+| 15 | 사고도 없는데 왜 막힐까 — 유령 체증 | 175.9초 | [15-traffic-jam/](15-traffic-jam/) | [upload.md](15-traffic-jam/upload.md) | 2026-11-07 |
+| 16 | 얼마나 차가워질 수 있을까 — 절대영도 | 164.9초 | [16-absolute-zero/](16-absolute-zero/) | [upload.md](16-absolute-zero/upload.md) | 2026-11-07 |
 | 17 | 벽을 타고 넘는 액체 — 초유체 헬륨 | 166.2초 | [17-superfluid-helium/](17-superfluid-helium/) | [upload.md](17-superfluid-helium/upload.md) | 2026-11-06 |
 | 18 | 섭씨, 화씨, 켈빈 — 온도를 재는 세 눈금 | 157.6초 | [18-temperature-scales/](18-temperature-scales/) | [upload.md](18-temperature-scales/upload.md) | 2026-11-06 |
 | 19 | 머리가 발보다 빨리 늙는다 — 중력과 시간 | 157.2초 | [19-gravity-time/](19-gravity-time/) | [upload.md](19-gravity-time/upload.md) | 2026-11-06 |
 | 20 | 원자폭탄은 어떻게 터질까 — 핵분열 연쇄반응 | 170.3초 | [20-atomic-bomb/](20-atomic-bomb/) | [upload.md](20-atomic-bomb/upload.md) | 2026-11-07 |
 | 21 | 수소폭탄은 왜 더 강할까 — 핵융합 | 163.6초 | [21-hydrogen-bomb/](21-hydrogen-bomb/) | [upload.md](21-hydrogen-bomb/upload.md) | 2026-11-07 |
 
-합계 21편, 59.5분, 449 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
+합계 21편, 59.5분, 455 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
 <!-- catalog:end -->
 
 ## 이전 작품 (`legacy/`)

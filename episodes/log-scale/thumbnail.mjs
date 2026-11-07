@@ -1,4 +1,4 @@
-// node episodes/log-scale/thumbnail.mjs [--out finals/08-log-scale/thumbnail.jpg]
+// node episodes/log-scale/thumbnail.mjs [--out finals/08-log-scale/thumbnail.jpg] [--no-text]
 // Shorts thumbnail for the log-scale episode (2026-11-05, user: "한 칸에 열 배는 탈락, 쇼츠 친화적으로").
 // The hook of the video as one picture: a calm magnitude-3 seismogram and, at the SAME vertical scale,
 // the magnitude-6 trace — 10³ = 1000 times the amplitude — bursting out of its panel. Text: the question
@@ -34,6 +34,7 @@ panel(800, 170, '규모 3', T.ink);
 trace(905, A3, '#CFE3F2', 4, [X0, 810, X1, 965]);
 stage.text('같은 축척', 900, 852, {size: 30, weight: 700, color: T.muted, align: 'right'});
 
+if (!process.argv.includes('--no-text')) {   // --no-text: picture only (poster key for the video's first frame, 2026-11-07)
 // text block (central square): question, then the answer
 const band = c.createLinearGradient(0, 990, 0, 1600);
 band.addColorStop(0, 'rgba(0,6,12,0)'); band.addColorStop(0.18, 'rgba(0,6,12,0.82)'); band.addColorStop(0.85, 'rgba(0,6,12,0.82)'); band.addColorStop(1, 'rgba(0,6,12,0)');
@@ -42,6 +43,7 @@ const fit = (s, w, max, weight = 700) => Math.min(max, max * w / stage.measure(s
 stage.text('규모 6은 규모 3의 2배?', 540, 1125, {role: 'display', weight: 700, size: fit('규모 6은 규모 3의 2배?', 860, 92), color: T.ink, align: 'center', shadow: 'rgba(0,0,0,0.9)', shadowBlur: 18});
 stage.text('아니, 1000배', 540, 1345, {role: 'display', weight: 700, size: fit('아니, 1000배', 900, 210), color: '#FFB547', align: 'center', shadow: 'rgba(0,0,0,0.9)', shadowBlur: 26});
 stage.text('지진계에 그려지는 흔들림 · 한 칸에 열 배', 540, 1500, {role: 'display', weight: 500, size: 40, color: T.light, align: 'center', shadow: 'rgba(0,0,0,0.85)', shadowBlur: 12});
+}
 
 fs.mkdirSync(path.dirname(out), {recursive: true});
 fs.writeFileSync(out, await stage.canvas.encode('jpeg', 90));

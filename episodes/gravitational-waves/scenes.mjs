@@ -729,7 +729,7 @@ export const scenes = {
 };
 
 /** Drawn after the scene, before captions. */
-export function overlays(stage, t, ctx) {
+function baseOverlays(stage, t, ctx) {
   const id = ctx.scene.id;
   if (id === 'mechanism' || id === 'merger') {
     const N = mapOf(ctx).label;
@@ -769,3 +769,8 @@ if (isMain && process.argv.includes('--emit-chirp')) {
   fs.writeFileSync(soundFile, JSON.stringify(sound, null, 2).replace(/\[\n\s+([-\d.e]+),\n\s+([-\d.e]+),\n\s+([-\d.e]+)\n\s+\]/g, '[$1, $2, $3]') + '\n');
   console.log(`chirp: ${ev.params.points.length} points, N = ${map.N.toFixed(2)} (label ${map.label}×), merge at ${map.tM.toFixed(3)} s, ends ${(map.t(RD_LEN)).toFixed(3)} s`);
 }
+
+// First frame = thumbnail (2026-11-07 retrofit, user request): poster 0–0.9 s, morph away 0.9–1.7 s, back at the last
+// sentence. Config and key picture: episodes/gravitational-waves/poster.json, poster-key.jpg (pipeline/render/posterintro.mjs).
+import {posterIntro} from '../../pipeline/render/posterintro.mjs';
+export const overlays = await posterIntro(baseOverlays, {slug: 'gravitational-waves'});

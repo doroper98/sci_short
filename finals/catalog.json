@@ -10,12 +10,12 @@
       "duration_sec": 177.3,
       "width": 1080,
       "height": 1920,
-      "bytes": 31188484,
-      "sha256": "51986be1b79d9ef29dc5ffdfe3048548e938fc00956bc83a5c83195282450628",
-      "video_date": "2026-10-31",
+      "bytes": 33528712,
+      "sha256": "5996311081bd61fcc21b13f01e59b202fd2ed0e16f84673584296dea8de6f036",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/gravitational-waves",
       "upload_info": "finals/01-gravitational-waves/upload.md",
-      "thumbnail": "[thumbnail.jpg](thumbnail.jpg) — 별도 썸네일 이미지(2026-11-05), 1080×1920. 96.5초 장면(두 블랙홀이 합쳐지기 직전, 휘어진 시공간 격자)을 확대하고 큰 제목 \"중력파 / 두 블랙홀이 공간을 흔든다\". 영상 프레임에서 고른다면: 약 100초(처프·링다운 장면)"
+      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완 — 흰 질문 \"두 블랙홀이 합쳐지면?\"과 큰 강조색 답 \"공간이 출렁인다\"). `thumbnail.jpg`도 같은 그림입니다."
     },
     {
       "number": 2,
@@ -27,12 +27,12 @@
       "duration_sec": 175.5,
       "width": 1080,
       "height": 1920,
-      "bytes": 12430665,
-      "sha256": "009bc688ddfdd81503ce7c04350be7e6cc3ccb8370460ca093fc74b6e62a0d4f",
-      "video_date": "2026-11-01",
+      "bytes": 13259841,
+      "sha256": "f0976e98c1d701ffaa8b4cf3e3f0fddedee7872ffed1a72e373cfb6263327031",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/ligo-how-it-works",
       "upload_info": "finals/02-ligo-how-it-works/upload.md",
-      "thumbnail": "[thumbnail.jpg](thumbnail.jpg) — 별도 썸네일 이미지(2026-11-05), 1080×1920. 95초 장면(한 팔은 늘고 한 팔은 주는 두 팔과 레이저)을 확대하고 큰 제목 \"LIGO / 공간의 떨림을 빛으로 잰다\". 영상 프레임에서 고른다면: 약 95초(한 팔은 늘고 한 팔은 주는 장면)"
+      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완 — 흰 질문 \"LIGO가 잰 길이 변화는?\"과 큰 강조색 답 \"양성자의 수백분의 1\"). `thumbnail.jpg`도 같은 그림입니다."
     },
     {
       "number": 3,
@@ -44,12 +44,12 @@
       "duration_sec": 178.0,
       "width": 1080,
       "height": 1920,
-      "bytes": 14847600,
-      "sha256": "a992db7eb04dda85fba3c4e3c4dc76a262871086e3e510154a09a632a93f0d62",
-      "video_date": "2026-11-01",
+      "bytes": 17344898,
+      "sha256": "eeb1cd6781a72d31392ff691bdc00755a4af1fad3968e9c2e521d172b60c73f8",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/el-nino-la-nina",
       "upload_info": "finals/03-el-nino-la-nina/upload.md",
-      "thumbnail": "[thumbnail.jpg](thumbnail.jpg) — 별도 썸네일 이미지(2026-11-05), 1080×1920. 75초 장면(따뜻한 바다층과 동쪽으로 번진 엘니뇨 해역 지도)을 확대하고 큰 제목 \"엘니뇨와 라니냐 / 적도의 바람과 바다\". 영상 프레임에서 고른다면: 약 80초(엘니뇨 되먹임 장면)"
+      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완 — 흰 질문 \"엘니뇨와 라니냐, 무엇이 다를까?\"과 큰 강조색 답 \"적도 바람의 세기\"). `thumbnail.jpg`도 같은 그림입니다."
     },
     {
       "number": 4,
@@ -61,12 +61,12 @@
       "duration_sec": 176.6,
       "width": 1080,
       "height": 1920,
-      "bytes": 21555129,
-      "sha256": "18285060e0da283716d95ea715fb58fa194c4c2ee45ca0a89582fbb533822c3d",
-      "video_date": "2026-11-01",
+      "bytes": 22959019,
+      "sha256": "8eaef6a84b51657c833a06d7222325914d0e298dd8bd395e68b7906d9f7d73cd",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/wavelength",
       "upload_info": "finals/04-wavelength/upload.md",
-      "thumbnail": "[thumbnail.jpg](thumbnail.jpg) — 별도 썸네일 이미지(2026-11-05), 1080×1920. 18초 장면(프리즘 무지개와 온도계 — 허셜의 실험)을 확대하고 큰 제목 \"파장 / 전파에서 감마선까지\". 영상 프레임에서 고른다면: 약 47초(전자기파 스펙트럼 계기판)"
+      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완 — 흰 질문 \"적외선은 빨간빛일까?\"과 큰 강조색 답 \"아니, 보이지 않는 빛\"). `thumbnail.jpg`도 같은 그림입니다."
     },
     {
       "number": 5,
@@ -78,12 +78,12 @@
       "duration_sec": 179.0,
       "width": 1080,
       "height": 1920,
-      "bytes": 31243512,
-      "sha256": "cac18c04b265a353bf3aa32587f9ed3c2779801b0034e0154df1fc3a4383bd11",
-      "video_date": "2026-11-02",
+      "bytes": 31258999,
+      "sha256": "faeef7eb06b4cefd83e6a8787fadd827d45c863be878c8166c7b2c4611c0eaad",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/global-winds",
       "upload_info": "finals/05-global-winds/upload.md",
-      "thumbnail": "[thumbnail.jpg](thumbnail.jpg) — 별도 썸네일 이미지(2026-11-05), 1080×1920. 125초 장면(무역풍이 부는 지구본)을 확대하고 큰 제목 \"바람의 띠 / 무역풍은 왜 동쪽에서 불까\". 영상 프레임에서 고른다면: 약 125초(지구본·무역풍·속도 그래프)"
+      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완 — 흰 질문 \"무역풍은 왜 동쪽에서 불까?\"과 큰 강조색 답 \"자전이 바람을 휜다\"). `thumbnail.jpg`도 같은 그림입니다."
     },
     {
       "number": 6,
@@ -95,12 +95,12 @@
       "duration_sec": 160.0,
       "width": 1080,
       "height": 1920,
-      "bytes": 14340349,
-      "sha256": "0059413734f755f1b0cb115ed502e2df6ad476a8b5c59a8a1e025f12fb66847a",
-      "video_date": "2026-11-02",
+      "bytes": 14648630,
+      "sha256": "570d39e498ab958afb7dd854dceaab7e40c93a99f25e22008187cfcb7090ef46",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/seasons",
       "upload_info": "finals/06-seasons/upload.md",
-      "thumbnail": "[thumbnail.jpg](thumbnail.jpg) — 별도 썸네일 이미지(2026-11-05), 1080×1920. 75초 장면(기울어진 지구와 낮은 해, 막대 그림자)을 확대하고 큰 제목 \"계절은 왜 생길까 / 거리가 아니라 기울기\". 영상 프레임에서 고른다면: 약 75초(해 높이·그림자·햇빛 다발 장면)"
+      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완 — 흰 질문 \"여름은 태양에 가까워서 더울까?\"과 큰 강조색 답 \"아니, 기울기 때문\"). `thumbnail.jpg`도 같은 그림입니다."
     },
     {
       "number": 7,
@@ -112,12 +112,12 @@
       "duration_sec": 173.9,
       "width": 1080,
       "height": 1920,
-      "bytes": 32822855,
-      "sha256": "1ddbb5f7c4f4291a4cdfa3e73b475ee617768b202638e5202e74bc31251da218",
-      "video_date": "2026-11-03",
+      "bytes": 30247409,
+      "sha256": "37cd0ade8ab3ba0e973946fc9e14df1036377064e8310b10a264f5d43b214300",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/precession",
       "upload_info": "finals/07-precession/upload.md",
-      "thumbnail": "[thumbnail.jpg](thumbnail.jpg) — 별도 썸네일 이미지(2026-11-05), 1080×1920. 7초 장면(기울어진 자전축이 그리는 원뿔)을 확대하고 큰 제목 \"세차운동 / 북극성은 영원하지 않다\". 영상 프레임에서 고른다면: 약 95초(빛 받는 지구와 자전축이 그리는 원뿔, 3D 개편 후)"
+      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완 — 흰 질문 \"북극성은 영원할까?\"과 큰 강조색 답 \"아니, 언젠가는 베가\"). `thumbnail.jpg`도 같은 그림입니다."
     },
     {
       "number": 8,
@@ -129,12 +129,12 @@
       "duration_sec": 165.8,
       "width": 1080,
       "height": 1920,
-      "bytes": 8906466,
-      "sha256": "42eb09ef3b518bb317816a369880f8b174c83303e419d8389c09853582372083",
-      "video_date": "2026-11-03",
+      "bytes": 10203985,
+      "sha256": "108829505803812123b233cffb07ad5fb4000571e24a0059d5c99c79a1af49fc",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/log-scale",
       "upload_info": "finals/08-log-scale/upload.md",
-      "thumbnail": "[thumbnail.jpg](thumbnail.jpg) — 쇼츠용 썸네일 이미지(2026-11-05 사용자 피드백으로 교체), 1080×1920. 같은 축척의 규모 3 지진파(잔잔)와 규모 6 지진파(1000배, 패널 밖으로 뚫고 나감), 글자 \"규모 6은 규모 3의 2배?\" / \"아니, 1000배\" / \"지진계에 그려지는 흔들림 · 한 칸에 열 배\". 그림 코드 `episodes/log-scale/thumbnail.mjs`. 영상 프레임에서 고른다면: 약 16초(지진계 ×10 → ×1000)"
+      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완 — 흰 질문 \"규모 6은 규모 3의 2배?\"과 큰 강조색 답 \"아니, 1000배\"). `thumbnail.jpg`도 같은 그림입니다."
     },
     {
       "number": 9,
@@ -197,9 +197,9 @@
       "duration_sec": 174.3,
       "width": 1080,
       "height": 1920,
-      "bytes": 19424355,
-      "sha256": "5188fd29cee4b42f4984aad3999817e36a7e0eef9abffa201c0cf34ae3c86ffa",
-      "video_date": "2026-11-05",
+      "bytes": 19424861,
+      "sha256": "92a54b71851d9057710513ade5cbd039d9c9fd97e722dedcd143be5898b51ed2",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/quasar",
       "upload_info": "finals/12-quasar/upload.md",
       "thumbnail": "0초 프레임(비스듬한 강착 원반과 두 제트, 제목 \"퀘이사 / 별처럼 보인 블랙홀\")"
@@ -248,9 +248,9 @@
       "duration_sec": 175.9,
       "width": 1080,
       "height": 1920,
-      "bytes": 19471307,
-      "sha256": "9d0dd114ace5ef51a77e72ed6a07ad9caf2a47842c0b23498e3dd4cc1965708a",
-      "video_date": "2026-11-06",
+      "bytes": 19470379,
+      "sha256": "230e933cb3955f22c5304a420e01ebca0e6b1663dd82221a2168acf938093554",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/traffic-jam",
       "upload_info": "finals/15-traffic-jam/upload.md",
       "thumbnail": "0초 프레임(밤 고속도로, 앞에서 뒤로 번지는 빨간 브레이크 등 띠, 흰 질문 \"사고도 없는데 왜 막힐까?\"와 큰 주황빨강 답 \"유령 체증\")"
@@ -265,9 +265,9 @@
       "duration_sec": 164.9,
       "width": 1080,
       "height": 1920,
-      "bytes": 18644826,
-      "sha256": "7d064ab9500ca14824f2227e8ae68978d9dae127aef81d6dced3a79ff6178487",
-      "video_date": "2026-11-06",
+      "bytes": 18648702,
+      "sha256": "d9eb60f5fd449f1c4f100d51438e993a68e3daf2ae855365d513451869e129b8",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/absolute-zero",
       "upload_info": "finals/16-absolute-zero/upload.md",
       "thumbnail": "0초 프레임(성에 낀 창 너머 바닥선까지 내려온 유리 온도 축, 흰 질문 \"얼마나 차가워질 수 있을까?\"와 큰 얼음빛 답 \"−273.15 °C\")"
@@ -350,8 +350,8 @@
       "duration_sec": 163.6,
       "width": 1080,
       "height": 1920,
-      "bytes": 15121280,
-      "sha256": "c7e89abc84d7c81ea4f38405ecfe0043050dade0b0e1f82bf8a51e1e5d389a3d",
+      "bytes": 15122460,
+      "sha256": "08f6a92fde09cd67942e2b0b47f73e1d0839aa0a99a7989410d8551dea7c4766",
       "video_date": "2026-11-07",
       "episode_code": "episodes/hydrogen-bomb",
       "upload_info": "finals/21-hydrogen-bomb/upload.md",
