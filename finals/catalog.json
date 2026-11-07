@@ -367,12 +367,12 @@
       "duration_sec": 149.7,
       "width": 1080,
       "height": 1920,
-      "bytes": 38922667,
-      "sha256": "628863336224d25bf612bc4b9f6509b589f070ab2b6de785c95cfb987d0e3986",
+      "bytes": 42582962,
+      "sha256": "b1912ad4f1e42ac87269339097e0d47c6211cc0e725c369605e1c7b03b02010b",
       "video_date": "uncommitted",
       "episode_code": "episodes/mushroom-cloud",
       "upload_info": "finals/22-mushroom-cloud/upload.md",
-      "thumbnail": "0초 프레임(해 질 녘 사막 위의 버섯구름, 흰 질문 \"버섯구름은 왜 버섯 모양?\"과 큰 주황 답 \"떠오르는 뜨거운 공기\")"
+      "thumbnail": "0초 프레임(어두운 바탕의 대기 단면 위, 빛나는 점과 가는 등고선으로 그린 큰 버섯구름과 km 고도 눈금, 흰 질문 \"버섯구름은 왜 버섯 모양?\"과 큰 주황 답 \"떠오르는 뜨거운 공기\")"
     },
     {
       "number": 23,
@@ -418,12 +418,12 @@
       "duration_sec": 165.4,
       "width": 1080,
       "height": 1920,
-      "bytes": 44292378,
-      "sha256": "68aa39d48f39f787ffc902446735d5fe97a38f441a5511c6089a11c68c6e8214",
+      "bytes": 35355432,
+      "sha256": "847ef0341f6c6cd2a330509bc953ce5309d60fc9f91a140d7a6fa847a7379ae8",
       "video_date": "2026-11-07",
       "episode_code": "episodes/fission-fusion",
       "upload_info": "finals/29-fission-fusion/upload.md",
-      "thumbnail": "0초 프레임(막 둘로 갈라지는 우라늄 원자핵과 바깥으로 날아가는 중성자, 오른쪽 위에서 합쳐지는 중수소·삼중수소, 위는 태양빛 주황·아래는 원자로의 푸른 빛기둥과 물결, 흰 질문 \"쪼개도 합쳐도 에너지?\"와 큰 주황 답 \"철을 향하기 때문\")"
+      "thumbnail": "0초 프레임(흑연색 배경에서 막 둘로 갈라진 우라늄 원자핵, 흰 섬광과 퍼지는 가는 고리, 바깥으로 날아가는 중성자 점 셋, 오른쪽 위의 중수소·삼중수소, 흰 질문 \"쪼개도 합쳐도 에너지?\"와 큰 주황 답 \"철을 향하기 때문\")"
     },
     {
       "number": 31,
