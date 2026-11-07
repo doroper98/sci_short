@@ -358,6 +358,23 @@
       "thumbnail": "0초 프레임(수평선 위 불덩이와 대기층 선을 뚫고 오른 버섯구름, 흰 질문 \"가장 큰 수소폭탄의 위력은?\"과 큰 주황 답 \"히로시마의 3천 배\")"
     },
     {
+      "number": 22,
+      "slug": "mushroom-cloud",
+      "title": "버섯구름은 왜 버섯 모양일까",
+      "status": "final",
+      "folder": "finals/22-mushroom-cloud",
+      "video": "finals/22-mushroom-cloud/mushroom-cloud.mp4",
+      "duration_sec": 149.7,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 38922667,
+      "sha256": "628863336224d25bf612bc4b9f6509b589f070ab2b6de785c95cfb987d0e3986",
+      "video_date": "uncommitted",
+      "episode_code": "episodes/mushroom-cloud",
+      "upload_info": "finals/22-mushroom-cloud/upload.md",
+      "thumbnail": "0초 프레임(해 질 녘 사막 위의 버섯구름, 흰 질문 \"버섯구름은 왜 버섯 모양?\"과 큰 주황 답 \"떠오르는 뜨거운 공기\")"
+    },
+    {
       "number": 23,
       "slug": "orbit-altitudes",
       "title": "제임스웹은 얼마나 높이 있을까 — 산에서 우주까지",
@@ -369,7 +386,7 @@
       "height": 1920,
       "bytes": 17640658,
       "sha256": "6596305ff65f6795af4c5afea11f77bcd59ffd68246b54a49b1bde95a57733d2",
-      "video_date": "uncommitted",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/orbit-altitudes",
       "upload_info": "finals/23-orbit-altitudes/upload.md",
       "thumbnail": "0초 프레임(지구의 둥근 가장자리와 백두산·에베레스트에서 위로 뻗은 로그 높이 사다리, 꼭대기의 금빛 제임스웹과 달, 흰 질문 \"제임스웹은 얼마나 높이?\"와 큰 금빛 답 \"150만 km\")"
@@ -392,6 +409,23 @@
       "thumbnail": "0초 프레임(함께 도는 계의 등고선 위 태양·지구와 빛나는 다섯 점 L1~L5, 흰 질문 \"우주의 주차 자리는?\"과 큰 금빛 답 \"라그랑주 점 5곳\")"
     },
     {
+      "number": 29,
+      "slug": "fission-fusion",
+      "title": "핵분열과 핵융합 — 쪼개도 합쳐도 에너지가 나오는 까닭",
+      "status": "final",
+      "folder": "finals/29-fission-fusion",
+      "video": "finals/29-fission-fusion/fission-fusion.mp4",
+      "duration_sec": 165.4,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 44292378,
+      "sha256": "68aa39d48f39f787ffc902446735d5fe97a38f441a5511c6089a11c68c6e8214",
+      "video_date": "2026-11-07",
+      "episode_code": "episodes/fission-fusion",
+      "upload_info": "finals/29-fission-fusion/upload.md",
+      "thumbnail": "0초 프레임(막 둘로 갈라지는 우라늄 원자핵과 바깥으로 날아가는 중성자, 오른쪽 위에서 합쳐지는 중수소·삼중수소, 위는 태양빛 주황·아래는 원자로의 푸른 빛기둥과 물결, 흰 질문 \"쪼개도 합쳐도 에너지?\"와 큰 주황 답 \"철을 향하기 때문\")"
+    },
+    {
       "number": 31,
       "slug": "reusable-rocket",
       "title": "로켓은 어떻게 돌아올까 — 저궤도와 재사용 로켓",
@@ -403,7 +437,7 @@
       "height": 1920,
       "bytes": 12014649,
       "sha256": "315dc94fd2975c9bdbdb68938d41843f90279f22c450470f698b2fef969a98c2",
-      "video_date": "uncommitted",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/reusable-rocket",
       "upload_info": "finals/31-reusable-rocket/upload.md",
       "thumbnail": "0초 프레임(밤의 착륙장, 다리를 펴고 불꽃을 뿜으며 내려앉는 1단, 흰 질문 \"다 쓴 로켓, 버릴까?\"와 큰 주황 답 \"돌아와 다시 난다\")"
