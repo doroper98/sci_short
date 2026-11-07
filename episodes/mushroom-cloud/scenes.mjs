@@ -6,12 +6,12 @@
 //    θ_amb rising slowly in the troposphere and steeply above the tropopause row JT (≈ 9.6 km) → the cap spreads there.
 //    Vorticity confinement, small viscosity and diffusion; MacCormack scalar advection. The same solver drives the
 //    volcano (continuous vent source), the wildfire (wide ground heat) and the ink drop (heavy blob, gravity reversed).
-//  - Rendering (v2): line-of-sight projection of the axisymmetric fields (Projector) → optical depth, Catmull-Rom
-//    upsampled to near screen resolution. Outline = blurred presence mask crossing a threshold set by the billow height
-//    (dome tops bulge out, creases cut in); billows = packed Worley domes anchored to the rising centroid that "boil"
-//    (old domes sink, new rise). Light: dome-height normals, 6-step march toward a low sun on the right (self-shadow),
-//    cool sky ambient from above, warm under-light from the stem/ground below; heat-weighted emission → incandescent
-//    ramp, bloom. Billows are texture only, not physics.
+//  - Rendering (series diagram style, 2026-11-07 remake): no volumetric shading. The cloud is the model's tracers — small
+//    additive glowing dots carried by the velocity field, each drawn at fixed azimuths (axisymmetric → 3D); colour =
+//    the parcel's excess temperature (white-hot → amber → muted warm grey; pale white where the cap condenses); dust
+//    tracers lifted from the ground layer. Two thin isolines of the line-of-sight density give the silhouette and the
+//    rolled ring. The sky is an atmosphere cross-section (km axis, ground line, dashed tropopause). diagram.mjs holds
+//    the dot buffer and the marching-squares contours.
 //  - Scale: main cloud 192 × 384 cells, 1 cell ≈ 43 m (height 16.4 km); volcano/wildfire 128 × 256, 1 cell = 64 m.
 //    Time: 1 step ≈ 1.5 s of real time (top passes ~10 km near step 180 ≈ 4.5 min; the hook shows it ≈ 22× faster).
 //  - Shock wave (myth): an analytic hemispherical front, drawn ahead of the fireball; not part of the fluid model.
@@ -257,8 +257,9 @@ function atmo(stage, {gy, ppc, km = KMM, a = 1, axis = 1, tropo = 0, tropoLabel 
     for (let k = 1; k <= kTop; k++) { const y = yK(k); if (y > 1920) continue; const big = k % 5 === 0; line(c, [[axisX, y], [axisX - (big ? 18 : 9), y]], AXIS, 1.5);
       if (big) stage.text(`${k} km`, axisX - 26, y, {size: 30, weight: 700, color: 'rgba(176,190,222,0.92)', align: 'right'}); }
   });
-  if (tropo > 0) {
-    const y = gy - (JTM + 0.5) * ppc;   // main-grid tropopause row
+  const yTr = gy - (JTM + 0.5) * ppc;   // main-grid tropopause row
+  if (tropo > 0 && yTr > 300) {
+    const y = yTr;
     withAlpha(c, a * tropo, () => { line(c, [[0, y], [1080, y]], 'rgba(176,206,255,0.7)', 2, {dash: [14, 10]}); });
     if (tropoLabel > 0) withAlpha(c, a * tropoLabel, () => stage.text('대류권계면 · 약 10 km', 1010, y - 28, {size: 30, weight: 700, color: PALE, align: 'right', shadow: 'rgba(0,0,0,0.9)', shadowBlur: 10}));
     if (layers > 0) withAlpha(c, a * layers, () => {
@@ -271,7 +272,7 @@ function atmo(stage, {gy, ppc, km = KMM, a = 1, axis = 1, tropo = 0, tropoLabel 
 function flashAt(stage, x, y, I, R = 900) {
   if (I <= 0.003) return;
   const c = stage.ctx; c.save(); c.globalCompositeOperation = 'lighter';
-  const g = c.createRadialGradient(x, y, 0, x, y, R); g.addColorStop(0, `rgba(255,244,226,${clamp(I)})`); g.addColorStop(0.18, `rgba(255,214,160,${clamp(I * 0.55)})`); g.addColorStop(1, 'rgba(255,190,120,0)');
+  const g = c.createRadialGradient(x, y, 0, x, y, R); g.addColorStop(0, `rgba(255,244,226,${clamp(I)})`); g.addColorStop(0.16, `rgba(255,232,206,${clamp(I * 0.5)})`); g.addColorStop(0.5, `rgba(255,214,170,${clamp(I * 0.12)})`); g.addColorStop(1, 'rgba(255,200,140,0)');
   c.fillStyle = g; c.fillRect(x - R, y - R, 2 * R, 2 * R); c.restore();
 }
 /** shock ring: a thin bright hemispherical front over the ground plus its ground ellipse */
@@ -425,7 +426,7 @@ function hook(stage, t, p, ctx) {
   flashAt(stage, 540, yc, 0.45 * hot, 120 + 260 * (1 - hot));      // the incandescent core fades as the fireball cools
   dotCloud(stage, 'main', {cx: 540, gy: hy, ppc, I: 0.85 + 0.3 * hot, halo: 0.5 + 0.3 * hot});
   c.restore();
-  flashAt(stage, 540, hy - 80, Math.exp(-u / 0.18) * 1.25, 1500);
+  flashAt(stage, 540, hy - 80, Math.exp(-u / 0.18) * 1.05, 1000);
   const a = fadeIn(t, P.reach10 - 1.4, 0.5) * fadeOut(t, P.s03 + 1.4, 0.5), y = hy - (10 / KMM) * ppc;
   if (a > 0 && y > 330) withAlpha(c, a, () => { line(c, [[60, y], [1020, y]], 'rgba(255,190,130,0.9)', 2.5, {dash: [16, 12]}); tag(stage, '10 km', 880, y - 36, {size: 38, color: '#FFD9A8'}); });
   const b = fadeIn(t, P.s03 - 0.2, 0.5) * fadeOut(t, P.hookEnd - 0.45, 0.35);
@@ -588,7 +589,7 @@ function torusShot(stage, t, t0, a) {
     const [sx, sy, z2, k] = P3(rho * Math.cos(p.phi), yy, rho * Math.sin(p.phi));
     if (sx < -40 || sx > 1120 || sy < -40 || sy > 1960) continue;
     const near = clamp((Dz - z2 - 1300) / 800), col = p.c < 0.55 ? C3.amber : p.c < 0.82 ? C3.hot : C3.cool;
-    DB.dot(sx, sy, col, a * (0.22 + 0.3 * near) * (0.6 + 0.4 * p.rr), clamp(1.3 * k, 1, 2.2));
+    DB.dot(sx, sy, col, a * (0.5 + 0.7 * near) * (0.6 + 0.4 * p.rr), clamp(1.7 * k, 1.3, 2.6));
   }
   DB.flush(stage, {gain: 1.2, halo: 0.35});
   // circulation arrows on the near side of the tube
@@ -775,7 +776,7 @@ function cases(stage, t, p, ctx) {
   const q = smooth((t - P.mirror + 0.3) / 0.8);
   const A = offStage(ctx, 'L'), B = offStage(ctx, 'R');
   if (A._key !== 'mirror') { nuclearHalf(A, P, 4.0 * SC); A._key = 'mirror'; }
-  background(B); inkShot(B, t, P.ink - 0.25, {end: P.mirror + 6}, {ppc: 6.4});
+  background(B); inkShot(B, t, P.ink - 0.25, {end: P.mirror + 6}, {ppc: 4.6});
   if (q < 1) inkShot(stage, t, P.ink - 0.25, {end: P.mirror + 6});
   half(stage, A, -1, q); half(stage, B, 1, q); seam(stage, q);
   tag(stage, '가벼우면 위로', 270, 430, {a: fadeIn(t, P.mirror, 0.4), size: 40, color: '#FFD9A8'});
@@ -821,7 +822,7 @@ function myth(stage, t, p, ctx) {
     if (t < P.allway + 0.2) tag(stage, '느린 화면', 540, 420, {a: fadeIn(t, P.shock + 0.3, 0.3) * fadeOut(t, P.allway - 0.2, 0.3), size: 34, color: '#E8DCCB'});
   }
   c.restore();
-  if (t >= P.shock) flashAt(stage, X0, hy - 40, Math.exp(-(t - P.shock) / 0.2) * 1.1, 1500);
+  if (t >= P.shock) flashAt(stage, X0, hy - 40, Math.exp(-(t - P.shock) / 0.2) * 0.95, 1000);
 }
 
 // ------------------------------------------------------------------ close: the poster comes back
