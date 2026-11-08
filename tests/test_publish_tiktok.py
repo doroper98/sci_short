@@ -55,6 +55,16 @@ class CaptionTest(unittest.TestCase):
 
 @mock.patch.object(tt, "probe_video", lambda p: dict(PROBE))
 class NextTest(unittest.TestCase):
+    def test_recent_offer_guard(self) -> None:
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            _ep(root, "01-old"); _ep(root, "02-next")
+            self.assertEqual(tt.tt_next(tt.TtConfig(), root, dry_run=False, env=ENV, morning=set())["results"][0]["status"], "offered")
+            again = tt.tt_next(tt.TtConfig(), root, dry_run=False, env=ENV, morning=set())
+            self.assertEqual(again["results"], [])
+            self.assertIn("6시간", again["note"])
+
+    @mock.patch.object(tt, "recently_offered", lambda *a: False)
     def test_prefer_backlog_record_and_skips(self) -> None:
         with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
             root = Path(d)
