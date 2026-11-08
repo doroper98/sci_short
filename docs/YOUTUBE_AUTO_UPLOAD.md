@@ -177,11 +177,28 @@ python -m publish.youtube finals/13-gamma-ray-burst --env-file .env   # 비공�
 - **할당량(2026-11-03 공식 문서 확인).** videos.insert 는 별도 버킷 하루 100회. captions.insert 400단위, thumbnails.set 50단위, channels.list 1단위(기본 하루 10,000단위). 초과 시 `quotaExceeded` 로 멈추고 태평양 시간 자정(KST 오후 4~5시) 뒤 다시 됩니다.
 - **로컬·클라우드 세션에서 직접** 올릴 수도 있습니다: `python -m publish.youtube finals/<ep> --env-file .env`.
 
+## 아침 업로드 (2026-11-08)
+
+사용자 결정: "내가 말하지 않아도 제작해서 비공개로 하나씩 올려. 올리는 시간은 아침 7시로 해. 내가 출근하면서 공개로 바꾸게."
+
+| 시각(KST) | 무엇이 | 하는 일 |
+|---|---|---|
+| 매일 20:13 | 예약 작업(클라우드 세션) | `config/daily.json` 순서에서 아직 없는 첫 편을 만들어 main 에 병합. 만들어 두고 아직 안 올린 편이 있으면 쉰다 |
+| 병합 push | `youtube-upload` | 이 목록의 편은 유튜브·인스타 모두 건너뜀(`--auto` 가드) |
+| 다음 날 06:37 | `.github/workflows/youtube-daily.yml` | `python -m publish.youtube --daily-next`: 새 편 한 편을 **비공개로** 올리고 '공개 전환 대기' 이슈를 연다 |
+| 출근길 | 사용자 | 스튜디오에서 공개로 전환, 이슈 닫기 |
+
+- 06:37 에 시작하는 까닭: GitHub 예약 실행은 몇~십여 분 늦게 돌고, 썸네일은 영상 처리 완료를 기다려 붙인다. 그래서 7시 전에 끝나게 당겨 두었다.
+- 쉬는 날: 최근 3일(`hold_if_private_within_days`) 안에 올린 영상이 아직 비공개면 올리지 않는다. 공개하지 않은 영상이 쌓이지 않게 하려는 것이다.
+- 새 편이 없는 날(목록이 끝났거나 밤 제작이 실패한 날)에는 아래 '다시 올리기' 대기열에서 한 편을 올린다. 하루 한 편은 그대로다.
+- 인스타: 이 목록의 편은 병합 때 게시하지 않는다. 인스타는 게시 즉시 공개라, 사용자가 비공개 판을 보기 전에 밤에 공개되면 안 되기 때문이다. 언제 올릴지는 인스타 연결 뒤 정한다(제안: 유튜브가 공개로 바뀐 것을 확인하면 게시).
+- 손으로 한 번: Actions → youtube-daily → Run workflow(검증만 하려면 dry_run).
+
 ## 다시 올리기 (2026-11-08)
 
 한꺼번에 공개해 노출을 못 받은 편을 **새 영상으로** 하루 1편씩 다시 올립니다(`docs/CHANNEL_GROWTH.md` H3).
 - 대기열과 규칙: `config/republish.json`(시작일, `min_views` 50, 비공개 대기 3일)
-- 실행: `.github/workflows/youtube-republish.yml` 매일 09:17 KST → `python -m publish.youtube --republish-next`
+- 실행: 아침 업로드(`.github/workflows/youtube-daily.yml`, 06:37 KST)가 올릴 새 편이 없는 날 대기열에서 한 편(`--daily-next` 안에서 `--republish-next` 와 같은 규칙)
 - 이전 판의 조회수를 `videos.list(part=status,statistics)`로 확인해 `min_views` 이상이면 건너뜁니다
 - 최근 3일 안에 올린 영상이 아직 비공개면 그날은 쉽니다(사용자가 공개하는 속도에 맞춤)
 - 새 기록의 `previous`에 이전 판(영상 ID, 다시 올릴 때의 조회수·공개 상태)이 남습니다

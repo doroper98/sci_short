@@ -1,13 +1,14 @@
-# 노출을 못 받은 편을 하루 1편씩 새 영상으로 다시 올린다(publish/youtube.py --republish-next).
-# 2026-11-08 사용자 요청: "재업로드(2번)가 되도록 구성해봐" — 한꺼번에 공개한 14편은 하루 반 동안 1~20회,
-# 혼자 공개한 27 소나는 몇 시간 만에 635회(docs/CHANNEL_GROWTH.md H3).
-# - 대기열·규칙: config/republish.json (시작일, 이전 판 조회수 기준, 비공개 대기 영상이 있으면 쉼)
-# - 매일 09:17 KST. 올리면 '공개 전환 대기' 이슈에 "이전 판 비공개로 전환" 체크가 붙는다. 공개는 사용자가 한다.
-name: youtube-republish
+# 아침 업로드 — 매일 한 편을 비공개로 올린다(publish/youtube.py --daily-next).
+# 2026-11-08 사용자: "내가 말하지 않아도 제작해서 비공개로 하나씩 올려. 올리는 시간은 아침 7시로 해. 내가 출근하면서 공개로 바꾸게."
+# - 06:37 KST 시작(GitHub 예약 실행은 몇~십여 분 늦게 돌고, 썸네일은 처리 완료를 기다려 붙이므로 7시 전에 끝나게).
+# - 순서: ① 최근 3일 안에 올린 영상이 아직 비공개면 쉼 ② config/daily.json 대기열에서 밤에 만들어 둔 새 편
+#         ③ 새 편이 없으면 config/republish.json 다시 올리기 한 편(몰아 공개해 노출을 못 받은 편, docs/CHANNEL_GROWTH.md H3)
+# - 올리면 '공개 전환 대기' 이슈가 열린다. 공개는 사용자가 한다(이 워크플로는 비공개로만 올린다).
+name: youtube-daily
 
 on:
   schedule:
-    - cron: "17 0 * * *"
+    - cron: "37 21 * * *"          # 06:37 KST
   workflow_dispatch:
     inputs:
       dry_run:
@@ -24,7 +25,7 @@ permissions:
   issues: write
 
 jobs:
-  republish:
+  daily:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
@@ -37,13 +38,13 @@ jobs:
           python-version: "3.12"
       - name: ffprobe 설치
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
-      - name: 다음 한 편 다시 올리기 (항상 비공개)
+      - name: 아침 한 편 올리기 (항상 비공개)
         env:
           YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
           YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
           YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
         run: |
-          ARGS=(--republish-next --report upload-report.json)
+          ARGS=(--daily-next --report upload-report.json)
           if [ "$DRY_RUN" = "true" ]; then ARGS+=(--dry-run); fi
           python -m publish.youtube "${ARGS[@]}"
       - name: 기록 커밋 (youtube_upload.json)
@@ -54,7 +55,7 @@ jobs:
           MISSING=0
           python .github/scripts/stage_records.py upload-report.json || MISSING=1
           if git diff --cached --quiet; then echo "기록 변경 없음"; exit $MISSING; fi
-          git commit -m "publish: 유튜브 다시 올리기 기록 [skip ci]"
+          git commit -m "publish: 유튜브 아침 업로드 기록 [skip ci]"
           git pull --rebase origin "$GITHUB_REF_NAME"
           git push origin "HEAD:$GITHUB_REF_NAME"
           exit $MISSING
