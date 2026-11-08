@@ -460,6 +460,23 @@
       "thumbnail": "0초 프레임(밤의 착륙장, 다리를 펴고 불꽃을 뿜으며 내려앉는 1단, 흰 질문 \"다 쓴 로켓, 버릴까?\"와 큰 주황 답 \"돌아와 다시 난다\")"
     },
     {
+      "number": 32,
+      "slug": "radar",
+      "title": "레이더 — 전파의 메아리로 보고, 메아리를 줄여 숨는다",
+      "status": "final",
+      "folder": "finals/32-radar",
+      "video": "finals/32-radar/radar.mp4",
+      "duration_sec": 164.3,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 19283830,
+      "sha256": "7c1054a58339085840eb5124dc3888f25b7900d983245ad57be666dcfeccd666",
+      "video_date": "uncommitted",
+      "episode_code": "episodes/radar",
+      "upload_info": "finals/32-radar/upload.md",
+      "thumbnail": "0초 프레임(어두운 청록 바탕, 왼쪽 아래 레이더 접시에서 오른쪽 위 비행기로 가는 호박색 펄스 호와 빔, 비행기에서 돌아오는 초록 메아리 호, 희미한 거리 고리, 흰 질문 \"레이더를 피하려면?\"과 큰 초록 답 \"메아리를 줄인다\")"
+    },
+    {
       "number": 34,
       "slug": "telescope-types",
       "title": "망원경의 종류 — 빛을 모으는 방법",
