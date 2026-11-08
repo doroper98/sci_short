@@ -279,18 +279,27 @@ export function plan(tl) {
   P.air0 = sc('aircraft').start;
   P.planeX = tt => -1250 + 330 * (tt - P.air0);
   P.alt = -560; P.oldBuoys = [-1, -2, -3].map(k => P.planeX(P.buoy15 - 0.1) + 10 + 165 + k * 270);
-  P.drops = [P.buoy15 - 0.1, P.drop15 + 0.05].map(t0 => { const x0 = P.planeX(t0) + 10; return {t0, x0, hit: t0 + Math.sqrt(2 * -P.alt / 1000)}; });
-  P.b1 = P.drops[0]; P.bx = tt => 0;                             // (drift handled in buoyPos)
-  P.micDown = [P.mic16 - 0.1, P.mic16 + 1.1];
-  P.hydDepth = 360;
-  P.airSub = [P.drops[0].x0 + 165 - 380, 470];
-  P.airLow = new Emitter({src: P.airSub, v: 600, t0: P.hear16 - 0.3 - dist(P.airSub, [P.drops[0].x0 + 165, 22 + P.hydDepth]) / 600, rep: 1.6, n: 5, crests: 3, gap: 70, rmax: 2600, col: PAL.sig, w: 2.2});
-  P.radioT = [P.radio16 - 0.05, P.plane16 + 0.6];
-  P.plane2 = tt => P.drops[0].x0 + 165 + 980 - 360 * (tt - (P.radio16 - 1.6));
-  P.airCam = tt => {                                             // follow the aircraft, then the first buoy, then pull back for the relay
-    const b1x = P.drops[0].x0 + 165, fol = cam(P.planeX(Math.min(tt, P.drops[0].t0 + 0.6)) - 150, -274, 0.95);
+  P.hydDepth = 300; P.micDown = [P.mic16 - 0.1, P.mic16 + 1.1];
+  const drop = (t0, x0, alt, vx, mic) => ({t0, x0, alt, vx, hit: t0 + Math.sqrt(2 * -alt / 1000), fx: x0 + vx * 0.5, mic});
+  P.drops = [P.buoy15 - 0.1, P.drop15 + 0.05].map(t0 => drop(t0, P.planeX(t0) + 10, P.alt, 330, P.micDown));
+  const b1x = P.drops[0].fx; P.b1x = b1x;
+  // second pass (heading left, a little higher): drops one more buoy, then receives the radio relay
+  P.alt2 = -600; P.drop3 = P.each16 + 0.25; P.plane2 = tt => b1x + 380 - 220 * (tt - P.drop3);
+  { const d = drop(P.drop3, P.plane2(P.drop3) - 10, P.alt2, -220, null); d.mic = [d.hit + 0.25, d.hit + 1.2]; P.drops.push(d); }
+  P.hyd = [P.drops[0], P.drops[2]].map(d => [d.fx, 22 + P.hydDepth]);
+  P.airSub = [b1x - 560, 400];
+  P.airLow = new Emitter({src: P.airSub, v: 600, t0: P.hear16 + 0.05 - dist(P.airSub, P.hyd[0]) / 600, rep: 1.6, n: 5, crests: 3, gap: 70, rmax: 2600, col: PAL.sig, w: 2.2});
+  // radio relay (display speed 900 world px/s — light is instantaneous on this scale; slowed to be seen)
+  P.vRadio = 900; P.ant = [P.drops[0], P.drops[2]].map(d => [d.fx, -54]);
+  P.radioE = P.plane16 - dist(P.ant[0], [P.plane2(P.plane16), P.alt2]) / P.vRadio;
+  P.radioEm = [0, 1].map(j => [0, 1, 2, 3, 4].map(k => P.radioE + j * 0.1 + k * 0.32));
+  P.radioRx = [0, 1].map(j => { let ta = P.radioEm[j][0] + 1; for (let it = 0; it < 6; it++) ta = P.radioEm[j][0] + dist(P.ant[j], [P.plane2(ta), P.alt2]) / P.vRadio; return ta; });
+  P.radioT = [P.radioE, P.radioE + 1.6];
+  P.airCam = tt => {                                             // follow the aircraft, then the buoys under the second pass
+    const fol = cam(P.planeX(Math.min(tt, P.drops[0].t0 + 0.6)) - 150, -274, 0.95);
     if (tt < P.drops[0].t0 + 0.6) return fol;
-    return keyCam(tt, [[P.drops[0].t0 + 0.6, fol.fx, fol.fy, fol.z], [P.drops[1].hit + 0.3, b1x + 60, -230, 0.9], [P.each16 + 0.3, b1x - 80, 140, 1.12], [P.radio16 - 0.3, b1x - 60, 140, 1.1], [P.radio16 + 0.6, b1x + 60, -170, 0.72], [P.tilt17[0], b1x + 70, -170, 0.7]]);
+    return keyCam(tt, [[P.drops[0].t0 + 0.6, fol.fx, fol.fy, fol.z], [P.drops[1].hit + 0.3, b1x + 60, -230, 0.9], [P.each16 - 0.1, b1x + 90, -120, 0.88], [P.hear16 + 0.5, b1x - 40, -110, 0.9],
+      [P.plane16 + 0.3, b1x - 160, -130, 0.86], [P.tilt17[0], b1x - 170, -130, 0.86]]);
   };
   P.tilt17 = [tl.at('s17') - 0.75, tl.at('s17') + 0.15];
   P.buoys = [[-500, -330], [10, -420], [480, -300], [-430, 120], [70, 20], [500, 170], [-80, 450]];
@@ -311,8 +320,8 @@ export function plan(tl) {
 }
 function ambiguityModel(P) {
   const tl = P.tl, s0 = tl.scene('ambiguity').start, L = {};
-  L.cable = 130; L.n = 12; L.sp = 50; L.len = (L.n - 1) * L.sp;
-  L.R = 220; L.dpsi = 40 * D2R;
+  L.cable = 110; L.n = 12; L.sp = 60; L.len = (L.n - 1) * L.sp;
+  L.R = 190; L.dpsi = 40 * D2R;
   L.tTurn = P.turn14 - 0.5;                                      // the ship starts to turn ("배가 방향을 틀어")
   L.v0 = 30; L.v1 = 560;                                         // slow cruise; time-lapse during the turn until the array is straight again
   // ship arc length: integrate the speed; fast from the turn until the tail has passed the end of the turn
@@ -336,15 +345,21 @@ function ambiguityModel(P) {
   L.meas1 = P.straight13 - 0.1;                                  // first measurement (snapshot)
   L.meas2 = Math.max(L.tStraight + 0.05, P.again14 + 0.2);       // second measurement once the array is straight again
   const c1 = L.center(L.meas1);
-  L.src = [c1[0] + 540 * Math.cos(120 * D2R), c1[1] - 540 * Math.sin(120 * D2R)];
+  L.src = [c1[0] + 420 * Math.cos(60 * D2R), c1[1] - 420 * Math.sin(60 * D2R)];
   const mirror = (p, c, ang) => { const ux = Math.cos(ang), uy = Math.sin(ang), dx = p[0] - c[0], dy = p[1] - c[1], al = dx * ux + dy * uy; return [c[0] + 2 * al * ux - dx, c[1] + 2 * al * uy - dy]; };
   L.ghost1 = mirror(L.src, c1, 0);
   const c2 = L.center(L.meas2), e2 = L.elems(L.meas2), ang2 = Math.atan2(e2[0][1] - e2[L.n - 1][1], e2[0][0] - e2[L.n - 1][0]);
   L.c1 = c1; L.c2 = c2; L.ang2 = ang2; L.ghost2 = mirror(L.src, c2, ang2);
+  L.tFreeze = L.tTurn - 0.2; L.cOld = L.center(L.tFreeze);        // the first bearings follow the array until the turn, then stay as a snapshot
   // fixed camera that frames the source, both ghosts, the first array and the ship after the turn
-  const pts = [L.src, L.ghost1, L.ghost2, L.elems(s0)[L.n - 1], L.elems(L.meas2 + 0.5)[0]];
-  const xs = pts.map(q => q[0]), ys = pts.map(q => q[1]), bw = Math.max(...xs) - Math.min(...xs) + 160, bh = Math.max(...ys) - Math.min(...ys) + 200;
-  L.cam = {fx: (Math.max(...xs) + Math.min(...xs)) / 2, fy: (Math.max(...ys) + Math.min(...ys)) / 2, z: Math.min(860 / bw, 930 / bh)};
+  // camera that follows the turn: frame 1 = source, mirror, array before the turn; frame 2 = source, new mirror, array after
+  const fit = (pts, mx = 120, my = 170) => { const xs = pts.map(q => q[0]), ys = pts.map(q => q[1]), bw = Math.max(...xs) - Math.min(...xs) + 2 * mx, bh = Math.max(...ys) - Math.min(...ys) + 2 * my;
+    return [(Math.max(...xs) + Math.min(...xs)) / 2, (Math.max(...ys) + Math.min(...ys)) / 2, Math.min(880 / bw, 950 / bh)]; };
+  const e1 = L.elems(L.meas1), e2b = L.elems(L.meas2 + 0.5);
+  L.fit1 = fit([L.src, L.ghost1, e1[0], e1[L.n - 1], L.pos(L.sAt(L.meas1))]);
+  L.fit2 = fit([L.src, L.ghost2, L.cOld, e2b[0], e2b[L.n - 1]]);
+  const mid = fit([L.src, L.ghost1, L.ghost2, e1[L.n - 1], e2b[0]]);
+  L.camKeys = [[s0, L.fit1[0], L.fit1[1], L.fit1[2] * 1.05], [L.tTurn - 0.2, ...L.fit1], [L.tTurn + 0.9, ...mid], [L.tStraight + 0.5, ...L.fit2], [tl.scene('ambiguity').end, L.fit2[0], L.fit2[1], L.fit2[2] * 1.03]];
   L.emit = new Emitter({src: L.src, v: 420, t0: s0 - 1.0, rep: 2.2, crests: 3, gap: 50, rmax: 2400, col: PAL.sig, w: 2.2});
   return L;
 }
@@ -782,7 +797,7 @@ function lambdaRuler(stage, t, P, pc, els, N) {
 function ambiguityScene(stage, t, ctx) {
   const c = stage.ctx, P = plan(ctx.tl), L = P.amb, s0 = ctx.scene.start;
   const sNow = L.sAt(t), ship = L.pos(sNow), ctr = L.center(t);
-  const pc = cam(L.cam.fx, L.cam.fy, L.cam.z * (1.06 - 0.06 * smooth((t - s0) / 1.2)) * (1 + 0.02 * smooth((t - s0) / 14)), 510, 815);
+  const kc = keyCam(t, L.camKeys, 510, 815), pc = cam(kc.fx, kc.fy, kc.z, 510, 815);
   const fi = smooth((t - s0) / 0.5);
   planBg(stage, pc, fi);
   // sound from the true source (and, dashed, the mirror source that would give the same arrival order)
@@ -791,7 +806,7 @@ function ambiguityScene(stage, t, ctx) {
   const ghostA = win(t, P.left13 - 0.3, L.tTurn + 0.2) * 0.6;
   if (ghostA > 0) { const g2 = new Emitter({...L.emit, src: L.ghost1}); c.save(); c.setLineDash([10, 10]); g2.draw(c, pc, t, {alpha: ghostA, clip: below}); c.restore(); }
   const snapA = 0.4 * fadeIn(t, L.tTurn, 0.5);
-  if (snapA > 0) { const e1 = L.elems(L.meas1); withAlpha(c, snapA, () => { line(c, e1.map(p => pc.S(p[0], p[1])), rgba(PAL.sig, 0.8), 2, {dash: [6, 6]}); e1.forEach(p => { const q = pc.S(p[0], p[1]); circle(c, q[0], q[1], 3, rgba(PAL.sig, 0.8)); }); }); }
+  if (snapA > 0) { const e1 = L.elems(L.tFreeze); withAlpha(c, snapA, () => { line(c, e1.map(p => pc.S(p[0], p[1])), rgba(PAL.sig, 0.8), 2, {dash: [6, 6]}); e1.forEach(p => { const q = pc.S(p[0], p[1]); circle(c, q[0], q[1], 3, rgba(PAL.sig, 0.8)); }); }); }
   // track, array, ship
   c.save(); c.beginPath(); for (let s = sNow - L.cable - L.len - 600; s <= sNow; s += 10) { const p = pc.S(...L.pos(s)); s === sNow - L.cable - L.len - 600 ? c.moveTo(...p) : c.lineTo(...p); }
   c.strokeStyle = 'rgba(150,172,214,0.25)'; c.lineWidth = 1.5; c.setLineDash([6, 8]); c.stroke(); c.restore();
@@ -802,17 +817,17 @@ function ambiguityScene(stage, t, ctx) {
   shipTop(c, xf(pc.S, ship[0], ship[1], 0.9, 1, ship[2]));
   // bearing lines: measurement 1 (both sides of the axis), measurement 2 after the turn
   const ray = (o, ang, len, col, a, dash) => { const q = [o[0] + len * Math.cos(ang), o[1] + len * Math.sin(ang)]; line(c, [pc.S(...o), pc.S(...q)], rgba(col, a), 2.6, {dash}); };
-  const m1 = fadeIn(t, P.straight13 + 0.1, 0.6), ang1 = Math.atan2(L.src[1] - L.c1[1], L.src[0] - L.c1[0]), ang1m = Math.atan2(L.ghost1[1] - L.c1[1], L.ghost1[0] - L.c1[0]);
+  const c1 = t < L.tFreeze ? L.center(t) : L.cOld, m1 = fadeIn(t, P.straight13 + 0.1, 0.6), ang1 = Math.atan2(L.src[1] - c1[1], L.src[0] - c1[0]), ang1m = Math.atan2(L.ghost1[1] - c1[1], L.ghost1[0] - c1[0]);
   const old = t > L.tTurn ? 0.45 : 1;
-  const l1 = dist(L.c1, L.src) + 160, l2 = dist(L.c2, L.src) + 160, l2m = dist(L.c2, L.ghost2) + 120;
-  if (m1 > 0) { withAlpha(c, m1, () => { ray(L.c1, ang1, l1 * m1, PAL.acc, 0.9 * old); ray(L.c1, ang1m, l1 * m1, PAL.acc, 0.9 * old * fadeOut(t, P.odd14, 0.6) + 0.25 * (t > P.odd14 ? 1 : 0), t > L.tTurn ? [10, 10] : null); }); }
+  const l1 = dist(c1, L.src) + 160, l2 = dist(L.c2, L.src) + 160, l2m = dist(L.c2, L.ghost2) + 120;
+  if (m1 > 0) { withAlpha(c, m1, () => { ray(c1, ang1, l1 * m1, PAL.acc, 0.9 * old); ray(c1, ang1m, l1 * m1, PAL.acc, 0.9 * old * fadeOut(t, P.odd14, 0.6) + 0.25 * (t > P.odd14 ? 1 : 0), t > L.tTurn ? [10, 10] : null); }); }
   const m2 = fadeIn(t, L.meas2, 0.6), ang2 = Math.atan2(L.src[1] - L.c2[1], L.src[0] - L.c2[0]), ang2m = Math.atan2(L.ghost2[1] - L.c2[1], L.ghost2[0] - L.c2[0]);
   if (m2 > 0) withAlpha(c, m2, () => { ray(L.c2, ang2, l2 * m2, PAL.acc, 0.95); ray(L.c2, ang2m, l2m * m2, PAL.acc, 0.95); });
   // true source and ghosts
   const sp = pc.S(...L.src), g1 = pc.S(...L.ghost1), g2 = pc.S(...L.ghost2);
-  const qa = fadeIn(t, P.left13, 0.3) * fadeOut(t, P.true14, 0.4);
+  const qa = fadeIn(t, P.left13, 0.3) * fadeOut(t, P.true14 - 0.45, 0.3);
   label(stage, '?', sp[0], sp[1] - 60, qa, {size: 56, color: PAL.acc});
-  label(stage, '?', g1[0], g1[1] + 60, fadeIn(t, P.right13, 0.3) * fadeOut(t, P.true14, 0.4), {size: 56, color: PAL.acc});
+  label(stage, '?', g1[0], g1[1] + 60, fadeIn(t, P.right13, 0.3) * fadeOut(t, P.true14 - 0.45, 0.3), {size: 56, color: PAL.acc});
   ringFx(c, g1[0], g1[1], 24, PAL.muted, 0.7 * fadeIn(t, P.right13, 0.3) * fadeOut(t, P.odd14 + 0.3, 0.6), 2);
   const tv = fadeIn(t, P.true14 - 0.1, 0.3);
   gl(c, sp[0], sp[1], 36, PAL.sig, 0.6 * fi); circle(c, sp[0], sp[1], 6, rgba(PAL.sigHot, fi));
@@ -825,49 +840,44 @@ function ambiguityScene(stage, t, ctx) {
 // ------------------------------------------------------------------ aircraft: drop, listen, relay; then the buoy field
 function buoyPos(P, d, tt) {
   const u = tt - d.t0; if (u < 0) return null;
-  const x = d.x0 + 330 * 0.5 * (1 - Math.exp(-u / 0.5)), y = Math.min(0, P.alt + 0.5 * 1000 * u * u);
-  return [x, y, u];
+  return [d.x0 + d.vx * 0.5 * (1 - Math.exp(-u / 0.5)), Math.min(0, d.alt + 0.5 * 1000 * u * u), u];
 }
 function aircraftScene(stage, t, ctx) {
-  const c = stage.ctx, P = plan(ctx.tl), s0 = ctx.scene.start;
+  const c = stage.ctx, P = plan(ctx.tl);
   if (t >= P.tilt17[0]) { if (t < P.tilt17[1]) { const q = smooth((t - P.tilt17[0]) / (P.tilt17[1] - P.tilt17[0]) / 0.6); withAlpha(c, 1 - q, () => aircraftSide(stage, t, P)); } buoyField(stage, t, P, ctx); return; }
   aircraftSide(stage, t, P);
 }
 function aircraftSide(stage, t, P) {
-  const c = stage.ctx;
-  const b1x = P.drops[0].x0 + 165, px = P.planeX(t);
-  const cm = P.airCam(t);
+  const c = stage.ctx, px = P.planeX(t), cm = P.airCam(t);
   sea(stage, cm, t, {});
   P.airLow.draw(c, cm, t, {clip: waterClip(cm)});
   subSide(c, xf(cm.S, P.airSub[0] + 75, P.airSub[1], 0.6), {spin: t * 8, alpha: 0.9 * fadeIn(t, P.each16 - 0.6, 0.5)});
-  P.oldBuoys.forEach((x, k) => buoySide(c, xf(cm.S, x, 4 * Math.sin(t * 2 + k * 1.7), 1.6), {depth: P.hydDepth / 1.6, alpha: 0.75}));
-  // buoys
+  P.oldBuoys.forEach((x, k) => buoySide(c, xf(cm.S, x, 4 * Math.sin(t * 2 + k * 1.7), 2), {depth: P.hydDepth / 2, alpha: 0.75}));
+  // buoys: fall, splash, lower the hydrophone on a thin line; the hydrophone flashes when a wavefront reaches it
   for (const [k, d] of P.drops.entries()) {
     const b = buoyPos(P, d, t); if (!b) continue;
-    const [x, y, u] = b, floating = y >= 0;
-    const depth = k === 0 ? P.hydDepth * easeInOut((t - P.micDown[0]) / (P.micDown[1] - P.micDown[0])) : 0;
-    buoySide(c, xf(cm.S, x, floating ? 4 * Math.sin(t * 2 + k) : y, 1.6), {depth: depth / 1.6});
-    if (!floating) { const s = cm.S(x, y); gl(c, s[0], s[1], 14, PAL.noise, 0.4); }
-    const sp = cm.S(x, 0); burst(c, sp[0], sp[1], t - d.hit, 60, PAL.noise, 0.8);
-    if (k === 0 && depth > 4) { const h = cm.S(x, 22 + depth); hydro(c, h[0], h[1], P.airLow.age([x, 22 + P.hydDepth], t), {r: 6}); }
+    const [x, y] = b, floating = y >= 0, depth = d.mic ? P.hydDepth * easeInOut((t - d.mic[0]) / (d.mic[1] - d.mic[0])) : 0;
+    buoySide(c, xf(cm.S, x, floating ? 4 * Math.sin(t * 2 + k) : y, 2), {depth: depth / 2});
+    if (!floating) { const s = cm.S(x, y); gl(c, s[0], s[1], 14, PAL.noise, 0.4); line(c, [s, cm.S(x - d.vx * 0.12, y - 70)], rgba(PAL.noise, 0.3), 1.4); }
+    c.save(); c.beginPath(); waterClip(cm)(c); c.clip(); const sp = cm.S(x, 0); burst(c, sp[0], sp[1], t - d.hit, 60, PAL.noise, 0.8); c.restore();
+    if (depth > 4) { const h = cm.S(x, 22 + depth); hydro(c, h[0], h[1], depth > P.hydDepth - 2 ? P.airLow.age([d.fx, 22 + P.hydDepth], t) : 9, {r: 6}); }
   }
-  // radio relay: dashed rings going up from the antenna
-  const b = buoyPos(P, P.drops[0], t);
-  if (b && t > P.radioT[0] && t < P.radioT[1] + 1.4) {
-    const an = cm.S(b[0], -54); c.save(); c.beginPath(); airClip(cm)(c); c.clip(); c.setLineDash([7, 9]);
-    for (let k = 0; k < 6; k++) { const te = P.radioT[0] + k * 0.32; const r = 900 * (t - te); if (r <= 0 || te > P.radioT[1]) continue; ringFx(c, an[0], an[1], r * cm.z, PAL.noise, 0.8 * Math.max(0, 1 - r / 1600), 1.8, Math.PI, TAU); }
-    c.restore();
-  }
-  // aircraft: first pass (drops), second pass (receives)
+  // radio relay: dashed rings rising from the floats' antennas to the aircraft
+  c.save(); c.beginPath(); airClip(cm)(c); c.clip(); c.setLineDash([7, 9]);
+  P.radioEm.forEach((em, j) => { const b = buoyPos(P, j ? P.drops[2] : P.drops[0], t); if (!b) return; const an = cm.S(b[0], -54);
+    for (const te of em) { const r = P.vRadio * (t - te); if (r <= 0 || r > 1500) continue; ringFx(c, an[0], an[1], r * cm.z, PAL.noise, 0.8 * (1 - r / 1500), 1.8, Math.PI, TAU); } });
+  c.restore();
+  // aircraft: first pass (drops two buoys), second pass (drops one more, then receives)
   planeSide(c, xf(cm.S, px, P.alt), {});
-  if (t > P.radio16 - 1.6) { const x2 = P.plane2(t); planeSide(c, xf(cm.S, x2, P.alt - 40, 1, -1), {}); const q = cm.S(x2, P.alt - 40); burst(c, q[0], q[1], t - P.plane16, 90, PAL.accHot, 0.9); }
-  // labels
+  if (t > P.drops[1].hit - 0.3) { const x2 = P.plane2(t), q = cm.S(x2, P.alt2); planeSide(c, xf(cm.S, x2, P.alt2, 1, -1), {}); P.radioRx.forEach((ta, j) => burst(c, q[0], q[1], t - ta, j ? 60 : 90, PAL.accHot, j ? 0.6 : 0.9)); }
+  // labels (≤ 3 at a time)
   const pl = cm.S(px, P.alt);
   label(stage, '초계기', pl[0] - 40, pl[1] - 90, win(t, P.plane15 - 0.1, P.drops[0].t0 + 1.4), {size: 38});
   const d0 = buoyPos(P, P.drops[0], t); if (d0) { const q = cm.S(d0[0], d0[1]); label(stage, '소노부이', q[0] + 30, q[1] - 46, win(t, P.buoy15, P.each16 - 0.2), {size: 38, color: PAL.acc, align: 'left'}); }
-  if (b) { const h = cm.S(b[0], 22 + P.hydDepth), an = cm.S(b[0], -54);
-    label(stage, '물속 마이크', h[0] + 30, h[1] + 4, win(t, P.mic16 + 0.4, P.radio16), {size: 36, color: PAL.sig, align: 'left'});
-    label(stage, '전파', an[0] + 40, an[1] - 120, win(t, P.radio16 + 0.1, P.tilt17[0]), {size: 38, align: 'left'}); }
+  const p2 = cm.S(P.plane2(t), P.alt2); label(stage, '초계기', p2[0] + 10, p2[1] - 80, win(t, P.drop3 - 0.4, P.drop3 + 1.3), {size: 36});
+  const h = cm.S(P.hyd[0][0], P.hyd[0][1]), an = cm.S(P.ant[0][0], P.ant[0][1]);
+  label(stage, '물속 마이크', h[0] - 30, h[1] + 4, win(t, P.mic16 + 0.4, P.radio16), {size: 36, color: PAL.sig, align: 'right'});
+  label(stage, '전파', an[0] + 50, an[1] - 150, win(t, P.radio16 + 0.1, P.tilt17[0]), {size: 38, align: 'left'});
 }
 function hyperbola(A, B, S) {           // branch through S of |p−A| − |p−B| = |S−A| − |S−B|
   const M2 = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2], ex = [(B[0] - A[0]), (B[1] - A[1])], cl = Math.hypot(...ex) / 2, e = [ex[0] / (2 * cl), ex[1] / (2 * cl)], n = [-e[1], e[0]];
@@ -1015,12 +1025,13 @@ export function soundEvents(tl) {
   swell('true', P.true14 - 0.05, [98, 147, 196], '진짜 방향: 두 선이 음원에서 만남', {dur: 1.4, gain: -31});
   tick('ghost', P.mirror14, 82, -35, '거울 방향: 엉뚱한 곳으로 바뀜', {decay: 0.2});
   // ---- aircraft
-  hum('aircraft', sc('aircraft').start, P.drops[1].t0 + 1.5, () => 0.45, -40, '초계기의 낮은 엔진 소리', {low: 70, high: 200});
+  hum('aircraft', sc('aircraft').start, P.tilt17[0], tt => tt < P.drops[1].t0 + 1.2 ? 0.45 : 0.3, -40, '초계기의 낮은 엔진 소리 (두 번째 지나감 포함)', {low: 70, high: 200});
   P.drops.forEach((d, k) => { whoosh(`drop${k}`, d.t0, d.hit - d.t0, 200, 110, '부표가 떨어짐', -37); thump(`splash${k}`, d.hit, '부표가 수면에 닿음', -33, 70, 0.4); });
   whoosh('mic_down', P.micDown[0], P.micDown[1] - P.micDown[0], 160, 80, '물속 마이크가 줄을 따라 내려감', -38);
-  ticks('buoy_hear', P.airLow.arrivals([P.drops[0].x0 + 165, 22 + P.hydDepth], P.micDown[1], P.tilt17[0]), 131, -35, '부표의 마이크에 잠수함 소리가 닿음', {decay: 0.08});
-  ticks('radio_relay', [0, 1, 2, 3, 4].map(k => P.radioT[0] + k * 0.32), 196, -40, '전파로 비행기에 보냄 (전파는 들리지 않음: 보내는 순간의 표시음)', {decay: 0.05});
-  tick('plane_rx', P.plane16, 165, -34, '비행기가 받음', {decay: 0.12});
+  whoosh('mic_down3', P.drops[2].mic[0], P.drops[2].mic[1] - P.drops[2].mic[0], 160, 80, '새 부표의 물속 마이크도 내려감', -40);
+  ticks('buoy_hear', [...P.airLow.arrivals(P.hyd[0], P.micDown[1], P.tilt17[0]), ...P.airLow.arrivals(P.hyd[1], P.drops[2].mic[1], P.tilt17[0])], 131, -35, '두 부표의 마이크에 잠수함 소리가 차례로 닿음 (거리 ÷ 화면 속도)', {decay: 0.08});
+  ticks('radio_relay', P.radioEm.flat(), 196, -40, '부표가 전파로 비행기에 보냄 (전파는 들리지 않음: 보내는 순간의 표시음)', {decay: 0.05});
+  ticks('plane_rx', P.radioRx, [165, 147], -34, '비행기가 받음 (안테나에서 비행기까지 거리 ÷ 화면 속도)', {decay: 0.12});
   whoosh('tilt17', P.tilt17[0], 0.9, 90, 200, '위에서 본 부표 배치로', -37);
   ticks('field', P.arr17, 131, -34, '파면이 각 부표에 닿는 순서 (거리 ÷ 화면 속도)', {decay: 0.08});
   swell('hyp', P.hypT[0], [110, 147], '시각 차이마다 곡선이 그려짐', {dur: 1.4, gain: -36});
