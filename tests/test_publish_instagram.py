@@ -162,6 +162,8 @@ class ConfigTest(unittest.TestCase):
     def test_repo_config_follows_decisions(self) -> None:
         cfg = ig.load_config()
         self.assertTrue(cfg.enabled)
+        self.assertEqual((cfg.ig_user_id, cfg.username), ("17841457693338876", "_quasarlab"))   # 2026-11-08 잠금
+        self.assertTrue(cfg.ai_label)                                          # 2026-11-08 사용자 "켜 둠"
         self.assertEqual((cfg.auto_from_number, cfg.thumb_offset_ms, cfg.hashtags_max), (22, 0, 5))
         self.assertTrue(cfg.share_to_feed)
         self.assertEqual(yu.load_config().auto_from_number, cfg.auto_from_number)   # 두 플랫폼의 자동 대상이 같다
@@ -203,6 +205,40 @@ class ReelSpecTest(unittest.TestCase):
             self.assertEqual(len(errs), 5, errs)
             _, warns = ig.check_reel(p, dict(PROBE_OK, width=1080, height=1080))
             self.assertTrue(any("9:16" in w for w in warns))
+
+
+@mock.patch.object(ig, "probe_reel", lambda p: dict(PROBE_OK))
+class ScheduleTest(unittest.TestCase):
+    """2026-11-08 사용자 결정: 새 편은 아침 업로드와 동시에, 옛 편은 아침·17시 하루 두 편, 따라잡으면 아침 1회만."""
+
+    def test_backlog_and_slots(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            old = _episode(root, name="01-old", slug="old")
+            off = _episode(root, name="05-off", slug="off", meta={"instagram": False})
+            done = _episode(root, name="22-done", slug="done")
+            self.assertEqual(ig.process_episode(done, _cfg(), dry_run=False, send=FakeGraph(), env=ENV,
+                                                sleep=lambda s: None)["status"], "posted")
+            night = _episode(root, name="32-night", slug="night")             # 밤에 만들고 아직 유튜브 전
+            today = _episode(root, name="33-today", slug="today")             # 오늘 아침 유튜브에 올림
+            (today / "youtube_upload.json").write_text("{}", encoding="utf-8")
+            morning = {32, 33}
+            self.assertEqual(ig.ig_backlog(root, morning), [old.resolve(), today.resolve()])
+            self.assertNotIn(off.resolve(), ig.ig_backlog(root, morning))
+            self.assertNotIn(night.resolve(), ig.ig_backlog(root, morning))
+            am = ig.ig_next(_cfg(), root, slot="morning", prefer=[today], dry_run=True, morning=morning)
+            self.assertEqual([r["dir"] for r in am["results"]], [yu._rel(today)])      # 오늘 올린 편이 먼저
+            pm = ig.ig_next(_cfg(), root, slot="evening", prefer=[today], dry_run=True, morning=morning)
+            self.assertEqual([r["dir"] for r in pm["results"]], [yu._rel(old)])        # 17시는 옛 편, prefer 무시
+            for slot in ("morning", "evening"):
+                out = ig.ig_next(_cfg(), root, slot=slot, prefer=[today], dry_run=False, send=FakeGraph(), env=ENV,
+                                 sleep=lambda s: None, morning=morning)
+                self.assertEqual(out["counts"]["posted"], 1, out)
+            rest = ig.ig_next(_cfg(), root, slot="evening", dry_run=False, send=FakeGraph(), env=ENV, morning=morning)
+            self.assertEqual(rest["results"], [])
+            self.assertIn("따라잡았습니다", rest["note"])                          # 따라잡으면 17시는 쉼
+            self.assertIsNotNone(ig.read_record(today))
+            self.assertIsNotNone(ig.read_record(old))
 
 
 @mock.patch.object(ig, "probe_reel", lambda p: dict(PROBE_OK))

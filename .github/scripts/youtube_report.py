@@ -95,6 +95,7 @@ def instagram_section(ig: dict | None) -> dict[str, dict]:
     c = ig.get("counts", {})
     lines = ["## 인스타 릴스 (게시 즉시 공개)", "",
              f"게시 {c.get('posted', 0)} · 건너뜀 {c.get('skipped', 0)} · dry-run {c.get('dry-run', 0)} · 오류 {c.get('error', 0)}", "",
+             *([f"일정 게시: {ig['note']}", ""] if ig.get("note") else []),
              "| 폴더 | 상태 | 제목 | 게시물 | 비고 |", "|---|---|---|---|---|"]
     for r in ig["results"]:
         note = cell(r.get("error") or " / ".join(r.get("warnings", [])))
@@ -104,7 +105,8 @@ def instagram_section(ig: dict | None) -> dict[str, dict]:
             create_issue_once(f"인스타 게시 실패: {r['dir']}",
                               f"오류: {r.get('error', '?')}\n\n실행: {RUN_URL}\n\n'게시됐을 수 있어 다시 게시하지 않습니다'라는 오류면 "
                               "인스타 앱에서 실제 게시 여부를 먼저 확인하십시오. 원인을 고친 뒤 Actions → youtube-upload 수동 실행"
-                              "(episode 지정, instagram 켬)으로 다시 게시할 수 있습니다.", LABEL_IG_ALERT, alerts)
+                              "(episode 지정, instagram 켬)으로 다시 게시할 수 있습니다. 그대로 두면 다음 일정 게시(아침·17시)가 "
+                              "같은 편을 다시 시도합니다.", LABEL_IG_ALERT, alerts)
     summary("\n".join(lines))
     return {r["dir"]: r for r in ig["results"]}
 
@@ -220,6 +222,9 @@ def cmd_ig_token_check(path: str, outcome: str) -> int:
 def main(argv: list[str]) -> int:
     if len(argv) >= 2 and argv[0] == "report":
         return cmd_report(argv[1], argv[2] if len(argv) >= 3 else None)
+    if len(argv) >= 2 and argv[0] == "ig-report":          # 17시 일정 게시(instagram-evening)
+        instagram_section(load(argv[1]))
+        return 0
     if len(argv) >= 3 and argv[0] == "ig-token-check":
         return cmd_ig_token_check(argv[1], argv[2])
     if len(argv) >= 3 and argv[0] == "token-check":

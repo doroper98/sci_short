@@ -1,7 +1,9 @@
 """완성된 쇼츠(finals/<NN>-<slug>/)를 인스타그램 **릴스**로 게시하는 도구. 표준 라이브러리만 쓴다.
 
 인스타 게시 API 에는 비공개·초안 상태가 없다. **게시하는 순간 공개된다**(2026-11-07 메타 공식 문서 확인).
-2026-11-07 사용자 결정 "병합 즉시 양쪽": main 병합 push 에서 유튜브(비공개)와 인스타(공개)를 함께 올린다.
+2026-11-08 사용자 결정(2026-11-07 "병합 즉시 양쪽"을 바꿈): 새 편은 아침 업로드와 동시에(youtube-daily) 게시한다.
+이미 유튜브에 있는 옛 편은 하루 두 번(아침·17시, instagram-evening) 한 편씩 올리고, 인스타가 유튜브를 따라잡으면 아침 1회만.
+push(병합)에서는 게시하지 않는다.
 그래서 이 도구는 게시 전 검사를 엄격히 한다(계정 잠금, 설명 규칙, 영상 규격, 같은 영상 재게시 금지).
 
 사용법
@@ -9,6 +11,8 @@
     python -m publish.instagram finals/<NN>-<slug>             # 실제 게시 (즉시 공개)
     python -m publish.instagram finals/<NN>-<slug> --auto      # push 자동 실행용: auto_from_number 이상 새 편만
     python -m publish.instagram --whoami                        # 토큰이 가리키는 인스타 계정(ID·사용자 이름) 확인
+    python -m publish.instagram --next morning --prefer finals/<ep>   # 아침 한 편: 오늘 유튜브에 올린 편 먼저, 없으면 옛 편
+    python -m publish.instagram --next evening                  # 17시 한 편: 아직 인스타에 없는 옛 편(따라잡았으면 쉼)
     python -m publish.instagram finals/<ep> --mark-posted <미디어 ID 또는 게시물 주소>   # 손으로 올린 편 기록
 
 흐름(메타 공식 문서 Content Publishing):
@@ -47,8 +51,8 @@ from pathlib import Path
 from typing import Any, Callable
 
 from publish.youtube import (DEFAULT_FINALS, MB, REPO, RETRY_STATUS, UPLOAD_MD_NAME, Response, Transport, TransportError,
-                             UploadError, _rel, load_env_file, load_episode, md5_file, morning_numbers, parse_upload_md,
-                             urllib_transport)
+                             UploadError, _rel, episode_dirs, load_env_file, load_episode, load_meta, md5_file,
+                             morning_numbers, parse_dir_name, parse_upload_md, urllib_transport)
 
 DEFAULT_CONFIG = REPO / "config" / "instagram.json"
 RECORD_NAME = "instagram_post.json"
@@ -599,6 +603,51 @@ def process_episode(dir_: Path, cfg: IgConfig, *, dry_run: bool, auto: bool = Fa
         return res
 
 
+def on_youtube(dir_: Path, morning: set[int]) -> bool:
+    """유튜브에 올라간 편인가. 아침 업로드 대기열 편은 유튜브 기록이 생긴 뒤부터(그 전에는 아직 밤에 만든 것뿐이다).
+    그 밖의 편은 모두 유튜브에 있다(01~21 일부는 손으로 올려 기록이 없다)."""
+    n = parse_dir_name(dir_)[0]
+    return (dir_ / "youtube_upload.json").is_file() if n in morning else True
+
+
+def ig_backlog(finals: Path, morning: set[int] | None = None) -> list[Path]:
+    """유튜브에는 있고 인스타에는 아직 없는 편, 번호 순. meta.json instagram=false 는 뺀다."""
+    morning = morning_numbers() if morning is None else morning
+    out = []
+    for d in episode_dirs(finals):
+        if read_record(d) is not None or load_meta(d).get("instagram") is False or not on_youtube(d, morning):
+            continue
+        out.append(d.resolve())
+    return out
+
+
+def ig_next(cfg: IgConfig, finals: Path, *, slot: str, prefer: list[Path] | None = None, dry_run: bool,
+            send: Transport | None = None, env: dict[str, str] | None = None,
+            sleep: Callable[[float], None] = time.sleep, morning: set[int] | None = None) -> dict[str, Any]:
+    """일정 게시 한 번(2026-11-08 사용자 결정). 한 번에 최대 한 편.
+
+    slot=morning(youtube-daily, 06:37 KST 유튜브 업로드 직후): prefer(오늘 유튜브에 올린 편)를 먼저, 없으면 옛 편 하나.
+    slot=evening(instagram-evening, 17시): 아직 인스타에 없는 옛 편 하나. 인스타가 유튜브를 따라잡았으면 쉰다
+    ("유튜브와 속도가 같아지면 그뒤론 아침 7시 업로드 1회만")."""
+    empty = {"posted": 0, "skipped": 0, "dry-run": 0, "error": 0}
+    backlog = ig_backlog(finals, morning)
+    first = [p.resolve() for p in (prefer or []) if p.resolve() in backlog] if slot == "morning" else []
+    cands = first + [d for d in backlog if d not in first]
+    if not cands:
+        return {"ok": True, "counts": empty, "results": [], "slot": slot,
+                "note": "인스타가 유튜브를 따라잡았습니다 — 올릴 편이 없습니다" + (" (17시 게시는 쉽니다)" if slot == "evening" else "")}
+    results = []
+    for d in cands:
+        res = process_episode(d, cfg, dry_run=dry_run, send=send, env=env, sleep=sleep)
+        results.append(res)
+        if res["status"] != "skipped":
+            break
+    counts = {s: sum(1 for r in results if r["status"] == s) for s in empty}
+    left = len([d for d in backlog if read_record(d) is None]) - (1 if dry_run and results[-1]["status"] == "dry-run" else 0)
+    return {"ok": counts["error"] == 0, "counts": counts, "results": results, "slot": slot,
+            "note": f"{'아침' if slot == 'morning' else '17시'} 게시 · 인스타에 아직 없는 편 {max(left, 0)}편"}
+
+
 def mark_posted(dir_: Path, ref: str, *, note: str = "") -> IgRecord:
     """이미 손으로 올린 편을 기록해 자동 게시가 건너뛰게 한다. ref 는 미디어 ID 또는 게시물 주소."""
     ep = load_episode(dir_, caption=False, thumbnail=False)
@@ -629,6 +678,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--whoami", action="store_true", help="토큰이 가리키는 인스타 계정을 확인한다")
     ap.add_argument("--mark-posted", metavar="ID_OR_URL", help="이미 손으로 올린 편의 기록을 만든다(에피소드 하나와 함께)")
     ap.add_argument("--allow-repost", action="store_true", help="기록이 있는데 영상이 바뀐 경우에도 새 게시물로 올린다")
+    ap.add_argument("--next", choices=("morning", "evening"), help="일정 게시 한 번(아침: 오늘 유튜브에 올린 편 먼저, 17시: 옛 편)")
+    ap.add_argument("--prefer", type=Path, action="append", default=[], help="--next morning 에서 먼저 올릴 편(오늘 유튜브 업로드)")
     ap.add_argument("--env-file", type=Path, help="KEY=VALUE 파일(.env)에서 비밀값을 읽는다")
     ap.add_argument("--report", type=Path, help="결과 JSON 을 이 파일에도 쓴다(GitHub Actions 용)")
     a = ap.parse_args(argv)
@@ -656,6 +707,9 @@ def main(argv: list[str] | None = None) -> int:
                 if not info["candidates"]:
                     _log("연결된 인스타 비즈니스 계정을 찾지 못했습니다 — 페이지 연결·토큰 권한 확인")
                 out = {"ok": bool(info["candidates"]), **info, "config_ig_user_id": cfg.ig_user_id, "matches_config": None}
+        elif a.next:
+            out = ig_next(cfg, a.finals, slot=a.next, prefer=a.prefer, dry_run=a.dry_run, env=env)
+            _log(out["note"])
         elif a.mark_posted:
             if len(a.episodes) != 1:
                 raise UploadError("--mark-posted 는 에피소드 폴더 하나와 함께 씁니다")
