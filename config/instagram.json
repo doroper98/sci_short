@@ -14,8 +14,8 @@
   "_api_host": "토큰 종류로 정한다. 시스템 사용자 토큰(만료 없음)·페이스북 로그인 → graph.facebook.com + transfer upload(rupload 직접 전송). 인스타그램 로그인 토큰(60일) → graph.instagram.com + transfer url(공개 주소 video_url, 기본 GitHub raw).",
 
   "ig_user_id": "17841457693338876",
-  "username": "_quasarlab",
-  "_ig_user_id": "게시할 인스타 계정 ID 와 사용자 이름(@ 없이). 2026-11-08 youtube-token-check 실행 42476213873 의 --whoami 로 확인(페이지 「과학쑛츠」, 시스템 사용자 토큰). 사용자가 2026-11-07 '인스타에서는 _quasarlab 으로 해뒀어'라고 알려 준 계정. 사용자 확인 없이 바꾸지 않는다. 비어 있으면 실제 게시를 거부한다.",
+  "username": "_scishorts",
+  "_ig_user_id": "게시할 인스타 계정 ID 와 사용자 이름(@ 없이). 2026-11-08 youtube-token-check 실행 42476213873 의 --whoami 로 확인(페이지 「과학쑛츠」, 시스템 사용자 토큰). 사용자가 2026-11-07 '인스타에서는 _quasarlab 으로 해뒀어'라고 알려 준 계정. 2026-11-08 사용자가 인스타 사용자 이름을 _quasarlab → _scishorts 로 바꿈(\"참고로 인스타 계정 정보는 이렇게 바꿨어\", 프로필 화면 캡처). 계정 ID 는 그대로. 사용자 확인 없이 바꾸지 않는다. 비어 있으면 실제 게시를 거부한다.",
 
   "auto_from_number": 22,
   "_auto_from_number": "push 자동 실행은 이 번호 이상 새 편만 게시한다. 01~21 은 손으로 올린 편이 섞여 있어 폴더를 고친 PR 이 병합돼도 다시 공개 게시하지 않는다. 옛 편을 자동 대상으로 하려면 그 편 meta.json 에 auto_publish: true, 인스타에서 빼려면 instagram: false.",

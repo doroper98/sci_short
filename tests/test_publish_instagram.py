@@ -173,7 +173,7 @@ class ConfigTest(unittest.TestCase):
     def test_repo_config_follows_decisions(self) -> None:
         cfg = ig.load_config()
         self.assertTrue(cfg.enabled)
-        self.assertEqual((cfg.ig_user_id, cfg.username), ("17841457693338876", "_quasarlab"))   # 2026-11-08 잠금
+        self.assertEqual((cfg.ig_user_id, cfg.username), ("17841457693338876", "_scishorts"))   # 2026-11-08 잠금
         self.assertTrue(cfg.ai_label)                                          # 2026-11-08 사용자 "켜 둠"
         self.assertEqual((cfg.auto_from_number, cfg.thumb_offset_ms, cfg.hashtags_max), (22, 0, 5))
         self.assertTrue(cfg.share_to_feed)
