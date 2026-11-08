@@ -49,7 +49,12 @@ def create_issue_once(title: str, body: str, label: str, existing: list[dict]) -
     if any(i["title"] == title for i in existing):
         print(f"[report] 이미 있음: {title}", file=sys.stderr)
         return
-    url = gh("issue", "create", "--title", title, "--body", body, "--label", label).strip()
+    # 저장소 주인을 담당자로 지정한다(2026-11-08). '할당됨' 알림은 지켜보기 설정과 상관없이 휴대전화로 온다.
+    # 지정이 거부되면(주인이 조직 등) 담당자 없이 다시 만든다 — 알림보다 이슈가 먼저다.
+    owner = os.environ.get("GITHUB_REPOSITORY_OWNER", "")
+    url = gh("issue", "create", "--title", title, "--body", body, "--label", label, "--assignee", owner).strip() if owner else ""
+    if not url:
+        url = gh("issue", "create", "--title", title, "--body", body, "--label", label).strip()
     print(f"[report] 이슈 생성: {title} {url}" if url else f"[report] 이슈 생성 실패: {title}", file=sys.stderr)
 
 

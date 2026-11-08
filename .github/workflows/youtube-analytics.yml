@@ -54,4 +54,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh label create youtube-report --color 1D76DB --description "과학쑛츠 주간 채널 보고서" --force
-          gh issue create --title "주간 채널 보고서 $D" --label youtube-report --body-file report.md
+          gh issue create --title "주간 채널 보고서 $D" --label youtube-report --body-file report.md --assignee "$GITHUB_REPOSITORY_OWNER" \
+            || gh issue create --title "주간 채널 보고서 $D" --label youtube-report --body-file report.md
