@@ -1,0 +1,28 @@
+{
+ "media_id": "17980701962925218",
+ "permalink": "https://www.instagram.com/reel/DfetDJgjHAJ/",
+ "posted_at": "2026-11-08T12:00:14+00:00",
+ "ig_user_id": "17841457693338876",
+ "username": "_quasarlab",
+ "video_file": "gravitational-waves.mp4",
+ "video_bytes": 33528712,
+ "video_md5": "988f61d16f851317dc9b53485bef2ed2",
+ "caption_chars": 314,
+ "hashtags": [
+  "#중력파",
+  "#블랙홀",
+  "#상대성이론",
+  "#과학",
+  "#과학릴스"
+ ],
+ "container_id": "17982692261923112",
+ "shortcode": "DfetDJgjHAJ",
+ "transfer": "url",
+ "ai_label": true,
+ "number": 1,
+ "slug": "gravitational-waves",
+ "status": "posted",
+ "note": "",
+ "source": "api",
+ "schema_version": 1
+}
