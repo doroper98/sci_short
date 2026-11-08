@@ -77,7 +77,7 @@
 ## 열린 결정
 
 - ~~AI 표시~~ → 2026-11-08 사용자 결정 **켜 둠**(인스타 `ai_label`, 유튜브 `contains_synthetic_media`). 설명란 문구 금지 규칙과는 별개.
-- ~~토큰 경로~~ → 경로 A(시스템 사용자 `quasarlab-publisher`, 만료 없음, 앱 `Quasarlab Publisher` ID 1834639971183676, 포트폴리오 퀘이사랩, 페이지 과학쑛츠). 2026-11-08 연결, `youtube-token-check` 실행 42476213873 에서 `@_quasarlab`(17841457693338876) 확인 후 잠금.
+- ~~토큰 경로~~ → 경로 A(시스템 사용자 `quasarlab-publisher`, 만료 없음, 앱 `Quasarlab Publisher` ID 1834639971183676, 포트폴리오 퀘이사랩, 페이지 과학쑛츠). 2026-11-08 연결, `youtube-token-check` 실행 42476213873 에서 `@_quasarlab`(17841457693338876) 확인 후 잠금. 같은 날 사용자가 이름을 `_scishorts` 로 바꿔 `username` 을 맞춤(ID 그대로).
 
 ## 문제 해결
 
