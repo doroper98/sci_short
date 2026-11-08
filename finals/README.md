@@ -46,18 +46,19 @@
 | 15 | 사고도 없는데 왜 막힐까 — 유령 체증 | 175.9초 | [15-traffic-jam/](15-traffic-jam/) | [upload.md](15-traffic-jam/upload.md) | 2026-11-07 |
 | 16 | 얼마나 차가워질 수 있을까 — 절대영도 | 164.9초 | [16-absolute-zero/](16-absolute-zero/) | [upload.md](16-absolute-zero/upload.md) | 2026-11-07 |
 | 17 | 벽을 타고 넘는 액체 — 초유체 헬륨 | 166.2초 | [17-superfluid-helium/](17-superfluid-helium/) | [upload.md](17-superfluid-helium/upload.md) | 2026-11-06 |
+| 17 | 헬륨을 영하 271도로 식히면 — 60초 핵심판 (길이 실험) | 59.9초 | [17-superfluid-helium-60s/](17-superfluid-helium-60s/) | [upload.md](17-superfluid-helium-60s/upload.md) | uncommitted |
 | 18 | 섭씨, 화씨, 켈빈 — 온도를 재는 세 눈금 | 157.6초 | [18-temperature-scales/](18-temperature-scales/) | [upload.md](18-temperature-scales/upload.md) | 2026-11-06 |
 | 19 | 머리가 발보다 빨리 늙는다 — 중력과 시간 | 157.2초 | [19-gravity-time/](19-gravity-time/) | [upload.md](19-gravity-time/upload.md) | 2026-11-06 |
 | 20 | 원자폭탄은 어떻게 터질까 — 핵분열 연쇄반응 | 170.3초 | [20-atomic-bomb/](20-atomic-bomb/) | [upload.md](20-atomic-bomb/upload.md) | 2026-11-07 |
 | 21 | 수소폭탄은 왜 더 강할까 — 핵융합 | 163.6초 | [21-hydrogen-bomb/](21-hydrogen-bomb/) | [upload.md](21-hydrogen-bomb/upload.md) | 2026-11-07 |
-| 22 | 버섯구름은 왜 버섯 모양일까 | 149.7초 | [22-mushroom-cloud/](22-mushroom-cloud/) | [upload.md](22-mushroom-cloud/upload.md) | uncommitted |
+| 22 | 버섯구름은 왜 버섯 모양일까 | 149.7초 | [22-mushroom-cloud/](22-mushroom-cloud/) | [upload.md](22-mushroom-cloud/upload.md) | 2026-11-07 |
 | 23 | 제임스웹은 얼마나 높이 있을까 — 산에서 우주까지 | 163.6초 | [23-orbit-altitudes/](23-orbit-altitudes/) | [upload.md](23-orbit-altitudes/upload.md) | 2026-11-07 |
 | 24 | 라그랑주 점 — 우주의 주차 자리 | 158.5초 | [24-lagrange-points/](24-lagrange-points/) | [upload.md](24-lagrange-points/upload.md) | 2026-11-07 |
 | 29 | 핵분열과 핵융합 — 쪼개도 합쳐도 에너지가 나오는 까닭 | 165.4초 | [29-fission-fusion/](29-fission-fusion/) | [upload.md](29-fission-fusion/upload.md) | 2026-11-07 |
 | 31 | 로켓은 어떻게 돌아올까 — 저궤도와 재사용 로켓 | 156.5초 | [31-reusable-rocket/](31-reusable-rocket/) | [upload.md](31-reusable-rocket/upload.md) | 2026-11-07 |
 | 34 | 망원경의 종류 — 빛을 모으는 방법 | 158.6초 | [34-telescope-types/](34-telescope-types/) | [upload.md](34-telescope-types/upload.md) | 2026-11-07 |
 
-합계 27편, 75.4분, 603 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
+합계 28편, 76.4분, 613 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
 <!-- catalog:end -->
 
 ## 이전 작품 (`legacy/`)
