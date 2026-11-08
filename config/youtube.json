@@ -13,7 +13,7 @@
   "caption_name": "한국어",
 
   "contains_synthetic_media": true,
-  "_contains_synthetic_media": "AI 합성 내레이션(Supertonic 3)을 쓰므로 status.containsSyntheticMedia 를 켠다. 편마다 meta.json 으로 바꿀 수 있다.",
+  "_contains_synthetic_media": "AI 합성 내레이션(Supertonic 3)을 쓰므로 status.containsSyntheticMedia 를 켠다(2026-11-08 사용자 결정 '켜 둠', 인스타 ai_label 과 함께). 편마다 meta.json 으로 바꿀 수 있다.",
 
   "made_for_kids": false,
   "_made_for_kids": "status.selfDeclaredMadeForKids(아동용 콘텐츠 자가 선언). 2026-11-07 사용자 결정: 아동용 아님. 이 채널의 주 시청자는 약 11~16세이며 13세 미만 어린이를 주 대상으로 하지 않는다. null 로 되돌리면 업로드를 거부한다. 편별로 바꾸려면 meta.json 의 made_for_kids. 판단 기준은 docs/YOUTUBE_UPLOAD.md '아동용 여부'.",

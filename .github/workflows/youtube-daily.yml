@@ -4,6 +4,8 @@
 # - 순서: ① 최근 3일 안에 올린 영상이 아직 비공개면 쉼 ② config/daily.json 대기열에서 밤에 만들어 둔 새 편
 #         ③ 새 편이 없으면 config/republish.json 다시 올리기 한 편(몰아 공개해 노출을 못 받은 편, docs/CHANNEL_GROWTH.md H3)
 # - 올리면 '공개 전환 대기' 이슈가 열린다. 공개는 사용자가 한다(이 워크플로는 비공개로만 올린다).
+# - 인스타(2026-11-08 사용자 결정 "아침 업로드와 동시에"): 유튜브 단계 직후 한 편을 게시한다(즉시 공개).
+#   오늘 유튜브에 올린 편이 먼저, 없으면 아직 인스타에 없는 옛 편. 옛 편은 17시(instagram-evening)에도 한 편씩.
 name: youtube-daily
 
 on:
@@ -47,15 +49,27 @@ jobs:
           ARGS=(--daily-next --report upload-report.json)
           if [ "$DRY_RUN" = "true" ]; then ARGS+=(--dry-run); fi
           python -m publish.youtube "${ARGS[@]}"
-      - name: 기록 커밋 (youtube_upload.json)
+      - name: 인스타 릴스 아침 게시 (즉시 공개)
+        if: ${{ always() }}
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+        run: |
+          if [ -z "$IG_ACCESS_TOKEN" ] && [ "$DRY_RUN" != "true" ]; then echo "IG_ACCESS_TOKEN 없음 — 인스타 건너뜀" >> "$GITHUB_STEP_SUMMARY"; exit 0; fi
+          ARGS=(--next morning --report instagram-report.json)
+          while read -r p; do
+            if [ -n "$p" ]; then ARGS+=(--prefer "$p"); fi
+          done < <(python .github/scripts/uploaded_dirs.py upload-report.json)
+          if [ "$DRY_RUN" = "true" ]; then ARGS+=(--dry-run); fi
+          python -m publish.instagram "${ARGS[@]}"
+      - name: 기록 커밋 (youtube_upload.json · instagram_post.json)
         if: ${{ always() && env.DRY_RUN != 'true' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           MISSING=0
-          python .github/scripts/stage_records.py upload-report.json || MISSING=1
+          python .github/scripts/stage_records.py upload-report.json instagram-report.json || MISSING=1
           if git diff --cached --quiet; then echo "기록 변경 없음"; exit $MISSING; fi
-          git commit -m "publish: 유튜브 아침 업로드 기록 [skip ci]"
+          git commit -m "publish: 유튜브·인스타 아침 기록 [skip ci]"
           git pull --rebase origin "$GITHUB_REF_NAME"
           git push origin "HEAD:$GITHUB_REF_NAME"
           exit $MISSING
@@ -63,4 +77,4 @@ jobs:
         if: ${{ always() }}
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python .github/scripts/youtube_report.py report upload-report.json
+        run: python .github/scripts/youtube_report.py report upload-report.json instagram-report.json

@@ -2,7 +2,7 @@
 # - main 에 finals/** 변경이 들어오면(PR 병합 = 업로드 승인) 그 push 에서 **바뀐 폴더만** 처리한다.
 #   push 자동 실행은 22번 이상 새 편만(--auto, config auto_from_number). 01~21 은 손으로 올린 편이 섞여 있다.
 #   전체(--all)는 수동 실행(all=true)에서 유튜브만 허용한다. 인스타는 전체 게시를 하지 않는다.
-# - 인스타(2026-11-07 사용자 결정 "병합 즉시 양쪽"): 게시 API 에 비공개가 없어 **즉시 공개**된다.
+# - 인스타: 2026-11-08 부터 push 에서는 게시하지 않는다(아침 youtube-daily · 17시 instagram-evening 일정 게시). 수동 실행에서 instagram 을 켜면 지정한 편을 게시(**즉시 공개**)된다.
 #   IG_ACCESS_TOKEN 비밀값이 없으면 인스타 단계는 건너뛴다. 수동 실행은 instagram 을 켠 때만 게시한다.
 # - 결과: finals/<ep>/youtube_upload.json · instagram_post.json 을 main 에 커밋하고 '공개 전환 대기' 이슈를 만든다.
 # - 비밀값: Settings → Secrets and variables → Actions 에 YT_CLIENT_ID · YT_CLIENT_SECRET · YT_REFRESH_TOKEN · IG_ACCESS_TOKEN.
@@ -93,6 +93,7 @@ jobs:
           skip() { printf '## 인스타 릴스\n%s\n' "$1" >> "$GITHUB_STEP_SUMMARY"; echo "$1"; exit 0; }
           mapfile -t ARGS < targets.txt
           if [ "${ARGS[0]}" = "--all" ]; then skip "인스타는 전체 게시를 하지 않습니다 — 건너뜀"; fi
+          if [ "${{ github.event_name }}" = "push" ]; then skip "인스타는 일정 게시(아침 youtube-daily · 17시 instagram-evening)로만 올립니다 — push 에서는 건너뜀(2026-11-08 사용자 결정)"; fi
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "$IG_DISPATCH" != "true" ]; then skip "수동 실행에서 instagram 을 켜지 않아 건너뜀"; fi
           if [ -z "$IG_ACCESS_TOKEN" ] && [ "$DRY_RUN" != "true" ]; then skip "IG_ACCESS_TOKEN 비밀값이 없어 건너뜀(인스타 연결 전)"; fi
           if [ "${{ github.event_name }}" = "push" ]; then ARGS+=(--auto); fi
