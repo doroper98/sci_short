@@ -170,6 +170,12 @@ def add_youtube_link(caption: str, link: str | None) -> str:
 
 
 def validate_caption(caption: str, cfg: IgConfig) -> list[str]:
+    """(아래 규칙에 더해) 첫 줄 <제목> 에 가운뎃점(·)을 쓰지 않는다(2026-11-08 사용자 규칙)."""
+    errs0 = ["설명 첫 줄(제목)에 가운뎃점(·) 금지 — | 또는 쉼표로(사용자 규칙)"] if "·" in (caption.splitlines() or [""])[0] else []
+    return errs0 + _validate_caption_rules(caption, cfg)
+
+
+def _validate_caption_rules(caption: str, cfg: IgConfig) -> list[str]:
     errs: list[str] = []
     if len(caption) > CAPTION_MAX_CHARS:
         errs.append(f"캡션 {len(caption)}자 — 한도 {CAPTION_MAX_CHARS}자")
