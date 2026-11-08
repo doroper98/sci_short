@@ -46,7 +46,7 @@
 | 15 | 사고도 없는데 왜 막힐까 — 유령 체증 | 175.9초 | [15-traffic-jam/](15-traffic-jam/) | [upload.md](15-traffic-jam/upload.md) | 2026-11-07 |
 | 16 | 얼마나 차가워질 수 있을까 — 절대영도 | 164.9초 | [16-absolute-zero/](16-absolute-zero/) | [upload.md](16-absolute-zero/upload.md) | 2026-11-07 |
 | 17 | 벽을 타고 넘는 액체 — 초유체 헬륨 | 166.2초 | [17-superfluid-helium/](17-superfluid-helium/) | [upload.md](17-superfluid-helium/upload.md) | 2026-11-06 |
-| 17 | 헬륨을 영하 271도로 식히면 — 60초 핵심판 (길이 실험) | 59.9초 | [17-superfluid-helium-60s/](17-superfluid-helium-60s/) | [upload.md](17-superfluid-helium-60s/upload.md) | uncommitted |
+| 17 | 헬륨을 영하 271도로 식히면 — 60초 핵심판 (길이 실험) | 59.9초 | [17-superfluid-helium-60s/](17-superfluid-helium-60s/) | [upload.md](17-superfluid-helium-60s/upload.md) | 2026-11-08 |
 | 18 | 섭씨, 화씨, 켈빈 — 온도를 재는 세 눈금 | 157.6초 | [18-temperature-scales/](18-temperature-scales/) | [upload.md](18-temperature-scales/upload.md) | 2026-11-06 |
 | 19 | 머리가 발보다 빨리 늙는다 — 중력과 시간 | 157.2초 | [19-gravity-time/](19-gravity-time/) | [upload.md](19-gravity-time/upload.md) | 2026-11-06 |
 | 20 | 원자폭탄은 어떻게 터질까 — 핵분열 연쇄반응 | 170.3초 | [20-atomic-bomb/](20-atomic-bomb/) | [upload.md](20-atomic-bomb/upload.md) | 2026-11-07 |
