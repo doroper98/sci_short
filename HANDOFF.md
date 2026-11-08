@@ -99,6 +99,7 @@
 
 ## 2026-11-08: 인스타 첫 게시·설명 말투·틱톡 반자동
 
+- 틱톡 옛 편 28편 일괄 예약 꾸러미 `docs/TIKTOK_BATCH_2026-11-08.md`(하루 3편 11/9~11/18, 사용자가 PC 틱톡 스튜디오에서 예약). 28편 `tiktok_offer.json` 기록 → 아침 안내는 새 편만. 틱톡 공식 API 심사·브라우저 대리 업로드는 하지 않음(지침상 자기 계정 도구 불가, 약관 자동화 위험).
 - 인스타 사용자 이름 변경: 사용자가 `_quasarlab` → `_scishorts`(프로필 '과학쑛츠', 소개에 유튜브 링크). `config/instagram.json` `username` 을 맞춤(ID 17841457693338876 그대로). 틱톡 `@shortform_science`(`config/tiktok.json` `account`).
 - 인스타 첫 게시: 01 중력파 https://www.instagram.com/reel/DfetDJgjHAJ/ (instagram-evening 수동 실행 42477985771). 첫 시도는 rupload 가 `ProcessingFailedError` 로 거부 → 메타 문서상 resumable 은 'Facebook Login for Business 구현 앱'만 → `transfer: url`(video_url, GitHub raw)로 바꿈(PR #54). 사용자가 앱에서 게시물 확인.
 - 사용자: "인스타에 올리는 설명은 친절한 말투로 하고, 설명 마지막 태그 전에 유튜브 프로필 링크를 달아. Youtube : https://www.youtube.com/@Shortform_science 이렇게." → 아직 인스타에 안 올린 28편(02~34)의 인스타 설명을 해요체로 다시 씀(사실·숫자·해시태그 유지), 링크는 게시 때 자동(`youtube_link`). `@Shortform_science` = 과학쑛츠(UCZJSpmlBYUthLg0PSWcbU6w) 확인.
