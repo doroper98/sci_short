@@ -8,8 +8,9 @@
 
   "api_host": "graph.facebook.com",
   "api_version": "v27.0",
-  "transfer": "upload",
+  "transfer": "url",
   "public_base_url": null,
+  "_transfer": "2026-11-08 첫 게시 시도(instagram-evening 실행 42477210307)에서 rupload 직접 전송이 HTTP 400 ProcessingFailedError('Request processing failed')로 거부됨. 메타 문서상 resumable(rupload)은 'Facebook Login for Business 를 구현한 앱만' 쓸 수 있고, 릴스의 기본 방식은 video_url(메타가 공개 주소에서 내려받음)이라 url 로 바꿨다. 영상 주소는 그 실행 커밋의 GitHub raw(저장소 공개).",
   "_api_host": "토큰 종류로 정한다. 시스템 사용자 토큰(만료 없음)·페이스북 로그인 → graph.facebook.com + transfer upload(rupload 직접 전송). 인스타그램 로그인 토큰(60일) → graph.instagram.com + transfer url(공개 주소 video_url, 기본 GitHub raw).",
 
   "ig_user_id": "17841457693338876",

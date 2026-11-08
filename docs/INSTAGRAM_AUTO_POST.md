@@ -86,6 +86,7 @@
 | `ig_user_id 가 비어 있습니다` | `--whoami` 로 확인해 config 에 넣고 병합 |
 | `오류 190` | 토큰 만료·무효. 새 토큰을 받아 비밀값 교체 |
 | `권한 부족` | 토큰 권한에 content_publish 가 있는지 확인 |
+| `영상 전송 실패 HTTP 400 … ProcessingFailedError` | rupload 직접 전송은 'Facebook Login for Business 를 구현한 앱'만 된다(메타 문서). 2026-11-08 첫 시도에서 이 오류가 나 `transfer: url`(video_url, GitHub raw 주소)로 바꿨다 |
 | `처리하지 못했습니다(ERROR)` | 영상 규격. 우리 mp4 는 ffmpeg 편집 목록(elst)을 가진다 — 거부되면 편집 목록 없는 재포장을 검토(현재 21편 모두 elst 있음, 실제 거부 여부 미확인) |
 | `게시됐을 수 있어 다시 게시하지 않습니다` | 인스타 앱에서 확인. 올라갔으면 `--mark-posted <주소>`, 아니면 기록 파일을 지우고 수동 실행 |
 | 한도 초과 | 계정당 24시간 100건(API 게시). 나중에 다시 |
