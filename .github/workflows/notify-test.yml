@@ -1,0 +1,32 @@
+# 알림 시험 — 아침 업로드 알림('공개 전환 대기' 이슈, 저장소 주인에게 할당)이 휴대전화로 오는지 확인한다.
+# 실제 업로드는 하지 않는다. 2026-11-08 사용자 요청: "지금 테스트로 아침에 영상을 올렸다 치고 알람이 오는지 테스트 해볼 수 있어?"
+# 실제 아침 업로드와 같은 방식(github-actions 봇이 이슈를 열고 주인을 담당자로 지정)으로 연다.
+name: notify-test
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["claude/**"]
+    paths: [".github/workflows/notify-test.yml"]
+
+permissions:
+  issues: write
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: 시험 이슈 열기 (주인 할당)
+        run: |
+          gh label create notify-test --color C5DEF5 --description "알림 시험(실제 업로드 아님)" --force
+          gh issue create --label notify-test --assignee "$GITHUB_REPOSITORY_OWNER" \
+            --title "[시험] 공개 전환 대기: 알림 시험 — 실제 업로드 아님" \
+            --body "아침 업로드 알림 시험입니다. 실제 영상은 올리지 않았습니다.
+
+          이 알림이 휴대전화로 왔다면 설정이 맞습니다. 확인하셨으면 이 이슈를 닫아 주십시오.
+
+          실제 알림은 매일 06:37~07:00 KST 에 '공개 전환 대기: (영상 제목)' 으로 옵니다. 본문에 유튜브·스튜디오 링크가 있습니다."
