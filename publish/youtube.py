@@ -615,6 +615,21 @@ def wait_processed(send: Transport, token: str, video_id: str, *, timeout_sec: f
         polls += 1
 
 
+def video_status(send: Transport, token: str, ids: list[str]) -> dict[str, dict[str, Any]]:
+    """videos.list(part=status,statistics) — 영상 ID 별 공개 상태와 조회수. 없는(지운) 영상은 빠진다. 50개씩, 1회 1단위."""
+    out: dict[str, dict[str, Any]] = {}
+    ids = [i for i in ids if i]
+    for k in range(0, len(ids), 50):
+        url = VIDEOS_URL + "?" + urllib.parse.urlencode({"part": "status,statistics", "id": ",".join(ids[k:k + 50])})
+        r = send("GET", url, {"Authorization": f"Bearer {token}"}, None)
+        if r.status != 200:
+            raise _api_error(r, "영상 상태 확인")
+        for v in r.json().get("items", []):
+            out[v["id"]] = {"privacy": v.get("status", {}).get("privacyStatus", ""),
+                            "views": int(v.get("statistics", {}).get("viewCount", 0) or 0)}
+    return out
+
+
 def upload_thumbnail(send: Transport, token: str, video_id: str, image: Path) -> None:
     """thumbnails.set — 채널이 맞춤 썸네일을 쓸 수 있어야 한다(전화 인증). 할당량 50단위."""
     ctype = "image/png" if image.suffix.lower() == ".png" else "image/jpeg"
@@ -654,6 +669,7 @@ class Record:
     number: int | None = None
     slug: str = ""
     source: str = "api"                   # api(이 도구가 올림) · manual(손으로 올린 것을 --mark-uploaded 로 기록)
+    previous: list[dict[str, Any]] = field(default_factory=list)   # 다시 올리기 전의 판들(최근 것이 앞)
     schema_version: int = 1
 
 
@@ -713,8 +729,13 @@ def apply_thumbnail(send: Transport, cfg: Config, token: str, rec: Record, image
 def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport | None = None,
                     env: dict[str, str] | None = None, caption: bool | None = None, thumbnail: bool | None = None,
                     synthetic: bool | None = None, made_for_kids: bool | None = None, not_shorts: bool = False,
-                    allow_reupload: bool = False, sleep: Callable[[float], None] = time.sleep, auto: bool = False) -> dict[str, Any]:
+                    allow_reupload: bool = False, sleep: Callable[[float], None] = time.sleep, auto: bool = False,
+                    republish: bool = False, republish_min_views: int = 50) -> dict[str, Any]:
     """에피소드 하나. 결과 dict 의 status: uploaded · skipped · dry-run · error.
+
+    republish=True(다시 올리기, 2026-11-08): 같은 영상이라도 새 영상으로 올린다. 몰아 공개해 노출을 못 받은 편을
+    하루 1편씩 새로 올리려는 것이다. 이전 판의 조회수가 republish_min_views 이상이면(그사이 노출을 받음) 올리지 않는다.
+    이전 판은 기록의 previous 에 남기고, 비공개 전환은 사용자가 스튜디오에서 한다(이 토큰에는 수정 권한이 없다).
 
     auto=True(push 자동 실행): 번호가 cfg.auto_from_number 이상이거나 meta.json auto_publish=true 인 편만 처리한다.
     01~21 은 손으로 올린 편이 섞여 있어, 폴더를 고친 PR 이 병합돼도 다시 올라가지 않게 한다(2026-11-07)."""
@@ -747,7 +768,7 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
              + f" · 자막 {'올림' if ep.srt else '안 올림'} · 썸네일 {ep.thumbnail.name if ep.thumbnail else '없음'}"
              + f" · 비공개 · 합성표시={meta.contains_synthetic_media} · 아동용={meta.made_for_kids}")
         prev = read_record(dir_)
-        if prev is not None:
+        if prev is not None and not republish:
             if prev.video_md5 == md5:
                 res.update(status="skipped", video_id=prev.video_id, url=prev.url, studio_url=prev.studio_url)
                 res["warnings"].append(f"이미 올린 영상(md5 {md5[:8]}, {prev.source}) — {prev.url} · 다시 올리지 않음")
@@ -778,7 +799,7 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
             res["warnings"].append(f"기록을 덮어씁니다 — 이전 영상 {prev.url} 은 유튜브에 그대로 남아 있습니다")
         if dry_run:
             res["status"] = "dry-run"
-            res["warnings"].append("dry-run — 올리지 않았습니다")
+            res["warnings"].append("dry-run — 올리지 않았습니다" + (" (다시 올리기 — 이전 판 조회수는 실제 실행 때 확인)" if republish else ""))
             return res
         secrets = read_secrets(env)
         tx = send or urllib_transport(cfg.timeout_sec)
@@ -787,6 +808,23 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
         if cfg.channel_id and ch["id"] != cfg.channel_id:
             raise UploadError(f"토큰이 가리키는 채널({ch['title']} {ch['id']})이 설정 channel_id({cfg.channel_id})와 다릅니다 — 업로드 중단")
         _log(f"채널: {ch['title']} ({ch['id']})")
+        prev_info: dict[str, Any] | None = None
+        if republish:
+            if prev is not None:
+                st = video_status(tx, token, [prev.video_id]).get(prev.video_id)
+                prev_info = {"video_id": prev.video_id, "url": prev.url, "title": prev.title, "uploaded_at": prev.uploaded_at,
+                             "views_at_republish": st["views"] if st else None,
+                             "privacy_at_republish": st["privacy"] if st else "not-found",
+                             "republished_at": _now(), "reason": "republish"}
+                if st and st["views"] >= republish_min_views:
+                    res.update(status="skipped", video_id=prev.video_id, url=prev.url, studio_url=prev.studio_url,
+                               previous_views=st["views"])
+                    res["warnings"].append(f"이전 판이 그사이 노출을 받았습니다({st['views']}회 ≥ {republish_min_views}) — 다시 올리지 않음")
+                    _log(res["warnings"][-1])
+                    return res
+                _log(f"다시 올리기: 이전 판 {prev.url} 조회 {st['views'] if st else '없음(지워짐)'}회")
+            else:
+                prev_info = {"video_id": None, "note": "손으로 올린 이전 판(ID 미기록)", "republished_at": _now(), "reason": "republish"}
         vid = upload_video(tx, cfg, token, ep.video, meta, sleep=sleep, log=_log)
         rec = Record(video_id=vid, url=WATCH_URL_PREFIX + vid, studio_url=STUDIO_URL.format(video_id=vid),
                      uploaded_at=_now(), privacy_status="private",
@@ -795,6 +833,9 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
                      contains_synthetic_media=meta.contains_synthetic_media, made_for_kids=meta.made_for_kids,
                      duration_sec=probe["duration_sec"] if probe else None, width=probe["width"] if probe else None,
                      height=probe["height"] if probe else None, number=ep.number, slug=ep.slug, source="api")
+        if prev_info is not None:
+            rec.previous = [prev_info] + (prev.previous if prev is not None else [])
+            res.update(republish=True, previous_video=prev_info.get("url"), previous_views=prev_info.get("views_at_republish"))
         write_record(dir_, rec)   # 자막·썸네일이 실패해도 영상 기록은 남는다
         _log(f"영상 업로드 완료(비공개) {rec.url} · Studio {rec.studio_url}")
         if ep.thumbnail is not None:
@@ -815,6 +856,59 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
         res["error"] = str(ex)
         _log(f"{_rel(dir_)}: 실패 — {ex}")
         return res
+
+
+DEFAULT_REPUBLISH = REPO / "config" / "republish.json"
+
+
+def republished(rec: Record | None) -> bool:
+    return rec is not None and any(p.get("reason") == "republish" for p in rec.previous)
+
+
+def republish_next(cfg: Config, queue_path: Path, finals: Path, *, today: dt.date, dry_run: bool,
+                   send: Transport | None = None, env: dict[str, str] | None = None,
+                   sleep: Callable[[float], None] = time.sleep) -> dict[str, Any]:
+    """대기열(config/republish.json)에서 다음 한 편을 다시 올린다. 하루 한 번 돈다(youtube-republish 워크플로).
+
+    쉬는 경우: 시작일 전 · 대기열 끝 · 최근 hold_days 안에 올린 영상이 아직 비공개(사용자가 공개하기 전).
+    이전 판이 그사이 min_views 이상이면 그 편은 건너뛰고 다음 편으로 간다. 한 번에 최대 한 편만 올린다."""
+    rc = json.loads(queue_path.read_text(encoding="utf-8"))
+    min_views = int(rc.get("min_views", 50))
+    hold_days = int(rc.get("hold_if_private_within_days", 3))
+    empty = {"uploaded": 0, "skipped": 0, "dry-run": 0, "error": 0}
+    start = dt.date.fromisoformat(rc["start"])
+    if today < start:
+        return {"ok": True, "counts": empty, "results": [], "note": f"다시 올리기 시작 전입니다({start.isoformat()}부터)"}
+    todo = [REPO / q for q in rc.get("queue", []) if not republished(read_record(REPO / q))]
+    if not todo:
+        return {"ok": True, "counts": empty, "results": [], "note": "다시 올리기 대기열이 끝났습니다"}
+    if not dry_run:
+        tx = send or urllib_transport(cfg.timeout_sec)
+        token = access_token(tx, read_secrets(env))
+        recent: dict[str, str] = {}
+        for d in episode_dirs(finals):
+            rec = read_record(d)
+            if rec is None or rec.source != "api" or not rec.uploaded_at:
+                continue
+            age = today - dt.datetime.fromisoformat(rec.uploaded_at).date()
+            if age.days <= hold_days:
+                recent[rec.video_id] = _rel(d)
+        if recent:
+            st = video_status(tx, token, list(recent))
+            waiting = [f"{recent[v]}({v})" for v, x in st.items() if x["privacy"] == "private"]
+            if waiting:
+                return {"ok": True, "counts": empty, "results": [],
+                        "note": "아직 공개하지 않은 비공개 영상이 있어 오늘은 쉽니다: " + ", ".join(waiting)}
+        send = tx
+    results = []
+    for d in todo:
+        res = process_episode(d, cfg, dry_run=dry_run, send=send, env=env, sleep=sleep, republish=True,
+                              republish_min_views=min_views)
+        results.append(res)
+        if res["status"] != "skipped":          # 올렸거나(또는 dry-run·오류) 멈춘다 — 하루 한 편
+            break
+    counts = {s: sum(1 for r in results if r["status"] == s) for s in empty}
+    return {"ok": counts["error"] == 0, "counts": counts, "results": results}
 
 
 def mark_uploaded(dir_: Path, video_id: str, *, note: str = "") -> Record:
@@ -899,6 +993,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--not-shorts", action="store_true", help="쇼츠 규격(세로·길이)에 어긋나도 일반 영상으로 올린다")
     ap.add_argument("--allow-reupload", action="store_true", help="기록이 있는데 영상이 바뀐 경우에도 새로 올린다")
     ap.add_argument("--auto", action="store_true", help="push 자동 실행: auto_from_number 이상(또는 meta.json auto_publish) 편만")
+    ap.add_argument("--republish", action="store_true", help="지정한 편을 새 영상으로 다시 올린다(이전 판이 min-views 이상이면 건너뜀)")
+    ap.add_argument("--republish-next", action="store_true", help="대기열(config/republish.json)에서 다음 한 편을 다시 올린다")
+    ap.add_argument("--republish-config", type=Path, default=DEFAULT_REPUBLISH)
+    ap.add_argument("--republish-min-views", type=int, default=50)
+    ap.add_argument("--today", help="기준일 YYYY-MM-DD(시험용)")
     ap.add_argument("--env-file", type=Path, help="KEY=VALUE 파일(.env)에서 비밀값을 읽는다")
     ap.add_argument("--report", type=Path, help="결과 JSON 을 이 파일에도 쓴다(GitHub Actions 용)")
     a = ap.parse_args(argv)
@@ -919,6 +1018,11 @@ def main(argv: list[str] | None = None) -> int:
             _log(f"채널: {info['channel_title']} ({info['channel_id']})" +
                  ("" if info["matches_config"] is None else (" · 설정과 일치" if info["matches_config"] else " · 설정 channel_id 와 다름!")))
             out = {"ok": True, **info}
+        elif a.republish_next:
+            today = dt.date.fromisoformat(a.today) if a.today else dt.datetime.now(dt.timezone.utc).date()
+            out = republish_next(cfg, a.republish_config, a.finals, today=today, dry_run=a.dry_run, env=env)
+            if out.get("note"):
+                _log(out["note"])
         elif a.mark_uploaded:
             if len(a.episodes) != 1:
                 raise UploadError("--mark-uploaded 는 에피소드 폴더 하나와 함께 씁니다")
@@ -937,7 +1041,8 @@ def main(argv: list[str] | None = None) -> int:
             results = [process_episode(d, cfg, dry_run=a.dry_run, caption=caption, thumbnail=False if a.no_thumbnail else None,
                                        synthetic=None if a.synthetic_media is None else a.synthetic_media == "yes",
                                        made_for_kids=None if a.made_for_kids is None else a.made_for_kids == "yes",
-                                       not_shorts=a.not_shorts, allow_reupload=a.allow_reupload, env=env, auto=a.auto) for d in dirs]
+                                       not_shorts=a.not_shorts, allow_reupload=a.allow_reupload, env=env, auto=a.auto,
+                                       republish=a.republish, republish_min_views=a.republish_min_views) for d in dirs]
             counts = {s: sum(1 for r in results if r["status"] == s) for s in ("uploaded", "skipped", "dry-run", "error")}
             out = {"ok": counts["error"] == 0, "counts": counts, "results": results}
             if not dirs:

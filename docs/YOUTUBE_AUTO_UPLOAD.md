@@ -177,6 +177,17 @@ python -m publish.youtube finals/13-gamma-ray-burst --env-file .env   # 비공�
 - **할당량(2026-11-03 공식 문서 확인).** videos.insert 는 별도 버킷 하루 100회. captions.insert 400단위, thumbnails.set 50단위, channels.list 1단위(기본 하루 10,000단위). 초과 시 `quotaExceeded` 로 멈추고 태평양 시간 자정(KST 오후 4~5시) 뒤 다시 됩니다.
 - **로컬·클라우드 세션에서 직접** 올릴 수도 있습니다: `python -m publish.youtube finals/<ep> --env-file .env`.
 
+## 다시 올리기 (2026-11-08)
+
+한꺼번에 공개해 노출을 못 받은 편을 **새 영상으로** 하루 1편씩 다시 올립니다(`docs/CHANNEL_GROWTH.md` H3).
+- 대기열과 규칙: `config/republish.json`(시작일, `min_views` 50, 비공개 대기 3일)
+- 실행: `.github/workflows/youtube-republish.yml` 매일 09:17 KST → `python -m publish.youtube --republish-next`
+- 이전 판의 조회수를 `videos.list(part=status,statistics)`로 확인해 `min_views` 이상이면 건너뜁니다
+- 최근 3일 안에 올린 영상이 아직 비공개면 그날은 쉽니다(사용자가 공개하는 속도에 맞춤)
+- 새 기록의 `previous`에 이전 판(영상 ID, 다시 올릴 때의 조회수·공개 상태)이 남습니다
+- 알림 이슈에 "이전 판 비공개로 전환" 체크가 붙습니다. 이 토큰에는 수정 권한이 없어 사람이 합니다
+- 한 편만 손으로: `python -m publish.youtube finals/<ep> --republish`
+
 ## 안전장치
 
 | 위험 | 장치 |

@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import datetime as dt
 import io
 import json
 import shutil
 import subprocess
 import tempfile
 import unittest
+import urllib.parse
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 from unittest import mock
@@ -103,6 +105,8 @@ class FakeApi:
                  thumb_fail: bool = False, processing: list[str] | None = None) -> None:
         self.calls: list[str] = []
         self.processing = list(processing or ["succeeded"])   # videos.list 가 차례로 돌려줄 processingStatus(마지막 값 유지)
+        self.status_map: dict[str, tuple[str, int]] = {}         # videos.list(part=status,statistics): id → (공개 상태, 조회수)
+        self.uploads = 0
         self.bodies: dict[str, bytes] = {}
         self.channel_id = channel_id
         self.fail_put_once = fail_put_once
@@ -120,6 +124,12 @@ class FakeApi:
             self.calls.append("channel")
             assert headers["Authorization"] == "Bearer AT"
             return yu.Response(200, {}, json.dumps({"items": [{"id": self.channel_id, "snippet": {"title": "과학 채널"}}]}).encode())
+        if url.startswith(yu.VIDEOS_URL) and "part=status" in url:
+            self.calls.append("status")
+            ids = urllib.parse.parse_qs(urllib.parse.urlsplit(url).query)["id"][0].split(",")
+            items = [{"id": i, "status": {"privacyStatus": self.status_map[i][0]}, "statistics": {"viewCount": str(self.status_map[i][1])}}
+                     for i in ids if i in self.status_map]
+            return yu.Response(200, {}, json.dumps({"items": items}).encode())
         if url.startswith(yu.VIDEOS_URL):
             self.calls.append("processing")
             assert method == "GET" and "part=processingDetails" in url and "id=VID123" in url
@@ -152,6 +162,7 @@ class FakeApi:
             self.received = end + 1
             if self.received < self.total:
                 return yu.Response(308, {"range": f"bytes=0-{end}"}, b"")
+            self.uploads += 1
             return yu.Response(200, {}, b'{"id": "VID123"}')
         if url.startswith(yu.CAPTIONS_URL):
             self.calls.append("caption")
@@ -437,6 +448,89 @@ class UploadFlowTest(unittest.TestCase):
             ep = _episode(Path(d), meta={"auto_publish": "yes"})
             with self.assertRaisesRegex(yu.UploadError, "auto_publish"):
                 yu.load_episode(ep)
+
+    def test_republish_uploads_new_video_and_keeps_previous(self) -> None:
+        """2026-11-08: 몰아 공개해 노출을 못 받은 편을 새 영상으로 다시 올린다. 이전 판은 previous 에 남는다."""
+        api = FakeApi()
+        with tempfile.TemporaryDirectory() as d:
+            ep = _episode(Path(d))
+            yu.process_episode(ep, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+            old = yu.read_record(ep)
+            old.video_id, old.url = "OLD1", "https://youtu.be/OLD1"
+            yu.write_record(ep, old)
+            api.status_map = {"OLD1": ("public", 7)}
+            res = yu.process_episode(ep, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None, republish=True)
+            self.assertEqual(res["status"], "uploaded", res)
+            self.assertEqual((res["previous_video"], res["previous_views"]), ("https://youtu.be/OLD1", 7))
+            rec = yu.read_record(ep)
+            self.assertEqual(rec.video_id, "VID123")
+            self.assertEqual(rec.previous[0]["video_id"], "OLD1")
+            self.assertEqual(rec.previous[0]["reason"], "republish")
+            self.assertTrue(yu.republished(rec))
+            self.assertEqual(api.uploads, 2)
+
+    def test_republish_skips_when_previous_got_views(self) -> None:
+        api = FakeApi()
+        with tempfile.TemporaryDirectory() as d:
+            ep = _episode(Path(d))
+            yu.process_episode(ep, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+            api.status_map = {"VID123": ("public", 900)}
+            res = yu.process_episode(ep, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None, republish=True)
+            self.assertEqual(res["status"], "skipped")
+            self.assertIn("노출을 받았습니다", res["warnings"][-1])
+            self.assertEqual(api.uploads, 1)
+
+    def test_republish_without_record_notes_manual_previous(self) -> None:
+        api = FakeApi()
+        with tempfile.TemporaryDirectory() as d:
+            ep = _episode(Path(d))
+            res = yu.process_episode(ep, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None, republish=True)
+            self.assertEqual(res["status"], "uploaded")
+            self.assertIn("ID 미기록", yu.read_record(ep).previous[0]["note"])
+
+    def test_republish_next_queue_gate_and_order(self) -> None:
+        api = FakeApi()
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            a = _episode(root, name="06-a", slug="a")
+            b = _episode(root, name="07-b", slug="b")
+            for ep, vid, views in ((a, "OA", 900), (b, "OB", 3)):
+                yu.process_episode(ep, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+                r = yu.read_record(ep)
+                r.video_id, r.uploaded_at = vid, "2026-11-10T10:00:00+00:00"   # 보류 창(3일) 안
+                yu.write_record(ep, r)
+            q = root / "republish.json"
+            rel = lambda p: p.relative_to(yu.REPO).as_posix()   # noqa: E731
+            q.write_text(json.dumps({"start": "2026-11-11", "min_views": 50, "hold_if_private_within_days": 3,
+                                     "queue": [rel(a), rel(b)]}), encoding="utf-8")
+            early = yu.republish_next(_cfg(), q, root, today=dt.date(2026, 11, 10), dry_run=False, send=api, env=ENV)
+            self.assertIn("시작 전", early["note"])
+            api.status_map = {"OA": ("public", 900), "OB": ("private", 3)}
+            hold = yu.republish_next(_cfg(), q, root, today=dt.date(2026, 11, 11), dry_run=False,
+                                     send=api, env=ENV, sleep=lambda s: None)
+            self.assertIn("쉽니다", hold["note"])                                  # 비공개 대기 영상이 있으면 쉰다
+            api.status_map = {"OA": ("public", 900), "OB": ("public", 3)}
+            n0 = api.uploads
+            out = yu.republish_next(_cfg(), q, root, today=dt.date(2026, 11, 11), dry_run=False, send=api, env=ENV,
+                                    sleep=lambda s: None)
+            self.assertEqual([r["status"] for r in out["results"]], ["skipped", "uploaded"])   # a 는 살아남음 → b 를 올림
+            self.assertEqual(api.uploads, n0 + 1)
+            self.assertTrue(yu.republished(yu.read_record(b)))
+            api.status_map["VID123"] = ("public", 0)
+            done = yu.republish_next(_cfg(), q, root, today=dt.date(2026, 11, 20), dry_run=False, send=api, env=ENV,
+                                     sleep=lambda s: None)
+            self.assertEqual([r["status"] for r in done["results"]], ["skipped"])          # a 는 여전히 건너뜀, b 는 끝
+            self.assertEqual(api.uploads, n0 + 1)
+
+    def test_repo_republish_queue_is_valid(self) -> None:
+        rc = json.loads((yu.REPO / "config" / "republish.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(rc["queue"]), len(set(rc["queue"])))
+        self.assertNotIn("finals/01-gravitational-waves", rc["queue"])     # 옛 판이 살아 있음
+        for q in rc["queue"]:
+            d = yu.REPO / q
+            self.assertTrue((d / "upload.md").is_file(), q)
+            meta = yu.build_metadata(yu.load_episode(d, caption=False), yu.load_config())
+            self.assertEqual(yu.validate_metadata(meta), [], q)
 
     def test_thumbnail_reapply_refuses_other_channel(self) -> None:
         with tempfile.TemporaryDirectory() as d:
