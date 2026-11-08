@@ -96,6 +96,7 @@ class IgConfig:
     thumb_offset_ms: int = 0                  # 커버 = 0초 프레임(2026-11-07 사용자 원칙: 썸네일은 첫 프레임)
     ai_label: bool = True                     # is_ai_generated(메타 'AI 정보' 표시). 유튜브 합성 표시와 같은 결정 대기
     hashtags_max: int = 5                     # 2026-11-07 사용자 규칙: 해시태그 5개 이내
+    youtube_link: str | None = None           # 2026-11-08 사용자: 설명 마지막 태그 앞에 유튜브 프로필 링크(게시할 때 붙인다)
     poll_sec: float = 30
     wait_sec: float = 900
     timeout_sec: float = 300
@@ -149,6 +150,23 @@ def parse_instagram_caption(text: str) -> str:
             body.append(lines[k])
         raise UploadError("인스타그램 설명 블록의 닫는 ``` 가 없습니다")
     raise UploadError(f"{UPLOAD_MD_NAME} 에 '인스타그램(릴스) 설명' 블록이 없습니다(finals/INSTAGRAM.md 규칙)")
+
+
+HASHTAG_LINE_RE = re.compile(r"^(#[^\s#]+\s*)+$")
+
+
+def add_youtube_link(caption: str, link: str | None) -> str:
+    """설명 끝의 해시태그 줄 바로 앞에 유튜브 프로필 링크 한 줄을 넣는다(2026-11-08 사용자: "설명 마지막 태그 전에
+    유튜브 프로필 링크를 달아. Youtube : https://www.youtube.com/@Shortform_science 이렇게."). 이미 있으면 그대로."""
+    if not link or link in caption:
+        return caption
+    lines = caption.rstrip().splitlines()
+    i = len(lines)
+    while i > 0 and HASHTAG_LINE_RE.match(lines[i - 1].strip()):
+        i -= 1
+    head = "\n".join(lines[:i]).rstrip()
+    tags = "\n".join(lines[i:])
+    return f"{head}\n\n{link}" + (f"\n\n{tags}" if tags else "")
 
 
 def validate_caption(caption: str, cfg: IgConfig) -> list[str]:
@@ -527,7 +545,7 @@ def process_episode(dir_: Path, cfg: IgConfig, *, dry_run: bool, auto: bool = Fa
             res["warnings"].append("아침 업로드 대기열(config/daily.json) 편 — push 에서는 게시하지 않습니다"
                                    "(인스타는 즉시 공개라 사용자가 유튜브 비공개 판을 보기 전에 공개되지 않게)")
             return res
-        caption = parse_instagram_caption(text)
+        caption = add_youtube_link(parse_instagram_caption(text), cfg.youtube_link)
         errs = validate_caption(caption, cfg)
         probe = probe_reel(ep.video)
         verrs, vwarns = check_reel(ep.video, probe)

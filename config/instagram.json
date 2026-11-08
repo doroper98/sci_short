@@ -28,6 +28,8 @@
   "_ai_label": "is_ai_generated(메타 'AI 정보' 표시). 2026-11-08 사용자 결정 '켜 둠'(유튜브 contains_synthetic_media 도 켜 둠). 메타는 디지털로 만든 사실적 음성·영상에 표시를 요구하고 우리 내레이션은 합성 음성이다. 설명란 문구 금지 규칙과는 별개의 설정이다.",
 
   "hashtags_max": 5,
+  "youtube_link": "Youtube : https://www.youtube.com/@Shortform_science",
+  "_youtube_link": "2026-11-08 사용자: \"설명 마지막 태그 전에 유튜브 프로필 링크를 달아. Youtube : https://www.youtube.com/@Shortform_science 이렇게.\" 게시할 때 publish/instagram.py 가 해시태그 줄 앞에 붙인다(upload.md 에는 쓰지 않는다). @Shortform_science 가 과학쑛츠(UCZJSpmlBYUthLg0PSWcbU6w)임을 채널 페이지에서 확인.",
   "_hashtags_max": "2026-11-07 사용자 규칙: 인스타 설명 해시태그 5개 이내. 넘으면 게시 전에 멈춘다.",
 
   "poll_sec": 30,

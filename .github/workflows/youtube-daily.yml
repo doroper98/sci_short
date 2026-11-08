@@ -6,6 +6,8 @@
 # - 올리면 '공개 전환 대기' 이슈가 열린다. 공개는 사용자가 한다(이 워크플로는 비공개로만 올린다).
 # - 인스타(2026-11-08 사용자 결정 "아침 업로드와 동시에"): 유튜브 단계 직후 한 편을 게시한다(즉시 공개).
 #   오늘 유튜브에 올린 편이 먼저, 없으면 아직 인스타에 없는 옛 편. 옛 편은 17시(instagram-evening)에도 한 편씩.
+# - 틱톡(2026-11-08 사용자 결정 "반자동: 직접 게시"): 올리지 않는다. 같은 편의 영상 주소·설명을 '공개 전환 대기' 이슈에 넣고
+#   사용자가 휴대전화로 올린다(publish/tiktok.py, docs/TIKTOK.md). 유튜브가 쉰 날은 옛 편 하나를 '틱톡 게시' 이슈로.
 name: youtube-daily
 
 on:
@@ -61,13 +63,22 @@ jobs:
           done < <(python .github/scripts/uploaded_dirs.py upload-report.json)
           if [ "$DRY_RUN" = "true" ]; then ARGS+=(--dry-run); fi
           python -m publish.instagram "${ARGS[@]}"
-      - name: 기록 커밋 (youtube_upload.json · instagram_post.json)
+      - name: 틱톡 직접 게시 안내 (올리지 않음)
+        if: ${{ always() }}
+        run: |
+          ARGS=(--next --report tiktok-report.json)
+          while read -r p; do
+            if [ -n "$p" ]; then ARGS+=(--prefer "$p"); fi
+          done < <(python .github/scripts/uploaded_dirs.py upload-report.json)
+          if [ "$DRY_RUN" = "true" ]; then ARGS+=(--dry-run); fi
+          python -m publish.tiktok "${ARGS[@]}"
+      - name: 기록 커밋 (youtube_upload.json · instagram_post.json · tiktok_offer.json)
         if: ${{ always() && env.DRY_RUN != 'true' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           MISSING=0
-          python .github/scripts/stage_records.py upload-report.json instagram-report.json || MISSING=1
+          python .github/scripts/stage_records.py upload-report.json instagram-report.json tiktok-report.json || MISSING=1
           if git diff --cached --quiet; then echo "기록 변경 없음"; exit $MISSING; fi
           git commit -m "publish: 유튜브·인스타 아침 기록 [skip ci]"
           git pull --rebase origin "$GITHUB_REF_NAME"
@@ -77,4 +88,4 @@ jobs:
         if: ${{ always() }}
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python .github/scripts/youtube_report.py report upload-report.json instagram-report.json
+        run: python .github/scripts/youtube_report.py report upload-report.json instagram-report.json tiktok-report.json
