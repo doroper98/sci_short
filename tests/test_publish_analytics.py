@@ -138,7 +138,7 @@ class AnalyticsTest(unittest.TestCase):
         self.assertIn("| SHORTS | 1,100 | 96% |", md)
         self.assertNotIn("비공개 편", md)                                         # 편별 표는 공개만
         self.assertIn("공개 영상 3편 · 비공개 1편", md)
-        self.assertIn("60초판이 아직 공개되지 않았습니다", md)
+        self.assertIn("60초판 시험은 2026-11-08 사용자 결정으로 접었습니다", md)
 
     def test_report_without_analytics_scope(self) -> None:
         api = FakeYT(analytics=False)
@@ -182,8 +182,7 @@ class AnalyticsTest(unittest.TestCase):
         by_vid, by_title = an.load_episodes(yu.REPO / "finals")
         self.assertEqual(by_vid["dbnYxnEgtpo"].dir, "04-wavelength")
         self.assertEqual(by_vid["3n4MJZM6trk"].opener, "question")             # 01 은 질문으로 시작
-        cut = [e for e in by_title.values() if e.dir == "17-superfluid-helium-60s"]
-        self.assertTrue(cut and cut[0].opener == "today")                        # 잘라 만든 판은 원본의 첫 문장
+        self.assertFalse((yu.REPO / "finals" / "17-superfluid-helium-60s").exists())   # 2026-11-08 사용자 결정으로 접음
 
 
 if __name__ == "__main__":

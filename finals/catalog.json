@@ -290,23 +290,6 @@
       "thumbnail": "0초 프레임(매달린 유리컵의 테두리를 넘어 흘러내리는 청록 막과 떨어지는 방울, 흰 질문 \"헬륨을 영하 271도로 식히면?\"과 큰 청록 답 \"벽을 타고 탈출\")"
     },
     {
-      "number": 17,
-      "slug": "superfluid-helium-60s",
-      "title": "헬륨을 영하 271도로 식히면 — 60초 핵심판 (길이 실험)",
-      "status": "final",
-      "folder": "finals/17-superfluid-helium-60s",
-      "video": "finals/17-superfluid-helium-60s/superfluid-helium-60s.mp4",
-      "duration_sec": 59.9,
-      "width": 1080,
-      "height": 1920,
-      "bytes": 10652543,
-      "sha256": "f72fe261c1937654c0384b12a1073ca26711bd18de76f7df61c9ab64ef2de417",
-      "video_date": "2026-11-08",
-      "episode_code": null,
-      "upload_info": "finals/17-superfluid-helium-60s/upload.md",
-      "thumbnail": "0초 프레임(원본과 같은 포스터 — 매달린 유리컵을 넘어 흐르는 청록 막, 흰 질문 \"헬륨을 영하 271도로 식히면?\" + 큰 청록 답 \"벽을 타고 탈출\"). `thumbnail.jpg`도 같은 그림입니다."
-    },
-    {
       "number": 18,
       "slug": "temperature-scales",
       "title": "섭씨, 화씨, 켈빈 — 온도를 재는 세 눈금",

@@ -45,7 +45,6 @@ HASHTAG_RE = re.compile(r"#\S+")
 # 진행 중인 실험(2026-11-08 사용자 결정). 판정 기준일이 지나면 보고서가 판정 줄을 붙인다.
 EXPERIMENTS = {
     "opener": {"title": "첫 문장 — 질문형 대 \"오늘은 ~ 알아볼까요?\"", "uploaded": "2026-11-07", "judge_on": "2026-11-14"},
-    "length": {"title": "길이 — 17 초유체 헬륨 3분판 대 60초판", "a": "17-superfluid-helium", "b": "17-superfluid-helium-60s"},
 }
 
 
@@ -116,12 +115,6 @@ def load_episodes(finals: Path) -> tuple[dict[str, Episode], dict[str, Episode]]
                 ep.duration_sec = float(t.get("duration") or 0) or None
             except (ValueError, KeyError, IndexError):
                 pass
-        elif (d / "cut.json").is_file():        # 잘라 만든 판은 원본 편의 첫 문장을 그대로 쓴다
-            src = json.loads((d / "cut.json").read_text(encoding="utf-8")).get("source", "")
-            parent = finals / Path(src).parent.name if src else None
-            if parent and (parent / "timeline.json").is_file():
-                first = json.loads((parent / "timeline.json").read_text(encoding="utf-8"))["sentences"][0]
-                ep.opener = classify_opener(first.get("text") or first.get("display") or "")
         rec = read_record(d)
         if rec is not None:
             by_vid[rec.video_id] = ep
@@ -419,22 +412,9 @@ def build_report(today: dt.date, ch: dict[str, Any], rows: list[VideoRow], *, ha
         out.append("> 판정일이 지났습니다. 위 표로 첫 문장 규칙(2026-11-01 결정)을 다시 정할지 사용자에게 묻습니다.")
     else:
         out.append("> 아직 판정 전입니다. 표본이 작아(질문형 3편) 큰 차이만 의미가 있습니다.")
-    e2 = EXPERIMENTS["length"]
-    a_row = next((r for r in pub if r.episode == e2["a"]), None)
-    b_row = next((r for r in pub if r.episode == e2["b"]), None)
-    out += ["", f"### {e2['title']}", ""]
-    if b_row is None:
-        out.append("60초판이 아직 공개되지 않았습니다(또는 업로드 전).")
-    else:
-        for name, r in (("3분판", a_row), ("60초판", b_row)):
-            if r is None:
-                continue
-            s = f"- {name}: 공개 {r.published}, 조회수 {r.views:,}"
-            if has_a:
-                s += (f", 평균 시청 비율 {_fmt(r.a_total.get('averageViewPercentage'), 'pct')}, "
-                      f"참여 조회 {_fmt(r.a_total.get('engagedViews'))}")
-            out.append(s)
-        out.append("> 공개 시점이 달라 누적 조회수는 바로 비교할 수 없습니다. 같은 경과 일수의 값과 평균 시청 비율을 봅니다.")
+    out += ["", "### 길이",
+            "", "60초판 시험은 2026-11-08 사용자 결정으로 접었습니다(\"설명력이 떨어질 것 같아\"). 길이는 아래 동종 채널 비교의 "
+            "'길이와 조회수' 표와 우리 편들의 평균 시청 비율로만 지켜봅니다."]
 
     if has_a and sources:
         total = sum(int(s.get("views", 0)) for s in sources) or 1
