@@ -1,0 +1,57 @@
+# 과학쑛츠 주간 채널 보고서(publish/analytics.py, 2026-11-08 사용자 결정 "주간 자동 보고서").
+# - 매주 월요일 09:47 KST(00:47 UTC)와 수동 실행.
+# - 편별 조회수·시청 비율·구독 증가, 진행 중인 실험(첫 문장, 길이)을 이슈 "주간 채널 보고서 YYYY-MM-DD"로 남기고
+#   자료 스냅숏을 reports/youtube/YYYY-MM-DD.json 으로 main 에 커밋한다(다음 주 비교와 장기 추세용).
+# - 토큰에 yt-analytics.readonly 가 없으면 Data API 부분(조회수·좋아요·공개 상태)만 나온다.
+# - 이 저장소는 공개라 보고서 수치(집계)도 공개된다.
+name: youtube-analytics
+
+on:
+  schedule:
+    - cron: "47 0 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: youtube-analytics
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 보고서 만들기
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: |
+          D=$(date -u +%F)
+          echo "D=$D" >> "$GITHUB_ENV"
+          python -m publish.analytics --md report.md --snapshot "reports/youtube/$D.json"
+          cat report.md >> "$GITHUB_STEP_SUMMARY"
+      - name: 스냅숏 커밋
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- "reports/youtube/$D.json"
+          if git diff --cached --quiet; then echo "변경 없음"; exit 0; fi
+          git commit -m "reports: 주간 채널 보고서 스냅숏 $D [skip ci]"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+      - name: 이슈로 남기기
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create youtube-report --color 1D76DB --description "과학쑛츠 주간 채널 보고서" --force
+          gh issue create --title "주간 채널 보고서 $D" --label youtube-report --body-file report.md

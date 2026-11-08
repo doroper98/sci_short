@@ -1,0 +1,65 @@
+# 노출을 못 받은 편을 하루 1편씩 새 영상으로 다시 올린다(publish/youtube.py --republish-next).
+# 2026-11-08 사용자 요청: "재업로드(2번)가 되도록 구성해봐" — 한꺼번에 공개한 14편은 하루 반 동안 1~20회,
+# 혼자 공개한 27 소나는 몇 시간 만에 635회(docs/CHANNEL_GROWTH.md H3).
+# - 대기열·규칙: config/republish.json (시작일, 이전 판 조회수 기준, 비공개 대기 영상이 있으면 쉼)
+# - 매일 09:17 KST. 올리면 '공개 전환 대기' 이슈에 "이전 판 비공개로 전환" 체크가 붙는다. 공개는 사용자가 한다.
+name: youtube-republish
+
+on:
+  schedule:
+    - cron: "17 0 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "검증만 하고 올리지 않음"
+        type: boolean
+        default: false
+
+concurrency:
+  group: youtube-upload          # 업로드 워크플로와 같은 줄에 세워 기록 커밋이 겹치지 않게
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  republish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      PYTHONUTF8: "1"
+      DRY_RUN: ${{ inputs.dry_run }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: ffprobe 설치
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+      - name: 다음 한 편 다시 올리기 (항상 비공개)
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: |
+          ARGS=(--republish-next --report upload-report.json)
+          if [ "$DRY_RUN" = "true" ]; then ARGS+=(--dry-run); fi
+          python -m publish.youtube "${ARGS[@]}"
+      - name: 기록 커밋 (youtube_upload.json)
+        if: ${{ always() && env.DRY_RUN != 'true' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          MISSING=0
+          python .github/scripts/stage_records.py upload-report.json || MISSING=1
+          if git diff --cached --quiet; then echo "기록 변경 없음"; exit $MISSING; fi
+          git commit -m "publish: 유튜브 다시 올리기 기록 [skip ci]"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+          exit $MISSING
+      - name: 결과 요약 · 공개 전환 대기 이슈
+        if: ${{ always() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python .github/scripts/youtube_report.py report upload-report.json

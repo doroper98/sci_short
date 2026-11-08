@@ -63,7 +63,17 @@
 | 권한 | 쓰는 곳 | 영상 수정·삭제 |
 |---|---|---|
 | `youtube.upload` | `videos.insert`(업로드), `thumbnails.set`(썸네일) | 불가 |
-| `youtube.readonly` | `channels.list(mine=true)` — 업로드 전 채널 확인 | 불가 |
+| `youtube.readonly` | `channels.list(mine=true)` — 업로드 전 채널 확인, 영상 처리 상태, 주간 보고서의 영상 목록·조회수 | 불가 |
+| `yt-analytics.readonly` (2026-11-08 추가) | 주간 채널 보고서(`publish/analytics.py`)의 시청 시간·평균 시청 비율·유입 경로·구독 증가 | 불가 |
+
+**분석 권한을 더한 토큰 다시 받기(2026-11-08, 한 번).** 업로드는 지금 토큰으로 계속 됩니다. 이 절차를 마치기 전까지 주간 보고서에는 조회수·좋아요만 나옵니다.
+1. 구글 클라우드 콘솔에서 프로젝트 **Osint Gen** → API 및 서비스 → 라이브러리 → **YouTube Analytics API** → 사용.
+2. 구글 인증 플랫폼 → 데이터 액세스 → 범위 추가에서 `.../auth/yt-analytics.readonly` 를 더하고 저장(민감 범위 — 미검수 앱 경고가 떠도 소유자 본인은 쓸 수 있음).
+3. OAuth Playground(톱니바퀴 → 내 클라이언트 ID·비밀번호, 2026-11-07과 같은 방법)에서 범위 칸에 세 개를 띄어쓰기로 넣는다:
+   `https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly`
+4. Authorize APIs → 계정 → **과학쑛츠** 채널 선택 → 허용 → Exchange authorization code for tokens.
+5. 새 Refresh token 을 저장소 Secrets 의 `YT_REFRESH_TOKEN` 에 덮어쓴다(채팅에 붙이지 않는다).
+6. Actions → youtube-token-check(채널 확인) → youtube-analytics 수동 실행으로 확인.
 
 **`youtube.force-ssl` 은 받지 않습니다.** 동의 화면에 "동영상, 평가, 댓글, 자막 보기, 수정 및 **완전 삭제**"로 표시되는 권한입니다.
 GitHub Secrets 에 오래 두는 토큰이 새면 채널 영상을 지울 수 있어 뺐습니다.
@@ -166,6 +176,17 @@ python -m publish.youtube finals/13-gamma-ray-burst --env-file .env   # 비공�
 - **쇼츠 분류.** 세로·정방형이고 180초 이하면 유튜브가 자동으로 쇼츠로 분류합니다. 13편 모두 1080×1920, 160~179초입니다.
 - **할당량(2026-11-03 공식 문서 확인).** videos.insert 는 별도 버킷 하루 100회. captions.insert 400단위, thumbnails.set 50단위, channels.list 1단위(기본 하루 10,000단위). 초과 시 `quotaExceeded` 로 멈추고 태평양 시간 자정(KST 오후 4~5시) 뒤 다시 됩니다.
 - **로컬·클라우드 세션에서 직접** 올릴 수도 있습니다: `python -m publish.youtube finals/<ep> --env-file .env`.
+
+## 다시 올리기 (2026-11-08)
+
+한꺼번에 공개해 노출을 못 받은 편을 **새 영상으로** 하루 1편씩 다시 올립니다(`docs/CHANNEL_GROWTH.md` H3).
+- 대기열과 규칙: `config/republish.json`(시작일, `min_views` 50, 비공개 대기 3일)
+- 실행: `.github/workflows/youtube-republish.yml` 매일 09:17 KST → `python -m publish.youtube --republish-next`
+- 이전 판의 조회수를 `videos.list(part=status,statistics)`로 확인해 `min_views` 이상이면 건너뜁니다
+- 최근 3일 안에 올린 영상이 아직 비공개면 그날은 쉽니다(사용자가 공개하는 속도에 맞춤)
+- 새 기록의 `previous`에 이전 판(영상 ID, 다시 올릴 때의 조회수·공개 상태)이 남습니다
+- 알림 이슈에 "이전 판 비공개로 전환" 체크가 붙습니다. 이 토큰에는 수정 권한이 없어 사람이 합니다
+- 한 편만 손으로: `python -m publish.youtube finals/<ep> --republish`
 
 ## 안전장치
 

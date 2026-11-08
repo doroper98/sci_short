@@ -110,6 +110,9 @@ def cmd_report(path: str, ig_path: str | None = None) -> int:
     if data is None:
         summary("## 유튜브 업로드\n결과 파일이 없습니다 — 업로드 단계가 시작 전에 실패했습니다(비밀값·설정 확인). " + RUN_URL)
         return 0
+    if data.get("note") and not data.get("results"):
+        summary(f"## 유튜브 다시 올리기\n{data['note']}")       # 쉬는 날(시작 전·대기열 끝·비공개 대기)
+        return 0
     if "results" not in data:
         summary(f"## 유튜브 업로드\n실패: {data.get('error', '?')}\n\n{RUN_URL}")
         ensure_labels()
@@ -135,10 +138,17 @@ def cmd_report(path: str, ig_path: str | None = None) -> int:
             igr = ig_by_dir.get(r["dir"]) or {}
             ig_line = (f"- 인스타 릴스(이미 공개): {igr.get('permalink') or igr.get('media_id')}\n" if igr.get("status") == "posted" else
                        f"- 인스타 릴스: {igr.get('status')} — {igr.get('error') or ' / '.join(igr.get('warnings', []))}\n" if igr else "")
-            body = (f"비공개로 올라갔습니다. YouTube Studio 에서 내용·자막을 확인한 뒤 **공개**로 바꾸고 이 이슈를 닫으십시오.\n\n"
-                    f"- 폴더: `{r['dir']}`\n- 채널: {r.get('channel', '')}\n- 보기: {r['url']}\n- Studio: {r['studio_url']}\n{ig_line}\n"
+            prev_line = (f"- **다시 올림**: 이전 판 {r['previous_video']} (조회 {r.get('previous_views')}회). 새 판을 공개한 뒤 "
+                         "**이전 판은 비공개로** 돌리십시오(같은 영상이 두 개 공개되지 않게)\n" if r.get("previous_video") else
+                         "- **다시 올림**: 이전 판은 손으로 올린 것이라 ID 기록이 없습니다. 스튜디오에서 찾아 비공개로 돌리십시오\n"
+                         if r.get("republish") else "")
+            body = (f"비공개로 올라갔습니다. YouTube Studio 에서 내용·자막을 확인한 뒤 **공개**로 바꾸고 이 이슈를 닫으십시오.\n"
+                    f"공개는 하루 1편, 다른 영상과 같은 날 몰아 하지 않습니다(docs/CHANNEL_GROWTH.md H3).\n\n"
+                    f"- 폴더: `{r['dir']}`\n- 채널: {r.get('channel', '')}\n- 보기: {r['url']}\n- Studio: {r['studio_url']}\n{ig_line}{prev_line}\n"
                     f"경고:\n{warns}\n\n확인할 것:\n- [ ] 영상·음성·자막이 맞는가\n- [ ] 제목·설명·태그가 맞는가\n"
-                    f"- [ ] 아동용 선언·합성 콘텐츠 표시가 맞는가\n- [ ] 공개(또는 예약 공개)로 전환\n\n실행: {RUN_URL}")
+                    f"- [ ] 아동용 선언·합성 콘텐츠 표시가 맞는가\n- [ ] 공개(또는 예약 공개)로 전환\n"
+                    + ("- [ ] 이전 판을 비공개로 전환\n" if (r.get("previous_video") or r.get("republish")) else "")
+                    + f"\n실행: {RUN_URL}")
             create_issue_once(title, body, LABEL_REVIEW, review)
         elif r["status"] == "error":
             title = f"유튜브 업로드 실패: {r['dir']}"
@@ -182,8 +192,13 @@ def cmd_ig_token_check(path: str, outcome: str) -> int:
     alerts = open_issues(LABEL_IG_ALERT)
     title = "인스타 토큰 점검 실패"
     if outcome == "success" and data.get("ok"):
-        summary(f"## 인스타 토큰 점검\n정상 — @{data.get('username')} ({data.get('ig_user_id')})"
-                + ("" if data.get("matches_config") is None else " · 설정과 일치"))
+        if data.get("ig_user_id"):
+            summary(f"## 인스타 토큰 점검\n정상 — @{data.get('username')} ({data.get('ig_user_id')})"
+                    + ("" if data.get("matches_config") is None else " · 설정과 일치"))
+        else:                         # 계정 잠금 전: 토큰이 닿는 인스타 계정 후보를 보여 준다(config 에 넣을 값)
+            rows = "\n".join(f"- @{c.get('username')} — ig_user_id `{c.get('ig_user_id')}` (페이지 「{c.get('page')}」)"
+                             for c in data.get("candidates", []))
+            summary("## 인스타 토큰 점검\n토큰 정상. 아직 계정이 잠기지 않았습니다. 아래 값을 config/instagram.json 에 넣습니다.\n\n" + rows)
         for i in alerts:
             if i["title"] == title:
                 gh("issue", "close", str(i["number"]), "--comment", f"인스타 토큰 점검이 다시 정상입니다. {RUN_URL}")
