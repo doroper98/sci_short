@@ -46,14 +46,34 @@ class FakeYT:
         u = urllib.parse.urlsplit(url)
         q = dict(urllib.parse.parse_qsl(u.query))
         assert headers.get("Authorization") == "Bearer AT"
+        if u.path.endswith("/channels") and ("id" in q or "forHandle" in q):      # 동종 채널
+            self.calls.append("peer:" + q.get("id", q.get("forHandle", "")))
+            if q.get("id") == "UCMISSING":
+                return yu.Response(200, {}, b'{"items": []}')
+            return yu.Response(200, {}, json.dumps({"items": [{"id": "UCP", "statistics": {"subscriberCount": "500"},
+                "contentDetails": {"relatedPlaylists": {"uploads": "UUP"}}}]}).encode())
         if u.path.endswith("/channels"):
             self.calls.append("channels")
             return yu.Response(200, {}, json.dumps({"items": [{"id": "UC1", "snippet": {"title": "과학쑛츠"},
                 "statistics": {"subscriberCount": "21", "videoCount": "4", "viewCount": "1250"},
                 "contentDetails": {"relatedPlaylists": {"uploads": "UU1"}}}]}).encode())
+        if u.path.endswith("/playlistItems") and q["playlistId"] == "UUP":
+            return yu.Response(200, {}, json.dumps({"items": [{"contentDetails": {"videoId": f"P{i}"}} for i in range(12)]}).encode())
         if u.path.endswith("/playlistItems"):
             self.calls.append("playlistItems")
             return yu.Response(200, {}, json.dumps({"items": [{"contentDetails": {"videoId": v[0]}} for v in VIDEOS]}).encode())
+        if u.path.endswith("/videos") and q["id"].startswith("P"):
+            # 동종 채널: 짧은 편(40초)이 긴 편(150초)보다 잘된다. 하나는 너무 새 편, 하나는 긴 영상(10분)
+            items = []
+            for i, vid in enumerate(q["id"].split(",")):
+                dur = "PT40S" if i % 2 == 0 else "PT2M30S"
+                if i == 11:
+                    dur = "PT10M"
+                pub = "2026-11-08" if i == 10 else f"2026-10-{10 + i:02d}"
+                views = 5000 + 100 * i if i % 2 == 0 else 800 + 10 * i
+                items.append({"id": vid, "snippet": {"title": vid, "publishedAt": pub + "T00:00:00Z"}, "status": {"privacyStatus": "public"},
+                              "contentDetails": {"duration": dur}, "statistics": {"viewCount": str(views)}})
+            return yu.Response(200, {}, json.dumps({"items": items}).encode())
         if u.path.endswith("/videos"):
             self.calls.append("videos")
             ids = q["id"].split(",")
@@ -131,6 +151,32 @@ class AnalyticsTest(unittest.TestCase):
     def test_judge_line_after_judge_date(self) -> None:
         md, _ = an.run(FakeYT(), "AT", today=dt.date(2026, 11, 15), finals=self.finals, prev=None)
         self.assertIn("판정일이 지났습니다", md)
+
+    def test_benchmark_table_and_length_effect(self) -> None:
+        cfg = {"recent": 50, "peers": [{"id": "UCPEER", "label": "동종A", "tier": "small"},
+                                       {"id": "@zack", "label": "핸들", "tier": "ref"},
+                                       {"id": "UCMISSING", "label": "없는 채널", "tier": "small"}]}
+        api = FakeYT()
+        md, snap = an.run(api, "AT", today=TODAY, finals=self.finals, prev=None, bench_cfg=cfg)
+        self.assertIn("peer:@zack", api.calls)                                      # 핸들은 forHandle 로 찾는다
+        b = snap["benchmark"]
+        a = b["channels"][0]
+        self.assertEqual((a["n_shorts"], a["n_judged"]), (11, 10))                  # 10분 영상 제외, 새 편은 판단에서 제외
+        self.assertEqual(a["median_sec"], 40)
+        eff = {x["bucket"]: x for x in b["length_effect"]}
+        self.assertGreater(eff["60초 이하"]["mean_pct"], 0.6)
+        self.assertLess(eff["121~180초"]["mean_pct"], 0.4)
+        self.assertEqual(b["own"]["tier"], "self")
+        self.assertIn("## 동종 채널 비교", md)
+        self.assertIn("### 길이와 조회수", md)
+        self.assertIn("없는 채널: 채널을 찾지 못함", md)
+
+    def test_real_benchmark_config_loads(self) -> None:
+        cfg = json.loads((yu.REPO / "config" / "benchmark.json").read_text(encoding="utf-8"))
+        self.assertGreaterEqual(len(cfg["peers"]), 10)
+        for p in cfg["peers"]:
+            self.assertTrue(p["id"].startswith(("UC", "@")), p)
+            self.assertIn(p["tier"], ("small", "mid", "ref"))
 
     def test_real_finals_mapping(self) -> None:
         by_vid, by_title = an.load_episodes(yu.REPO / "finals")

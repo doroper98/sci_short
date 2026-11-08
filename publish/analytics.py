@@ -168,7 +168,7 @@ def channel_info(send: Transport, token: str) -> dict[str, Any]:
             "uploads": c.get("contentDetails", {}).get("relatedPlaylists", {}).get("uploads", "")}
 
 
-def list_videos(send: Transport, token: str, uploads: str) -> list[VideoRow]:
+def list_videos(send: Transport, token: str, uploads: str, limit: int = 2000) -> list[VideoRow]:
     ids: list[str] = []
     page = ""
     while True:
@@ -178,8 +178,9 @@ def list_videos(send: Transport, token: str, uploads: str) -> list[VideoRow]:
         j = _get(send, token, f"{DATA}/playlistItems?" + urllib.parse.urlencode(q), "업로드 목록")
         ids += [it["contentDetails"]["videoId"] for it in j.get("items", []) if it.get("contentDetails", {}).get("videoId")]
         page = j.get("nextPageToken", "")
-        if not page or len(ids) >= 2000:
+        if not page or len(ids) >= limit:
             break
+    ids = ids[:limit]
     rows: list[VideoRow] = []
     for i in range(0, len(ids), 50):
         j = _get(send, token, f"{DATA}/videos?" + urllib.parse.urlencode(
@@ -226,6 +227,117 @@ def analytics(send: Transport, token: str, *, start: str, end: str, metrics: tup
     return [dict(zip(cols, row)) for row in j.get("rows", []) or []]
 
 
+# ───────────────────────────── 동종 채널 비교 ─────────────────────────────
+
+DEFAULT_BENCHMARK = Path(__file__).resolve().parents[1] / "config" / "benchmark.json"
+BUCKETS = ((0, 60, "60초 이하"), (61, 120, "61~120초"), (121, 180, "121~180초"))
+FRESH_DAYS = 3          # 공개 3일 안의 편은 조회수 비교에서 뺀다(아직 노출이 끝나지 않음)
+
+
+def _percentiles(vals: list[float]) -> list[float]:
+    order = sorted(range(len(vals)), key=lambda i: vals[i])
+    out = [0.0] * len(vals)
+    i = 0
+    while i < len(order):
+        j = i
+        while j + 1 < len(order) and vals[order[j + 1]] == vals[order[i]]:
+            j += 1
+        for k in range(i, j + 1):
+            out[order[k]] = ((i + j) / 2) / max(len(vals) - 1, 1)
+        i = j + 1
+    return out
+
+
+def channel_stats(label: str, tier: str, subs: int | None, rows: list[VideoRow], today: dt.date) -> dict[str, Any]:
+    shorts = [r for r in rows if 0 < r.duration_sec <= 180 and r.privacy in ("public", "")]
+    judged = [r for r in shorts if r.published and (today - dt.date.fromisoformat(r.published)).days >= FRESH_DAYS]
+    recent = [r for r in shorts if r.published and (today - dt.date.fromisoformat(r.published)).days < 28]
+    dates = sorted(dt.date.fromisoformat(r.published) for r in shorts if r.published)
+    gaps = [(b - a).days for a, b in zip(dates, dates[1:])]
+    v = [r.views for r in judged]
+    return {"label": label, "tier": tier, "subs": subs, "n_shorts": len(shorts), "n_judged": len(judged),
+            "median_sec": _median([r.duration_sec for r in shorts]),
+            "share_le60": (sum(r.duration_sec <= 60 for r in shorts) / len(shorts)) if shorts else None,
+            "median_views": _median(v), "p90_views": sorted(v)[int(0.9 * (len(v) - 1))] if v else None,
+            "lt50": (sum(x < 50 for x in v) / len(v)) if v else None,
+            "per_week": len(recent) / 4, "median_gap_days": _median(gaps),
+            "same_day_share": (sum(g == 0 for g in gaps) / len(gaps)) if gaps else None}
+
+
+def length_effect(per_channel: list[list[VideoRow]], today: dt.date) -> list[dict[str, Any]]:
+    """채널 안 조회수 백분위를 길이 구간별로 모은다(채널 규모 효과 제거). 3구간 중 2구간 이상에 각 3편+ 있는 채널만."""
+    acc: dict[str, list[float]] = {b[2]: [] for b in BUCKETS}
+    chans: dict[str, int] = {b[2]: 0 for b in BUCKETS}
+    for rows in per_channel:
+        js = [r for r in rows if 0 < r.duration_sec <= 180 and r.published
+              and (today - dt.date.fromisoformat(r.published)).days >= FRESH_DAYS]
+        if len(js) < 10:
+            continue
+        counts = {b[2]: sum(b[0] <= r.duration_sec <= b[1] for r in js) for b in BUCKETS}
+        if sum(c >= 3 for c in counts.values()) < 2:
+            continue
+        pct = _percentiles([float(r.views) for r in js])
+        for r, q in zip(js, pct):
+            for lo, hi, name in BUCKETS:
+                if lo <= r.duration_sec <= hi:
+                    acc[name].append(q)
+        for name, c in counts.items():
+            chans[name] += c >= 3
+    return [{"bucket": name, "n": len(acc[name]), "channels": chans[name],
+             "mean_pct": (statistics.mean(acc[name]) if acc[name] else None)} for _, _, name in BUCKETS]
+
+
+def benchmark(send: Transport, token: str, cfg: dict[str, Any], today: dt.date,
+              own: tuple[str, int | None, list[VideoRow]] | None = None) -> dict[str, Any]:
+    recent = int(cfg.get("recent", 50))
+    rows_out, per_channel, errors = [], [], []
+    for p in cfg.get("peers", []):
+        ref = p["id"]
+        q = {"part": "snippet,statistics,contentDetails"}
+        q.update({"forHandle": ref} if ref.startswith("@") else {"id": ref})
+        try:
+            j = _get(send, token, f"{DATA}/channels?" + urllib.parse.urlencode(q), f"동종 채널 {p.get('label', ref)}")
+            items = j.get("items") or []
+            if not items:
+                errors.append(f"{p.get('label', ref)}: 채널을 찾지 못함")
+                continue
+            c = items[0]
+            uploads = c.get("contentDetails", {}).get("relatedPlaylists", {}).get("uploads", "")
+            vids = list_videos(send, token, uploads, limit=recent)
+        except (UploadError, TransportError) as ex:
+            errors.append(f"{p.get('label', ref)}: {ex}")
+            continue
+        subs = int(c.get("statistics", {}).get("subscriberCount", 0) or 0)
+        rows_out.append(channel_stats(p.get("label", ref), p.get("tier", ""), subs, vids, today))
+        per_channel.append(vids)
+    own_stats = channel_stats(own[0], "self", own[1], own[2], today) if own else None
+    return {"channels": rows_out, "own": own_stats, "length_effect": length_effect(per_channel, today), "errors": errors}
+
+
+def benchmark_md(b: dict[str, Any]) -> list[str]:
+    out = ["", "## 동종 채널 비교 (공식 Data API, 최근 업로드)", "",
+           "| 채널 | 층 | 구독자 | 쇼츠 길이 중앙값 | 60초 이하 비율 | 조회수 중앙값 | 상위 10% | 50회 미만 | 주당 공개 | 같은 날 공개 비율 |",
+           "|---|---|---|---|---|---|---|---|---|---|"]
+    rows = sorted(b["channels"], key=lambda r: -(r["subs"] or 0)) + ([b["own"]] if b.get("own") else [])
+    for r in rows:
+        name = f"**{r['label']}**" if r["tier"] == "self" else r["label"]
+        out.append(f"| {name} | {r['tier']} | {_fmt(r['subs'])} | {_fmt(r['median_sec'], 'sec')} | {_fmt(100 * r['share_le60'] if r['share_le60'] is not None else None, 'pct')} | "
+                   f"{_fmt(r['median_views'])} | {_fmt(r['p90_views'])} | {_fmt(100 * r['lt50'] if r['lt50'] is not None else None, 'pct')} | "
+                   f"{r['per_week']:.1f} | {_fmt(100 * r['same_day_share'] if r['same_day_share'] is not None else None, 'pct')} |")
+    le = b.get("length_effect") or []
+    if any(x["n"] for x in le):
+        out += ["", "### 길이와 조회수 — 같은 채널 안에서 비교", "",
+                "채널마다 조회수를 0(가장 낮음)~1(가장 높음) 백분위로 바꾼 뒤 길이 구간별로 평균했습니다. 0.5 보다 크면 그 채널 안에서 평균보다 잘된 편입니다.", "",
+                "| 길이 | 편 수 | 채널 수 | 평균 백분위 |", "|---|---|---|---|"]
+        for x in le:
+            mp = "—" if x["mean_pct"] is None else "%.2f" % x["mean_pct"]
+            out.append(f"| {x['bucket']} | {x['n']} | {x['channels']} | {mp} |")
+        out += ["", "> 길이를 섞어 쓰는 채널만 들어갑니다. 길이와 주제가 함께 움직일 수 있어 원인이 아니라 관계입니다."]
+    if b.get("errors"):
+        out += ["", "가져오지 못한 채널: " + " · ".join(b["errors"])]
+    return out
+
+
 # ───────────────────────────── 보고서 ─────────────────────────────
 
 def _fmt(x: Any, kind: str = "") -> str:
@@ -257,7 +369,8 @@ def group_line(name: str, rows: list[VideoRow], has_a: bool) -> str:
 
 
 def build_report(today: dt.date, ch: dict[str, Any], rows: list[VideoRow], *, has_a: bool, a_note: str,
-                 sources: list[dict[str, Any]], daily: list[dict[str, Any]], prev: dict[str, Any] | None) -> str:
+                 sources: list[dict[str, Any]], daily: list[dict[str, Any]], prev: dict[str, Any] | None,
+                 bench: dict[str, Any] | None = None) -> str:
     out: list[str] = [f"# 과학쑛츠 주간 채널 보고서 — {today.isoformat()}", ""]
     prev_views = {v["video_id"]: v["views"] for v in (prev or {}).get("videos", [])}
     prev_subs = (prev or {}).get("channel", {}).get("subscribers")
@@ -328,12 +441,15 @@ def build_report(today: dt.date, ch: dict[str, Any], rows: list[VideoRow], *, ha
         out += ["", "## 유입 경로 (최근 28일)", "", "| 경로 | 조회수 | 비율 |", "|---|---|---|"]
         for s in sources[:8]:
             out.append(f"| {s.get('insightTrafficSourceType')} | {int(s.get('views', 0)):,} | {100 * int(s.get('views', 0)) / total:.0f}% |")
+    if bench:
+        out += benchmark_md(bench)
     out += ["", "---", "자료: YouTube Data API(조회수는 실시간에 가까움) · YouTube Analytics API(2~3일 늦음). "
             "참여 조회 비율 = engagedViews ÷ views(쇼츠에서 넘기지 않고 본 비율의 근사). 원인 해석은 docs/CHANNEL_GROWTH.md."]
     return "\n".join(out) + "\n"
 
 
-def run(send: Transport, token: str, *, today: dt.date, finals: Path, prev: dict[str, Any] | None) -> tuple[str, dict[str, Any]]:
+def run(send: Transport, token: str, *, today: dt.date, finals: Path, prev: dict[str, Any] | None,
+        bench_cfg: dict[str, Any] | None = None) -> tuple[str, dict[str, Any]]:
     ch = channel_info(send, token)
     rows = list_videos(send, token, ch["uploads"])
     by_vid, by_title = load_episodes(finals)
@@ -362,9 +478,11 @@ def run(send: Transport, token: str, *, today: dt.date, finals: Path, prev: dict
                           sort="day")
     except NoAnalyticsScope as ex:
         has_a, a_note = False, str(ex)
-    md = build_report(today, ch, rows, has_a=has_a, a_note=a_note, sources=sources, daily=daily, prev=prev)
+    bench = benchmark(send, token, bench_cfg, today, own=(ch["title"] or "우리", ch["subscribers"], rows)) if bench_cfg else None
+    md = build_report(today, ch, rows, has_a=has_a, a_note=a_note, sources=sources, daily=daily, prev=prev, bench=bench)
     snap = {"date": today.isoformat(), "channel": {k: v for k, v in ch.items() if k != "uploads"},
-            "analytics": has_a, "videos": [asdict(r) for r in rows], "sources": sources, "daily": daily}
+            "analytics": has_a, "videos": [asdict(r) for r in rows], "sources": sources, "daily": daily,
+            "benchmark": bench}
     return md, snap
 
 
@@ -388,6 +506,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     ap.add_argument("--env-file", type=Path)
     ap.add_argument("--today", help="기준일(YYYY-MM-DD, 시험용)")
+    ap.add_argument("--benchmark", type=Path, default=DEFAULT_BENCHMARK, help="동종 채널 목록(config/benchmark.json)")
+    ap.add_argument("--no-benchmark", action="store_true", help="동종 채널 비교를 건너뛴다")
     a = ap.parse_args(argv)
     env = dict(os.environ)
     try:
@@ -398,7 +518,10 @@ def main(argv: list[str] | None = None) -> int:
         send = urllib_transport(cfg.timeout_sec)
         token = access_token(send, read_secrets(env))
         prev = latest_snapshot(a.snapshot.parent, today.isoformat()) if a.snapshot else None
-        md, snap = run(send, token, today=today, finals=a.finals, prev=prev)
+        bench_cfg = None
+        if not a.no_benchmark and a.benchmark.is_file():
+            bench_cfg = json.loads(a.benchmark.read_text(encoding="utf-8"))
+        md, snap = run(send, token, today=today, finals=a.finals, prev=prev, bench_cfg=bench_cfg)
     except (UploadError, TransportError, OSError, ValueError) as ex:
         print(f"[analytics] 실패 — {ex}", file=sys.stderr)
         return 1

@@ -1,0 +1,22 @@
+{
+ "_purpose": "주간 채널 보고서(publish/analytics.py)의 동종 채널 비교. 공식 YouTube Data API(youtube.readonly)로 각 채널의 최근 업로드 길이·공개일·조회수를 읽는다. 2026-11-08 채널 분석 2판(docs/CHANNEL_GROWTH.md)에서 고른 채널. 'id' 는 채널 ID(UC…) 또는 @핸들.",
+ "_tier": "small = 구독자 2천 명 미만(우리와 같은 출발선), mid = 1만~30만, ref = 형식 참고(해외 대형)",
+ "recent": 50,
+ "peers": [
+  {"id": "UCWe8t83GL8J-N3a4ZF6BG-Q", "label": "세모과학", "tier": "mid"},
+  {"id": "UClBX3bgRAdA9VafrpRUj1LA", "label": "Cosmoswag", "tier": "mid"},
+  {"id": "UCXb5Jph9hkZ2Q48QyBealyA", "label": "과학을보다", "tier": "mid"},
+  {"id": "UCBY8WJaooesXR1ePH94aDkw", "label": "신박한천문학연구소", "tier": "mid"},
+  {"id": "UCL6MRHUhNKIn8E82NcyvZxQ", "label": "엉뚱박사과학TV", "tier": "mid"},
+  {"id": "UCKl-ua9mz25r4kSNHvyv5tA", "label": "과학상잡", "tier": "small"},
+  {"id": "UC6sF7tNKYzK-jirdRRsiScQ", "label": "과학상식ForYou", "tier": "small"},
+  {"id": "UCuLezaF8oSHYRSp0hYGXe7w", "label": "1분과학쎈세", "tier": "small"},
+  {"id": "UCex9A9wjLQyMBUQoXegnpqQ", "label": "공학쇼츠", "tier": "small"},
+  {"id": "UCnVqQ2BMuXkL3P2PxzqCqBQ", "label": "1분 과학", "tier": "small"},
+  {"id": "UCVLAg2bRsBt8Uu1CZZqH7_A", "label": "지식냠냠", "tier": "small"},
+  {"id": "UC2uZlIfab7DcA9puyKlpqJg", "label": "우주 한 스푼", "tier": "small"},
+  {"id": "UC0caEs68eI8hdoeRLlyOShg", "label": "우주쇼츠", "tier": "small"},
+  {"id": "UCTbW_SfiOHpvNyrAa-GYgNQ", "label": "Zap Facts", "tier": "ref"},
+  {"id": "@ZackDFilms", "label": "Zack D. Films", "tier": "ref"}
+ ]
+}
