@@ -522,6 +522,83 @@ class UploadFlowTest(unittest.TestCase):
             self.assertEqual([r["status"] for r in done["results"]], ["skipped"])          # a 는 여전히 건너뜀, b 는 끝
             self.assertEqual(api.uploads, n0 + 1)
 
+    def test_auto_push_skips_morning_queue(self) -> None:
+        """아침 업로드 대기열(config/daily.json) 편은 병합 push 에서 올리지 않는다(2026-11-08 사용자 "아침 7시")."""
+        api = FakeApi()
+        with tempfile.TemporaryDirectory() as d:
+            ep = _episode(Path(d), name="32-radar", slug="radar")
+            res = yu.process_episode(ep, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None, auto=True,
+                                     morning={32})
+            self.assertEqual(res["status"], "skipped")
+            self.assertIn("아침 업로드 대기열", res["warnings"][0])
+            self.assertEqual(api.calls, [])
+            self.assertEqual(yu.process_episode(ep, _cfg(), dry_run=True, morning={32})["status"], "dry-run")   # 수동·아침은 올림
+        self.assertIn(32, yu.morning_numbers())                                  # 저장소 설정을 읽는다
+
+    def test_daily_next_new_first_then_hold_then_republish(self) -> None:
+        api = FakeApi()
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            old = _episode(root, name="06-a", slug="a")
+            yu.process_episode(old, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+            r = yu.read_record(old)
+            r.video_id, r.uploaded_at = "OA", "2026-11-01T10:00:00+00:00"       # 보류 창 밖
+            yu.write_record(old, r)
+            second = _episode(root, name="28-tides", slug="tides")
+            first = _episode(root, name="32-radar", slug="radar")
+            daily = root / "daily.json"
+            daily.write_text(json.dumps({"hold_if_private_within_days": 3,
+                                         "order": [{"number": 32, "topic": "레이더"}, {"number": 28, "topic": "조석"},
+                                                   {"number": 33, "topic": "SAR"}]}), encoding="utf-8")
+            rq = root / "republish.json"
+            rq.write_text(json.dumps({"start": "2026-11-11", "min_views": 50, "hold_if_private_within_days": 3,
+                                      "queue": [old.relative_to(yu.REPO).as_posix()]}), encoding="utf-8")
+            self.assertEqual(yu.morning_dirs(json.loads(daily.read_text(encoding="utf-8")), root), [first, second])
+            dry = yu.daily_next(_cfg(), daily, rq, root, today=dt.date(2026, 11, 9), dry_run=True)
+            self.assertEqual((dry["kind"], dry["results"][0]["status"]), ("new", "dry-run"))
+            self.assertEqual(api.uploads, 1)
+            api.status_map = {"OA": ("public", 3)}
+            n0 = api.uploads
+            out = yu.daily_next(_cfg(), daily, rq, root, today=dt.date(2026, 11, 9), dry_run=False, send=api, env=ENV,
+                                sleep=lambda s: None)
+            self.assertEqual((out["kind"], out["results"][0]["dir"], out["results"][0]["status"]),
+                             ("new", yu._rel(first), "uploaded"))                 # 순서대로 32 먼저, 한 편만
+            self.assertEqual(api.uploads, n0 + 1)
+            self.assertIn("대기 1편 더", out["note"])
+            rec = yu.read_record(first)
+            rec.uploaded_at = "2026-11-08T21:40:00+00:00"                          # 11-09 06:40 KST
+            yu.write_record(first, rec)
+            api.status_map[rec.video_id] = ("private", 0)
+            hold = yu.daily_next(_cfg(), daily, rq, root, today=dt.date(2026, 11, 10), dry_run=False, send=api, env=ENV)
+            self.assertIn("쉽니다", hold["note"])                                   # 사용자가 아직 공개하지 않음
+            self.assertEqual(api.uploads, n0 + 1)
+            api.status_map[rec.video_id] = ("public", 0)
+            nxt = yu.daily_next(_cfg(), daily, rq, root, today=dt.date(2026, 11, 10), dry_run=False, send=api, env=ENV,
+                                sleep=lambda s: None)
+            self.assertEqual(nxt["results"][0]["dir"], yu._rel(second))
+            rec2 = yu.read_record(second)
+            rec2.uploaded_at = "2026-11-09T21:40:00+00:00"
+            yu.write_record(second, rec2)
+            api.status_map[rec2.video_id] = ("public", 0)
+            n1 = api.uploads
+            rep = yu.daily_next(_cfg(), daily, rq, root, today=dt.date(2026, 11, 11), dry_run=False, send=api, env=ENV,
+                                sleep=lambda s: None)
+            self.assertEqual((rep["kind"], rep["results"][0]["status"]), ("republish", "uploaded"))   # 새 편이 없으면 다시 올리기
+            self.assertTrue(yu.republished(yu.read_record(old)))
+            self.assertEqual(api.uploads, n1 + 1)
+
+    def test_repo_daily_queue_is_valid(self) -> None:
+        daily = yu.load_daily()
+        nums = [o["number"] for o in daily["order"]]
+        self.assertEqual(len(nums), len(set(nums)))
+        self.assertNotIn(26, nums)                                              # 사용자 "26은 보류"
+        backlog = (yu.REPO / "docs" / "TOPIC_BACKLOG.md").read_text(encoding="utf-8")
+        for o in daily["order"]:
+            self.assertIn(f"| {o['number']} | {o['topic']} |", backlog)          # 사용자 문구 그대로
+        for d in yu.episode_dirs(yu.REPO / "finals"):                           # 이미 올린 편이 대기열에 끼지 않는다
+            if yu.parse_dir_name(d)[0] in nums:
+                self.assertIsNone(yu.read_record(d), d)
+
     def test_repo_republish_queue_is_valid(self) -> None:
         rc = json.loads((yu.REPO / "config" / "republish.json").read_text(encoding="utf-8"))
         self.assertEqual(len(rc["queue"]), len(set(rc["queue"])))

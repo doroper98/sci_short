@@ -336,6 +336,10 @@ class PostFlowTest(unittest.TestCase):
             self.assertEqual(ig.process_episode(off, _cfg(), dry_run=False, auto=True, send=FakeGraph(), env=ENV)["status"], "skipped")
             new = _episode(Path(d), name="24-new", slug="new")
             self.assertEqual(ig.process_episode(new, _cfg(), dry_run=True, auto=True, env={})["status"], "dry-run")
+            morning = _episode(Path(d), name="32-radar", slug="radar")            # 아침 업로드 대기열은 push 에서 게시 안 함
+            res = ig.process_episode(morning, _cfg(), dry_run=False, auto=True, send=FakeGraph(), env=ENV, morning={32})
+            self.assertEqual(res["status"], "skipped")
+            self.assertIn("아침 업로드 대기열", res["warnings"][0])
 
     def test_disabled_config_skips(self) -> None:
         with tempfile.TemporaryDirectory() as d:

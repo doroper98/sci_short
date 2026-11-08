@@ -47,7 +47,8 @@ from pathlib import Path
 from typing import Any, Callable
 
 from publish.youtube import (DEFAULT_FINALS, MB, REPO, RETRY_STATUS, UPLOAD_MD_NAME, Response, Transport, TransportError,
-                             UploadError, _rel, load_env_file, load_episode, md5_file, parse_upload_md, urllib_transport)
+                             UploadError, _rel, load_env_file, load_episode, md5_file, morning_numbers, parse_upload_md,
+                             urllib_transport)
 
 DEFAULT_CONFIG = REPO / "config" / "instagram.json"
 RECORD_NAME = "instagram_post.json"
@@ -496,8 +497,11 @@ def _now() -> str:
 
 def process_episode(dir_: Path, cfg: IgConfig, *, dry_run: bool, auto: bool = False, send: Transport | None = None,
                     env: dict[str, str] | None = None, allow_repost: bool = False,
-                    sleep: Callable[[float], None] = time.sleep) -> dict[str, Any]:
-    """에피소드 하나. status: posted · skipped · dry-run · error."""
+                    sleep: Callable[[float], None] = time.sleep, morning: set[int] | None = None) -> dict[str, Any]:
+    """에피소드 하나. status: posted · skipped · dry-run · error.
+
+    아침 업로드 대기열(config/daily.json)의 편은 push 에서 게시하지 않는다(2026-11-08). 인스타는 게시 즉시 공개라,
+    사용자가 유튜브 비공개 판을 보기 전에 밤에 공개되면 안 된다. 언제 게시할지는 인스타 연결 뒤 정한다."""
     env = dict(os.environ) if env is None else env
     res: dict[str, Any] = {"dir": _rel(dir_), "status": "error", "warnings": []}
     try:
@@ -513,6 +517,11 @@ def process_episode(dir_: Path, cfg: IgConfig, *, dry_run: bool, auto: bool = Fa
             res.update(status="skipped")
             res["warnings"].append(f"자동 대상 아님(번호 {ep.number} < {cfg.auto_from_number}, meta.json auto_publish 없음) — "
                                    "옛 편은 손으로 올린 것이 섞여 있어 자동 게시하지 않습니다")
+            return res
+        if auto and ep.number in (morning_numbers() if morning is None else morning):
+            res.update(status="skipped")
+            res["warnings"].append("아침 업로드 대기열(config/daily.json) 편 — push 에서는 게시하지 않습니다"
+                                   "(인스타는 즉시 공개라 사용자가 유튜브 비공개 판을 보기 전에 공개되지 않게)")
             return res
         caption = parse_instagram_caption(text)
         errs = validate_caption(caption, cfg)

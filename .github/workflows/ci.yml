@@ -12,6 +12,8 @@ on:
       - "tests/**"
       - "config/youtube.json"
       - "config/instagram.json"
+      - "config/daily.json"
+      - "config/republish.json"
       - "finals/**"
       - ".github/**"
   pull_request:
@@ -20,6 +22,8 @@ on:
       - "tests/**"
       - "config/youtube.json"
       - "config/instagram.json"
+      - "config/daily.json"
+      - "config/republish.json"
       - "finals/**"
       - ".github/**"
 
@@ -43,6 +47,8 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
       - name: 단위 시험
         run: python -m unittest discover -s tests -v
+      - name: 아침 업로드 모의 실행 (dry-run, 내일 아침 무엇을 올릴지)
+        run: python -m publish.youtube --daily-next --dry-run
       - name: 바뀐 finals 에피소드 사전 검증 (dry-run)
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then

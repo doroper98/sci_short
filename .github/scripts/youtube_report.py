@@ -111,7 +111,7 @@ def cmd_report(path: str, ig_path: str | None = None) -> int:
         summary("## 유튜브 업로드\n결과 파일이 없습니다 — 업로드 단계가 시작 전에 실패했습니다(비밀값·설정 확인). " + RUN_URL)
         return 0
     if data.get("note") and not data.get("results"):
-        summary(f"## 유튜브 다시 올리기\n{data['note']}")       # 쉬는 날(시작 전·대기열 끝·비공개 대기)
+        summary(f"## 유튜브 아침 업로드\n{data['note']}")       # 쉬는 날(비공개 대기·시작 전·대기열 끝)
         return 0
     if "results" not in data:
         summary(f"## 유튜브 업로드\n실패: {data.get('error', '?')}\n\n{RUN_URL}")
@@ -121,6 +121,7 @@ def cmd_report(path: str, ig_path: str | None = None) -> int:
     c = data.get("counts", {})
     lines = ["## 유튜브 업로드 (항상 비공개)", "",
              f"업로드 {c.get('uploaded', 0)} · 건너뜀 {c.get('skipped', 0)} · dry-run {c.get('dry-run', 0)} · 오류 {c.get('error', 0)}", "",
+             *([f"아침 업로드: {data['note']}", ""] if data.get("note") else []),
              "| 폴더 | 상태 | 제목 | 링크 | 비고 |", "|---|---|---|---|---|"]
     for r in data["results"]:
         note = cell(r.get("error") or " / ".join(r.get("warnings", [])))

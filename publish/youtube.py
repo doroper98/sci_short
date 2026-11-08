@@ -46,6 +46,8 @@ from typing import Any, Callable
 REPO = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = REPO / "config" / "youtube.json"
 DEFAULT_FINALS = REPO / "finals"
+DEFAULT_DAILY = REPO / "config" / "daily.json"
+KST = dt.timezone(dt.timedelta(hours=9), "KST")   # 사용자 기준 시각(아침 업로드·다시 올리기 시작일)
 RECORD_NAME = "youtube_upload.json"
 UPLOAD_MD_NAME = "upload.md"
 META_NAME = "meta.json"
@@ -730,7 +732,8 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
                     env: dict[str, str] | None = None, caption: bool | None = None, thumbnail: bool | None = None,
                     synthetic: bool | None = None, made_for_kids: bool | None = None, not_shorts: bool = False,
                     allow_reupload: bool = False, sleep: Callable[[float], None] = time.sleep, auto: bool = False,
-                    republish: bool = False, republish_min_views: int = 50) -> dict[str, Any]:
+                    republish: bool = False, republish_min_views: int = 50,
+                    morning: set[int] | None = None) -> dict[str, Any]:
     """에피소드 하나. 결과 dict 의 status: uploaded · skipped · dry-run · error.
 
     republish=True(다시 올리기, 2026-11-08): 같은 영상이라도 새 영상으로 올린다. 몰아 공개해 노출을 못 받은 편을
@@ -738,7 +741,8 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
     이전 판은 기록의 previous 에 남기고, 비공개 전환은 사용자가 스튜디오에서 한다(이 토큰에는 수정 권한이 없다).
 
     auto=True(push 자동 실행): 번호가 cfg.auto_from_number 이상이거나 meta.json auto_publish=true 인 편만 처리한다.
-    01~21 은 손으로 올린 편이 섞여 있어, 폴더를 고친 PR 이 병합돼도 다시 올라가지 않게 한다(2026-11-07)."""
+    01~21 은 손으로 올린 편이 섞여 있어, 폴더를 고친 PR 이 병합돼도 다시 올라가지 않게 한다(2026-11-07).
+    아침 업로드 대기열(config/daily.json, morning)의 편도 push 에서는 올리지 않는다. 다음 날 아침 daily_next 가 올린다(2026-11-08)."""
     res: dict[str, Any] = {"dir": _rel(dir_), "status": "error", "warnings": []}
     try:
         ep = load_episode(dir_, caption=cfg.upload_captions if caption is None else caption,
@@ -748,6 +752,12 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
             res["status"] = "skipped"
             res["warnings"].append(f"자동 대상 아님(번호 {ep.number} < {cfg.auto_from_number}, meta.json auto_publish 없음) — "
                                    "옛 편은 수동 실행(episode 지정)으로만 올립니다")
+            _log(f"{_rel(dir_)}: {res['warnings'][-1]}")
+            return res
+        if auto and ep.number in (morning_numbers() if morning is None else morning):
+            res["status"] = "skipped"
+            res["warnings"].append("아침 업로드 대기열(config/daily.json) 편 — push 에서는 올리지 않고 "
+                                   "아침 youtube-daily 가 비공개로 올립니다")
             _log(f"{_rel(dir_)}: {res['warnings'][-1]}")
             return res
         meta = build_metadata(ep, cfg, synthetic=synthetic, made_for_kids=made_for_kids)
@@ -865,10 +875,80 @@ def republished(rec: Record | None) -> bool:
     return rec is not None and any(p.get("reason") == "republish" for p in rec.previous)
 
 
+WAITING_NOTE = "아직 공개하지 않은 비공개 영상이 있어 오늘은 쉽니다: "
+
+
+def private_waiting(send: Transport, token: str, finals: Path, today: dt.date, hold_days: int) -> list[str]:
+    """최근 hold_days 일 안에 API 로 올린 영상 중 아직 비공개인 것. 사용자가 공개하기 전에는 다음 편을 쌓지 않는다."""
+    recent: dict[str, str] = {}
+    for d in episode_dirs(finals):
+        rec = read_record(d)
+        if rec is None or rec.source != "api" or not rec.uploaded_at:
+            continue
+        up = dt.datetime.fromisoformat(rec.uploaded_at)
+        up_day = (up if up.tzinfo else up.replace(tzinfo=dt.timezone.utc)).astimezone(KST).date()
+        if (today - up_day).days <= hold_days:
+            recent[rec.video_id] = _rel(d)
+    if not recent:
+        return []
+    st = video_status(send, token, list(recent))
+    return [f"{recent[v]}({v})" for v, x in st.items() if x["privacy"] == "private"]
+
+
+def load_daily(path: Path | None = None) -> dict[str, Any]:
+    p = DEFAULT_DAILY if path is None else path
+    return json.loads(p.read_text(encoding="utf-8")) if p.is_file() else {"order": []}
+
+
+def morning_numbers(path: Path | None = None) -> set[int]:
+    """아침 업로드 대기열(config/daily.json order)의 번호. push 자동 실행은 이 편들을 올리지 않는다."""
+    return {int(o["number"]) for o in load_daily(path).get("order", [])}
+
+
+def morning_dirs(daily: dict[str, Any], finals: Path) -> list[Path]:
+    """대기열 순서대로, 만들어졌고(finals/<NN>-*) 아직 유튜브 기록이 없는 편."""
+    out = []
+    for o in daily.get("order", []):
+        for d in episode_dirs(finals):
+            if parse_dir_name(d)[0] == int(o["number"]) and read_record(d) is None:
+                out.append(d)
+    return out
+
+
+def daily_next(cfg: Config, daily_path: Path, republish_path: Path, finals: Path, *, today: dt.date, dry_run: bool,
+               send: Transport | None = None, env: dict[str, str] | None = None,
+               sleep: Callable[[float], None] = time.sleep) -> dict[str, Any]:
+    """아침 업로드 한 번(youtube-daily 워크플로, 매일 아침 7시 전). 2026-11-08 사용자 결정.
+
+    1) 최근 hold 일 안에 올린 영상이 아직 비공개면 쉰다.
+    2) 대기열(config/daily.json)에서 만들어 두고 아직 안 올린 첫 편을 비공개로 올린다.
+    3) 그런 편이 없으면 다시 올리기 대기열(config/republish.json)에서 한 편을 올린다. 하루 한 편만."""
+    daily = load_daily(daily_path)
+    hold_days = int(daily.get("hold_if_private_within_days", 3))
+    empty = {"uploaded": 0, "skipped": 0, "dry-run": 0, "error": 0}
+    if not dry_run:
+        tx = send or urllib_transport(cfg.timeout_sec)
+        waiting = private_waiting(tx, access_token(tx, read_secrets(env)), finals, today, hold_days)
+        if waiting:
+            return {"ok": True, "counts": empty, "results": [], "note": WAITING_NOTE + ", ".join(waiting)}
+        send = tx
+    ready = morning_dirs(daily, finals)
+    if ready:
+        res = process_episode(ready[0], cfg, dry_run=dry_run, send=send, env=env, sleep=sleep)
+        counts = {s: int(res["status"] == s) for s in empty}
+        return {"ok": res["status"] != "error", "counts": counts, "results": [res], "kind": "new",
+                "note": f"새 편 {_rel(ready[0])}" + (f" · 대기 {len(ready) - 1}편 더" if len(ready) > 1 else "")}
+    out = republish_next(cfg, republish_path, finals, today=today, dry_run=dry_run, send=send, env=env, sleep=sleep,
+                         skip_hold=True)
+    out["kind"] = "republish"
+    out["note"] = "올릴 새 편이 없어 다시 올리기 대기열에서 — " + out.get("note", "한 편")
+    return out
+
+
 def republish_next(cfg: Config, queue_path: Path, finals: Path, *, today: dt.date, dry_run: bool,
                    send: Transport | None = None, env: dict[str, str] | None = None,
-                   sleep: Callable[[float], None] = time.sleep) -> dict[str, Any]:
-    """대기열(config/republish.json)에서 다음 한 편을 다시 올린다. 하루 한 번 돈다(youtube-republish 워크플로).
+                   sleep: Callable[[float], None] = time.sleep, skip_hold: bool = False) -> dict[str, Any]:
+    """대기열(config/republish.json)에서 다음 한 편을 다시 올린다. 아침 업로드(daily_next)가 새 편이 없는 날 부른다.
 
     쉬는 경우: 시작일 전 · 대기열 끝 · 최근 hold_days 안에 올린 영상이 아직 비공개(사용자가 공개하기 전).
     이전 판이 그사이 min_views 이상이면 그 편은 건너뛰고 다음 편으로 간다. 한 번에 최대 한 편만 올린다."""
@@ -882,23 +962,11 @@ def republish_next(cfg: Config, queue_path: Path, finals: Path, *, today: dt.dat
     todo = [REPO / q for q in rc.get("queue", []) if not republished(read_record(REPO / q))]
     if not todo:
         return {"ok": True, "counts": empty, "results": [], "note": "다시 올리기 대기열이 끝났습니다"}
-    if not dry_run:
+    if not dry_run and not skip_hold:
         tx = send or urllib_transport(cfg.timeout_sec)
-        token = access_token(tx, read_secrets(env))
-        recent: dict[str, str] = {}
-        for d in episode_dirs(finals):
-            rec = read_record(d)
-            if rec is None or rec.source != "api" or not rec.uploaded_at:
-                continue
-            age = today - dt.datetime.fromisoformat(rec.uploaded_at).date()
-            if age.days <= hold_days:
-                recent[rec.video_id] = _rel(d)
-        if recent:
-            st = video_status(tx, token, list(recent))
-            waiting = [f"{recent[v]}({v})" for v, x in st.items() if x["privacy"] == "private"]
-            if waiting:
-                return {"ok": True, "counts": empty, "results": [],
-                        "note": "아직 공개하지 않은 비공개 영상이 있어 오늘은 쉽니다: " + ", ".join(waiting)}
+        waiting = private_waiting(tx, access_token(tx, read_secrets(env)), finals, today, hold_days)
+        if waiting:
+            return {"ok": True, "counts": empty, "results": [], "note": WAITING_NOTE + ", ".join(waiting)}
         send = tx
     results = []
     for d in todo:
@@ -997,6 +1065,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--republish-next", action="store_true", help="대기열(config/republish.json)에서 다음 한 편을 다시 올린다")
     ap.add_argument("--republish-config", type=Path, default=DEFAULT_REPUBLISH)
     ap.add_argument("--republish-min-views", type=int, default=50)
+    ap.add_argument("--daily-next", action="store_true", help="아침 업로드 한 번: 대기열(config/daily.json)의 새 편, 없으면 다시 올리기 한 편")
+    ap.add_argument("--daily-config", type=Path, default=DEFAULT_DAILY)
     ap.add_argument("--today", help="기준일 YYYY-MM-DD(시험용)")
     ap.add_argument("--env-file", type=Path, help="KEY=VALUE 파일(.env)에서 비밀값을 읽는다")
     ap.add_argument("--report", type=Path, help="결과 JSON 을 이 파일에도 쓴다(GitHub Actions 용)")
@@ -1018,9 +1088,12 @@ def main(argv: list[str] | None = None) -> int:
             _log(f"채널: {info['channel_title']} ({info['channel_id']})" +
                  ("" if info["matches_config"] is None else (" · 설정과 일치" if info["matches_config"] else " · 설정 channel_id 와 다름!")))
             out = {"ok": True, **info}
-        elif a.republish_next:
-            today = dt.date.fromisoformat(a.today) if a.today else dt.datetime.now(dt.timezone.utc).date()
-            out = republish_next(cfg, a.republish_config, a.finals, today=today, dry_run=a.dry_run, env=env)
+        elif a.republish_next or a.daily_next:
+            today = dt.date.fromisoformat(a.today) if a.today else dt.datetime.now(KST).date()
+            if a.daily_next:
+                out = daily_next(cfg, a.daily_config, a.republish_config, a.finals, today=today, dry_run=a.dry_run, env=env)
+            else:
+                out = republish_next(cfg, a.republish_config, a.finals, today=today, dry_run=a.dry_run, env=env)
             if out.get("note"):
                 _log(out["note"])
         elif a.mark_uploaded:
