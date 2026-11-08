@@ -10,7 +10,10 @@ from unittest import mock
 
 from publish import tiktok as tt
 from publish import youtube as yu
-from test_publish_instagram import UPLOAD
+try:
+    from test_publish_instagram import UPLOAD          # unittest discover -s tests
+except ImportError:
+    from tests.test_publish_instagram import UPLOAD    # python -m unittest tests.test_publish_tiktok
 
 PROBE = {"width": 1080, "height": 1920, "duration_sec": 120.0}
 ENV = {"GITHUB_REPOSITORY": "doroper98/sci_short", "GITHUB_SHA": "abc123"}
