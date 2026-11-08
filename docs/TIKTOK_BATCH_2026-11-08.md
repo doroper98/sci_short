@@ -1,48 +1,48 @@
 # 틱톡 일괄 예약 꾸러미 — 옛 편 28편 (2026-11-08)
 
-틱톡에 아직 없는 옛 편 28편을 **하루 3편(12:00·18:00·21:00), 11/9~11/18** 로 나눠 예약하는 꾸러미입니다.
+틱톡에 아직 없는 옛 편 28편을 **하루 3편(12:00, 18:00, 21:00), 11/9~11/18** 로 나눠 예약하는 꾸러미입니다.
 2026-11-08 사용자: "지금 이십 몇개가 있으니 그걸 다 올리면 되지 않아?". 한꺼번에 공개하지 않고 나눠 공개합니다(유튜브에서 몰아 공개한 14편은 노출을 거의 못 받음).
 
-**PC 틱톡 스튜디오에서 한 편씩**: 업로드 → 영상 → 아래 설명 붙여 넣기 → 커버 첫 장면 → 'AI 생성 콘텐츠' 켜기 → **게시 예약**에 표의 날짜·시각 → 예약.
+**PC 틱톡 스튜디오에서 한 편씩**: 업로드 → 영상 → 아래 설명 붙여 넣기 → 커버 첫 장면 → 'AI 생성 콘텐츠' 켜기 → **게시 예약**에 표의 날짜와 시각 → 예약.
 틱톡 스튜디오 예약은 10일 앞까지라 오늘(11/8) 밤 안에 모두 넣을 수 있습니다. 예약 단추가 안 보이면(개인 계정 제한 가능성) 알려 주십시오 — 매일 안내 방식으로 바꿉니다.
 새 편(32 레이더부터)은 지금처럼 매일 아침 '공개 전환 대기' 이슈로 따로 옵니다(오전 7시 무렵 직접 게시). 계정: @shortform_science
 
 | # | 예약 | 편 | 제목 |
 |---|---|---|---|
-| 1 | 11/9(월) 12:00 | [01](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/01-gravitational-waves/gravitational-waves.mp4) | 두 블랙홀이 하나가 될 때, 공간이 출렁인다 · 중력파 |
-| 2 | 11/9(월) 18:00 | [15](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/15-traffic-jam/traffic-jam.mp4) | 사고도 없는데 왜 막힐까? · 유령 체증의 정체 |
-| 3 | 11/9(월) 21:00 | [06](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/06-seasons/seasons.mp4) | 여름은 태양에 가까워서 더울까? · 계절이 생기는 진짜 이유 |
-| 4 | 11/10(화) 12:00 | [27](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/27-towed-array-sonar/towed-array-sonar.mp4) | 군함은 왜 긴 줄을 끌까? · 예인 소나의 원리 |
-| 5 | 11/10(화) 18:00 | [16](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/16-absolute-zero/absolute-zero.mp4) | 얼마나 차가워질 수 있을까? · 절대영도의 세상 |
-| 6 | 11/10(화) 21:00 | [23](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/23-orbit-altitudes/orbit-altitudes.mp4) | 제임스웹은 얼마나 높이 있을까? · 산에서 우주까지 |
-| 7 | 11/11(수) 12:00 | [14](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/14-cold-vaccine/cold-vaccine.mp4) | 감기 주사는 왜 없을까? · 범인이 200가지 |
-| 8 | 11/11(수) 18:00 | [04](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/04-wavelength/wavelength.mp4) | 적외선은 빨간빛일까? · 파장으로 보는 빛의 정체 |
-| 9 | 11/11(수) 21:00 | [22](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/22-mushroom-cloud/mushroom-cloud.mp4) | 버섯구름은 왜 버섯 모양일까? · 떠오르는 뜨거운 공기 |
-| 10 | 11/12(목) 12:00 | [10](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/10-aurora/aurora.mp4) | 한국에서도 찍힌 붉은 오로라 · 오로라는 왜 극지방에서만 보일까 |
-| 11 | 11/12(목) 18:00 | [18](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/18-temperature-scales/temperature-scales.mp4) | 화씨 100도면 물이 끓을까? · 섭씨·화씨·켈빈 |
-| 12 | 11/12(목) 21:00 | [31](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/31-reusable-rocket/reusable-rocket.mp4) | 다 쓴 로켓, 버릴까? · 저궤도와 재사용 로켓 |
-| 13 | 11/13(금) 12:00 | [08](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/08-log-scale/log-scale.mp4) | 규모 6은 규모 3의 두 배일까? · 한 칸에 열 배, 로그 |
-| 14 | 11/13(금) 18:00 | [12](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/12-quasar/quasar.mp4) | 별인 줄 알았던 우주에서 가장 밝은 빛 · 퀘이사 |
-| 15 | 11/13(금) 21:00 | [05](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/05-global-winds/global-winds.mp4) | 무역풍은 왜 늘 동쪽에서 불까 · 지구를 두른 바람의 띠 |
-| 16 | 11/14(토) 12:00 | [20](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/20-atomic-bomb/atomic-bomb.mp4) | 히로시마 원폭, 에너지가 된 질량은? · 핵분열 연쇄반응 |
-| 17 | 11/14(토) 18:00 | [09](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/09-twinkle/twinkle.mp4) | 별은 반짝이는데 달은 왜 안 반짝일까? · 별의 반짝임 |
-| 18 | 11/14(토) 21:00 | [24](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/24-lagrange-points/lagrange-points.mp4) | 우주의 주차 자리는? · 라그랑주 점 5곳 |
-| 19 | 11/15(일) 12:00 | [17](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/17-superfluid-helium/superfluid-helium.mp4) | 헬륨을 영하 271도로 식히면? · 벽을 타는 초유체 |
-| 20 | 11/15(일) 18:00 | [03](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/03-el-nino-la-nina/el-nino-la-nina.mp4) | 엘니뇨와 라니냐는 무엇이 다를까 · 적도 바람과 한국의 겨울 |
-| 21 | 11/15(일) 21:00 | [34](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/34-telescope-types/telescope-types.mp4) | 망원경의 핵심은 확대? · 렌즈·거울·전파 접시 |
-| 22 | 11/16(월) 12:00 | [21](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/21-hydrogen-bomb/hydrogen-bomb.mp4) | 가장 큰 수소폭탄의 위력은? · 핵융합의 힘 |
-| 23 | 11/16(월) 18:00 | [07](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/07-precession/precession.mp4) | 북극성은 영원하지 않다 · 지구 자전축의 세차운동과 장동 |
-| 24 | 11/16(월) 21:00 | [13](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/13-gamma-ray-burst/gamma-ray-burst.mp4) | 단 몇 초에 태양 100억 년 치 에너지 · 감마선 폭발 |
-| 25 | 11/17(화) 12:00 | [29](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/29-fission-fusion/fission-fusion.mp4) | 쪼개도 합쳐도 에너지가? · 핵분열과 핵융합 |
-| 26 | 11/17(화) 18:00 | [19](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/19-gravity-time/gravity-time.mp4) | 머리와 발, 어디가 더 빨리 늙을까? · 중력과 시간 |
-| 27 | 11/17(화) 21:00 | [02](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/02-ligo-how-it-works/ligo-how-it-works.mp4) | 양성자 지름의 수백분의 1을 재는 법 · LIGO 간섭계 |
-| 28 | 11/18(수) 12:00 | [11](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/11-eddington-limit/eddington-limit.mp4) | 별은 얼마나 밝아질 수 있을까? · 에딩턴 한계 |
+| 1 | 11/9(월) 12:00 | [01](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/01-gravitational-waves/gravitational-waves.mp4) | 두 블랙홀이 하나가 될 때, 공간이 출렁인다 \| 중력파 |
+| 2 | 11/9(월) 18:00 | [15](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/15-traffic-jam/traffic-jam.mp4) | 사고도 없는데 왜 막힐까? \| 유령 체증의 정체 |
+| 3 | 11/9(월) 21:00 | [06](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/06-seasons/seasons.mp4) | 여름은 태양에 가까워서 더울까? \| 계절이 생기는 진짜 이유 |
+| 4 | 11/10(화) 12:00 | [27](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/27-towed-array-sonar/towed-array-sonar.mp4) | 군함은 왜 긴 줄을 끌까? \| 예인 소나의 원리 |
+| 5 | 11/10(화) 18:00 | [16](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/16-absolute-zero/absolute-zero.mp4) | 얼마나 차가워질 수 있을까? \| 절대영도의 세상 |
+| 6 | 11/10(화) 21:00 | [23](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/23-orbit-altitudes/orbit-altitudes.mp4) | 제임스웹은 얼마나 높이 있을까? \| 산에서 우주까지 |
+| 7 | 11/11(수) 12:00 | [14](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/14-cold-vaccine/cold-vaccine.mp4) | 감기 주사는 왜 없을까? \| 범인이 200가지 |
+| 8 | 11/11(수) 18:00 | [04](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/04-wavelength/wavelength.mp4) | 적외선은 빨간빛일까? \| 파장으로 보는 빛의 정체 |
+| 9 | 11/11(수) 21:00 | [22](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/22-mushroom-cloud/mushroom-cloud.mp4) | 버섯구름은 왜 버섯 모양일까? \| 떠오르는 뜨거운 공기 |
+| 10 | 11/12(목) 12:00 | [10](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/10-aurora/aurora.mp4) | 한국에서도 찍힌 붉은 오로라 \| 오로라는 왜 극지방에서만 보일까 |
+| 11 | 11/12(목) 18:00 | [18](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/18-temperature-scales/temperature-scales.mp4) | 화씨 100도면 물이 끓을까? \| 섭씨, 화씨, 켈빈 |
+| 12 | 11/12(목) 21:00 | [31](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/31-reusable-rocket/reusable-rocket.mp4) | 다 쓴 로켓, 버릴까? \| 저궤도와 재사용 로켓 |
+| 13 | 11/13(금) 12:00 | [08](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/08-log-scale/log-scale.mp4) | 규모 6은 규모 3의 두 배일까? \| 한 칸에 열 배, 로그 |
+| 14 | 11/13(금) 18:00 | [12](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/12-quasar/quasar.mp4) | 별인 줄 알았던 우주에서 가장 밝은 빛 \| 퀘이사 |
+| 15 | 11/13(금) 21:00 | [05](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/05-global-winds/global-winds.mp4) | 무역풍은 왜 늘 동쪽에서 불까 \| 지구를 두른 바람의 띠 |
+| 16 | 11/14(토) 12:00 | [20](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/20-atomic-bomb/atomic-bomb.mp4) | 히로시마 원폭, 에너지가 된 질량은? \| 핵분열 연쇄반응 |
+| 17 | 11/14(토) 18:00 | [09](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/09-twinkle/twinkle.mp4) | 별은 반짝이는데 달은 왜 안 반짝일까? \| 별의 반짝임 |
+| 18 | 11/14(토) 21:00 | [24](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/24-lagrange-points/lagrange-points.mp4) | 우주의 주차 자리는? \| 라그랑주 점 5곳 |
+| 19 | 11/15(일) 12:00 | [17](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/17-superfluid-helium/superfluid-helium.mp4) | 헬륨을 영하 271도로 식히면? \| 벽을 타는 초유체 |
+| 20 | 11/15(일) 18:00 | [03](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/03-el-nino-la-nina/el-nino-la-nina.mp4) | 엘니뇨와 라니냐는 무엇이 다를까 \| 적도 바람과 한국의 겨울 |
+| 21 | 11/15(일) 21:00 | [34](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/34-telescope-types/telescope-types.mp4) | 망원경의 핵심은 확대? \| 렌즈, 거울, 전파 접시 |
+| 22 | 11/16(월) 12:00 | [21](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/21-hydrogen-bomb/hydrogen-bomb.mp4) | 가장 큰 수소폭탄의 위력은? \| 핵융합의 힘 |
+| 23 | 11/16(월) 18:00 | [07](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/07-precession/precession.mp4) | 북극성은 영원하지 않다 \| 지구 자전축의 세차운동과 장동 |
+| 24 | 11/16(월) 21:00 | [13](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/13-gamma-ray-burst/gamma-ray-burst.mp4) | 단 몇 초에 태양 100억 년 치 에너지 \| 감마선 폭발 |
+| 25 | 11/17(화) 12:00 | [29](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/29-fission-fusion/fission-fusion.mp4) | 쪼개도 합쳐도 에너지가? \| 핵분열과 핵융합 |
+| 26 | 11/17(화) 18:00 | [19](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/19-gravity-time/gravity-time.mp4) | 머리와 발, 어디가 더 빨리 늙을까? \| 중력과 시간 |
+| 27 | 11/17(화) 21:00 | [02](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/02-ligo-how-it-works/ligo-how-it-works.mp4) | 양성자 지름의 수백분의 1을 재는 법 \| LIGO 간섭계 |
+| 28 | 11/18(수) 12:00 | [11](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/11-eddington-limit/eddington-limit.mp4) | 별은 얼마나 밝아질 수 있을까? \| 에딩턴 한계 |
 
 ---
 
-### 1. 11/9(월) 12:00 — 01 두 블랙홀이 하나가 될 때, 공간이 출렁인다 · 중력파
+### 1. 11/9(월) 12:00 — 01 두 블랙홀이 하나가 될 때, 공간이 출렁인다 | 중력파
 
-영상: [gravitational-waves.mp4 (33.5 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/01-gravitational-waves/gravitational-waves.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [gravitational-waves.mp4 (33.5 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/01-gravitational-waves/gravitational-waves.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -68,9 +68,9 @@
 #중력파 #블랙홀 #상대성이론 #과학 #과학릴스
 ```
 
-### 2. 11/9(월) 18:00 — 15 사고도 없는데 왜 막힐까? · 유령 체증의 정체
+### 2. 11/9(월) 18:00 — 15 사고도 없는데 왜 막힐까? | 유령 체증의 정체
 
-영상: [traffic-jam.mp4 (19.5 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/15-traffic-jam/traffic-jam.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [traffic-jam.mp4 (19.5 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/15-traffic-jam/traffic-jam.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -99,9 +99,9 @@
 #교통체증 #유령체증 #물리 #과학 #과학릴스
 ```
 
-### 3. 11/9(월) 21:00 — 06 여름은 태양에 가까워서 더울까? · 계절이 생기는 진짜 이유
+### 3. 11/9(월) 21:00 — 06 여름은 태양에 가까워서 더울까? | 계절이 생기는 진짜 이유
 
-영상: [seasons.mp4 (14.6 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/06-seasons/seasons.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [seasons.mp4 (14.6 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/06-seasons/seasons.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -125,9 +125,9 @@
 #계절 #자전축 #지구과학 #과학 #과학릴스
 ```
 
-### 4. 11/10(화) 12:00 — 27 군함은 왜 긴 줄을 끌까? · 예인 소나의 원리
+### 4. 11/10(화) 12:00 — 27 군함은 왜 긴 줄을 끌까? | 예인 소나의 원리
 
-영상: [towed-array-sonar.mp4 (25.9 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/27-towed-array-sonar/towed-array-sonar.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [towed-array-sonar.mp4 (25.9 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/27-towed-array-sonar/towed-array-sonar.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -164,9 +164,9 @@ SONAR라는 이름은 1942년 미국에서 레이더에 맞춰 지었어요.
 #예인소나 #소나 #바다 #물리 #과학
 ```
 
-### 5. 11/10(화) 18:00 — 16 얼마나 차가워질 수 있을까? · 절대영도의 세상
+### 5. 11/10(화) 18:00 — 16 얼마나 차가워질 수 있을까? | 절대영도의 세상
 
-영상: [absolute-zero.mp4 (18.6 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/16-absolute-zero/absolute-zero.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [absolute-zero.mp4 (18.6 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/16-absolute-zero/absolute-zero.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -192,9 +192,9 @@ SONAR라는 이름은 1942년 미국에서 레이더에 맞춰 지었어요.
 #절대영도 #켈빈 #온도 #과학 #과학릴스
 ```
 
-### 6. 11/10(화) 21:00 — 23 제임스웹은 얼마나 높이 있을까? · 산에서 우주까지
+### 6. 11/10(화) 21:00 — 23 제임스웹은 얼마나 높이 있을까? | 산에서 우주까지
 
-영상: [orbit-altitudes.mp4 (17.6 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/23-orbit-altitudes/orbit-altitudes.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [orbit-altitudes.mp4 (17.6 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/23-orbit-altitudes/orbit-altitudes.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -233,9 +233,9 @@ SONAR라는 이름은 1942년 미국에서 레이더에 맞춰 지었어요.
 #제임스웹 #인공위성 #정지궤도 #우주 #과학
 ```
 
-### 7. 11/11(수) 12:00 — 14 감기 주사는 왜 없을까? · 범인이 200가지
+### 7. 11/11(수) 12:00 — 14 감기 주사는 왜 없을까? | 범인이 200가지
 
-영상: [cold-vaccine.mp4 (25.5 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/14-cold-vaccine/cold-vaccine.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [cold-vaccine.mp4 (25.5 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/14-cold-vaccine/cold-vaccine.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -263,9 +263,9 @@ SONAR라는 이름은 1942년 미국에서 레이더에 맞춰 지었어요.
 #감기 #백신 #면역 #과학 #과학릴스
 ```
 
-### 8. 11/11(수) 18:00 — 04 적외선은 빨간빛일까? · 파장으로 보는 빛의 정체
+### 8. 11/11(수) 18:00 — 04 적외선은 빨간빛일까? | 파장으로 보는 빛의 정체
 
-영상: [wavelength.mp4 (23.0 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/04-wavelength/wavelength.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [wavelength.mp4 (23.0 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/04-wavelength/wavelength.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -292,9 +292,9 @@ SONAR라는 이름은 1942년 미국에서 레이더에 맞춰 지었어요.
 #파장 #적외선 #빛 #과학 #과학릴스
 ```
 
-### 9. 11/11(수) 21:00 — 22 버섯구름은 왜 버섯 모양일까? · 떠오르는 뜨거운 공기
+### 9. 11/11(수) 21:00 — 22 버섯구름은 왜 버섯 모양일까? | 떠오르는 뜨거운 공기
 
-영상: [mushroom-cloud.mp4 (42.6 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/22-mushroom-cloud/mushroom-cloud.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [mushroom-cloud.mp4 (42.6 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/22-mushroom-cloud/mushroom-cloud.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -329,9 +329,9 @@ SONAR라는 이름은 1942년 미국에서 레이더에 맞춰 지었어요.
 #버섯구름 #유체역학 #대기 #과학 #물리
 ```
 
-### 10. 11/12(목) 12:00 — 10 한국에서도 찍힌 붉은 오로라 · 오로라는 왜 극지방에서만 보일까
+### 10. 11/12(목) 12:00 — 10 한국에서도 찍힌 붉은 오로라 | 오로라는 왜 극지방에서만 보일까
 
-영상: [aurora.mp4 (29.8 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/10-aurora/aurora.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [aurora.mp4 (29.8 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/10-aurora/aurora.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -359,9 +359,9 @@ SONAR라는 이름은 1942년 미국에서 레이더에 맞춰 지었어요.
 #오로라 #극광 #태양풍 #과학 #과학릴스
 ```
 
-### 11. 11/12(목) 18:00 — 18 화씨 100도면 물이 끓을까? · 섭씨·화씨·켈빈
+### 11. 11/12(목) 18:00 — 18 화씨 100도면 물이 끓을까? | 섭씨, 화씨, 켈빈
 
-영상: [temperature-scales.mp4 (11.9 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/18-temperature-scales/temperature-scales.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [temperature-scales.mp4 (11.9 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/18-temperature-scales/temperature-scales.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -386,9 +386,9 @@ SONAR라는 이름은 1942년 미국에서 레이더에 맞춰 지었어요.
 #온도 #섭씨 #화씨 #과학 #과학릴스
 ```
 
-### 12. 11/12(목) 21:00 — 31 다 쓴 로켓, 버릴까? · 저궤도와 재사용 로켓
+### 12. 11/12(목) 21:00 — 31 다 쓴 로켓, 버릴까? | 저궤도와 재사용 로켓
 
-영상: [reusable-rocket.mp4 (12.0 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/31-reusable-rocket/reusable-rocket.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [reusable-rocket.mp4 (12.0 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/31-reusable-rocket/reusable-rocket.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -420,9 +420,9 @@ SONAR라는 이름은 1942년 미국에서 레이더에 맞춰 지었어요.
 #로켓 #재사용로켓 #우주 #과학 #물리
 ```
 
-### 13. 11/13(금) 12:00 — 08 규모 6은 규모 3의 두 배일까? · 한 칸에 열 배, 로그
+### 13. 11/13(금) 12:00 — 08 규모 6은 규모 3의 두 배일까? | 한 칸에 열 배, 로그
 
-영상: [log-scale.mp4 (10.2 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/08-log-scale/log-scale.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [log-scale.mp4 (10.2 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/08-log-scale/log-scale.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -448,9 +448,9 @@ pH는 1 작아질 때마다 산성 알갱이가 10배가 돼요.
 #로그 #지진규모 #데시벨 #과학 #과학릴스
 ```
 
-### 14. 11/13(금) 18:00 — 12 별인 줄 알았던 우주에서 가장 밝은 빛 · 퀘이사
+### 14. 11/13(금) 18:00 — 12 별인 줄 알았던 우주에서 가장 밝은 빛 | 퀘이사
 
-영상: [quasar.mp4 (19.4 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/12-quasar/quasar.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [quasar.mp4 (19.4 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/12-quasar/quasar.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -474,9 +474,9 @@ pH는 1 작아질 때마다 산성 알갱이가 10배가 돼요.
 #퀘이사 #블랙홀 #천문 #과학 #과학릴스
 ```
 
-### 15. 11/13(금) 21:00 — 05 무역풍은 왜 늘 동쪽에서 불까 · 지구를 두른 바람의 띠
+### 15. 11/13(금) 21:00 — 05 무역풍은 왜 늘 동쪽에서 불까 | 지구를 두른 바람의 띠
 
-영상: [global-winds.mp4 (31.3 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/05-global-winds/global-winds.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [global-winds.mp4 (31.3 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/05-global-winds/global-winds.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -504,9 +504,9 @@ trade의 원래 뜻은 '길'이에요.
 #무역풍 #편서풍 #지구과학 #과학 #과학릴스
 ```
 
-### 16. 11/14(토) 12:00 — 20 히로시마 원폭, 에너지가 된 질량은? · 핵분열 연쇄반응
+### 16. 11/14(토) 12:00 — 20 히로시마 원폭, 에너지가 된 질량은? | 핵분열 연쇄반응
 
-영상: [atomic-bomb.mp4 (23.5 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/20-atomic-bomb/atomic-bomb.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [atomic-bomb.mp4 (23.5 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/20-atomic-bomb/atomic-bomb.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -537,9 +537,9 @@ trade의 원래 뜻은 '길'이에요.
 #원자폭탄 #핵분열 #연쇄반응 #과학 #역사
 ```
 
-### 17. 11/14(토) 18:00 — 09 별은 반짝이는데 달은 왜 안 반짝일까? · 별의 반짝임
+### 17. 11/14(토) 18:00 — 09 별은 반짝이는데 달은 왜 안 반짝일까? | 별의 반짝임
 
-영상: [twinkle.mp4 (40.1 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/09-twinkle/twinkle.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [twinkle.mp4 (40.1 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/09-twinkle/twinkle.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -564,9 +564,9 @@ trade의 원래 뜻은 '길'이에요.
 #별 #천문 #대기 #과학 #과학릴스
 ```
 
-### 18. 11/14(토) 21:00 — 24 우주의 주차 자리는? · 라그랑주 점 5곳
+### 18. 11/14(토) 21:00 — 24 우주의 주차 자리는? | 라그랑주 점 5곳
 
-영상: [lagrange-points.mp4 (19.1 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/24-lagrange-points/lagrange-points.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [lagrange-points.mp4 (19.1 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/24-lagrange-points/lagrange-points.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -600,9 +600,9 @@ L4와 L5는 비켜나도 그 둘레를 맴돌아요.
 #라그랑주점 #제임스웹 #우주 #천문학 #과학
 ```
 
-### 19. 11/15(일) 12:00 — 17 헬륨을 영하 271도로 식히면? · 벽을 타는 초유체
+### 19. 11/15(일) 12:00 — 17 헬륨을 영하 271도로 식히면? | 벽을 타는 초유체
 
-영상: [superfluid-helium.mp4 (24.7 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/17-superfluid-helium/superfluid-helium.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [superfluid-helium.mp4 (24.7 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/17-superfluid-helium/superfluid-helium.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -628,9 +628,9 @@ L4와 L5는 비켜나도 그 둘레를 맴돌아요.
 #초유체 #헬륨 #양자역학 #과학 #과학릴스
 ```
 
-### 20. 11/15(일) 18:00 — 03 엘니뇨와 라니냐는 무엇이 다를까 · 적도 바람과 한국의 겨울
+### 20. 11/15(일) 18:00 — 03 엘니뇨와 라니냐는 무엇이 다를까 | 적도 바람과 한국의 겨울
 
-영상: [el-nino-la-nina.mp4 (17.3 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/03-el-nino-la-nina/el-nino-la-nina.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [el-nino-la-nina.mp4 (17.3 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/03-el-nino-la-nina/el-nino-la-nina.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -659,9 +659,9 @@ L4와 L5는 비켜나도 그 둘레를 맴돌아요.
 #엘니뇨 #라니냐 #기후 #과학 #과학릴스
 ```
 
-### 21. 11/15(일) 21:00 — 34 망원경의 핵심은 확대? · 렌즈·거울·전파 접시
+### 21. 11/15(일) 21:00 — 34 망원경의 핵심은 확대? | 렌즈, 거울, 전파 접시
 
-영상: [telescope-types.mp4 (21.1 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/34-telescope-types/telescope-types.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [telescope-types.mp4 (21.1 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/34-telescope-types/telescope-types.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -693,9 +693,9 @@ L4와 L5는 비켜나도 그 둘레를 맴돌아요.
 #망원경 #천문학 #제임스웹 #과학 #우주
 ```
 
-### 22. 11/16(월) 12:00 — 21 가장 큰 수소폭탄의 위력은? · 핵융합의 힘
+### 22. 11/16(월) 12:00 — 21 가장 큰 수소폭탄의 위력은? | 핵융합의 힘
 
-영상: [hydrogen-bomb.mp4 (15.1 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/21-hydrogen-bomb/hydrogen-bomb.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [hydrogen-bomb.mp4 (15.1 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/21-hydrogen-bomb/hydrogen-bomb.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -726,9 +726,9 @@ L4와 L5는 비켜나도 그 둘레를 맴돌아요.
 #수소폭탄 #핵융합 #태양 #과학 #역사
 ```
 
-### 23. 11/16(월) 18:00 — 07 북극성은 영원하지 않다 · 지구 자전축의 세차운동과 장동
+### 23. 11/16(월) 18:00 — 07 북극성은 영원하지 않다 | 지구 자전축의 세차운동과 장동
 
-영상: [precession.mp4 (30.2 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/07-precession/precession.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [precession.mp4 (30.2 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/07-precession/precession.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -753,9 +753,9 @@ L4와 L5는 비켜나도 그 둘레를 맴돌아요.
 #세차운동 #북극성 #천문 #과학 #과학릴스
 ```
 
-### 24. 11/16(월) 21:00 — 13 단 몇 초에 태양 100억 년 치 에너지 · 감마선 폭발
+### 24. 11/16(월) 21:00 — 13 단 몇 초에 태양 100억 년 치 에너지 | 감마선 폭발
 
-영상: [gamma-ray-burst.mp4 (17.2 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/13-gamma-ray-burst/gamma-ray-burst.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [gamma-ray-burst.mp4 (17.2 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/13-gamma-ray-burst/gamma-ray-burst.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -781,9 +781,9 @@ L4와 L5는 비켜나도 그 둘레를 맴돌아요.
 #감마선폭발 #중성자별 #천문 #과학 #과학릴스
 ```
 
-### 25. 11/17(화) 12:00 — 29 쪼개도 합쳐도 에너지가? · 핵분열과 핵융합
+### 25. 11/17(화) 12:00 — 29 쪼개도 합쳐도 에너지가? | 핵분열과 핵융합
 
-영상: [fission-fusion.mp4 (35.4 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/29-fission-fusion/fission-fusion.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [fission-fusion.mp4 (35.4 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/29-fission-fusion/fission-fusion.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -817,9 +817,9 @@ KSTAR는 1억 도를 48초 동안 유지했어요.
 #핵분열 #핵융합 #원자력 #과학 #물리
 ```
 
-### 26. 11/17(화) 18:00 — 19 머리와 발, 어디가 더 빨리 늙을까? · 중력과 시간
+### 26. 11/17(화) 18:00 — 19 머리와 발, 어디가 더 빨리 늙을까? | 중력과 시간
 
-영상: [gravity-time.mp4 (12.8 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/19-gravity-time/gravity-time.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [gravity-time.mp4 (12.8 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/19-gravity-time/gravity-time.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -844,9 +844,9 @@ GPS 위성의 시계는 중력이 약한 높은 곳에 있어 하루 45마이크
 #상대성이론 #중력 #시간 #과학 #과학릴스
 ```
 
-### 27. 11/17(화) 21:00 — 02 양성자 지름의 수백분의 1을 재는 법 · LIGO 간섭계
+### 27. 11/17(화) 21:00 — 02 양성자 지름의 수백분의 1을 재는 법 | LIGO 간섭계
 
-영상: [ligo-how-it-works.mp4 (13.3 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/02-ligo-how-it-works/ligo-how-it-works.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [ligo-how-it-works.mp4 (13.3 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/02-ligo-how-it-works/ligo-how-it-works.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 
@@ -872,9 +872,9 @@ GPS 위성의 시계는 중력이 약한 높은 곳에 있어 하루 45마이크
 #LIGO #중력파 #간섭계 #과학 #과학릴스
 ```
 
-### 28. 11/18(수) 12:00 — 11 별은 얼마나 밝아질 수 있을까? · 에딩턴 한계
+### 28. 11/18(수) 12:00 — 11 별은 얼마나 밝아질 수 있을까? | 에딩턴 한계
 
-영상: [eddington-limit.mp4 (23.3 MB)](https://raw.githubusercontent.com/doroper98/sci_short/891ea5a66ab3c46170794360d11aea607be77ed4/finals/11-eddington-limit/eddington-limit.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
+영상: [eddington-limit.mp4 (23.3 MB)](https://raw.githubusercontent.com/doroper98/sci_short/780320418f3894bf1818447b5351dd8ab9047282/finals/11-eddington-limit/eddington-limit.mp4) — 링크를 오른쪽 클릭 → 다른 이름으로 저장
 
 설명(오른쪽 위 복사 단추):
 

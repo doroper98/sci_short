@@ -375,6 +375,8 @@ def validate_metadata(meta: Metadata) -> list[str]:
         errs.append(f"제목 {len(meta.title)}자 — 한도 {TITLE_MAX_CHARS}자")
     if _nbytes(meta.description) > DESCRIPTION_MAX_BYTES:
         errs.append(f"설명 {_nbytes(meta.description)}바이트(UTF-8) — 한도 {DESCRIPTION_MAX_BYTES}바이트(한글 약 1,600자)")
+    if "·" in meta.title:                                  # 2026-11-08 사용자 규칙: "· 이거 절대 쓰지 마. | 이걸 쓰던지 다른걸 써."
+        errs.append("제목에 가운뎃점(·) 금지 — 구분은 | 또는 쉼표로(사용자 규칙)")
     for name, val in (("제목", meta.title), ("설명", meta.description)):
         bad = [c for c in FORBIDDEN_CHARS if c in val]
         if bad:

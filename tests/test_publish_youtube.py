@@ -304,6 +304,14 @@ class InputTest(unittest.TestCase):
             with self.assertRaises(yu.UploadError):
                 yu.load_episode(_episode(Path(d), meta={"made_for_kids": "yes"}, name="02-b"))
 
+    def test_title_middle_dot_forbidden(self) -> None:
+        """2026-11-08 사용자 규칙: 제목에 · 절대 쓰지 않는다(| 또는 다른 것)."""
+        meta = yu.Metadata(title="질문? · 부제", description="설명", tags=[], category_id="27", default_language="ko",
+                           contains_synthetic_media=True, made_for_kids=False)
+        self.assertTrue(any("가운뎃점" in e for e in yu.validate_metadata(meta)))
+        for f in sorted((yu.REPO / "finals").glob("[0-9]*/upload.md")):
+            self.assertNotIn("·", yu.parse_upload_md(f.read_text(encoding="utf-8"))["title"], f)
+
     def test_validate_limits(self) -> None:
         m = yu.Metadata(title="가" * 101 + "<", description="나" * 1700 + ">", tags=["t" * 501], category_id="27",
                         default_language="ko", contains_synthetic_media=True, made_for_kids=False)
