@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """업로드·게시 기록 파일을 git 에 올리고(stage), 올라간 편의 기록이 빠지지 않았는지 확인한다(GitHub Actions 용).
 
-    stage_records.py [upload-report.json] [instagram-report.json]
+    stage_records.py [upload-report.json] [instagram-report.json] [tiktok-report.json]
 
 2026-11-07 사고: 셸에서 `git add -- finals/*/youtube_upload.json finals/*/instagram_post.json` 을 썼는데,
 인스타 기록이 하나도 없어 두 번째 패턴이 그대로 남자 git add 전체가 실패했고(`|| true` 로 묻힘)
@@ -16,7 +16,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-RECORDS = {"youtube_upload.json": ("uploaded",), "instagram_post.json": ("posted",)}
+RECORDS = {"youtube_upload.json": ("uploaded",), "instagram_post.json": ("posted",), "tiktok_offer.json": ("offered",)}
 
 
 def staged_files() -> set[str]:
@@ -30,7 +30,7 @@ def main(argv: list[str]) -> int:
         subprocess.run(["git", "add", "--", *files], check=True)
     staged = staged_files()
     missing: list[str] = []
-    for report, name in zip(argv[:2], RECORDS):
+    for report, name in zip(argv[:3], RECORDS):
         p = Path(report)
         if not p.is_file():
             continue

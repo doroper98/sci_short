@@ -18,6 +18,7 @@
 
 - 옛 편 = 유튜브에 있고 인스타 기록(`instagram_post.json`)이 없는 편, 번호 순. 아침 업로드 대기열 편은 유튜브 기록이 생긴 뒤부터. `meta.json` `instagram: false` 는 뺌.
 - 도구: `python -m publish.instagram --next morning --prefer finals/<ep>` / `--next evening`.
+- 설명(2026-11-08 사용자): 친절한 해요체. 게시할 때 마지막 해시태그 줄 앞에 `Youtube : https://www.youtube.com/@Shortform_science` 를 붙인다(`config/instagram.json` `youtube_link`). 01 중력파는 이 결정 전에 음슴체로 게시됐다.
 - 2026-11-08 기준 옛 편 28편. 하루 두 편이면 약 2주 뒤 따라잡습니다(새 편이 아침 자리를 쓰는 날은 옛 편이 17시 한 편만).
 - 실패하면 `instagram-alert` 이슈(저장소 주인 할당). 그대로 두면 다음 일정이 같은 편을 다시 시도합니다(게시 여부가 불분명한 편은 다시 게시하지 않음).
 

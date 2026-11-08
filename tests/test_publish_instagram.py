@@ -147,6 +147,17 @@ class CaptionTest(unittest.TestCase):
             self.assertEqual(ig.validate_caption(cap, cfg), [], d.name)
             self.assertNotIn("인스타그램", cap.splitlines()[0], d.name)
 
+    def test_youtube_link_goes_before_hashtags(self) -> None:
+        """2026-11-08 사용자: 설명 마지막 태그 전에 유튜브 프로필 링크."""
+        link = "Youtube : https://www.youtube.com/@Shortform_science"
+        cap = "<제목>\n\n본문이에요.\n\n#과학 #물리"
+        self.assertEqual(ig.add_youtube_link(cap, link), f"<제목>\n\n본문이에요.\n\n{link}\n\n#과학 #물리")
+        self.assertEqual(ig.add_youtube_link(ig.add_youtube_link(cap, link), link).count(link), 1)   # 두 번 붙지 않음
+        self.assertEqual(ig.add_youtube_link("본문", link), f"본문\n\n{link}")
+        self.assertEqual(ig.add_youtube_link(cap, None), cap)
+        self.assertEqual(ig.load_config().youtube_link, link)
+        self.assertEqual(ig.validate_caption(ig.add_youtube_link(cap, link), _cfg()), [])
+
     def test_rules_hashtags_and_ai_notice(self) -> None:
         cfg = _cfg()
         self.assertEqual(ig.validate_caption("광합성은 빛으로 #과학", cfg), [])        # '합성' 단어 자체는 허용

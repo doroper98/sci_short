@@ -37,6 +37,8 @@
 - push 자동 실행은 **22번 이상 새 편만** 유튜브에 올립니다(`auto_from_number`, 인스타는 위 일정으로만). 01~21 은 손으로 올린 편이 섞여 있어, 그 폴더를 고친 PR 이 병합돼도 다시 올리지 않습니다. 옛 편은 `meta.json` 의 `auto_publish: true` 또는 수동 실행으로만 올립니다.
 - **공개는 하루 1편, 혼자**(2026-11-08 분석: 한꺼번에 공개한 14편은 노출을 거의 못 받음). 노출을 못 받은 편은 `config/republish.json` 대기열로 하루 1편씩 새 영상으로 다시 올립니다(`youtube-daily` 워크플로가 새 편이 없는 날 올림).
 - **아침 업로드와 밤 자동 제작**(2026-11-08 사용자: "내가 말하지 않아도 제작해서 비공개로 하나씩 올려. 올리는 시간은 아침 7시로 해. 내가 출근하면서 공개로 바꾸게."): 예약 작업이 매일 20:13 KST 에 `config/daily.json` 순서의 다음 편을 만들어 main 에 병합합니다. 이 목록의 편은 병합 push 에서 유튜브·인스타에 올리지 않고, 다음 날 06:37 KST `youtube-daily` 가 비공개로 올립니다(7시 전 완료). 최근 3일 안에 올린 영상이 아직 비공개면 업로드도 제작도 쉽니다. 목록의 편은 사용자가 따로 말하지 않아도 만듭니다. 26번은 보류이므로 만들지 않습니다. 절차는 `docs/YOUTUBE_AUTO_UPLOAD.md` '아침 업로드'.
+- **인스타 설명 말투·링크**(2026-11-08 사용자): 인스타 설명은 친절한 해요체로 씁니다. 설명 마지막 해시태그 앞에 `Youtube : https://www.youtube.com/@Shortform_science` 를 `publish/instagram.py` 가 게시할 때 붙입니다(`config/instagram.json` `youtube_link`, upload.md 에는 쓰지 않음).
+- **틱톡**(2026-11-08 사용자 결정 "반자동: 직접 게시", 새 개인 계정): 공식 게시 API 는 개발자 지침상 자기 계정 업로드 도구를 허용하지 않아 쓰지 않습니다. 아침 `youtube-daily` 가 그날 편의 영상 주소와 설명을 '공개 전환 대기' 이슈에 넣고(`publish/tiktok.py`), 사용자가 휴대전화로 올립니다. 절차는 `docs/TIKTOK.md`.
 - **주간 채널 보고서**(`publish/analytics.py`, 2026-11-08)와 성장 실험은 `docs/CHANNEL_GROWTH.md` 에 있습니다. 첫 문장 규칙은 2026-11-14 비교 전까지 바꾸지 않습니다. 토큰 범위는 `youtube.upload`·`youtube.readonly`·`yt-analytics.readonly` 세 가지뿐입니다.
 - 비밀값 `IG_ACCESS_TOKEN` 도 환경 변수에만 둡니다. `config/instagram.json` 의 `ig_user_id`·`username` 잠금을 사용자 확인 없이 바꾸지 마세요. 인스타 캡션에도 AI 제작·내레이션·"실제와 다르다" 안내를 쓰지 않습니다(업로더가 게시 전에 막습니다).
 

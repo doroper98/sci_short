@@ -111,15 +111,33 @@ def instagram_section(ig: dict | None) -> dict[str, dict]:
     return {r["dir"]: r for r in ig["results"]}
 
 
-def cmd_report(path: str, ig_path: str | None = None) -> int:
+def tiktok_results(tt: dict | None) -> list[dict]:
+    """틱톡 안내 결과(publish.tiktok). 안내한(또는 dry-run) 편만."""
+    if not tt:
+        return []
+    if "results" not in tt:
+        summary(f"## 틱톡 안내\n실패: {tt.get('error', '?')}")
+        return []
+    for r in tt["results"]:
+        if r.get("status") == "error":
+            summary(f"## 틱톡 안내\n`{r['dir']}` 실패: {r.get('error', '?')}")
+    if tt.get("note") and not tt["results"]:
+        summary(f"## 틱톡 안내\n{tt['note']}")
+    return [r for r in tt["results"] if r.get("status") in ("offered", "dry-run")]
+
+
+def cmd_report(path: str, ig_path: str | None = None, tt_path: str | None = None) -> int:
     ig_by_dir = instagram_section(load(ig_path) if ig_path else None)
+    tt = tiktok_results(load(tt_path) if tt_path else None)
+    tt_by_dir = {r["dir"]: r for r in tt}
+    tt_done: set[str] = set()
     data = load(path)
     if data is None:
         summary("## 유튜브 업로드\n결과 파일이 없습니다 — 업로드 단계가 시작 전에 실패했습니다(비밀값·설정 확인). " + RUN_URL)
         return 0
     if data.get("note") and not data.get("results"):
         summary(f"## 유튜브 아침 업로드\n{data['note']}")       # 쉬는 날(비공개 대기·시작 전·대기열 끝)
-        return 0
+        return tiktok_issues(tt, tt_done)
     if "results" not in data:
         summary(f"## 유튜브 업로드\n실패: {data.get('error', '?')}\n\n{RUN_URL}")
         ensure_labels()
@@ -146,6 +164,10 @@ def cmd_report(path: str, ig_path: str | None = None) -> int:
             igr = ig_by_dir.get(r["dir"]) or {}
             ig_line = (f"- 인스타 릴스(이미 공개): {igr.get('permalink') or igr.get('media_id')}\n" if igr.get("status") == "posted" else
                        f"- 인스타 릴스: {igr.get('status')} — {igr.get('error') or ' / '.join(igr.get('warnings', []))}\n" if igr else "")
+            tt_part = ""
+            if r["dir"] in tt_by_dir:
+                tt_part = "\n" + tiktok_instructions(tt_by_dir[r["dir"]]) + "\n- [ ] 틱톡에 게시\n"
+                tt_done.add(r["dir"])
             prev_line = (f"- **다시 올림**: 이전 판 {r['previous_video']} (조회 {r.get('previous_views')}회). 새 판을 공개한 뒤 "
                          "**이전 판은 비공개로** 돌리십시오(같은 영상이 두 개 공개되지 않게)\n" if r.get("previous_video") else
                          "- **다시 올림**: 이전 판은 손으로 올린 것이라 ID 기록이 없습니다. 스튜디오에서 찾아 비공개로 돌리십시오\n"
@@ -156,12 +178,32 @@ def cmd_report(path: str, ig_path: str | None = None) -> int:
                     f"경고:\n{warns}\n\n확인할 것:\n- [ ] 영상·음성·자막이 맞는가\n- [ ] 제목·설명·태그가 맞는가\n"
                     f"- [ ] 아동용 선언·합성 콘텐츠 표시가 맞는가\n- [ ] 공개(또는 예약 공개)로 전환\n"
                     + ("- [ ] 이전 판을 비공개로 전환\n" if (r.get("previous_video") or r.get("republish")) else "")
-                    + f"\n실행: {RUN_URL}")
+                    + tt_part + f"\n실행: {RUN_URL}")
             create_issue_once(title, body, LABEL_REVIEW, review)
         elif r["status"] == "error":
             title = f"유튜브 업로드 실패: {r['dir']}"
             create_issue_once(title, f"오류: {r.get('error', '?')}\n\n실행: {RUN_URL}\n\n원인을 고친 뒤 main 에 다시 반영하거나 "
                               f"Actions 에서 youtube-upload 를 수동 실행하십시오.", LABEL_ALERT, alerts)
+    return tiktok_issues(tt, tt_done)
+
+
+def tiktok_instructions(r: dict) -> str:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from publish.tiktok import instructions_md        # 저장소 루트에서 실행(GitHub Actions)
+    return instructions_md(r)
+
+
+def tiktok_issues(tt: list[dict], done: set[str]) -> int:
+    """유튜브 '공개 전환 대기' 이슈에 붙지 않은 틱톡 안내(유튜브가 쉰 날의 옛 편 등)는 따로 이슈를 연다."""
+    rest = [r for r in tt if r["dir"] not in done and r.get("status") == "offered"]
+    if not rest:
+        return 0
+    ensure_labels()
+    review = open_issues(LABEL_REVIEW)
+    for r in rest:
+        create_issue_once(f"틱톡 게시: {r.get('title', r['dir'])}",
+                          "오늘 틱톡에 올릴 편입니다(유튜브에는 이미 있음). 휴대전화로 올린 뒤 이 이슈를 닫으십시오.\n\n"
+                          + tiktok_instructions(r) + f"\n실행: {RUN_URL}", LABEL_REVIEW, review)
     return 0
 
 
@@ -221,7 +263,7 @@ def cmd_ig_token_check(path: str, outcome: str) -> int:
 
 def main(argv: list[str]) -> int:
     if len(argv) >= 2 and argv[0] == "report":
-        return cmd_report(argv[1], argv[2] if len(argv) >= 3 else None)
+        return cmd_report(argv[1], argv[2] if len(argv) >= 3 else None, argv[3] if len(argv) >= 4 else None)
     if len(argv) >= 2 and argv[0] == "ig-report":          # 17시 일정 게시(instagram-evening)
         instagram_section(load(argv[1]))
         return 0

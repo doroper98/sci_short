@@ -97,6 +97,13 @@
 - 남은 작은 흠: 22번 갓 윤곽선 꼭대기의 작은 뾰족한 끝(시뮬레이션 흔적), 122~127초 나란히 비교에서 잉크 쪽이 작게 그려짐.
 - 미수행: 청취(소리는 수치로만), 휴대전화 재생, 실제 쇼츠 화면의 안전 영역.
 
+## 2026-11-08: 인스타 첫 게시·설명 말투·틱톡 반자동
+
+- 인스타 첫 게시: 01 중력파 https://www.instagram.com/reel/DfetDJgjHAJ/ (instagram-evening 수동 실행 42477985771). 첫 시도는 rupload 가 `ProcessingFailedError` 로 거부 → 메타 문서상 resumable 은 'Facebook Login for Business 구현 앱'만 → `transfer: url`(video_url, GitHub raw)로 바꿈(PR #54). 사용자가 앱에서 게시물 확인.
+- 사용자: "인스타에 올리는 설명은 친절한 말투로 하고, 설명 마지막 태그 전에 유튜브 프로필 링크를 달아. Youtube : https://www.youtube.com/@Shortform_science 이렇게." → 아직 인스타에 안 올린 28편(02~34)의 인스타 설명을 해요체로 다시 씀(사실·숫자·해시태그 유지), 링크는 게시 때 자동(`youtube_link`). `@Shortform_science` = 과학쑛츠(UCZJSpmlBYUthLg0PSWcbU6w) 확인.
+- 사용자: "그럼 틱톡으로 확장하자" → 결정 "반자동: 직접 게시", "새 개인 계정 만들기". 틱톡 공식 API 는 지침('A utility tool to help upload contents to the account(s) you or your team manages' 불가, 심사 전 SELF_ONLY)상 못 씀. `publish/tiktok.py` + `youtube-daily` 틱톡 단계 + 이슈 안내. 계정 이름은 사용자가 만든 뒤 `config/tiktok.json` `account`.
+- 수익화 논의(사용자 질문): 유튜브·인스타·틱톡 모두 유료 구독 불필요. 조회당 단가 틱톡 > 쇼츠 > 인스타(직접 수익 사실상 없음) > 스레드(창작자 몫 없음). 유튜브 '진정성 없는 콘텐츠'(2025-07) 대비로 "브랜드는 고정, 내용은 변주"(도입·구성·대표 장면) 제안 — 다양성 점검을 밤 제작에 넣을지는 사용자 답 대기.
+
 ## 2026-11-08: 인스타 연결과 일정 게시
 
 사용자: "인스타 연결도 지난번에 페이지 연결까지만 하고 그 뒤는 아직 안했거든? 지금 해보자".

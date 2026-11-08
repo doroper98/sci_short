@@ -73,7 +73,7 @@ CHUNK_UNIT = 256 * 1024        # 재개 가능 업로드 조각은 256 KiB 배�
 MB = 1024 * 1024
 RETRY_STATUS: frozenset[int] = frozenset({500, 502, 503, 504})
 META_KEYS: frozenset[str] = frozenset({"tags", "made_for_kids", "contains_synthetic_media", "category_id", "caption", "thumbnail", "video",
-                                       "auto_publish", "instagram"})   # auto_publish·instagram: 자동 대상 지정(publish/instagram.py 와 공용)
+                                       "auto_publish", "instagram", "tiktok"})   # auto_publish·instagram·tiktok: 자동 대상 지정(publish/instagram.py·tiktok.py 와 공용)
 TOKEN_EXPIRED_HINT = ("리프레시 토큰이 만료되거나 철회되었습니다(invalid_grant). OAuth 앱이 '테스트 중'이면 7일마다 만료됩니다. "
                       "앱을 프로덕션으로 게시한 뒤 `python -m publish.oauth` 로 새 토큰을 받아 YT_REFRESH_TOKEN 을 바꾸십시오(docs/YOUTUBE_AUTO_UPLOAD.md).")
 
