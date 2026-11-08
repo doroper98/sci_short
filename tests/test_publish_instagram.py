@@ -166,7 +166,7 @@ class CaptionTest(unittest.TestCase):
         for bad in ("AI 내레이션입니다", "인공지능으로 만든 영상", "합성 음성 사용", "실제와 다릅니다", "나레이션: 합성"):
             self.assertTrue(ig.validate_caption(bad, cfg), bad)
         self.assertTrue(any("2201자" in e for e in ig.validate_caption("가" * 2201, cfg)))
-        self.assertEqual(ig.validate_caption("GAIN·EMAIL 같은 단어", cfg), [])        # 낱말 속 ai 는 무시
+        self.assertEqual(ig.validate_caption("GAIN, EMAIL 같은 단어", cfg), [])        # 낱말 속 ai 는 무시
 
 
 class ConfigTest(unittest.TestCase):
