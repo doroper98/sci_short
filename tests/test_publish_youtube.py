@@ -666,6 +666,8 @@ class OAuthHelperTest(unittest.TestCase):
         self.assertEqual(q["code_challenge_method"], "S256")
         self.assertIn("youtube.upload", q["scope"])
         self.assertIn("youtube.readonly", q["scope"])
+        self.assertIn("yt-analytics.readonly", q["scope"])          # 주간 채널 보고서(읽기 전용)
+        self.assertNotIn("yt-analytics-monetary", q["scope"])
         # 최소 권한: 영상 수정·삭제가 가능한 범위는 요청하지 않는다
         for broad in ("youtube.force-ssl", "auth%2Fyoutube+", "auth%2Fyoutube%20", "youtubepartner"):
             self.assertNotIn(broad, q["scope"])

@@ -63,7 +63,17 @@
 | 권한 | 쓰는 곳 | 영상 수정·삭제 |
 |---|---|---|
 | `youtube.upload` | `videos.insert`(업로드), `thumbnails.set`(썸네일) | 불가 |
-| `youtube.readonly` | `channels.list(mine=true)` — 업로드 전 채널 확인 | 불가 |
+| `youtube.readonly` | `channels.list(mine=true)` — 업로드 전 채널 확인, 영상 처리 상태, 주간 보고서의 영상 목록·조회수 | 불가 |
+| `yt-analytics.readonly` (2026-11-08 추가) | 주간 채널 보고서(`publish/analytics.py`)의 시청 시간·평균 시청 비율·유입 경로·구독 증가 | 불가 |
+
+**분석 권한을 더한 토큰 다시 받기(2026-11-08, 한 번).** 업로드는 지금 토큰으로 계속 됩니다. 이 절차를 마치기 전까지 주간 보고서에는 조회수·좋아요만 나옵니다.
+1. 구글 클라우드 콘솔에서 프로젝트 **Osint Gen** → API 및 서비스 → 라이브러리 → **YouTube Analytics API** → 사용.
+2. 구글 인증 플랫폼 → 데이터 액세스 → 범위 추가에서 `.../auth/yt-analytics.readonly` 를 더하고 저장(민감 범위 — 미검수 앱 경고가 떠도 소유자 본인은 쓸 수 있음).
+3. OAuth Playground(톱니바퀴 → 내 클라이언트 ID·비밀번호, 2026-11-07과 같은 방법)에서 범위 칸에 세 개를 띄어쓰기로 넣는다:
+   `https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly`
+4. Authorize APIs → 계정 → **과학쑛츠** 채널 선택 → 허용 → Exchange authorization code for tokens.
+5. 새 Refresh token 을 저장소 Secrets 의 `YT_REFRESH_TOKEN` 에 덮어쓴다(채팅에 붙이지 않는다).
+6. Actions → youtube-token-check(채널 확인) → youtube-analytics 수동 실행으로 확인.
 
 **`youtube.force-ssl` 은 받지 않습니다.** 동의 화면에 "동영상, 평가, 댓글, 자막 보기, 수정 및 **완전 삭제**"로 표시되는 권한입니다.
 GitHub Secrets 에 오래 두는 토큰이 새면 채널 영상을 지울 수 있어 뺐습니다.

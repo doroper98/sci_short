@@ -43,7 +43,8 @@ AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 # GitHub Secrets 에 오래 두는 토큰이 새면 채널 영상을 지울 수 있기 때문이다.
 # 대가로 captions.insert(자막 파일 업로드)를 못 쓴다. 자막은 화면에 새겨져 있어 원래 꺼져 있다.
 SCOPES = ("https://www.googleapis.com/auth/youtube.upload",
-          "https://www.googleapis.com/auth/youtube.readonly")
+          "https://www.googleapis.com/auth/youtube.readonly",
+          "https://www.googleapis.com/auth/yt-analytics.readonly")   # 2026-11-08 주간 채널 보고서(publish/analytics.py), 읽기 전용
 DEFAULT_PORT = 8765
 DONE_HTML = ("<!doctype html><meta charset='utf-8'><title>완료</title>"
              "<body style='font:18px/1.6 system-ui;padding:2rem'>인증이 끝났습니다. 이 창을 닫고 터미널로 돌아가십시오.</body>")

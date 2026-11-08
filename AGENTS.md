@@ -35,6 +35,7 @@
 - 실제 업로드 시험은 사용자 허락 뒤 비공개 1건으로 합니다. 절차는 `docs/YOUTUBE_AUTO_UPLOAD.md`.
 - **인스타 릴스**(2026-11-07 사용자 결정 "병합 즉시 양쪽"): 같은 병합 push 에서 `publish/instagram.py` 가 `upload.md` 의 '인스타그램(릴스) 설명'으로 게시합니다. 인스타에는 비공개가 없어 **게시 즉시 공개**입니다. 그래서 병합이 곧 공개 승인입니다. 절차는 `docs/INSTAGRAM_AUTO_POST.md`.
 - push 자동 실행은 **22번 이상 새 편만** 유튜브·인스타에 올립니다(`auto_from_number`). 01~21 은 손으로 올린 편이 섞여 있어, 그 폴더를 고친 PR 이 병합돼도 다시 올리지 않습니다. 옛 편은 `meta.json` 의 `auto_publish: true` 또는 수동 실행으로만 올립니다.
+- **주간 채널 보고서**(`publish/analytics.py`, 2026-11-08)와 성장 실험은 `docs/CHANNEL_GROWTH.md` 에 있습니다. 첫 문장 규칙은 2026-11-14 비교 전까지 바꾸지 않습니다. 토큰 범위는 `youtube.upload`·`youtube.readonly`·`yt-analytics.readonly` 세 가지뿐입니다.
 - 비밀값 `IG_ACCESS_TOKEN` 도 환경 변수에만 둡니다. `config/instagram.json` 의 `ig_user_id`·`username` 잠금을 사용자 확인 없이 바꾸지 마세요. 인스타 캡션에도 AI 제작·내레이션·"실제와 다르다" 안내를 쓰지 않습니다(업로더가 게시 전에 막습니다).
 
 ## 참고자료 사용
