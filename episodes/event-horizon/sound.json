@@ -1366,7 +1366,7 @@
     },
     {
       "id": "far_clock",
-      "at": 89.1772,
+      "at": 87.1523,
       "kind": "custom",
       "params": {
         "gain_db": -34,
@@ -1383,7 +1383,7 @@
           },
           {
             "kind": "tick",
-            "offset": 0.7727,
+            "offset": 0.6182,
             "params": {
               "freq": 200.5,
               "decay": 0.12,
@@ -1393,7 +1393,7 @@
           },
           {
             "kind": "tick",
-            "offset": 1.5942,
+            "offset": 1.2754,
             "params": {
               "freq": 186.7,
               "decay": 0.12,
@@ -1403,7 +1403,7 @@
           },
           {
             "kind": "tick",
-            "offset": 2.4901,
+            "offset": 1.9921,
             "params": {
               "freq": 168,
               "decay": 0.12,
@@ -1413,7 +1413,7 @@
           },
           {
             "kind": "tick",
-            "offset": 3.519,
+            "offset": 2.8152,
             "params": {
               "freq": 140.2,
               "decay": 0.12,
@@ -1423,7 +1423,7 @@
           },
           {
             "kind": "tick",
-            "offset": 4.8826,
+            "offset": 3.906,
             "params": {
               "freq": 91.1,
               "decay": 0.12,
@@ -1437,7 +1437,7 @@
     },
     {
       "id": "own_clock",
-      "at": 96.3609,
+      "at": 96.3392,
       "kind": "custom",
       "params": {
         "gain_db": -36,
@@ -1454,7 +1454,7 @@
           },
           {
             "kind": "tick",
-            "offset": 0.4,
+            "offset": 0.32,
             "params": {
               "freq": 165,
               "decay": 0.08,
@@ -1464,7 +1464,7 @@
           },
           {
             "kind": "tick",
-            "offset": 0.8,
+            "offset": 0.64,
             "params": {
               "freq": 165,
               "decay": 0.08,
@@ -1474,7 +1474,17 @@
           },
           {
             "kind": "tick",
-            "offset": 1.2,
+            "offset": 0.96,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 1.28,
             "params": {
               "freq": 165,
               "decay": 0.08,
@@ -1494,7 +1504,7 @@
           },
           {
             "kind": "tick",
-            "offset": 2,
+            "offset": 1.92,
             "params": {
               "freq": 165,
               "decay": 0.08,
@@ -1504,7 +1514,7 @@
           },
           {
             "kind": "tick",
-            "offset": 2.4,
+            "offset": 2.24,
             "params": {
               "freq": 165,
               "decay": 0.08,
@@ -1514,7 +1524,17 @@
           },
           {
             "kind": "tick",
-            "offset": 2.8,
+            "offset": 2.56,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 2.88,
             "params": {
               "freq": 165,
               "decay": 0.08,
@@ -1534,7 +1554,7 @@
           },
           {
             "kind": "tick",
-            "offset": 3.6,
+            "offset": 3.52,
             "params": {
               "freq": 165,
               "decay": 0.08,
@@ -1544,7 +1564,7 @@
           },
           {
             "kind": "tick",
-            "offset": 4,
+            "offset": 3.84,
             "params": {
               "freq": 165,
               "decay": 0.08,
@@ -1554,7 +1574,17 @@
           },
           {
             "kind": "tick",
-            "offset": 4.4,
+            "offset": 4.16,
+            "params": {
+              "freq": 165,
+              "decay": 0.08,
+              "click": 0,
+              "gain_db": 0
+            }
+          },
+          {
+            "kind": "tick",
+            "offset": 4.48,
             "params": {
               "freq": 165,
               "decay": 0.08,
@@ -1564,7 +1594,7 @@
           }
         ]
       },
-      "means": "우주선 안의 시계: 일정한 박자 (12번), 지평선을 지날 때도 그대로"
+      "means": "우주선 안의 시계: 일정한 박자 (15번), 지평선을 지날 때도 그대로"
     },
     {
       "id": "clock_far",

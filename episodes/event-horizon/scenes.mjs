@@ -130,12 +130,12 @@ export function gpFront(ex, ey, hMax = 1.2, n = 40) {
 }
 export const frontAt = (F, h) => F.frames[clamp(Math.round(h / F.dh), 0, F.frames.length - 1)];
 // ---- falling ship (free fall from rest at infinity), far observer, light pulses
-export const FALL = {r0: 5, dTau: 1.0, rObs: 9, KT: 0.4};
+export const FALL = {r0: 5, dTau: 1.0, rObs: 9, KT: 0.32};
 const Tf = r => (2 / 3) * r ** 1.5 + 2 * Math.sqrt(r) - Math.log((Math.sqrt(r) + 1) / (Math.sqrt(r) - 1));
 export const fallT = r => Tf(FALL.r0) - Tf(r);                      // coordinate time from r0 to r (→ ∞ at r_s)
 export const fallTau = r => (2 / 3) * (FALL.r0 ** 1.5 - Math.max(0, r) ** 1.5);
 export const rOfTau = (tau, r0 = FALL.r0) => Math.max(0, r0 ** 1.5 - 1.5 * tau) ** (2 / 3);
-export const OWN_R0 = 7;                                              // the crew's replay starts a little further out (same free fall)
+export const OWN_R0 = 8;                                              // the crew's replay starts a little further out (same free fall)
 export function rOfT(t) { if (t <= 0) return FALL.r0; let lo = 1 + 1e-13, hi = FALL.r0; for (let i = 0; i < 90; i++) { const m = (lo + hi) / 2; if (fallT(m) > t) lo = m; else hi = m; } return (lo + hi) / 2; }
 const tort = r => r + Math.log(r - 1);
 export const redshift = r => Math.max(0, 1 - 1 / Math.sqrt(r));    // f_received / f_emitted
@@ -394,7 +394,8 @@ export function plan(tl) {
   P.sunC = [P.squeeze10 - 0.25, P.km10 + 0.05]; P.earC = [P.earth10 + 0.2, P.mm10 + 0.1];
   P.flash11 = P.s11 + 0.35; P.tilt11 = [P.any11 - 0.1, P.all11 + 0.2]; P.flash11b = P.all11 + 0.05;
   // ---- time
-  P.s12 = sc('time').start; P.fall0 = P.far12 - 0.1; P.s13 = at('s13') - 0.5; P.s14 = at('s14') - 0.6;
+  // fall0: the ship's first light reaches the far observer on "멀리서"
+  P.s12 = sc('time').start; P.fall0 = P.far12 - 0.1 - (tort(FALL.rObs) - tort(FALL.r0)) * FALL.KT;   P.s13 = at('s13') - 0.5; P.s14 = at('s14') - 0.6;
   P.tc = tt => (tt - P.fall0) / FALL.KT;                              // screen → coordinate time (r_s/c)
   P.arrivals = PULSES.map(p => ({...p, ts: P.fall0 + p.ta * FALL.KT})).filter(p => p.ts < P.s14 + 0.2);
   P.crossTau = (2 / 3) * (OWN_R0 ** 1.5 - 1); P.own0 = P.notice13 + 0.1 - P.crossTau * FALL.KT; P.pass = P.own0 + P.crossTau * FALL.KT;   // the crew's replay crosses the horizon on "알아차리지"
@@ -831,21 +832,21 @@ function timeScene(stage, t, ctx) {
   clocksShot(stage, t, P); fadeFromBlack(c, t, P.s14, 0.3);
 }
 function lanes(stage, t, P) {
-  const c = stage.ctx, split = easeInOut((t - P.s13) / 0.8), yF = lerp(760, 545, split), RdF = lerp(330, 215, split), yS = 1015, tc = P.tc(t), sz = lerp(1.5, 1.15, split);
+  const c = stage.ctx, split = easeInOut((t - P.s13) / 0.8), yF = lerp(760, 545, split), RdF = lerp(330, 215, split), yS = 1015, tc = P.tc(t), sz = lerp(1.9, 1.2, split);
   // ---- far lane: the far observer's description (coordinate time)
   laneHole(c, yF, RdF, 1, [300, lerp(1330, 778, split)]);
   poly(c, [[LX.xh, yF], [lxOf(FALL.rObs) - 34, yF]], PAL.muted, 1.5, 0.45, [6, 7]);
-  const rs = rOfT(Math.max(0, tc)), f0 = redshift(FALL.r0), fr = redshift(rs) / f0, col = mix(PAL.red, PAL.rayHot, Math.min(1, fr * 1.15));
-  for (const p of PULSES) { const r = pulseR(p, tc); if (r == null) continue; const pc = mix(PAL.red, PAL.rayHot, Math.min(1, p.f / f0 * 1.15)); photonDot(c, lxOf(r), yF, 0.3 + 0.7 * p.f / f0, 2.8, pc); }
-  shipIcon(c, lxOf(rs), yF, col, t < P.fall0 ? 1 : 0.15 + 0.85 * fr, sz);
-  const ex = lxOf(FALL.rObs); eyeIcon(c, ex, yF);
+  // what the far observer SEES: the ship's image where the light now arriving left it (r_seen), with that light's redshift
+  const f0 = redshift(FALL.r0), seen = seenTau(tc), rs = rOfTau(seen), fs = redshift(rs) / f0, scol = mix(PAL.red, PAL.rayHot, Math.min(1, fs * 1.15)), ex = lxOf(FALL.rObs);
+  const tail = lxOf(rs) + 66 * sz; if (ex - 30 > tail) { poly(c, [[tail, yF], [ex - 30, yF]], scol, 7, 0.1 * fs); poly(c, [[tail, yF], [ex - 30, yF]], scol, 2, 0.75 * fs); }
+  shipIcon(c, lxOf(rs), yF, scol, 0.12 + 0.88 * fs, sz);
+  eyeIcon(c, ex, yF);
   const last = P.arrivals.findLast(p => p.ts <= t), fl = last ? Math.max(0, 1 - (t - last.ts) / 0.35) : 0;
   if (fl > 0) ringFx(c, ex, yF, 24 + 20 * (1 - fl), mix(PAL.red, PAL.rayHot, last.f / f0), fl);
-  const seen = seenTau(tc), fs = redshift(rOfTau(seen)) / f0, scol = mix(PAL.red, PAL.rayHot, Math.min(1, fs * 1.15));
   dial(c, lerp(800, 880, split), lerp(500, 400, split), lerp(72, 50, split), seen / (FALL.dTau * 4), {col: scol, hand: scol, flash: fl});
   label(stage, '멀리서 본 우주선 시계', 900, 388, fadeIn(t, P.far12 + 0.2) * (1 - split), {size: 32, color: PAL.ink, align: 'right'});
   label(stage, '사건의 지평선', LX.xh + 14, yF - 0.62 * RdF, fadeIn(t, P.s12 + 0.3) * (1 - split), {size: 34, color: PAL.amber, align: 'left'});
-  const sa = fadeIn(t, P.stop12 - 0.1) * (1 - split); if (sa > 0) label(stage, '멈춘 듯', lxOf(rs) + 70, yF + 70, sa, {size: 38, color: PAL.red});
+  const sa = fadeIn(t, P.stop12 - 0.1) * (1 - split); if (sa > 0) label(stage, '멈춘 듯', lxOf(rs) + 60, yF + 75, sa, {size: 38, color: PAL.red});
   // gauge: the light the far observer receives (frequency ratio → colour and length)
   const ga = fadeIn(t, P.far12, 0.4) * (1 - split);
   if (ga > 0) withAlpha(c, ga, () => {
