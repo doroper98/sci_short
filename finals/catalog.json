@@ -426,6 +426,23 @@
       "thumbnail": "0초 프레임(함께 도는 계의 등고선 위 태양·지구와 빛나는 다섯 점 L1~L5, 흰 질문 \"우주의 주차 자리는?\"과 큰 금빛 답 \"라그랑주 점 5곳\")"
     },
     {
+      "number": 27,
+      "slug": "towed-array-sonar",
+      "title": "예인 소나 — 긴 줄로 바닷속 소리를 듣는 법",
+      "status": "final",
+      "folder": "finals/27-towed-array-sonar",
+      "video": "finals/27-towed-array-sonar/towed-array-sonar.mp4",
+      "duration_sec": 149.2,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 25919732,
+      "sha256": "46a16e039f10d519b73730d07075072d94e384d4e907518d178ee25c693d4af6",
+      "video_date": "2026-11-08",
+      "episode_code": "episodes/towed-array-sonar",
+      "upload_info": "finals/27-towed-array-sonar/upload.md",
+      "thumbnail": "0초 프레임(어두운 남색 바다 단면, 수면 위 군함 선화에서 뒤로 늘어진 줄과 줄 위의 빛나는 물속 마이크 점들, 왼쪽 아래 잠수함 선화에서 퍼지는 가는 파면 호, 꼬리 쪽 마이크부터 빛남, 흰 질문 \"군함은 왜 긴 줄을 끌까?\"와 큰 주황 답 \"바닷속 소리를 들으려고\")"
+    },
+    {
       "number": 29,
       "slug": "fission-fusion",
       "title": "핵분열과 핵융합 — 쪼개도 합쳐도 에너지가 나오는 까닭",
