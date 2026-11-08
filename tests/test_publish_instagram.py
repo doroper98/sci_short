@@ -222,6 +222,19 @@ class ReelSpecTest(unittest.TestCase):
 class ScheduleTest(unittest.TestCase):
     """2026-11-08 사용자 결정: 새 편은 아침 업로드와 동시에, 옛 편은 아침·17시 하루 두 편, 따라잡으면 아침 1회만."""
 
+    def test_recent_post_guard(self) -> None:
+        """2026-11-09: 예비 예약 실행이 겹쳐도 6시간 안에 두 번 게시하지 않는다."""
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            done = _episode(root, name="22-done", slug="done")
+            ig.process_episode(done, _cfg(), dry_run=False, send=FakeGraph(), env=ENV, sleep=lambda s: None)
+            _episode(root, name="01-old", slug="old")
+            self.assertTrue(ig.recently_posted(root, 6))
+            out = ig.ig_next(_cfg(), root, slot="evening", dry_run=False, send=FakeGraph(), env=ENV, morning=set())
+            self.assertEqual(out["results"], [])
+            self.assertIn("6시간", out["note"])
+
+    @mock.patch.object(ig, "RECENT_HOURS", 0)
     def test_backlog_and_slots(self) -> None:
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)

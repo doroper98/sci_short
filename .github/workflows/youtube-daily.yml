@@ -12,7 +12,9 @@ name: youtube-daily
 
 on:
   schedule:
-    - cron: "37 21 * * *"          # 06:37 KST
+    - cron: "47 20 * * *"          # 05:47 KST — 2026-11-09 06:37 예약이 70분 넘게 돌지 않아 앞당기고 예비를 둠
+    - cron: "27 21 * * *"          # 06:27 KST(예비)
+    - cron: "7 22 * * *"           # 07:07 KST(예비). 먼저 돈 실행만 올리고 나머지는 6시간 안전장치로 쉰다
   workflow_dispatch:
     inputs:
       dry_run:

@@ -543,6 +543,22 @@ class UploadFlowTest(unittest.TestCase):
             self.assertEqual(yu.process_episode(ep, _cfg(), dry_run=True, morning={32})["status"], "dry-run")   # 수동·아침은 올림
         self.assertIn(32, yu.morning_numbers())                                  # 저장소 설정을 읽는다
 
+    def test_daily_next_recent_upload_guard(self) -> None:
+        api = FakeApi()
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep = _episode(root, name="32-radar", slug="radar")
+            yu.process_episode(ep, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None)   # 방금 올림
+            _episode(root, name="28-tides", slug="tides")
+            daily = root / "daily.json"
+            daily.write_text(json.dumps({"order": [{"number": 28, "topic": "조석"}]}), encoding="utf-8")
+            n0 = api.uploads
+            out = yu.daily_next(_cfg(), daily, root / "none.json", root, today=dt.date(2026, 11, 9), dry_run=False,
+                                send=api, env=ENV)
+            self.assertIn("6시간", out["note"])                        # 예비 실행은 쉰다
+            self.assertEqual(api.uploads, n0)
+
+    @mock.patch.object(yu, "RECENT_HOURS", 0)
     def test_daily_next_new_first_then_hold_then_republish(self) -> None:
         api = FakeApi()
         with tempfile.TemporaryDirectory(dir=yu.REPO) as d:

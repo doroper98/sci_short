@@ -917,6 +917,24 @@ def morning_dirs(daily: dict[str, Any], finals: Path) -> list[Path]:
     return out
 
 
+RECENT_HOURS = 6     # 2026-11-09: 예약 실행이 늦어 예비 실행을 여러 번 걸어 둔다. 먼저 돈 하나만 올린다.
+
+
+def recently_uploaded(finals: Path, hours: float, now: dt.datetime | None = None) -> bool:
+    if hours <= 0:
+        return False
+    now = now or dt.datetime.now(dt.timezone.utc)
+    for d in episode_dirs(finals):
+        rec = read_record(d)
+        if rec is None or rec.source != "api" or not rec.uploaded_at:
+            continue
+        up = dt.datetime.fromisoformat(rec.uploaded_at)
+        up = up if up.tzinfo else up.replace(tzinfo=dt.timezone.utc)
+        if (now - up).total_seconds() < hours * 3600:
+            return True
+    return False
+
+
 def daily_next(cfg: Config, daily_path: Path, republish_path: Path, finals: Path, *, today: dt.date, dry_run: bool,
                send: Transport | None = None, env: dict[str, str] | None = None,
                sleep: Callable[[float], None] = time.sleep) -> dict[str, Any]:
@@ -928,6 +946,9 @@ def daily_next(cfg: Config, daily_path: Path, republish_path: Path, finals: Path
     daily = load_daily(daily_path)
     hold_days = int(daily.get("hold_if_private_within_days", 3))
     empty = {"uploaded": 0, "skipped": 0, "dry-run": 0, "error": 0}
+    if not dry_run and recently_uploaded(finals, RECENT_HOURS):
+        return {"ok": True, "counts": empty, "results": [],
+                "note": f"최근 {RECENT_HOURS}시간 안에 올린 영상이 있어 쉽니다(예비 실행이 하루 두 편을 올리지 않게)"}
     if not dry_run:
         tx = send or urllib_transport(cfg.timeout_sec)
         waiting = private_waiting(tx, access_token(tx, read_secrets(env)), finals, today, hold_days)

@@ -8,6 +8,7 @@ name: instagram-evening
 on:
   schedule:
     - cron: "57 7 * * *"          # 16:57 KST
+    - cron: "37 8 * * *"          # 17:37 KST(예비, 6시간 안전장치로 한 번만 게시)
   workflow_dispatch:
     inputs:
       dry_run:

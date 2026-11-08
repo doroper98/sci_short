@@ -645,6 +645,25 @@ def ig_backlog(finals: Path, morning: set[int] | None = None) -> list[Path]:
     return out
 
 
+RECENT_HOURS = 6          # 2026-11-09: 예약 실행이 늦거나 예비 실행이 겹쳐도 한 자리에 두 번 게시하지 않게
+
+
+def recently_posted(finals: Path, hours: float, now: dt.datetime | None = None) -> bool:
+    if hours <= 0:
+        return False
+    now = now or dt.datetime.now(dt.timezone.utc)
+    for d in episode_dirs(finals):
+        rec = read_record(d)
+        if rec and rec.posted_at:
+            try:
+                t = dt.datetime.fromisoformat(rec.posted_at)
+            except ValueError:
+                continue
+            if (now - t).total_seconds() < hours * 3600:
+                return True
+    return False
+
+
 def ig_next(cfg: IgConfig, finals: Path, *, slot: str, prefer: list[Path] | None = None, dry_run: bool,
             send: Transport | None = None, env: dict[str, str] | None = None,
             sleep: Callable[[float], None] = time.sleep, morning: set[int] | None = None) -> dict[str, Any]:
@@ -654,8 +673,15 @@ def ig_next(cfg: IgConfig, finals: Path, *, slot: str, prefer: list[Path] | None
     slot=evening(instagram-evening, 17시): 아직 인스타에 없는 옛 편 하나. 인스타가 유튜브를 따라잡았으면 쉰다
     ("유튜브와 속도가 같아지면 그뒤론 아침 7시 업로드 1회만")."""
     empty = {"posted": 0, "skipped": 0, "dry-run": 0, "error": 0}
+    morning = morning_numbers() if morning is None else morning
+    if not dry_run and recently_posted(finals, RECENT_HOURS):
+        return {"ok": True, "counts": empty, "results": [], "slot": slot,
+                "note": f"최근 {RECENT_HOURS}시간 안에 게시한 편이 있어 쉽니다(예비 실행이 두 번 게시하지 않게)"}
     backlog = ig_backlog(finals, morning)
-    first = [p.resolve() for p in (prefer or []) if p.resolve() in backlog] if slot == "morning" else []
+    first: list[Path] = []
+    if slot == "morning":      # 오늘 유튜브에 올린 편, 그리고 유튜브에 올라간 새 편(아침 대기열)이 먼저
+        first = [p.resolve() for p in (prefer or []) if p.resolve() in backlog]
+        first += [d for d in backlog if parse_dir_name(d)[0] in morning and d not in first]
     cands = first + [d for d in backlog if d not in first]
     if not cands:
         return {"ok": True, "counts": empty, "results": [], "slot": slot,

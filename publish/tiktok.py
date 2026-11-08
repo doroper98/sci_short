@@ -32,7 +32,7 @@ from typing import Any
 from publish.instagram import IgConfig, on_youtube, parse_instagram_caption, validate_caption
 from publish.instagram import load_config as load_ig_config
 from publish.youtube import (DEFAULT_FINALS, REPO, UploadError, _rel, episode_dirs, load_episode, load_meta,
-                             md5_file, morning_numbers, parse_upload_md, probe_video)
+                             md5_file, morning_numbers, parse_dir_name, parse_upload_md, probe_video)
 
 DEFAULT_CONFIG = REPO / "config" / "tiktok.json"
 RECORD_NAME = "tiktok_offer.json"
@@ -118,6 +118,15 @@ def tt_backlog(finals: Path, morning: set[int] | None = None) -> list[Path]:
             if read_record(d) is None and load_meta(d).get("tiktok") is not False and on_youtube(d, morning)]
 
 
+def recently_offered(finals: Path, hours: float) -> bool:
+    now = dt.datetime.now(dt.timezone.utc)
+    for d in episode_dirs(finals):
+        rec = read_record(d)
+        if rec and rec.offered_at and (now - dt.datetime.fromisoformat(rec.offered_at)).total_seconds() < hours * 3600:
+            return True
+    return False
+
+
 def video_url(video: Path, env: dict[str, str]) -> str:
     """사용자가 휴대전화로 받을 주소. 이 실행 커밋의 GitHub raw(저장소 공개)."""
     rel = video.resolve().relative_to(REPO).as_posix()
@@ -131,8 +140,12 @@ def tt_next(cfg: TtConfig, finals: Path, *, prefer: list[Path] | None = None, dr
     empty = {"offered": 0, "dry-run": 0, "error": 0}
     if not cfg.enabled:
         return {"ok": True, "counts": empty, "results": [], "note": "config/tiktok.json enabled=false — 틱톡 안내 안 함"}
+    morning = morning_numbers() if morning is None else morning
+    if not dry_run and recently_offered(finals, 6):
+        return {"ok": True, "counts": empty, "results": [], "note": "최근 6시간 안에 안내한 편이 있어 쉽니다(예비 실행)"}
     backlog = tt_backlog(finals, morning)
     first = [p.resolve() for p in (prefer or []) if p.resolve() in backlog]
+    first += [d for d in backlog if parse_dir_name(d)[0] in morning and d not in first]   # 유튜브에 올라간 새 편 먼저
     cands = first + [d for d in backlog if d not in first]
     if not cands:
         return {"ok": True, "counts": empty, "results": [], "note": "틱톡에 안내할 편이 없습니다(모두 안내함)"}
