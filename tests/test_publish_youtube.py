@@ -611,6 +611,36 @@ class UploadFlowTest(unittest.TestCase):
             self.assertTrue(yu.republished(yu.read_record(old)))
             self.assertEqual(api.uploads, n1 + 1)
 
+    @mock.patch.object(yu, "RECENT_HOURS", 0)
+    def test_daily_next_hold_zero_uploads_even_if_private(self) -> None:
+        """2026-11-11 사용자: "비공개가 있어도 예정된 스케줄의 영상들을 올리도록 해" — hold 0 이면 비공개가 있어도 다음 편을 올린다."""
+        api = FakeApi()
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            first = _episode(root, name="32-radar", slug="radar")
+            second = _episode(root, name="28-tides", slug="tides")
+            daily = root / "daily.json"
+            daily.write_text(json.dumps({"hold_if_private_within_days": 0,
+                                         "order": [{"number": 32, "topic": "레이더"}, {"number": 28, "topic": "조석"}]}), encoding="utf-8")
+            rq = root / "republish.json"
+            rq.write_text(json.dumps({"start": "2026-11-11", "min_views": 50, "hold_if_private_within_days": 0, "queue": []}), encoding="utf-8")
+            out = yu.daily_next(_cfg(), daily, rq, root, today=dt.date(2026, 11, 10), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+            self.assertEqual(out["results"][0]["dir"], yu._rel(first))
+            rec = yu.read_record(first)
+            rec.uploaded_at = "2026-11-09T21:40:00+00:00"
+            yu.write_record(first, rec)
+            api.status_map = {rec.video_id: ("private", 0)}                     # 아직 비공개 — 그래도 쉬지 않는다
+            n0 = api.uploads
+            nxt = yu.daily_next(_cfg(), daily, rq, root, today=dt.date(2026, 11, 10), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+            self.assertEqual((nxt["kind"], nxt["results"][0]["dir"], nxt["results"][0]["status"]), ("new", yu._rel(second), "uploaded"))
+            self.assertEqual(api.uploads, n0 + 1)
+
+    def test_repo_hold_is_off(self) -> None:
+        """설정의 비공개 보류는 꺼져 있다(2026-11-11 사용자 결정)."""
+        self.assertEqual(int(yu.load_daily().get("hold_if_private_within_days", 3)), 0)
+        rc = json.loads((yu.REPO / "config" / "republish.json").read_text(encoding="utf-8"))
+        self.assertEqual(int(rc.get("hold_if_private_within_days", 3)), 0)
+
     def test_repo_daily_queue_is_valid(self) -> None:
         daily = yu.load_daily()
         nums = [o["number"] for o in daily["order"]]
