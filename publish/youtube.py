@@ -940,7 +940,8 @@ def daily_next(cfg: Config, daily_path: Path, republish_path: Path, finals: Path
                sleep: Callable[[float], None] = time.sleep) -> dict[str, Any]:
     """아침 업로드 한 번(youtube-daily 워크플로, 매일 아침 7시 전). 2026-11-08 사용자 결정.
 
-    1) 최근 hold 일 안에 올린 영상이 아직 비공개면 쉰다.
+    1) 최근 hold 일 안에 올린 영상이 아직 비공개면 쉰다 — hold 가 0 이면 쉬지 않는다
+       (2026-11-11 사용자: "비공개가 있어도 예정된 스케줄의 영상들을 올리도록 해", 설정 0).
     2) 대기열(config/daily.json)에서 만들어 두고 아직 안 올린 첫 편을 비공개로 올린다.
     3) 그런 편이 없으면 다시 올리기 대기열(config/republish.json)에서 한 편을 올린다. 하루 한 편만."""
     daily = load_daily(daily_path)
@@ -949,7 +950,7 @@ def daily_next(cfg: Config, daily_path: Path, republish_path: Path, finals: Path
     if not dry_run and recently_uploaded(finals, RECENT_HOURS):
         return {"ok": True, "counts": empty, "results": [],
                 "note": f"최근 {RECENT_HOURS}시간 안에 올린 영상이 있어 쉽니다(예비 실행이 하루 두 편을 올리지 않게)"}
-    if not dry_run:
+    if not dry_run and hold_days > 0:
         tx = send or urllib_transport(cfg.timeout_sec)
         waiting = private_waiting(tx, access_token(tx, read_secrets(env)), finals, today, hold_days)
         if waiting:
@@ -973,7 +974,7 @@ def republish_next(cfg: Config, queue_path: Path, finals: Path, *, today: dt.dat
                    sleep: Callable[[float], None] = time.sleep, skip_hold: bool = False) -> dict[str, Any]:
     """대기열(config/republish.json)에서 다음 한 편을 다시 올린다. 아침 업로드(daily_next)가 새 편이 없는 날 부른다.
 
-    쉬는 경우: 시작일 전 · 대기열 끝 · 최근 hold_days 안에 올린 영상이 아직 비공개(사용자가 공개하기 전).
+    쉬는 경우: 시작일 전 · 대기열 끝 · 최근 hold_days 안에 올린 영상이 아직 비공개(사용자가 공개하기 전, hold_days 0 이면 보지 않음).
     이전 판이 그사이 min_views 이상이면 그 편은 건너뛰고 다음 편으로 간다. 한 번에 최대 한 편만 올린다."""
     rc = json.loads(queue_path.read_text(encoding="utf-8"))
     min_views = int(rc.get("min_views", 50))
@@ -985,7 +986,7 @@ def republish_next(cfg: Config, queue_path: Path, finals: Path, *, today: dt.dat
     todo = [REPO / q for q in rc.get("queue", []) if not republished(read_record(REPO / q))]
     if not todo:
         return {"ok": True, "counts": empty, "results": [], "note": "다시 올리기 대기열이 끝났습니다"}
-    if not dry_run and not skip_hold:
+    if not dry_run and not skip_hold and hold_days > 0:
         tx = send or urllib_transport(cfg.timeout_sec)
         waiting = private_waiting(tx, access_token(tx, read_secrets(env)), finals, today, hold_days)
         if waiting:
