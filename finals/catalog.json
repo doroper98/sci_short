@@ -182,7 +182,7 @@
       "height": 1920,
       "bytes": 23290586,
       "sha256": "84b2838ffddf8647a8c0963b49611b02ec61057ca1ff5478c6984255f6fd6e4f",
-      "video_date": "2026-11-04",
+      "video_date": "2026-11-05",
       "episode_code": "episodes/eddington-limit",
       "upload_info": "finals/11-eddington-limit/upload.md",
       "thumbnail": "0초 프레임(바깥층이 날아가는 청백색 별과 제목 \"에딩턴 한계 / 빛이 별을 밀어낸다\"). 첫 프레임 = 썸네일 규칙을 처음 적용한 편"
@@ -437,7 +437,7 @@
       "height": 1920,
       "bytes": 33699362,
       "sha256": "47d6e8b87f4db3de7e39dfb81d6f8b6b62fe7167bd32fe856a1971dc4c5603d1",
-      "video_date": "uncommitted",
+      "video_date": "2026-11-10",
       "episode_code": "episodes/tides",
       "upload_info": "finals/28-tides/upload.md",
       "thumbnail": "0초 프레임(어두운 우주 바탕, 왼쪽 위 달, 빛을 받은 지구를 감싼 청록 물 껍질의 두 부풂 — 달 쪽과 그 반대쪽, 흰 질문 \"반대쪽 바다는 왜 부풀까?\"와 큰 호박색 답 \"덜 당겨져서\")"
@@ -509,6 +509,23 @@
       "episode_code": "episodes/telescope-types",
       "upload_info": "finals/34-telescope-types/upload.md",
       "thumbnail": "0초 프레임(오목거울 단면이 위에서 내려오는 별빛 광선 다발을 되비쳐 한 점에 모으고 그 초점이 빛남, 흰 질문 \"망원경의 핵심은 확대?\"와 큰 호박색 답 \"아니, 빛 모으기\")"
+    },
+    {
+      "number": 36,
+      "slug": "accretion-disk",
+      "title": "강착원반 — 별이 블랙홀 둘레에서 원반이 되는 이유",
+      "status": "final",
+      "folder": "finals/36-accretion-disk",
+      "video": "finals/36-accretion-disk/accretion-disk.mp4",
+      "duration_sec": 174.4,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 29613728,
+      "sha256": "dd4e2c924638601982c56194e3ffcd9a75b5ee7416aff105b92ba9accfbeb0d6",
+      "video_date": "2026-11-10",
+      "episode_code": "episodes/accretion-disk",
+      "upload_info": "finals/36-accretion-disk/upload.md",
+      "thumbnail": "0초 프레임(어두운 바탕에 비스듬히 본 주황빛 강착원반과 가운데 검은 블랙홀, 흰 질문 \"블랙홀 둘레엔 왜 원반이?\"와 큰 호박색 답 \"곧장 못 떨어져서\")"
     }
   ],
   "legacy": [
@@ -524,7 +541,7 @@
       "height": 1350,
       "bytes": 8416674,
       "sha256": "30c1f6563480f52c60034bbc67c0387019deae9fc298876e3ce6608762fbc4e6",
-      "video_date": "2026-10-17",
+      "video_date": "2026-11-05",
       "episode_code": null,
       "upload_info": null,
       "thumbnail": ""
@@ -541,7 +558,7 @@
       "height": 1920,
       "bytes": 9752406,
       "sha256": "d182e7e4b4e513d8dfdc7b5cccb78892bc00089164a325274acd12704cacf6c0",
-      "video_date": "2026-10-24",
+      "video_date": "2026-11-05",
       "episode_code": null,
       "upload_info": null,
       "thumbnail": ""
@@ -558,7 +575,7 @@
       "height": 1920,
       "bytes": 10274636,
       "sha256": "83c79ae5d0940fa0d86d0bc3e0ece7491f777d9226c4e57a7cd3469049470f53",
-      "video_date": "2026-10-20",
+      "video_date": "2026-11-05",
       "episode_code": null,
       "upload_info": null,
       "thumbnail": ""
