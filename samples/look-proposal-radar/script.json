@@ -1,0 +1,13 @@
+{
+  "title": "영상미 제안 샘플 — 레이더는 어떻게 거리를 잴까",
+  "language": "ko",
+  "lead_sec": 1.0,
+  "tail_sec": 1.2,
+  "scene_lead_sec": 0.4,
+  "default_gap_sec": 0.9,
+  "notes": "2026-11-10 영상미 제안용 약 10초 샘플. 한 장면(range). 표준 M3 x0.85, 문장 끝 6반음 하강.",
+  "sentences": [
+    {"id": "s01", "scene": "range", "text": "레이더는 전파를 쏘고, 돌아오는 메아리를 기다립니다.", "gap": 1.7},
+    {"id": "s02", "scene": "range", "text": "절반의 시간에 돌아오면, 거리도 절반입니다."}
+  ]
+}
