@@ -543,6 +543,23 @@
       "episode_code": "episodes/accretion-disk",
       "upload_info": "finals/36-accretion-disk/upload.md",
       "thumbnail": "0초 프레임(어두운 바탕에 비스듬히 본 주황빛 강착원반과 가운데 검은 블랙홀, 흰 질문 \"블랙홀 둘레엔 왜 원반이?\"와 큰 호박색 답 \"곧장 못 떨어져서\")"
+    },
+    {
+      "number": 37,
+      "slug": "ai-learning",
+      "title": "AI는 어떻게 배우고 답할까 — 다음에 올 말을 맞히는 연습",
+      "status": "final",
+      "folder": "finals/37-ai-learning",
+      "video": "finals/37-ai-learning/ai-learning.mp4",
+      "duration_sec": 153.5,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 12011837,
+      "sha256": "637006e3ef328322bce5ce1a4614483969a1a8dd2407829dbaab6a7a31cae1cf",
+      "video_date": "uncommitted",
+      "episode_code": "episodes/ai-learning",
+      "upload_info": "finals/37-ai-learning/upload.md",
+      "thumbnail": "0초 프레임(어두운 바탕, 질문 토큰 타일 \"하늘은 왜 파랄까?\", 손잡이 네 줄이 박힌 무광 모델 판, 다음 토큰의 확률 막대 중 '햇빛'이 호박색, 흰 질문 \"ChatGPT는 어떻게 답할까?\"와 큰 호박색 답 \"다음 말 맞히기\")"
     }
   ],
   "legacy": [

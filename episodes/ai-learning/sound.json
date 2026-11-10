@@ -1,0 +1,1305 @@
+{
+  "version": 1,
+  "notes": "설명용 합성음입니다(녹음 아님). 계산·고침의 물결, 토큰이 붙는 순간, 숫자와 표시의 순간을 화면과 같은 시각에 냅니다. 모든 사건은 `node episodes/ai-learning/scenes.mjs --emit-sound`가 장면과 같은 계획(plan)에서 씁니다. 기본음 700 Hz 미만, 배경음악 없음.",
+  "events": [
+    {
+      "id": "poster",
+      "at": 0.05,
+      "kind": "swell",
+      "params": {
+        "freqs": [
+          98,
+          147
+        ],
+        "dur": 1.8,
+        "attack": 0.4,
+        "gain_db": -34,
+        "cutoff": 700
+      },
+      "means": "첫 화면(썸네일): 질문의 토큰과 다음 토큰의 확률 막대",
+      "model": {
+        "sig": "153.546/37/18/2.600"
+      }
+    },
+    {
+      "id": "land_a",
+      "at": 2.4,
+      "kind": "custom",
+      "params": {
+        "gain_db": -37,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 196,
+              "dur": 0.25,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.9,
+            "params": {
+              "freq": 196,
+              "dur": 0.25,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 3.45,
+            "params": {
+              "freq": 196,
+              "dur": 0.25,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 5,
+            "params": {
+              "freq": 196,
+              "dur": 0.25,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 6.55,
+            "params": {
+              "freq": 196,
+              "dur": 0.25,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 8.1,
+            "params": {
+              "freq": 196,
+              "dur": 0.25,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 9.65,
+            "params": {
+              "freq": 196,
+              "dur": 0.25,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          }
+        ]
+      },
+      "means": "고른 토큰이 글 뒤에 붙음"
+    },
+    {
+      "id": "f_a",
+      "at": 2.6,
+      "kind": "custom",
+      "params": {
+        "gain_db": -38,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.55,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 3.1,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 4.65,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 6.2,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 7.75,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 20.761,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 23.203,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 26.417,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 27.967,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 29.517,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 31.067,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          }
+        ]
+      },
+      "means": "계산의 물결(따뜻한 색)이 층을 지나감: 장면의 순전파마다 낮은 음"
+    },
+    {
+      "id": "y1955",
+      "at": 15.713,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.12,
+        "gain_db": -35,
+        "click": 0
+      },
+      "means": "1955"
+    },
+    {
+      "id": "sup",
+      "at": 22.56,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.12,
+        "gain_db": -35,
+        "click": 0
+      },
+      "means": "習 글자"
+    },
+    {
+      "id": "b_0",
+      "at": 24.061,
+      "kind": "whoosh",
+      "params": {
+        "dur": 0.6,
+        "f_start": 90,
+        "f_end": 200,
+        "q": 1.6,
+        "gain_db": -37
+      },
+      "means": "고치는 물결(차가운 색)이 아래에서 위로: 손잡이가 조금씩 돔"
+    },
+    {
+      "id": "b_1",
+      "at": 26.503,
+      "kind": "whoosh",
+      "params": {
+        "dur": 0.6,
+        "f_start": 90,
+        "f_end": 200,
+        "q": 1.6,
+        "gain_db": -37
+      },
+      "means": "고치는 물결(차가운 색)이 아래에서 위로: 손잡이가 조금씩 돔"
+    },
+    {
+      "id": "b_2",
+      "at": 29.767,
+      "kind": "whoosh",
+      "params": {
+        "dur": 0.5,
+        "f_start": 90,
+        "f_end": 200,
+        "q": 1.6,
+        "gain_db": -37
+      },
+      "means": "고치는 물결(차가운 색)이 아래에서 위로: 손잡이가 조금씩 돔"
+    },
+    {
+      "id": "b_3",
+      "at": 31.317,
+      "kind": "whoosh",
+      "params": {
+        "dur": 0.5,
+        "f_start": 90,
+        "f_end": 200,
+        "q": 1.6,
+        "gain_db": -37
+      },
+      "means": "고치는 물결(차가운 색)이 아래에서 위로: 손잡이가 조금씩 돔"
+    },
+    {
+      "id": "b_4",
+      "at": 32.867,
+      "kind": "whoosh",
+      "params": {
+        "dur": 0.5,
+        "f_start": 90,
+        "f_end": 200,
+        "q": 1.6,
+        "gain_db": -37
+      },
+      "means": "고치는 물결(차가운 색)이 아래에서 위로: 손잡이가 조금씩 돔"
+    },
+    {
+      "id": "b_5",
+      "at": 34.417,
+      "kind": "whoosh",
+      "params": {
+        "dur": 0.5,
+        "f_start": 90,
+        "f_end": 200,
+        "q": 1.6,
+        "gain_db": -37
+      },
+      "means": "고치는 물결(차가운 색)이 아래에서 위로: 손잡이가 조금씩 돔"
+    },
+    {
+      "id": "cover",
+      "at": 40.971,
+      "kind": "tick",
+      "params": {
+        "freq": 110,
+        "decay": 0.12,
+        "gain_db": -35,
+        "click": 0
+      },
+      "means": "마지막 토큰을 가림"
+    },
+    {
+      "id": "f_b",
+      "at": 44.311,
+      "kind": "custom",
+      "params": {
+        "gain_db": -38,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 11.826,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 36.203,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 37.703,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 39.203,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          }
+        ]
+      },
+      "means": "계산의 물결(따뜻한 색)이 층을 지나감: 장면의 순전파마다 낮은 음"
+    },
+    {
+      "id": "answer",
+      "at": 46.333,
+      "kind": "swell",
+      "params": {
+        "freqs": [
+          131,
+          196
+        ],
+        "dur": 1.2,
+        "attack": 0.4,
+        "gain_db": -35,
+        "cutoff": 700
+      },
+      "means": "정답이 드러남(차가운 테)"
+    },
+    {
+      "id": "gap",
+      "at": 48.637,
+      "kind": "tick",
+      "params": {
+        "freq": 98,
+        "decay": 0.18,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "오차"
+    },
+    {
+      "id": "b_6",
+      "at": 51.653,
+      "kind": "whoosh",
+      "params": {
+        "dur": 3,
+        "f_start": 90,
+        "f_end": 200,
+        "q": 1.6,
+        "gain_db": -37
+      },
+      "means": "고치는 물결(차가운 색)이 아래에서 위로: 손잡이가 조금씩 돔"
+    },
+    {
+      "id": "param",
+      "at": 58.806,
+      "kind": "tick",
+      "params": {
+        "freq": 165,
+        "decay": 0.1,
+        "gain_db": -36,
+        "click": 0
+      },
+      "means": "매개변수 이름표"
+    },
+    {
+      "id": "b_7",
+      "at": 61.659,
+      "kind": "whoosh",
+      "params": {
+        "dur": 1.2,
+        "f_start": 90,
+        "f_end": 200,
+        "q": 1.6,
+        "gain_db": -37
+      },
+      "means": "고치는 물결(차가운 색)이 아래에서 위로: 손잡이가 조금씩 돔"
+    },
+    {
+      "id": "bprop",
+      "at": 61.809,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.1,
+        "gain_db": -36,
+        "click": 0
+      },
+      "means": "역전파 이름표"
+    },
+    {
+      "id": "n175",
+      "at": 68.098,
+      "kind": "tick",
+      "params": {
+        "freq": 196,
+        "decay": 0.16,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "1,750억"
+    },
+    {
+      "id": "n15",
+      "at": 73.017,
+      "kind": "tick",
+      "params": {
+        "freq": 196,
+        "decay": 0.16,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "15조"
+    },
+    {
+      "id": "gpu",
+      "at": 74.84,
+      "kind": "swell",
+      "params": {
+        "freqs": [
+          82,
+          123
+        ],
+        "dur": 1.6,
+        "attack": 0.4,
+        "gain_db": -36,
+        "cutoff": 700
+      },
+      "means": "GPU가 계산을 시작함"
+    },
+    {
+      "id": "land_b",
+      "at": 82.014,
+      "kind": "custom",
+      "params": {
+        "gain_db": -37,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 196,
+              "dur": 0.25,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 1.5,
+            "params": {
+              "freq": 196,
+              "dur": 0.25,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 3,
+            "params": {
+              "freq": 196,
+              "dur": 0.25,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 35.009,
+            "params": {
+              "freq": 196,
+              "dur": 0.25,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 38.671,
+            "params": {
+              "freq": 196,
+              "dur": 0.25,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 40.171,
+            "params": {
+              "freq": 196,
+              "dur": 0.25,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 53.111,
+            "params": {
+              "freq": 196,
+              "dur": 0.25,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 54.511,
+            "params": {
+              "freq": 196,
+              "dur": 0.25,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 55.911,
+            "params": {
+              "freq": 196,
+              "dur": 0.25,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 57.311,
+            "params": {
+              "freq": 196,
+              "dur": 0.25,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 67.774,
+            "params": {
+              "freq": 196,
+              "dur": 0.25,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          }
+        ]
+      },
+      "means": "고른 토큰이 글 뒤에 붙음"
+    },
+    {
+      "id": "dunno",
+      "at": 85.048,
+      "kind": "tick",
+      "params": {
+        "freq": 98,
+        "decay": 0.16,
+        "gain_db": -35,
+        "click": 0
+      },
+      "means": "이어 쓰기만 한 토큰이 잔상으로"
+    },
+    {
+      "id": "demo",
+      "at": 88.002,
+      "kind": "swell",
+      "params": {
+        "freqs": [
+          131,
+          196
+        ],
+        "dur": 1.2,
+        "attack": 0.4,
+        "gain_db": -36,
+        "cutoff": 700
+      },
+      "means": "사람이 쓴 문답 예시"
+    },
+    {
+      "id": "b_8",
+      "at": 88.902,
+      "kind": "whoosh",
+      "params": {
+        "dur": 0.9,
+        "f_start": 90,
+        "f_end": 200,
+        "q": 1.6,
+        "gain_db": -37
+      },
+      "means": "고치는 물결(차가운 색)이 아래에서 위로: 손잡이가 조금씩 돔"
+    },
+    {
+      "id": "better",
+      "at": 90.689,
+      "kind": "tick",
+      "params": {
+        "freq": 165,
+        "decay": 0.14,
+        "gain_db": -35,
+        "click": 0
+      },
+      "means": "더 나은 답에 표시"
+    },
+    {
+      "id": "b_9",
+      "at": 91.831,
+      "kind": "whoosh",
+      "params": {
+        "dur": 0.9,
+        "f_start": 90,
+        "f_end": 200,
+        "q": 1.6,
+        "gain_db": -37
+      },
+      "means": "고치는 물결(차가운 색)이 아래에서 위로: 손잡이가 조금씩 돔"
+    },
+    {
+      "id": "y2022",
+      "at": 94.981,
+      "kind": "tick",
+      "params": {
+        "freq": 147,
+        "decay": 0.12,
+        "gain_db": -35,
+        "click": 0
+      },
+      "means": "2022"
+    },
+    {
+      "id": "princ",
+      "at": 98.343,
+      "kind": "tick",
+      "params": {
+        "freq": 131,
+        "decay": 0.12,
+        "gain_db": -36,
+        "click": 0
+      },
+      "means": "원칙 카드"
+    },
+    {
+      "id": "b_10",
+      "at": 100.804,
+      "kind": "whoosh",
+      "params": {
+        "dur": 0.9,
+        "f_start": 90,
+        "f_end": 200,
+        "q": 1.6,
+        "gain_db": -37
+      },
+      "means": "고치는 물결(차가운 색)이 아래에서 위로: 손잡이가 조금씩 돔"
+    },
+    {
+      "id": "lock",
+      "at": 105.774,
+      "kind": "tick",
+      "params": {
+        "freq": 110,
+        "decay": 0.16,
+        "gain_db": -35,
+        "click": 0
+      },
+      "means": "손잡이 고정"
+    },
+    {
+      "id": "f_c",
+      "at": 107.22,
+      "kind": "custom",
+      "params": {
+        "gain_db": -38,
+        "layers": [
+          {
+            "kind": "tone",
+            "offset": 0,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 3.671,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 11.965,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 13.465,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 26.505,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 27.905,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 29.305,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 30.705,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          },
+          {
+            "kind": "tone",
+            "offset": 40.868,
+            "params": {
+              "freq": 131,
+              "dur": 0.4,
+              "harmonics": [
+                1,
+                0.25
+              ],
+              "attack": 0.03,
+              "decay": 0.15,
+              "sustain": 0.4,
+              "release": 0.3,
+              "gain_db": 0,
+              "wave": "sine"
+            }
+          }
+        ]
+      },
+      "means": "계산의 물결(따뜻한 색)이 층을 지나감: 장면의 순전파마다 낮은 음"
+    },
+    {
+      "id": "resample",
+      "at": 123.101,
+      "kind": "tick",
+      "params": {
+        "freq": 165,
+        "decay": 0.14,
+        "gain_db": -36,
+        "click": 0
+      },
+      "means": "같은 막대, 다른 선택"
+    },
+    {
+      "id": "net",
+      "at": 130.267,
+      "kind": "tick",
+      "params": {
+        "freq": 110,
+        "decay": 0.12,
+        "gain_db": -36,
+        "click": 0
+      },
+      "means": "인터넷 상자"
+    },
+    {
+      "id": "cut",
+      "at": 132.825,
+      "kind": "tick",
+      "params": {
+        "freq": 98,
+        "decay": 0.18,
+        "gain_db": -34,
+        "click": 0
+      },
+      "means": "연결을 끊음"
+    },
+    {
+      "id": "check",
+      "at": 144.2,
+      "kind": "tick",
+      "params": {
+        "freq": 165,
+        "decay": 0.14,
+        "gain_db": -35,
+        "click": 0
+      },
+      "means": "확인 표시"
+    },
+    {
+      "id": "poster_back",
+      "at": 151.146,
+      "kind": "swell",
+      "params": {
+        "freqs": [
+          98,
+          147,
+          196
+        ],
+        "dur": 1.8,
+        "attack": 0.4,
+        "gain_db": -32,
+        "cutoff": 700
+      },
+      "means": "첫 화면의 포스터가 돌아옴"
+    }
+  ],
+  "ambient": {
+    "kind": "pad",
+    "seed": 7,
+    "gain_db": -32,
+    "root_hz": 110,
+    "intervals": [
+      0,
+      7,
+      12,
+      16
+    ],
+    "enabled": false
+  },
+  "music": {
+    "id": "zabriskie_patriarch",
+    "under_db": 12,
+    "duck_db": 6,
+    "start_sec": 0,
+    "enabled": false,
+    "note": "음악 없음."
+  }
+}
