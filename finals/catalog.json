@@ -182,7 +182,7 @@
       "height": 1920,
       "bytes": 23290586,
       "sha256": "84b2838ffddf8647a8c0963b49611b02ec61057ca1ff5478c6984255f6fd6e4f",
-      "video_date": "2026-11-05",
+      "video_date": "2026-11-04",
       "episode_code": "episodes/eddington-limit",
       "upload_info": "finals/11-eddington-limit/upload.md",
       "thumbnail": "0초 프레임(바깥층이 날아가는 청백색 별과 제목 \"에딩턴 한계 / 빛이 별을 밀어낸다\"). 첫 프레임 = 썸네일 규칙을 처음 적용한 편"
@@ -494,6 +494,23 @@
       "thumbnail": "0초 프레임(어두운 청록 바탕, 왼쪽 아래 레이더 접시에서 오른쪽 위 비행기로 가는 호박색 펄스 호와 빔, 비행기에서 돌아오는 초록 메아리 호, 희미한 거리 고리, 흰 질문 \"레이더를 피하려면?\"과 큰 초록 답 \"메아리를 줄인다\")"
     },
     {
+      "number": 33,
+      "slug": "sar",
+      "title": "합성개구레이더(SAR) — 움직이며 받은 메아리를 이어 붙여, 거대한 안테나를 만든다",
+      "status": "final",
+      "folder": "finals/33-sar",
+      "video": "finals/33-sar/sar.mp4",
+      "duration_sec": 169.9,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 27602551,
+      "sha256": "bd161256f06452cbc6c450cbc2dc878ef9db76c798ee72749cabba0263fa0062",
+      "video_date": "uncommitted",
+      "episode_code": "episodes/sar",
+      "upload_info": "finals/33-sar/upload.md",
+      "thumbnail": "0초 프레임(어두운 밤하늘의 위성, 구름층을 지나 바다로 내려가는 호박색 펄스, 아래에 위성 뒤로 만들어지는 레이더 사진 띠와 배 점들, 흰 질문 \"구름 낀 밤, 위성 사진?\"과 큰 호박색 답 \"메아리로 찍는다\")"
+    },
+    {
       "number": 34,
       "slug": "telescope-types",
       "title": "망원경의 종류 — 빛을 모으는 방법",
@@ -541,7 +558,7 @@
       "height": 1350,
       "bytes": 8416674,
       "sha256": "30c1f6563480f52c60034bbc67c0387019deae9fc298876e3ce6608762fbc4e6",
-      "video_date": "2026-11-05",
+      "video_date": "2026-10-17",
       "episode_code": null,
       "upload_info": null,
       "thumbnail": ""
@@ -558,7 +575,7 @@
       "height": 1920,
       "bytes": 9752406,
       "sha256": "d182e7e4b4e513d8dfdc7b5cccb78892bc00089164a325274acd12704cacf6c0",
-      "video_date": "2026-11-05",
+      "video_date": "2026-10-24",
       "episode_code": null,
       "upload_info": null,
       "thumbnail": ""
@@ -575,7 +592,7 @@
       "height": 1920,
       "bytes": 10274636,
       "sha256": "83c79ae5d0940fa0d86d0bc3e0ece7491f777d9226c4e57a7cd3469049470f53",
-      "video_date": "2026-11-05",
+      "video_date": "2026-10-20",
       "episode_code": null,
       "upload_info": null,
       "thumbnail": ""
