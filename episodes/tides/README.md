@@ -1,20 +1,12 @@
-# 에피소드 폴더 `tides`
-
-`python pipeline/new_episode.py <slug> --title "…"`로 만든 폴더입니다. 직접 쓰는 파일은 셋입니다.
+# 에피소드 폴더 `tides` — 28. 밀물과 썰물이 생기는 이유
 
 | 파일 | 내용 |
 |---|---|
-| `script.json` | 문장(표시 `text` / 발음 `tts`), 장면 id, 문장 뒤 쉼 `gap`. 스키마: `pipeline/narration/script_schema.py` |
-| `scenes.mjs` | `theme`, `scenes.{id}(stage, t, p, ctx)`, 선택 `overlays`, `titles`, `captionLayout`, `events` |
-| `sound.json` | 설명용 소리 사건(`events`)과 선택 배경음(`ambient`, 기본 꺼짐). 사건 시각은 화면과 공유 |
+| `brief.md` | 범위, 출처, 장면 계획, 소리, 단순화 메모 |
+| `script.json` | 23문장(합니다체), 숫자·연도는 `tts` |
+| `scenes.mjs` | 모형(평형 조석, 기조력 무늬, 하루 두 번, 사리·조금, 해안 단면)과 장면. 지구는 `pipeline/render/globe.mjs` `drawEarthLit` |
+| `sound.json` | `node episodes/tides/scenes.mjs --emit-sound`가 같은 모형에서 써 넣음(사건 36개) |
+| `land.json` | Natural Earth 1:110m 육지(공유 저작물), `episodes/precession/land.json` 사본 |
 
-`brief.md`는 기획·단순화·검증 메모, `render.mjs`와 `run.sh`는 보통 고치지 않습니다.
-
-```bash
-episodes/tides/run.sh                       # narrate → stills → render → sfx → mix → finish → validate
-episodes/tides/run.sh stills                # 스틸만 다시 (outputs/tides/stills/contact-sheet.jpg)
-SCISHORT_ROOT=$PWD node episodes/tides/render.mjs --stills --safe   # 플랫폼 UI 영역 겹쳐 보기
-```
-
-`scenes.mjs`의 장면 id는 `script.json`의 `scene` 값과 같아야 합니다. 예시는 "얼음은 왜 물에 뜰까"이며 내용은 바꿉니다.
-자세한 순서와 API는 [pipeline/README.md](../../pipeline/README.md).
+실행: `episodes/tides/run.sh narrate` → `node episodes/tides/scenes.mjs --emit-sound` → `SKIP_NARRATE=1 episodes/tides/run.sh stills render sfx mix finish validate`.
+영상은 템플릿 기본 CRF 18로 인코딩합니다.

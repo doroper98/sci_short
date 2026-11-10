@@ -151,7 +151,7 @@ export function plan(tl) {
   const rotMoon = t => 90 + look(moonA, t);
   const sunS = S('sun'), mAfter = rotMoon(rot.end);
   const sunMoon = keyed([[sunS.start, mAfter], [P.mass15, 112, 'io'], [P.full16 - 0.2, 150, 'lin'], [P.new16 + 0.1, 180, 'o'], [P.half17 - 0.2, 180, 'lin'], [P.cross17 + 0.4, 270, 'io'], [sunS.end, 278, 'lin']]);
-  const mythMoon = keyed([[myth.start, 90], [P.two22 - 0.1, 90, 'lin'], [P.follow22 + 1.2, 215, 'io']]);
+  const mythMoon = keyed([[myth.start, 90], [P.two22 - 0.1, 90, 'lin'], [P.follow22 + 1.2, 170, 'io']]);
   P.moon = t => {
     if (t < rot.start) return 90;
     if (t < rot.end) return rotMoon(t);
@@ -279,6 +279,12 @@ function world(stage, o) {
   }
   return {E, moon, mark, hull, mpos};
 }
+/** poster accent: the Moon's pull (warm field) and both bulge tips glowing — no text */
+function posterAccent(stage, cam, a) {
+  if (a <= 0) return;
+  const c = stage.ctx, R = 1 + M.W0 + M.A * 0.67;
+  withAlpha(c, a, () => { for (const sg of [1, -1]) { const p = P2(cam, [0, sg * R, 0]); glow(c, p[0], p[1], 120, PAL.waterHi, 0.42); glow(c, p[0], p[1], 40, '#FFFFFF', 0.35); } });
+}
 function glowLine(c, pts, col, a) { line(c, pts, rgba(col, a * 0.5), 9); line(c, pts, rgba(col, a), 4.5); }
 /** an arrow in world space */
 function arrowW(stage, cam, p0, p1, col, w = 4, head) { const a = P2(cam, p0), b = P2(cam, p1); arrow(stage.ctx, a, b, col, w, {head: head ?? Math.max(14, w * 4)}); return [a, b]; }
@@ -363,7 +369,9 @@ export const scenes = {
     const camK = keyedCam([[0, {...HOME}], [P.MORPH[1], {...HOME}], [P.seoul - 0.2, {...HOME, R: 270, az: -32, e: 62}], [P.moon3, {...HOME, R: 262, az: -24}], [ctx.scene.end, {...HOME, R: 256, az: -20}]]);
     const cam = camOf(camK(t)), spin = P.spin(t);
     const lastHigh = P.hookHighs.filter(x => x <= t).pop(), pulse = lastHigh ? Math.exp(-(t - lastHigh) / 0.5) : 0;
-    const w = world(stage, {cam, t, spin, moon: 90, mark: fadeIn(t, P.seoul - 0.2, 0.4), markPulse: pulse});
+    const pA = 1 - smooth((t - P.MORPH[0]) / 1.2);
+    const w = world(stage, {cam, t, spin, moon: 90, mark: fadeIn(t, P.seoul - 0.2, 0.4), markPulse: pulse, field: 0.55 * pA});
+    posterAccent(stage, cam, pA);
     // marker label
     if (w.mark) tag(stage, '서해', w.mark[0] + 26, w.mark[1] - 30, {size: 28, align: 'left', color: PAL.mark, a: fadeIn(t, P.seoul, 0.4) * fadeOut(t, P.moon3 - 0.3, 0.4)});
     const hiA = fadeIn(t, P.back2 - 0.2, 0.4) * fadeOut(t, P.moon3 - 0.3, 0.4);
@@ -390,7 +398,7 @@ export const scenes = {
     const cam = camOf(camK(t)), spin = P.spin(t);
     const galA = fadeIn(t, P.gal - 0.3, 0.8) * fadeOut(t, at('s06') - 0.5, 0.8);
     const slosh = galA > 0 ? [1, 0, 0.11 * galA * Math.sin((t - P.gal) * 2.6)] : null;
-    const cardA0 = fadeIn(t, s0 + 0.2, 0.5) * fadeOut(t, at('s05') - 0.6, 0.5), moonA = 1 - 0.8 * Math.max(galA, cardA0), k = 1 - galA;
+    const cardA0 = fadeIn(t, s0 + 0.2, 0.5) * fadeOut(t, at('s05') - 0.6, 0.5), moonA = 1 - Math.max(0.8 * galA, 0.97 * cardA0), k = 1 - galA;
     const E0 = P2(cam, [0, 0, 0]);
     const sun = {a: galA, x: E0[0] - 760, y: E0[1] + 40, R: 520};
     const w = world(stage, {cam, t, spin, moon: 90, k, slosh, moonA, sun, field: fadeIn(t, P.grav - 0.2, 0.8) * fadeOut(t, ctx.scene.end - 0.6, 0.5)});
@@ -622,7 +630,7 @@ export const scenes = {
   // ------------------------------------------------------------------ myth: spin fast — bulges stay; move the Moon — bulges follow
   myth(stage, t, p, ctx) {
     const P = plan(ctx.tl), c = stage.ctx, s0 = ctx.scene.start;
-    const camK = keyedCam([[s0, {...HOME, R: 250, e: 68}], [ctx.scene.end, {...HOME, R: 262, e: 66, az: -20}]]);
+    const camK = keyedCam([[s0, {...HOME, R: 250, e: 68}], [P.two22 - 0.4, {...HOME, R: 256, e: 67, az: -22}], [P.follow22 + 0.6, {cx: 650, cy: 960, R: 178, e: 64, az: -25}], [ctx.scene.end, {cx: 650, cy: 960, R: 182, e: 63, az: -25}]]);
     const cam = camOf(camK(t)), spin = P.spin(t), moon = P.moon(t);
     const w = world(stage, {cam, t, spin, moon, orbitA: fadeIn(t, P.two22 - 0.4, 0.5)});
     // spin arrow (fast)
@@ -636,7 +644,7 @@ export const scenes = {
     const fA = fadeIn(t, P.follow22 - 0.4, 0.4);
     if (fA > 0 && w.moon) {
       tag(stage, '부풂이 달을 따라감', 300, 1300, {size: 30, color: PAL.waterHi, a: fA});
-      withAlpha(c, fA, () => { const pts = []; for (let a = 90; a <= moon; a += 1) pts.push(P2(cam, mul(vdeg(a), M.DM))); if (pts.length > 1) line(c, pts, rgba(PAL.moon, 0.75), 3); });
+      withAlpha(c, fA, () => { const pts = []; for (let a = 90; a <= moon; a += 1) pts.push(P2(cam, mul(vdeg(a), M.DM))); if (pts.length > 1) line(c, pts, rgba(PAL.moon, 0.75), 3); if (w.moon && moon > 100) { const ghost = moonBall(stage, cam, mul(vdeg(90), M.DM), M.RM, 0.25); void ghost; } });
     }
     dip(c, t, s0, 0.4);
   },
@@ -646,7 +654,9 @@ export const scenes = {
     const P = plan(ctx.tl), c = stage.ctx, s0 = ctx.scene.start;
     const camK = keyedCam([[s0, {...HOME, R: 250, az: -18}], [P.poster + 0.8, {...HOME}], [P.end, {...HOME}]]);
     const cam = camOf(camK(t));
-    world(stage, {cam, t, spin: P.spin(t), moon: 90});
+    const pA = smooth((t - P.poster) / 0.9);
+    world(stage, {cam, t, spin: P.spin(t), moon: 90, field: 0.55 * pA});
+    posterAccent(stage, cam, pA);
     // the proposition as three pulls, briefly
     const qA = fadeIn(t, s0 + 0.4, 0.5) * fadeOut(t, P.poster - 0.5, 0.4);
     if (qA > 0) withAlpha(c, qA, () => {
@@ -723,6 +733,7 @@ function coast(stage, t, P, ctx) {
     line(c, [[160, 640], [520, 640]], rgba(PAL.waterHi, 0.9), 3); arrow(c, [460, 640], [560, 640], PAL.waterHi, 3, {head: 18});
     tag(stage, '조석의 물결', 340, 600, {size: 30, color: PAL.waterHi});
     tag(stage, '얕아질수록 높아짐', 420, 1090, {size: 28, color: PAL.ink, a: fadeIn(t, P.high20 - 0.2, 0.4)});
+    withAlpha(c, fadeIn(t, P.bay20 - 0.2, 0.4), () => arrow(c, [820, 590], [940, floorY(940) - 30], PAL.pull, 3, {head: 16}));
     tag(stage, '좁은 만에 쌓임', 790, 560, {size: 28, color: PAL.pull, a: fadeIn(t, P.bay20 - 0.2, 0.4)});
   });
   // distance note

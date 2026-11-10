@@ -426,6 +426,23 @@
       "thumbnail": "0초 프레임(어두운 남색 바다 단면, 수면 위 군함 선화에서 뒤로 늘어진 줄과 줄 위의 빛나는 물속 마이크 점들, 왼쪽 아래 잠수함 선화에서 퍼지는 가는 파면 호, 꼬리 쪽 마이크부터 빛남, 흰 질문 \"군함은 왜 긴 줄을 끌까?\"와 큰 주황 답 \"바닷속 소리를 들으려고\")"
     },
     {
+      "number": 28,
+      "slug": "tides",
+      "title": "밀물과 썰물 — 달은 가까운 쪽을 더 세게, 먼 쪽을 더 약하게 당긴다",
+      "status": "final",
+      "folder": "finals/28-tides",
+      "video": "finals/28-tides/tides.mp4",
+      "duration_sec": 164.6,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 33699362,
+      "sha256": "47d6e8b87f4db3de7e39dfb81d6f8b6b62fe7167bd32fe856a1971dc4c5603d1",
+      "video_date": "uncommitted",
+      "episode_code": "episodes/tides",
+      "upload_info": "finals/28-tides/upload.md",
+      "thumbnail": "0초 프레임(어두운 우주 바탕, 왼쪽 위 달, 빛을 받은 지구를 감싼 청록 물 껍질의 두 부풂 — 달 쪽과 그 반대쪽, 흰 질문 \"반대쪽 바다는 왜 부풀까?\"와 큰 호박색 답 \"덜 당겨져서\")"
+    },
+    {
       "number": 29,
       "slug": "fission-fusion",
       "title": "핵분열과 핵융합 — 쪼개도 합쳐도 에너지가 나오는 까닭",
@@ -471,7 +488,7 @@
       "height": 1920,
       "bytes": 19283830,
       "sha256": "7c1054a58339085840eb5124dc3888f25b7900d983245ad57be666dcfeccd666",
-      "video_date": "uncommitted",
+      "video_date": "2026-11-08",
       "episode_code": "episodes/radar",
       "upload_info": "finals/32-radar/upload.md",
       "thumbnail": "0초 프레임(어두운 청록 바탕, 왼쪽 아래 레이더 접시에서 오른쪽 위 비행기로 가는 호박색 펄스 호와 빔, 비행기에서 돌아오는 초록 메아리 호, 희미한 거리 고리, 흰 질문 \"레이더를 피하려면?\"과 큰 초록 답 \"메아리를 줄인다\")"
