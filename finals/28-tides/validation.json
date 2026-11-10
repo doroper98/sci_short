@@ -1,8 +1,8 @@
 {
   "file": "tides.mp4",
-  "bytes": 33699362,
-  "sha256": "47d6e8b87f4db3de7e39dfb81d6f8b6b62fe7167bd32fe856a1971dc4c5603d1",
-  "created": "2026-11-10T05:20:46+00:00",
+  "bytes": 17105748,
+  "sha256": "51697b576bb0793a6d8904e44bb1733ed93e307c66e294dfdf989282f5cbce9b",
+  "created": "2026-11-10T12:23:49+00:00",
   "title": "밀물과 썰물이 생기는 이유",
   "timeline_duration": 164.59,
   "max_sec": 180.0,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2528256,
         "duration": "164.600000",
-        "bit_rate": "1461236",
+        "bit_rate": "654328",
         "bits_per_raw_sample": "8",
         "nb_frames": "4938",
         "extradata_size": 50,
@@ -95,7 +95,7 @@
         "start_time": "0.000000",
         "duration_ts": 7900320,
         "duration": "164.590000",
-        "bit_rate": "167778",
+        "bit_rate": "168212",
         "nb_frames": "7716",
         "extradata_size": 5,
         "disposition": {
@@ -133,8 +133,8 @@
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "164.600000",
-      "size": "33699362",
-      "bit_rate": "1637879",
+      "size": "17105748",
+      "bit_rate": "831385",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -147,19 +147,19 @@
   },
   "audio_mastering_input": {
     "input_i": "-17.61",
-    "input_tp": "-1.89",
+    "input_tp": "-1.88",
     "input_lra": "3.90",
     "input_thresh": "-28.11",
     "output_i": "-13.93",
     "output_tp": "-1.50",
     "output_lra": "3.70",
-    "output_thresh": "-24.44",
+    "output_thresh": "-24.43",
     "normalization_type": "dynamic",
     "target_offset": "-0.07"
   },
   "encoded_audio": {
     "input_i": "-14.05",
-    "input_tp": "-1.34",
+    "input_tp": "-1.08",
     "input_lra": "3.70"
   },
   "targets": {

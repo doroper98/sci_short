@@ -54,14 +54,14 @@
 | 23 | 제임스웹은 얼마나 높이 있을까 — 산에서 우주까지 | 163.6초 | [23-orbit-altitudes/](23-orbit-altitudes/) | [upload.md](23-orbit-altitudes/upload.md) | 2026-11-07 |
 | 24 | 라그랑주 점 — 우주의 주차 자리 | 158.5초 | [24-lagrange-points/](24-lagrange-points/) | [upload.md](24-lagrange-points/upload.md) | 2026-11-07 |
 | 27 | 예인 소나 — 긴 줄로 바닷속 소리를 듣는 법 | 149.2초 | [27-towed-array-sonar/](27-towed-array-sonar/) | [upload.md](27-towed-array-sonar/upload.md) | 2026-11-08 |
-| 28 | 밀물과 썰물 — 달은 가까운 쪽을 더 세게, 먼 쪽을 더 약하게 당긴다 | 164.6초 | [28-tides/](28-tides/) | [upload.md](28-tides/upload.md) | 2026-11-10 |
+| 28 | 밀물과 썰물 — 달은 가까운 쪽을 더 세게, 먼 쪽을 더 약하게 당긴다 | 164.6초 | [28-tides/](28-tides/) | [upload.md](28-tides/upload.md) | uncommitted |
 | 29 | 핵분열과 핵융합 — 쪼개도 합쳐도 에너지가 나오는 까닭 | 165.4초 | [29-fission-fusion/](29-fission-fusion/) | [upload.md](29-fission-fusion/upload.md) | 2026-11-07 |
 | 31 | 로켓은 어떻게 돌아올까 — 저궤도와 재사용 로켓 | 156.5초 | [31-reusable-rocket/](31-reusable-rocket/) | [upload.md](31-reusable-rocket/upload.md) | 2026-11-07 |
 | 32 | 레이더 — 전파의 메아리로 보고, 메아리를 줄여 숨는다 | 164.3초 | [32-radar/](32-radar/) | [upload.md](32-radar/upload.md) | 2026-11-08 |
 | 34 | 망원경의 종류 — 빛을 모으는 방법 | 158.6초 | [34-telescope-types/](34-telescope-types/) | [upload.md](34-telescope-types/upload.md) | 2026-11-07 |
 | 36 | 강착원반 — 별이 블랙홀 둘레에서 원반이 되는 이유 | 174.4초 | [36-accretion-disk/](36-accretion-disk/) | [upload.md](36-accretion-disk/upload.md) | 2026-11-10 |
 
-합계 31편, 86.3분, 711 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
+합계 31편, 86.3분, 695 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
 <!-- catalog:end -->
 
 ## 이전 작품 (`legacy/`)

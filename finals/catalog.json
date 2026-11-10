@@ -435,12 +435,12 @@
       "duration_sec": 164.6,
       "width": 1080,
       "height": 1920,
-      "bytes": 33699362,
-      "sha256": "47d6e8b87f4db3de7e39dfb81d6f8b6b62fe7167bd32fe856a1971dc4c5603d1",
-      "video_date": "2026-11-10",
+      "bytes": 17105748,
+      "sha256": "51697b576bb0793a6d8904e44bb1733ed93e307c66e294dfdf989282f5cbce9b",
+      "video_date": "uncommitted",
       "episode_code": "episodes/tides",
       "upload_info": "finals/28-tides/upload.md",
-      "thumbnail": "0초 프레임(어두운 우주 바탕, 왼쪽 위 달, 빛을 받은 지구를 감싼 청록 물 껍질의 두 부풂 — 달 쪽과 그 반대쪽, 흰 질문 \"반대쪽 바다는 왜 부풀까?\"와 큰 호박색 답 \"덜 당겨져서\")"
+      "thumbnail": "0초 프레임(어두운 우주 바탕, 왼쪽 위 달, 빛을 받은 지구를 감싼 무광 청록 물 껍질의 두 부풂 — 달 쪽과 그 반대쪽, 달과 지구를 잇는 가는 호박색 점선, 흰 질문 \"반대쪽 바다는 왜 부풀까?\"와 큰 호박색 답 \"덜 당겨져서\")"
     },
     {
       "number": 29,
