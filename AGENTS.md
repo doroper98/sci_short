@@ -16,6 +16,7 @@
 
 - **음성**: Supertonic 3 M3 + MMS 정렬 + `니다` 문장 끝 억양 보정. osint 기준값은 `config/voice-reference.json`, 이 프로젝트가 바꾼 값(속도 0.85, 하강 6반음은 2026-10-31 사용자 결정; 프리셋은 2026-10-31 F4 → 2026-11-06 "남자 목소리로" 결정으로 M3)은 `config/voice-overrides.json`에만 둡니다. 두 파일 외의 방법으로 목소리 값을 바꾸지 마세요. 구현은 `pipeline/narration/`입니다. 다른 목소리·다른 모델 변환본·speaker id 추정·글자 수 비례 시각으로 조용히 대체하지 마세요. 정렬 모델을 받을 수 없으면 `--skip-alignment`의 결과가 표준이 아님을 알리고 전달합니다.
 - 이전 석영 영상(`samples/quartz/`)의 Sherpa-ONNX INT8 경로는 **호스트 차단 시의 임시 우회 기록**입니다. 표준이 아니며 새 에피소드에 재사용하지 않습니다. 필요한 호스트는 `docs/NETWORK_AND_ASSETS.md`에 있습니다.
+- **대본 검수**(2026-11-11 사용자: "대본만 딱."): 음성 합성 전에 Fable 모델 작업자(`Agent`, `model: "fable"`)가 대본만 검수합니다. 영상은 제작 세션과 그 작업자가 만듭니다. 절차는 `skills/science-short/SKILL.md` 2. 대본.
 - **문체**: 내레이션은 합니다체입니다. 억양 보정이 `니다`에만 적용되므로 문체와 음성 기준이 함께 갑니다. 감탄사·마스코트·의성어 자막을 쓰지 않습니다.
 - **글꼴·톤**: `doroper98/agents_reviewer` 르포 템플릿 기준(GmarketSans 제목, Noto Sans KR 본문, `noturno` 테마 기본). 글꼴 파일은 `pipeline/render/fetch_fonts.py`로 받고 Git에 넣지 않습니다.
 - 한국어 자막은 실제 음성의 글자 시각에 맞추고, 화면의 핵심 현상을 가리지 않도록 장면별로 위치를 정합니다.
