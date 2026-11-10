@@ -7,8 +7,7 @@ name: instagram-evening
 
 on:
   schedule:
-    - cron: "57 7 * * *"          # 16:57 KST
-    - cron: "37 8 * * *"          # 17:37 KST(예비, 6시간 안전장치로 한 번만 게시)
+    - cron: "53 * * * *"          # 매시간(2026-11-10: GitHub 예약이 6~10시간 늦어 02 LIGO 가 03시에 올라감). 저녁 창(16~21시 KST) 밖이면 gate 에서 끝남
   workflow_dispatch:
     inputs:
       dry_run:
@@ -25,7 +24,23 @@ permissions:
   issues: write
 
 jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      go: ${{ steps.w.outputs.go }}
+    steps:
+      - id: w
+        name: 시간 창 확인(16~21시 KST, 수동 실행은 언제나)
+        run: |
+          H=$(TZ=Asia/Seoul date +%-H)
+          if [ "${{ github.event_name }}" = "schedule" ] && { [ "$H" -lt 16 ] || [ "$H" -ge 21 ]; }; then
+            echo "go=false" >> "$GITHUB_OUTPUT"; echo "시간 창 밖(${H}시 KST) — 쉼" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          fi
   evening:
+    needs: gate
+    if: needs.gate.outputs.go == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:

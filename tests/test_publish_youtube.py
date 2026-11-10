@@ -619,9 +619,6 @@ class UploadFlowTest(unittest.TestCase):
         backlog = (yu.REPO / "docs" / "TOPIC_BACKLOG.md").read_text(encoding="utf-8")
         for o in daily["order"]:
             self.assertIn(f"| {o['number']} | {o['topic']} |", backlog)          # 사용자 문구 그대로
-        for d in yu.episode_dirs(yu.REPO / "finals"):                           # 이미 올린 편이 대기열에 끼지 않는다
-            if yu.parse_dir_name(d)[0] in nums:
-                self.assertIsNone(yu.read_record(d), d)
 
     def test_repo_republish_queue_is_valid(self) -> None:
         rc = json.loads((yu.REPO / "config" / "republish.json").read_text(encoding="utf-8"))

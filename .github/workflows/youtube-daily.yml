@@ -1,6 +1,7 @@
 # 아침 업로드 — 매일 한 편을 비공개로 올린다(publish/youtube.py --daily-next).
 # 2026-11-08 사용자: "내가 말하지 않아도 제작해서 비공개로 하나씩 올려. 올리는 시간은 아침 7시로 해. 내가 출근하면서 공개로 바꾸게."
-# - 06:37 KST 시작(GitHub 예약 실행은 몇~십여 분 늦게 돌고, 썸네일은 처리 완료를 기다려 붙이므로 7시 전에 끝나게).
+# - 2026-11-10 바뀜: GitHub 예약 실행이 6~10시간씩 늦게 돌아(11-09·10 실측) 매시간 걸고, 아침 창(05~10시 KST)에 돈 실행만 일한다.
+#   창 안에서 먼저 돈 실행이 올리고, 나머지는 '최근 6시간 안에 올린 것이 있으면 쉼' 안전장치로 쉰다.
 # - 순서: ① 최근 3일 안에 올린 영상이 아직 비공개면 쉼 ② config/daily.json 대기열에서 밤에 만들어 둔 새 편
 #         ③ 새 편이 없으면 config/republish.json 다시 올리기 한 편(몰아 공개해 노출을 못 받은 편, docs/CHANNEL_GROWTH.md H3)
 # - 올리면 '공개 전환 대기' 이슈가 열린다. 공개는 사용자가 한다(이 워크플로는 비공개로만 올린다).
@@ -12,9 +13,7 @@ name: youtube-daily
 
 on:
   schedule:
-    - cron: "47 20 * * *"          # 05:47 KST — 2026-11-09 06:37 예약이 70분 넘게 돌지 않아 앞당기고 예비를 둠
-    - cron: "27 21 * * *"          # 06:27 KST(예비)
-    - cron: "7 22 * * *"           # 07:07 KST(예비). 먼저 돈 실행만 올리고 나머지는 6시간 안전장치로 쉰다
+    - cron: "23 * * * *"           # 매시간. 아침 창 밖이면 gate 에서 바로 끝난다
   workflow_dispatch:
     inputs:
       dry_run:
@@ -31,7 +30,23 @@ permissions:
   issues: write
 
 jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      go: ${{ steps.w.outputs.go }}
+    steps:
+      - id: w
+        name: 시간 창 확인(5~10시 KST, 수동 실행은 언제나)
+        run: |
+          H=$(TZ=Asia/Seoul date +%-H)
+          if [ "${{ github.event_name }}" = "schedule" ] && { [ "$H" -lt 5 ] || [ "$H" -ge 10 ]; }; then
+            echo "go=false" >> "$GITHUB_OUTPUT"; echo "시간 창 밖(${H}시 KST) — 쉼" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          fi
   daily:
+    needs: gate
+    if: needs.gate.outputs.go == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
