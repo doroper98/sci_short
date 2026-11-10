@@ -39,7 +39,7 @@
 | 08 | 한 칸에 열 배 — 지진 규모·데시벨·pH와 로그 | 165.8초 | [08-log-scale/](08-log-scale/) | [upload.md](08-log-scale/upload.md) | 2026-11-07 |
 | 09 | 별은 왜 반짝일까 — 반짝임은 공기가 만든다 | 175.7초 | [09-twinkle/](09-twinkle/) | [upload.md](09-twinkle/upload.md) | 2026-11-05 |
 | 10 | 오로라는 왜 극지방에서만 보일까 | 161.3초 | [10-aurora/](10-aurora/) | [upload.md](10-aurora/upload.md) | 2026-11-05 |
-| 11 | 에딩턴 한계 — 빛이 별을 밀어낸다 | 171.5초 | [11-eddington-limit/](11-eddington-limit/) | [upload.md](11-eddington-limit/upload.md) | 2026-11-05 |
+| 11 | 에딩턴 한계 — 빛이 별을 밀어낸다 | 171.5초 | [11-eddington-limit/](11-eddington-limit/) | [upload.md](11-eddington-limit/upload.md) | 2026-11-04 |
 | 12 | 퀘이사 — 별처럼 보인 블랙홀 | 174.3초 | [12-quasar/](12-quasar/) | [upload.md](12-quasar/upload.md) | 2026-11-07 |
 | 13 | 감마선 폭발 — 우주에서 가장 밝은 섬광 | 175.5초 | [13-gamma-ray-burst/](13-gamma-ray-burst/) | [upload.md](13-gamma-ray-burst/upload.md) | 2026-11-05 |
 | 14 | 감기 주사는 왜 없을까 — 범인이 200가지 | 172.1초 | [14-cold-vaccine/](14-cold-vaccine/) | [upload.md](14-cold-vaccine/upload.md) | 2026-11-05 |
@@ -58,10 +58,11 @@
 | 29 | 핵분열과 핵융합 — 쪼개도 합쳐도 에너지가 나오는 까닭 | 165.4초 | [29-fission-fusion/](29-fission-fusion/) | [upload.md](29-fission-fusion/upload.md) | 2026-11-07 |
 | 31 | 로켓은 어떻게 돌아올까 — 저궤도와 재사용 로켓 | 156.5초 | [31-reusable-rocket/](31-reusable-rocket/) | [upload.md](31-reusable-rocket/upload.md) | 2026-11-07 |
 | 32 | 레이더 — 전파의 메아리로 보고, 메아리를 줄여 숨는다 | 164.3초 | [32-radar/](32-radar/) | [upload.md](32-radar/upload.md) | 2026-11-08 |
+| 33 | 합성개구레이더(SAR) — 움직이며 받은 메아리를 이어 붙여, 거대한 안테나를 만든다 | 169.9초 | [33-sar/](33-sar/) | [upload.md](33-sar/upload.md) | uncommitted |
 | 34 | 망원경의 종류 — 빛을 모으는 방법 | 158.6초 | [34-telescope-types/](34-telescope-types/) | [upload.md](34-telescope-types/upload.md) | 2026-11-07 |
 | 36 | 강착원반 — 별이 블랙홀 둘레에서 원반이 되는 이유 | 174.4초 | [36-accretion-disk/](36-accretion-disk/) | [upload.md](36-accretion-disk/upload.md) | 2026-11-10 |
 
-합계 31편, 86.3분, 711 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
+합계 32편, 89.1분, 739 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
 <!-- catalog:end -->
 
 ## 이전 작품 (`legacy/`)
