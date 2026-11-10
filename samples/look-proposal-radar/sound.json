@@ -1,0 +1,12 @@
+{"version": 1, "music": {"enabled": false}, "events": [
+ {"id": "emit1", "at": {"sentence": "s01", "word": "쏘고"}, "kind": "tone", "params": {"freq": 220, "dur": 0.16, "attack": 0.004, "release": 0.12, "gain_db": -15}},
+ {"id": "hit1",  "at": {"sentence": "s01", "word": "쏘고", "offset": 1.5}, "kind": "tick", "params": {"freq": 330, "decay": 0.06, "gain_db": -27}},
+ {"id": "ret1",  "at": {"sentence": "s01", "word": "쏘고", "offset": 3.0}, "kind": "tone", "params": {"freq": 220, "dur": 0.22, "attack": 0.01, "release": 0.18, "gain_db": -22}},
+ {"id": "fly",   "at": {"sentence": "s01", "word": "쏘고", "offset": 3.17}, "kind": "whoosh", "params": {"dur": 1.3, "f_start": 180, "f_end": 520, "gain_db": -30}},
+ {"id": "emit2", "at": ["s02", 0.55], "kind": "tone", "params": {"freq": 220, "dur": 0.16, "attack": 0.004, "release": 0.12, "gain_db": -15}},
+ {"id": "hit2",  "at": ["s02", 1.30], "kind": "tick", "params": {"freq": 330, "decay": 0.06, "gain_db": -27}},
+ {"id": "ret2",  "at": ["s02", 2.05], "kind": "tone", "params": {"freq": 220, "dur": 0.22, "attack": 0.01, "release": 0.18, "gain_db": -19}},
+ {"id": "emit3", "at": ["s02", 2.60], "kind": "tone", "params": {"freq": 220, "dur": 0.16, "attack": 0.004, "release": 0.12, "gain_db": -17}},
+ {"id": "hit3",  "at": ["s02", 3.35], "kind": "tick", "params": {"freq": 330, "decay": 0.06, "gain_db": -28}},
+ {"id": "ret3",  "at": ["s02", 4.10], "kind": "tone", "params": {"freq": 220, "dur": 0.12, "attack": 0.01, "release": 0.08, "gain_db": -20}}
+]}

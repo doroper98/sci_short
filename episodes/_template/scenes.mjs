@@ -1,4 +1,8 @@
 // Episode scenes — worked example: "얼음은 왜 물에 뜰까?"
+// Look grammar (user decision 2026-11-10, docs/ANIMATION_QUALITY.md "움직임이 설명하고, 빛은 조금만"): every moving thing is a link
+// of one causal chain; world, instrument, number and sound share one clock; change one condition and keep an afterimage;
+// only energy/signals glow, objects are matte filled bodies; one warm + one cool colour; one stage with the instrument on
+// the same ruler; honest time scale; three pieces of text. Reference implementation: samples/look-proposal-radar/scenes.mjs.
 // Replace the content, keep the shape: export {theme, scenes, overlays?, titles?, captionLayout?, events?}.
 // Each scene: (stage, t, p, ctx) where p = 0..1 progress inside the scene,
 // ctx = {tl (Timeline), events (resolved, shared with sound.json), theme, scene (sceneAt result), local (s since scene start)}.
