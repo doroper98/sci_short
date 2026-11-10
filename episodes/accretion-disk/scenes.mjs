@@ -47,18 +47,18 @@ export function plan(tl) {
   const D = Math.PI / 180;
   // camera keys: time, focus (world, or 'star'), screen centre, scale (px per horizon radius), tilt
   P.CAM = [
-    [0, {f: [0, 0], c: [540, 660], k: 22, inc: 62 * D}], [P.diskOut[0], {f: [0, 0], c: [540, 700], k: 24.5, inc: 62 * D}],
+    [0, {f: [0, 0], c: [540, 660], k: 20, inc: 62 * D}], [P.diskOut[0], {f: [0, 0], c: [540, 700], k: 22, inc: 62 * D}],
     [P.diskOut[1] + 0.9, {f: [0, 0], c: [860, 470], k: 12, inc: 0}], [tl.at('tide') - 0.6, {f: [0, 0], c: [860, 470], k: 12, inc: 0}],
-    [tl.at('tide') + 1.8, {f: 'star', c: [560, 960], k: 50, inc: 0}], [e('s06') - 0.4, {f: 'star', c: [560, 960], k: 50, inc: 0}],
+    [tl.at('tide') + 1.8, {f: 'star', c: [600, 1000], k: 60, inc: 0}], [e('s06') - 0.4, {f: 'star', c: [600, 1000], k: 60, inc: 0}],
     [s('s07') + 1.3, {f: [0, 0], c: [640, 980], k: 24, inc: 0}], [tl.at('whole') - 0.5, {f: [0, 0], c: [640, 980], k: 24, inc: 0}],
     [tl.at('whole') + 0.9, {f: [0, 0], c: [540, 800], k: 24, inc: 0}], [tl.at('spin') - 0.2, {f: [0, 0], c: [540, 800], k: 24, inc: 0}],
     [tl.at('spin') + 2.4, {f: [0, 0], c: [850, 1040], k: 5, inc: 0}], [P.core - 0.6, {f: [0, 0], c: [850, 1040], k: 5, inc: 0}],
     [P.core + 2.4, {f: [0, 0], c: [700, 720], k: 11, inc: 0}], [P.amount + 2.0, {f: [0, 0], c: [640, 760], k: 17, inc: 0}],
     [tl.at('flatten') + 1.5, {f: [0, 0], c: [540, 800], k: 21, inc: 0}], [P.tilt[0], {f: [0, 0], c: [540, 800], k: 21, inc: 0}],
-    [P.tilt[1], {f: [0, 0], c: [540, 800], k: 21, inc: 76 * D}], [P.tilt[2], {f: [0, 0], c: [540, 790], k: 20, inc: 38 * D}],
-    [P.spiral[0], {f: [0, 0], c: [540, 790], k: 20, inc: 38 * D}], [P.heat + 1.5, {f: [0, 0], c: [540, 760], k: 27, inc: 52 * D}], [P.obsIn, {f: [0, 0], c: [540, 760], k: 29, inc: 52 * D}],
+    [P.tilt[1], {f: [0, 0], c: [540, 800], k: 21, inc: 76 * D}], [P.tilt[2], {f: [0, 0], c: [540, 790], k: 17, inc: 50 * D}],
+    [P.spiral[0], {f: [0, 0], c: [540, 790], k: 17, inc: 50 * D}], [P.heat + 1.5, {f: [0, 0], c: [540, 770], k: 19, inc: 57 * D}], [P.obsIn, {f: [0, 0], c: [540, 770], k: 20, inc: 57 * D}],
     [P.obsOut, {f: [0, 0], c: [540, 800], k: 5.5, inc: 0}], [P.zoomIn, {f: [0, 0], c: [540, 800], k: 5.5, inc: 0}],
-    [P.zoomIn + 4.2, {f: [0, 0], c: [540, 660], k: 22, inc: 62 * D}], [P.end, {f: [0, 0], c: [540, 660], k: 22.6, inc: 62 * D}],
+    [P.zoomIn + 4.2, {f: [0, 0], c: [540, 660], k: 20, inc: 62 * D}], [P.end, {f: [0, 0], c: [540, 660], k: 20.5, inc: 62 * D}],
   ];
   P.tracer = 921;
   return (PLAN = P);
@@ -193,7 +193,7 @@ function drawDisk(stage, cam, Dk, o = {}) {
       const Y = -((by + 0.5) * inv - hy) / (k * ci); if ((Y > 0) !== (g === gb) && cam.si > 0.05) continue; if (cam.si <= 0.05 && g === gb) continue;
       for (let bx = reg[0]; bx < reg[2]; bx++) {
         const X = ((bx + 0.5) * inv - hx) / k, r = Math.hypot(X, Y); if (r > Rout || r < 2.6) continue;
-        const I = 1.25 * prof(r) * boost(r, X / r) * (0.6 + 0.4 * ci); if (I < 0.004) continue;
+        const I = 1.05 * prof(r) * boost(r, X / r) * (0.6 + 0.4 * ci); if (I < 0.004) continue;
         const col = ramp(tempU(r) * (0.82 + 0.3 * hot)), i = by * w + bx; R[i] += I * col[0]; G[i] += I * col[1]; B[i] += I * col[2];
       }
     }
@@ -337,7 +337,7 @@ export const scenes = {
       const xm = x0 + w / 1.5; line(c, [[xm, y - 24], [xm, y + 24]], PAL.ink, 3); stage.text('버티는 한계', xm, y + 48, {size: 28, weight: 500, color: PAL.ink, align: 'center', ...SH});
     });
     const pulse = clamp(1 - (t - P.tear) / 1.0); if (t >= P.tear && pulse > 0) { const sp = cam.P(f[0], f[1]); ring(c, sp[0], sp[1], 70 + 190 * (1 - pulse), rgba(PAL.hot, 0.7 * pulse), 3); }
-    const aB = fadeIn(t, tl.at('tide') + 2.2, 0.6) * fadeOut(t, ctx.scene.end - 0.5, 0.4); if (onScreen(cam.hole[0], cam.hole[1], -60)) tag(stage, '블랙홀', cam.hole[0], cam.hole[1] - cam.k - 34, {a: aB, size: 28});
+    const aB = fadeIn(t, tl.at('tide') + 2.2, 0.6) * fadeOut(t, ctx.scene.end - 0.5, 0.4); if (onScreen(cam.hole[0], cam.hole[1], -60) && cam.hole[1] > 400) tag(stage, '블랙홀', cam.hole[0], cam.hole[1] - cam.k - 34, {a: aB, size: 28});
   },
 
   whole(stage, t, p, ctx) {
@@ -357,9 +357,9 @@ export const scenes = {
     // the star: torn at the dashed circle for a light hole, swallowed whole by a heavy one
     const [g] = [buf1()], u = clamp((t - (P.swallow - 2.6)) / 2.6), sx = lerp(980, cx + Math.max(rh, RT) * 0.92, easeInOut(u)), sy = lerp(520, cy - 60, easeInOut(u));
     const gone = fadeOut(t, P.swallow, 0.45), sA = aD * gone * (t < P.dial2[0] - 0.4 ? fadeIn(t, P.dial[0] - 0.2, 0.5) : 0);
-    if (sA > 0.01) { g.splat(sx, sy, 62, STAR, 0.95 * sA); g.splat(sx, sy, 34, WHITE, 0.7 * sA); g.splat(sx, sy, 150, STREAM, 0.12 * sA); }
+    if (sA > 0.01) { g.splat(sx, sy, 92, [1.0, 0.5, 0.13], 0.8 * sA); g.splat(sx, sy, 56, STAR, 0.7 * sA); g.splat(sx, sy, 200, STREAM, 0.12 * sA); }
     // second pass: a small star rides the dashed circle so the two radii can be compared
-    const s2 = aD * fadeIn(t, P.dial2[0], 0.5); if (s2 > 0.01) { const an = -0.6 - 0.25 * (t - P.dial2[0]), x = cx + RT * Math.cos(an), y = cy + RT * Math.sin(an), vis = over ? 0.25 : 1; g.splat(x, y, 46, STAR, 0.9 * s2 * vis); g.splat(x, y, 24, WHITE, 0.6 * s2 * vis); g.splat(x, y, 110, STREAM, 0.1 * s2 * vis); }
+    const s2 = aD * fadeIn(t, P.dial2[0], 0.5); if (s2 > 0.01) { const an = -0.6 - 0.25 * (t - P.dial2[0]), x = cx + RT * Math.cos(an), y = cy + RT * Math.sin(an), vis = over ? 0.25 : 1; g.splat(x, y, 86, [1.0, 0.5, 0.13], 0.8 * s2 * vis); g.splat(x, y, 52, STAR, 0.7 * s2 * vis); g.splat(x, y, 190, STREAM, 0.12 * s2 * vis); }
     g.flush(stage, {bloom: 0.5});
     if (t >= P.swallow && t < P.swallow + 0.9) { const q = (t - P.swallow) / 0.9; ring(c, sx, sy, 40 + 60 * q, rgba(PAL.warm, 0.6 * (1 - q)), 3); }
     // dial
@@ -377,7 +377,7 @@ export const scenes = {
 
   spin(stage, t, p, ctx) {
     const P = plan(ctx.tl), c = stage.ctx, tl = ctx.tl, S = sim().advance(P.tau(t)), cam = camAt(P, t, S), i = P.tracer;
-    drawSim(stage, cam, S, {gain: 1.15});
+    drawSim(stage, cam, S, {gain: 1.7});
     // s10: half escapes, half returns — counted from the model (orbital energy of every particle)
     const aH = fadeIn(t, tl.at('s10') + 1.2, 0.6) * fadeOut(t, P.core - 0.7, 0.5);
     if (aH > 0.01) {
