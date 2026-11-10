@@ -61,9 +61,8 @@
 | 33 | 합성개구레이더(SAR) — 움직이며 받은 메아리를 이어 붙여, 거대한 안테나를 만든다 | 169.9초 | [33-sar/](33-sar/) | [upload.md](33-sar/upload.md) | 2026-11-10 |
 | 34 | 망원경의 종류 — 빛을 모으는 방법 | 158.6초 | [34-telescope-types/](34-telescope-types/) | [upload.md](34-telescope-types/upload.md) | 2026-11-07 |
 | 36 | 강착원반 — 별이 블랙홀 둘레에서 원반이 되는 이유 | 174.4초 | [36-accretion-disk/](36-accretion-disk/) | [upload.md](36-accretion-disk/upload.md) | 2026-11-10 |
-| 37 | AI는 어떻게 배우고 답할까 — 다음에 올 말을 맞히는 연습 | 153.5초 | [37-ai-learning/](37-ai-learning/) | [upload.md](37-ai-learning/upload.md) | uncommitted |
 
-합계 33편, 91.7분, 734 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
+합계 32편, 89.1분, 722 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
 <!-- catalog:end -->
 
 ## 이전 작품 (`legacy/`)
