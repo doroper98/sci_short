@@ -117,7 +117,7 @@ export function plan(tl) {
   P.MORPH = [0.9, 1.7];
   P.seoul = wd('s02', '서해'); P.back2 = wd('s02', '물러났다가'); P.moon3 = wd('s03', '달인데'); P.far3 = wd('s03', '반대쪽');
   P.jo = wd('s04', '아침'); P.seok = wd('s04', '저녁'); P.josuk = wd('s04', '조석이라');
-  P.gal = wd('s05', '갈릴레이는'); P.slosh = wd('s05', '출렁이게'); P.reject = wd('s05', '물리쳤습니다');
+  P.gal = wd('s05', '갈릴레이는'); P.slosh = wd('s05', '출렁이게'); P.reject = wd('s05', '믿지');
   P.newton = wd('s06', '뉴턴은'); P.grav = wd('s06', '만유인력으로'); P.place = wd('s06', '자리마다');
   P.far7 = wd('s07', '멀수록'); P.near7 = wd('s07', '가까운'); P.ctr7 = wd('s07', '중심보다'); P.farP7 = wd('s07', '먼');
   P.near8 = wd('s08', '가까운'); P.far8 = wd('s08', '먼');
@@ -128,7 +128,7 @@ export function plan(tl) {
   P.day13 = wd('s13', '지구가'); P.coast13 = wd('s13', '바닷가는'); P.two13 = wd('s13', '두');
   P.moon14 = wd('s14', '달도'); P.num14 = wd('s14', '열두시간');
   P.sun15 = wd('s15', '태양은'); P.mass15 = wd('s15', '이천칠백만배'); P.dist15 = wd('s15', '삼백구십배'); P.half15 = wd('s15', '절반이');
-  P.full16 = wd('s16', '보름달과'); P.new16 = wd('s16', '그믐달'); P.line16 = wd('s16', '겹쳐'); P.spring16 = wd('s16', '사리가');
+  P.full16 = wd('s16', '보름과'); P.new16 = wd('s16', '그믐'); P.line16 = wd('s16', '겹쳐'); P.spring16 = wd('s16', '사리가');
   P.half17 = wd('s17', '반달'); P.cross17 = wd('s17', '엇갈려'); P.neap17 = wd('s17', '조금이');
   P.ocean18 = wd('s18', '넓은'); P.one18 = wd('s18', '일미터쯤입니다');
   P.inch19 = wd('s19', '인천'); P.nine19 = wd('s19', '구미터에');
@@ -331,13 +331,13 @@ function arrowW(stage, cam, p0, p1, col, w = 4, head) { const a = P2(cam, p0), b
 function titleList(id, P) {
   const at = s => P.tl.at(s) - 0.5;
   if (id === 'hook') return [[-Infinity, '오늘의 주제 · 하루를 8초로', '반대쪽 바다는 왜 부풀까?']];
-  if (id === 'origin') return [[-Infinity, '기원 · 이름', '潮汐 = 아침 밀물 + 저녁 밀물'], [at('s05'), '1632 · 갈릴레이', '지구가 움직여서 출렁인다?'], [at('s06'), '1687 · 뉴턴', '자리마다 다른 달의 당김']];
-  if (id === 'essence') return [[-Infinity, '본질 · 달 거리 축소, 차이 과장', '멀수록 약한 당김'], [at('s08'), '본질 · 달 거리 축소, 차이 과장', '가까운 쪽은 세게, 먼 쪽은 약하게']];
-  if (id === 'stretch') return [[-Infinity, '메커니즘 ① · 부풂 크기 과장', '당김의 차이 = 기조력'], [at('s11'), '메커니즘 ① · 부풂 크기 과장', '아주 작지만, 옆으로 민다']];
-  if (id === 'rotate') return [[-Infinity, '메커니즘 ② · 하루를 5초로', '두 부풂 밑을 도는 지구']];
+  if (id === 'origin') return [[-Infinity, '기원 · 이름', '潮汐 = 아침 밀물 + 저녁 밀물'], [at('s05'), '1632 · 갈릴레이', '지구가 움직여서 출렁인다?'], [at('s06'), '1687 · 뉴턴', '자리마다 다른 달의 힘']];
+  if (id === 'essence') return [[-Infinity, '본질 · 달 거리 축소, 차이 과장', '멀수록 약해지는 중력'], [at('s08'), '본질 · 달 거리 축소, 차이 과장', '가까운 쪽은 세게, 먼 쪽은 약하게']];
+  if (id === 'stretch') return [[-Infinity, '메커니즘 ① · 물높이 과장', '힘의 차이 = 기조력'], [at('s11'), '메커니즘 ① · 물높이 과장', '아주 작지만, 옆으로 민다']];
+  if (id === 'rotate') return [[-Infinity, '메커니즘 ② · 하루를 5초로', '두 부푼 곳 밑을 도는 지구']];
   if (id === 'sun') return [[-Infinity, '메커니즘 ③ · 태양 거리 축소', '달의 절반이 안 되는 힘'], [P.full16 - 0.4, '메커니즘 ③ · 달의 자리만 바꿈', '사리와 조금']];
   if (id === 'westsea') return [[-Infinity, '현상 · 높이 크게 과장', '넓은 바다는 1 m'], [P.inch19 - 0.4, '현상 · 서해', '인천 앞바다는 9 m'], [at('s20'), '현상 · 서해', '얕은 바다가 물결을 키운다']];
-  if (id === 'myth') return [[-Infinity, '오해 바로잡기 · 자전을 빠르게', '자전 때문일까?'], [P.two22 - 0.3, '오해 바로잡기 · 달을 옮김', '부풂은 달을 따라간다']];
+  if (id === 'myth') return [[-Infinity, '오해 바로잡기 · 자전을 빠르게', '자전 때문일까?'], [P.two22 - 0.3, '오해 바로잡기 · 달을 옮김', '부푼 곳은 달을 따라간다']];
   return [[-Infinity, '', '']];
 }
 function head(stage, kicker, title, aK, aT) {
@@ -454,7 +454,7 @@ export const scenes = {
       const top = P2(cam, [0, 1 + M.W0 + M.A * 0.67, 0]), mp = w.moon, dx = top[0] - mp[0], dy = top[1] - mp[1], dl = Math.hypot(dx, dy), g = easeOut((t - P.moon3 + 0.1) / 0.5);
       const a0 = [mp[0] + dx / dl * (mp[2] + 14), mp[1] + dy / dl * (mp[2] + 14)], a1 = [top[0] - dx / dl * 16, top[1] - dy / dl * 16];
       arrow(c, a0, [lerp(a0[0], a1[0], g), lerp(a0[1], a1[1], g)], PAL.pull, 5, {head: 22});
-      tag(stage, '달의 당김', mp[0] + mp[2] + 20, mp[1] + 40, {size: 28, align: 'left', color: PAL.pull});
+      tag(stage, '달이 당기는 힘', mp[0] + mp[2] + 20, mp[1] + 40, {size: 28, align: 'left', color: PAL.pull});
     });
     const fA = fadeIn(t, P.far3 - 0.05, 0.3) * fadeOut(t, ctx.scene.end - 0.4, 0.3);
     if (fA > 0) { const bot = P2(cam, [0, -(1 + M.W0 + M.A * 0.67), 0]); tag(stage, '반대쪽', bot[0] - 60, bot[1] + 24, {size: 30, color: PAL.waterHi, a: fA, align: 'right'}); }
@@ -489,7 +489,7 @@ export const scenes = {
       line(c, sp.slice(0, -2), rgba(PAL.ink, 0.8), 3); arrow(c, sp[sp.length - 4], sp[sp.length - 1], rgba(PAL.ink, 0.8), 3, {head: 16});
       const orb = []; for (let i = 0; i <= 50; i++) { const q = (-22 + i * 0.9) * D2R; orb.push([sun.x + 700 * Math.cos(q), sun.y - 40 - 700 * Math.sin(q)]); }
       line(c, orb, rgba(PAL.sun, 0.55), 2.2, {dash: [6, 8]}); arrow(c, orb[orb.length - 3], orb[orb.length - 1], rgba(PAL.sun, 0.8), 2.4, {head: 16});
-      if (w.moon) { const x = w.moon[0] + w.moon[2] + 16, y = w.moon[1]; const ww = tag(stage, '달의 당김', x, y, {size: 28, align: 'left', color: PAL.pull, a: 0.9}); const q = smooth((t - P.reject + 0.034) / 0.4); if (q > 0) line(c, [[x - 4, y + 2], [x - 4 + (ww + 8) * q, y + 2]], rgba('#FF8A5C', 0.95), 4); }
+      if (w.moon) { const x = w.moon[0] + w.moon[2] + 16, y = w.moon[1]; const ww = tag(stage, '달이 당긴다', x, y, {size: 28, align: 'left', color: PAL.pull, a: 0.9}); const q = smooth((t - P.reject + 0.034) / 0.4); if (q > 0) line(c, [[x - 4, y + 2], [x - 4 + (ww + 8) * q, y + 2]], rgba('#FF8A5C', 0.95), 4); }
     });
     // s06: Newton — the rings of the Moon's pull open outward (weaker with distance); near and far get different pulls
     const nA = fadeIn(t, P.place - 0.2, 0.3) * fadeOut(t, ctx.scene.end - 0.4, 0.4);
@@ -538,7 +538,7 @@ export const scenes = {
       }
       const top = P2(cam, [0, 1 + LPULL * b, 0]), bot = P2(cam, [0, -1 - LPULL * b, 0]);
       tag(stage, '달 쪽으로', top[0] + 60, top[1], {size: 28, color: PAL.pull, align: 'left', a: arrA * onAt(t, P.out9, 0.3)});
-      tag(stage, '뒤에 남음', bot[0] + 60, bot[1], {size: 28, color: PAL.pull, align: 'left', a: arrA * onAt(t, P.far10, 0.3)});
+      tag(stage, '덜 당겨짐', bot[0] + 60, bot[1], {size: 28, color: PAL.pull, align: 'left', a: arrA * onAt(t, P.far10, 0.3)});
     }
     // the tidal-force pattern (s11): 16 arrows appear around from the near side to both flanks
     const fieldA = fadeIn(t, P.name11 - 0.2, 0.3) * fadeOut(t, P.side12 - 0.3, 0.5);
@@ -637,7 +637,7 @@ export const scenes = {
     const tA = fadeOut(t, P.full16 - 0.5, 0.4);
     tag(stage, '질량 2,700만 배', 40, E0[1] - 230, {size: 28, color: PAL.sun, align: 'left', a: tA * onAt(t, P.mass15, 0.25)});
     tag(stage, '거리 390배', 40, E0[1] - 180, {size: 28, color: PAL.sun, align: 'left', a: tA * onAt(t, P.dist15, 0.25)});
-    bigNum(stage, '태양의 당김은 달의', '46', '%', 980, 450, onAt(t, P.half15) * fadeOut(t, P.full16 - 0.5, 0.4), {col: PAL.pull, ucol: PAL.pull});
+    bigNum(stage, '태양의 기조력은 달의', '46', '%', 980, 450, onAt(t, P.half15) * fadeOut(t, P.full16 - 0.5, 0.4), {col: PAL.pull, ucol: PAL.pull});
     // range bar (물높이 차) on the same clock as the Moon's angle; the spring value stays as a ghost tick
     const d = (moon - 180) * D2R, range = Math.hypot(1 + M.sunK * Math.cos(2 * d) * ks, M.sunK * Math.sin(2 * d) * ks);
     const mA = fadeIn(t, P.full16 - 0.2, 0.4);
@@ -654,8 +654,8 @@ export const scenes = {
     const lineA = fadeIn(t, P.full16 - 0.1, 0.3) * fadeOut(t, P.half17 - 0.3, 0.4);
     if (lineA > 0) {
       const mf = ghostMoon(stage, cam, 0, lineA, 1.3);
-      if (mf) { tag(stage, '보름달', mf[0], mf[1] - mf[2] - 30, {size: 28, color: PAL.moon, a: lineA * onAt(t, P.full16, 0.3)}); withAlpha(c, lineA, () => line(c, [[E0[0] - 640, E0[1]], [mf[0] + 60, mf[1]]], rgba(PAL.pull, 0.32), 2, {dash: [10, 8]})); }
-      if (w.moon) tag(stage, '그믐달', w.moon[0], w.moon[1] - w.moon[2] - 34, {size: 28, color: PAL.moon, a: lineA * onAt(t, P.new16, 0.3)});
+      if (mf) { tag(stage, '보름', mf[0], mf[1] - mf[2] - 30, {size: 28, color: PAL.moon, a: lineA * onAt(t, P.full16, 0.3)}); withAlpha(c, lineA, () => line(c, [[E0[0] - 640, E0[1]], [mf[0] + 60, mf[1]]], rgba(PAL.pull, 0.32), 2, {dash: [10, 8]})); }
+      if (w.moon) tag(stage, '그믐', w.moon[0], w.moon[1] - w.moon[2] - 34, {size: 28, color: PAL.moon, a: lineA * onAt(t, P.new16, 0.3)});
     }
     const wkA = fadeIn(t, P.half17 - 0.2, 0.25) * fadeOut(t, P.cross17 + 0.5, 0.3);
     if (wkA > 0 && w.moon) tag(stage, '약 7일 뒤', w.moon[0] + w.moon[2] + 20, w.moon[1] - 10, {size: 28, color: PAL.ink, align: 'left', a: wkA});
@@ -810,7 +810,7 @@ export function soundEvents(tl) {
   // ---- origin
   tick('jo', P.jo, 147, -35, '潮 카드', {decay: 0.12}); tick('seok', P.seok, 131, -35, '汐 카드', {decay: 0.12});
   hum('slosh', P.gal - 0.2, tl.at('s06') - 0.4, tt => 0.35 + 0.35 * Math.abs(Math.sin((tt - P.gal) * 2.6)), -38, '갈릴레이의 생각: 출렁이는 물(설명용 낮은 잡음, 출렁임과 같은 박자)', {low: 50, high: 180});
-  tick('reject', P.reject, 98, -34, '"물리쳤습니다": 달의 당김에 줄', {decay: 0.16});
+  tick('reject', P.reject, 98, -34, '"믿지 않았습니다": 달이 당긴다는 생각에 줄', {decay: 0.16});
   tick('newton', P.newton, 165, -35, '1687 뉴턴', {decay: 0.12});
   swell('field', P.grav - 0.1, [98, 131], '달의 당김 고리가 바깥으로 열림(멀수록 약함)', {dur: 1.8, gain: -36});
   // ---- essence: pull strength → pitch (stronger = higher)
