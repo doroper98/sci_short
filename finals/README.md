@@ -53,7 +53,7 @@
 | 22 | 버섯구름은 왜 버섯 모양일까 | 149.7초 | [22-mushroom-cloud/](22-mushroom-cloud/) | [upload.md](22-mushroom-cloud/upload.md) | 2026-11-07 |
 | 23 | 제임스웹은 얼마나 높이 있을까 — 산에서 우주까지 | 163.6초 | [23-orbit-altitudes/](23-orbit-altitudes/) | [upload.md](23-orbit-altitudes/upload.md) | 2026-11-07 |
 | 24 | 라그랑주 점 — 우주의 주차 자리 | 158.5초 | [24-lagrange-points/](24-lagrange-points/) | [upload.md](24-lagrange-points/upload.md) | 2026-11-07 |
-| 25 | 태풍은 왜 우리나라 앞에서 꺾일까 — 스스로 돌지만, 길은 둘레의 바람이 정한다 | 170.3초 | [25-typhoon-track/](25-typhoon-track/) | [upload.md](25-typhoon-track/upload.md) | uncommitted |
+| 25 | 태풍은 왜 우리나라 앞에서 꺾일까 — 스스로 돌지만, 길은 둘레의 바람이 정한다 | 170.3초 | [25-typhoon-track/](25-typhoon-track/) | [upload.md](25-typhoon-track/upload.md) | 2026-11-11 |
 | 27 | 예인 소나 — 긴 줄로 바닷속 소리를 듣는 법 | 149.2초 | [27-towed-array-sonar/](27-towed-array-sonar/) | [upload.md](27-towed-array-sonar/upload.md) | 2026-11-08 |
 | 28 | 밀물과 썰물 — 달은 가까운 쪽을 더 세게, 먼 쪽을 더 약하게 당긴다 | 173.8초 | [28-tides/](28-tides/) | [upload.md](28-tides/upload.md) | 2026-11-11 |
 | 29 | 핵분열과 핵융합 — 쪼개도 합쳐도 에너지가 나오는 까닭 | 165.4초 | [29-fission-fusion/](29-fission-fusion/) | [upload.md](29-fission-fusion/upload.md) | 2026-11-07 |
