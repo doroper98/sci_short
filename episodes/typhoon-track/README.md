@@ -1,20 +1,12 @@
-# 에피소드 폴더 `typhoon-track`
-
-`python pipeline/new_episode.py <slug> --title "…"`로 만든 폴더입니다. 직접 쓰는 파일은 셋입니다.
+# 에피소드 폴더 `typhoon-track` — 25. 태풍은 왜 우리나라 앞에서 꺾일까
 
 | 파일 | 내용 |
 |---|---|
-| `script.json` | 문장(표시 `text` / 발음 `tts`), 장면 id, 문장 뒤 쉼 `gap`. 스키마: `pipeline/narration/script_schema.py` |
-| `scenes.mjs` | `theme`, `scenes.{id}(stage, t, p, ctx)`, 선택 `overlays`, `titles`, `captionLayout`, `events` |
-| `sound.json` | 설명용 소리 사건(`events`)과 선택 배경음(`ambient`, 기본 꺼짐). 사건 시각은 화면과 공유 |
+| `brief.md` | 범위, 출처, 대본 Fable 검수, 장면별 인과 사슬, 소리, 단순화·검증 메모 |
+| `script.json` | 24문장(합니다체, 800음절), 숫자·연도는 `tts`. Fable 검수 반영본 |
+| `scenes.mjs` | 모형(북태평양 고기압 타원, 그 둘레를 도는 태풍 길, 위도에 따른 이동 속도, 전향력 ∝ sin 위도, 레드필드의 두 숲)과 장면. 무대 하나(북서태평양 평면 지도) |
+| `land.json` | Natural Earth 1:110m 육지 윤곽(퍼블릭 도메인, `episodes/tides/land.json` 사본) |
+| `sound.json` | `node episodes/typhoon-track/scenes.mjs --emit-sound`가 같은 모형에서 써 넣음(사건 40개) |
 
-`brief.md`는 기획·단순화·검증 메모, `render.mjs`와 `run.sh`는 보통 고치지 않습니다.
-
-```bash
-episodes/typhoon-track/run.sh                       # narrate → stills → render → sfx → mix → finish → validate
-episodes/typhoon-track/run.sh stills                # 스틸만 다시 (outputs/typhoon-track/stills/contact-sheet.jpg)
-SCISHORT_ROOT=$PWD node episodes/typhoon-track/render.mjs --stills --safe   # 플랫폼 UI 영역 겹쳐 보기
-```
-
-`scenes.mjs`의 장면 id는 `script.json`의 `scene` 값과 같아야 합니다. 예시는 "얼음은 왜 물에 뜰까"이며 내용은 바꿉니다.
-자세한 순서와 API는 [pipeline/README.md](../../pipeline/README.md).
+실행: `episodes/typhoon-track/run.sh narrate` → `node episodes/typhoon-track/scenes.mjs --emit-sound` → `SKIP_NARRATE=1 episodes/typhoon-track/run.sh stills render sfx mix finish validate`.
+영상은 템플릿 기본 CRF 18로 인코딩합니다. 완성본은 `finals/25-typhoon-track/`.

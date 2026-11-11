@@ -39,7 +39,7 @@
 | 08 | 한 칸에 열 배 — 지진 규모·데시벨·pH와 로그 | 165.8초 | [08-log-scale/](08-log-scale/) | [upload.md](08-log-scale/upload.md) | 2026-11-07 |
 | 09 | 별은 왜 반짝일까 — 반짝임은 공기가 만든다 | 175.7초 | [09-twinkle/](09-twinkle/) | [upload.md](09-twinkle/upload.md) | 2026-11-05 |
 | 10 | 오로라는 왜 극지방에서만 보일까 | 161.3초 | [10-aurora/](10-aurora/) | [upload.md](10-aurora/upload.md) | 2026-11-05 |
-| 11 | 에딩턴 한계 — 빛이 별을 밀어낸다 | 171.5초 | [11-eddington-limit/](11-eddington-limit/) | [upload.md](11-eddington-limit/upload.md) | 2026-11-05 |
+| 11 | 에딩턴 한계 — 빛이 별을 밀어낸다 | 171.5초 | [11-eddington-limit/](11-eddington-limit/) | [upload.md](11-eddington-limit/upload.md) | 2026-11-04 |
 | 12 | 퀘이사 — 별처럼 보인 블랙홀 | 174.3초 | [12-quasar/](12-quasar/) | [upload.md](12-quasar/upload.md) | 2026-11-07 |
 | 13 | 감마선 폭발 — 우주에서 가장 밝은 섬광 | 175.5초 | [13-gamma-ray-burst/](13-gamma-ray-burst/) | [upload.md](13-gamma-ray-burst/upload.md) | 2026-11-05 |
 | 14 | 감기 주사는 왜 없을까 — 범인이 200가지 | 172.1초 | [14-cold-vaccine/](14-cold-vaccine/) | [upload.md](14-cold-vaccine/upload.md) | 2026-11-05 |
@@ -53,6 +53,7 @@
 | 22 | 버섯구름은 왜 버섯 모양일까 | 149.7초 | [22-mushroom-cloud/](22-mushroom-cloud/) | [upload.md](22-mushroom-cloud/upload.md) | 2026-11-07 |
 | 23 | 제임스웹은 얼마나 높이 있을까 — 산에서 우주까지 | 163.6초 | [23-orbit-altitudes/](23-orbit-altitudes/) | [upload.md](23-orbit-altitudes/upload.md) | 2026-11-07 |
 | 24 | 라그랑주 점 — 우주의 주차 자리 | 158.5초 | [24-lagrange-points/](24-lagrange-points/) | [upload.md](24-lagrange-points/upload.md) | 2026-11-07 |
+| 25 | 태풍은 왜 우리나라 앞에서 꺾일까 — 스스로 돌지만, 길은 둘레의 바람이 정한다 | 170.3초 | [25-typhoon-track/](25-typhoon-track/) | [upload.md](25-typhoon-track/upload.md) | uncommitted |
 | 27 | 예인 소나 — 긴 줄로 바닷속 소리를 듣는 법 | 149.2초 | [27-towed-array-sonar/](27-towed-array-sonar/) | [upload.md](27-towed-array-sonar/upload.md) | 2026-11-08 |
 | 28 | 밀물과 썰물 — 달은 가까운 쪽을 더 세게, 먼 쪽을 더 약하게 당긴다 | 173.8초 | [28-tides/](28-tides/) | [upload.md](28-tides/upload.md) | 2026-11-11 |
 | 29 | 핵분열과 핵융합 — 쪼개도 합쳐도 에너지가 나오는 까닭 | 165.4초 | [29-fission-fusion/](29-fission-fusion/) | [upload.md](29-fission-fusion/upload.md) | 2026-11-07 |
@@ -62,7 +63,7 @@
 | 34 | 망원경의 종류 — 빛을 모으는 방법 | 158.6초 | [34-telescope-types/](34-telescope-types/) | [upload.md](34-telescope-types/upload.md) | 2026-11-07 |
 | 36 | 강착원반 — 별이 블랙홀 둘레에서 원반이 되는 이유 | 174.4초 | [36-accretion-disk/](36-accretion-disk/) | [upload.md](36-accretion-disk/upload.md) | 2026-11-10 |
 
-합계 32편, 89.3분, 723 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
+합계 33편, 92.1분, 743 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
 <!-- catalog:end -->
 
 ## 이전 작품 (`legacy/`)
