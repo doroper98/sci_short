@@ -245,7 +245,9 @@ function layerScene(stage, t, p, ctx) {
     for (let i = i0; i < lim.length; i++) poly.push([cm.sx(lim[i].x), cm.sy(lim[i].z)]);
     const last = poly[poly.length - 1];
     poly.push([last[0], 1112], [W + 20, 1112], [W + 20, cm.sy(140)]);
-    withAlpha(c, shA, () => { c.beginPath(); poly.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.closePath(); c.fillStyle = rgba('#000A10', 0.45); c.fill(); });
+    withAlpha(c, shA, () => { c.beginPath(); poly.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.closePath(); const y0 = cm.sy(140), g = c.createLinearGradient(0, y0, 0, 1110), f = y => clamp((y - y0) / (1110 - y0));   // soft top (30 px) and bottom (960 → 1110); the limiting-ray edge stays sharp
+      g.addColorStop(0, rgba('#000A10', 0)); g.addColorStop(f(y0 + 30), rgba('#000A10', 0.45)); g.addColorStop(f(960), rgba('#000A10', 0.45)); g.addColorStop(1, rgba('#000A10', 0));
+      c.fillStyle = g; c.fill(); });
   }
   // ---------------- bodies: ship (bow left), towed sonar, helicopter + dipping sonar, submarine
   const sh = ship(stage, 286, ys, {len: 180, dir: -1, domeLit: hitAny(t, L.pings1, 0.25)});

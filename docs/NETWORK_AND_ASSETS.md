@@ -46,6 +46,22 @@
 - **배경음악**: `assets/music/registry.json` 의 archive.org URL 을 이제 받을 수 있습니다. 다만 **배경음악 기본 꺼짐은 2026-10-31 사용자 결정이며 그대로입니다.** 받을 수 있다는 것과 쓴다는 것은 다릅니다.
 - **유튜브 업로드**: 업로드·토큰 엔드포인트가 닿습니다. 비밀값만 있으면 이 환경에서 실제 비공개 업로드를 시험할 수 있습니다(`docs/YOUTUBE_AUTO_UPLOAD.md`).
 
+## 2026-11-12 — MMS 가중치 호스트의 인증서 만료와 대체 경로
+
+`dl.fbaipublicfiles.com` 의 TLS 인증서가 2026-11-11 23:59:59 GMT 에 만료되어(`*.fbaipublicfiles.com`, DigiCert 발급) `fetch_assets.py --mms` 가 `curl (60) certificate has expired` 로 실패했습니다. 네트워크 정책 문제가 아니라 서버 쪽 인증서 문제이며, **TLS 검증을 끄지 않습니다.**
+
+같은 파일을 해시로 증명할 수 있는 대체 경로로 받았습니다(아래 '자산 보관 원칙'의 조건).
+
+| 항목 | 값 |
+|---|---|
+| 대체 출처 | Hugging Face `selectorrrr/ctc_alignment_mling_uroman`, revision `c13912af40f24d0f910181f141d6f917caf6edcc`, 파일 `model.pt` |
+| 주소 | `https://huggingface.co/selectorrrr/ctc_alignment_mling_uroman/resolve/c13912af40f24d0f910181f141d6f917caf6edcc/model.pt` |
+| 크기 | 1,262,047,414 B (기준과 일치) |
+| SHA-1 | `0300fd9ae57a63e3bd239ae1337e32127a587214` (기준 `config/voice-reference.json`·`pipeline/narration/assets.json` 과 일치) |
+| SHA-256 | `20ef12963ab4924bef49ac4fc7f58ad5da2ee43b2c11bc8c853c9b90ecdbc680` (이번에 계산해 기록) |
+
+받는 법: 임시 폴더에 내려받아 크기와 SHA-1 을 대조한 뒤에만 `models/mms_fa/model.pt` 로 옮기고 `fetch_assets.py --check` 로 확인합니다. 개인 저장소의 사본이므로 해시가 맞지 않으면 쓰지 않습니다. 공식 주소의 인증서가 갱신되면 원래 경로(`fetch_assets.py --mms`)를 그대로 씁니다. `fetch_assets.py` 에 이 대체 출처를 넣는 것은 아직 하지 않았습니다(제안).
+
 ## Higgsfield (AI 생성 클립, 선택)
 
 2026-10-31 사용자가 `*.higgsfield.ai` 를 허용했습니다. 공식 API 문서는 `docs.higgsfield.ai/docs`(마크다운은 각 경로 뒤에 `.md`), 키 발급은 `console.higgsfield.ai`, 호출은 `api.higgsfield.ai` 입니다.

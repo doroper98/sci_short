@@ -148,7 +148,7 @@
       "height": 1920,
       "bytes": 40110414,
       "sha256": "17df58a0160640e0c4b6a39a559ca67d2c42cac7061c170a52b6bb8033652054",
-      "video_date": "2026-11-05",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/twinkle",
       "upload_info": "finals/09-twinkle/upload.md",
       "thumbnail": "0초 프레임(은하수와 초승달이 뜬 밤하늘, 큰 제목 \"별은 왜 반짝일까 / 반짝임은 공기가 만든다\"). 2026-11-05 첫 프레임 = 썸네일 규칙으로 보완"
@@ -165,7 +165,7 @@
       "height": 1920,
       "bytes": 29808604,
       "sha256": "7b41b372c64ab12df07c2e635f2459c4eabc88399f921c199bb2e8e180fc0ffc",
-      "video_date": "2026-11-05",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/aurora",
       "upload_info": "finals/10-aurora/upload.md",
       "thumbnail": "0초 프레임(호수에 비친 초록·분홍 오로라 커튼, 큰 제목 \"오로라 / 왜 극지방에서만 보일까\"). 2026-11-05 첫 프레임 = 썸네일 규칙으로 보완"
@@ -182,7 +182,7 @@
       "height": 1920,
       "bytes": 23290586,
       "sha256": "84b2838ffddf8647a8c0963b49611b02ec61057ca1ff5478c6984255f6fd6e4f",
-      "video_date": "2026-11-04",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/eddington-limit",
       "upload_info": "finals/11-eddington-limit/upload.md",
       "thumbnail": "0초 프레임(바깥층이 날아가는 청백색 별과 제목 \"에딩턴 한계 / 빛이 별을 밀어낸다\"). 첫 프레임 = 썸네일 규칙을 처음 적용한 편"
@@ -216,7 +216,7 @@
       "height": 1920,
       "bytes": 17192117,
       "sha256": "6bb257de323e64d85e4c1e72d45f560109983d36a970bf3df9ffc034fb1e7e81",
-      "video_date": "2026-11-05",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/gamma-ray-burst",
       "upload_info": "finals/13-gamma-ray-burst/upload.md",
       "thumbnail": "0초 프레임(무너지는 별을 뚫고 나오는 두 줄기 제트, 큰 제목 \"감마선 폭발 / 우주에서 가장 밝은 섬광\")"
@@ -233,7 +233,7 @@
       "height": 1920,
       "bytes": 25479691,
       "sha256": "de6602468a880dc1ce46748ab6d2d13054c3b019949fb36685bf531814bc414c",
-      "video_date": "2026-11-05",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/cold-vaccine",
       "upload_info": "finals/14-cold-vaccine/upload.md",
       "thumbnail": "0초 프레임(모양·색이 저마다 다른 바이러스 무리 가운데 주사기 하나, 흰 질문 \"감기 주사는 왜 없을까?\"와 큰 주황 답 \"범인이 200가지\")"
@@ -284,7 +284,7 @@
       "height": 1920,
       "bytes": 24730389,
       "sha256": "14b54ee41d4a76dac9640bfa35ee864bb79fc65e68ff9c06eb208a78f7511950",
-      "video_date": "2026-11-06",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/superfluid-helium",
       "upload_info": "finals/17-superfluid-helium/upload.md",
       "thumbnail": "0초 프레임(매달린 유리컵의 테두리를 넘어 흘러내리는 청록 막과 떨어지는 방울, 흰 질문 \"헬륨을 영하 271도로 식히면?\"과 큰 청록 답 \"벽을 타고 탈출\")"
@@ -301,7 +301,7 @@
       "height": 1920,
       "bytes": 11898919,
       "sha256": "94487fbc66ac1ffcae2bf9e74e36bdf61310dcdd33288b2a51ec2672ae9b437d",
-      "video_date": "2026-11-06",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/temperature-scales",
       "upload_info": "finals/18-temperature-scales/upload.md",
       "thumbnail": "0초 프레임(해 질 녘 도시 위 큰 온도계가 같은 높이에서 38 °C와 100 °F를 가리킴, 흰 질문 \"화씨 100도면 물이 끓을까?\"와 큰 주황 답 \"아니, 섭씨 38도\")"
@@ -318,7 +318,7 @@
       "height": 1920,
       "bytes": 12790025,
       "sha256": "54bc401aa0197dd20f8bc7d5836af3a7b78b25485920d2a9580079c2e329d478",
-      "video_date": "2026-11-06",
+      "video_date": "2026-11-07",
       "episode_code": "episodes/gravity-time",
       "upload_info": "finals/19-gravity-time/upload.md",
       "thumbnail": "0초 프레임(땅 위에 선 사람 옆모습, 머리 옆 금빛 시계와 발 옆 푸른 시계, 흰 질문 \"머리와 발, 어디가 더 빨리 늙을까?\"와 큰 금빛 답 \"머리가 더 빨리\")"
@@ -560,6 +560,23 @@
       "episode_code": "episodes/accretion-disk",
       "upload_info": "finals/36-accretion-disk/upload.md",
       "thumbnail": "0초 프레임(어두운 바탕에 비스듬히 본 주황빛 강착원반과 가운데 검은 블랙홀, 흰 질문 \"블랙홀 둘레엔 왜 원반이?\"와 큰 호박색 답 \"곧장 못 떨어져서\")"
+    },
+    {
+      "number": 38,
+      "slug": "submarine-detection",
+      "title": "잠수함은 어떻게 찾을까 — 바다는 모습을 가려도, 소리와 자기장의 흔적까지 다 가리지는 못한다",
+      "status": "final",
+      "folder": "finals/38-submarine-detection",
+      "video": "finals/38-submarine-detection/submarine-detection.mp4",
+      "duration_sec": 170.6,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 17775106,
+      "sha256": "4f9c207e8d0aa0df7ec544ea18697432c27b4a751bfce0a7d5790e94b7f82828",
+      "video_date": "uncommitted",
+      "episode_code": "episodes/submarine-detection",
+      "upload_info": "finals/38-submarine-detection/upload.md",
+      "thumbnail": "0초 프레임(바다 단면: 하늘의 초계기, 물속 잠수함과 퍼져 나가는 소리 파면, 줄에 마이크를 내린 부표, 흰 질문 \"잠수함은 어떻게 찾을까?\"와 큰 호박색 답 \"소리와 자기장으로\")"
     }
   ],
   "legacy": [
