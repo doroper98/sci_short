@@ -1,0 +1,2610 @@
+{
+ "version": 1,
+ "notes": "설명용 합성음입니다(녹음 아님). 모든 사건은 `node episodes/gpt-generative/scenes.mjs --emit-sound`가 model.mjs·장면 모듈의 같은 시간 계획에서 써 넣습니다(손으로 고치지 마세요). 대응: 표지가 띠에 떨어짐 → 짧은 틱(배속이 오를수록 높고 촘촘하게), 조각이 글줄에 붙음 → 330 Hz, 끝 조각(■) → 220 Hz 맺음 음, 읽기·계산 → 낮은 스웰(느린 걸음에서만), 확률 막대가 자람 → 확률에 비례한 높이의 낮은 음, 자르는 선 → 틱. 모든 기본음 700 Hz 아래, 모노(패닝 없음). 배경음악·배경음 없음. 타임라인이 바뀌면 다시 실행하세요.",
+ "events": [
+  {
+   "id": "poster",
+   "at": 0.05,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     98,
+     147
+    ],
+    "dur": 1.8,
+    "attack": 0.4,
+    "gain_db": -34
+   },
+   "means": "첫 화면(썸네일): 포스터 구도",
+   "model": {
+    "sig": "159.366/157.166/15.191,23.062,39.879/45.133,54.057,66.164/73.084,85.329,95.316,111.818/117.819,131.889,152.524"
+   }
+  },
+  {
+   "id": "hook_poster",
+   "at": 0.2,
+   "kind": "custom",
+   "params": {
+    "gain_db": -30,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.5,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.5,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.5,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 3,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 3.5,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 4,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 4.5,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     }
+    ]
+   },
+   "means": "첫 화면: 0.5초마다 표지가 띠에 떨어짐(조각마다 틱)"
+  },
+  {
+   "id": "hook_erase",
+   "at": 5.55,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.45,
+    "f_start": 520,
+    "f_end": 180,
+    "q": 1.6,
+    "gain_db": -36
+   },
+   "means": "대답이 캐럿 쪽으로 지워짐"
+  },
+  {
+   "id": "hook_ghost",
+   "at": 8.504,
+   "kind": "tone",
+   "params": {
+    "freq": 196,
+    "dur": 0.3,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.15,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -34
+   },
+   "means": "\"한꺼번에\": 대답 전체의 윤곽이 한 번에 보였다가 사라짐"
+  },
+  {
+   "id": "hook_stream",
+   "at": 10.206,
+   "kind": "custom",
+   "params": {
+    "gain_db": -31,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 330,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.45,
+      "params": {
+       "freq": 330,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.9,
+      "params": {
+       "freq": 330,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.35,
+      "params": {
+       "freq": 330,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.8,
+      "params": {
+       "freq": 330,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.25,
+      "params": {
+       "freq": 330,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.7,
+      "params": {
+       "freq": 330,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 3.15,
+      "params": {
+       "freq": 330,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 3.6,
+      "params": {
+       "freq": 330,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 4.05,
+      "params": {
+       "freq": 330,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 4.5,
+      "params": {
+       "freq": 330,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     }
+    ]
+   },
+   "means": "대답이 앞에서부터 한 조각씩 나타남(조각마다 틱)"
+  },
+  {
+   "id": "hook_make1",
+   "at": 15.291,
+   "kind": "tone",
+   "params": {
+    "freq": 165,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.1,
+    "sustain": 0.1,
+    "release": 0.07333333333333333,
+    "gain_db": -32
+   },
+   "means": "기계 출구에서 조각 '때문'이 나옴"
+  },
+  {
+   "id": "hook_attach1",
+   "at": 15.611,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.2,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.1,
+    "sustain": 0.1,
+    "release": 0.06666666666666667,
+    "gain_db": -29
+   },
+   "means": "조각 '때문'이 글줄 끝에 붙음"
+  },
+  {
+   "id": "hook_make2",
+   "at": 15.741,
+   "kind": "tone",
+   "params": {
+    "freq": 165,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.1,
+    "sustain": 0.1,
+    "release": 0.07333333333333333,
+    "gain_db": -32
+   },
+   "means": "기계 출구에서 조각 '입니다'이 나옴"
+  },
+  {
+   "id": "hook_attach2",
+   "at": 16.061,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.2,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.1,
+    "sustain": 0.1,
+    "release": 0.06666666666666667,
+    "gain_db": -29
+   },
+   "means": "조각 '입니다'이 글줄 끝에 붙음"
+  },
+  {
+   "id": "hook_make3",
+   "at": 16.191,
+   "kind": "tone",
+   "params": {
+    "freq": 165,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.1,
+    "sustain": 0.1,
+    "release": 0.07333333333333333,
+    "gain_db": -32
+   },
+   "means": "기계 출구에서 조각 '.'이 나옴"
+  },
+  {
+   "id": "hook_attach3",
+   "at": 16.511,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.2,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.1,
+    "sustain": 0.1,
+    "release": 0.06666666666666667,
+    "gain_db": -29
+   },
+   "means": "조각 '.'이 글줄 끝에 붙음"
+  },
+  {
+   "id": "hook_make4",
+   "at": 16.641,
+   "kind": "tone",
+   "params": {
+    "freq": 165,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.1,
+    "sustain": 0.1,
+    "release": 0.07333333333333333,
+    "gain_db": -32
+   },
+   "means": "기계 출구에서 조각 '■'이 나옴"
+  },
+  {
+   "id": "hook_attach4",
+   "at": 17.041,
+   "kind": "tone",
+   "params": {
+    "freq": 220,
+    "dur": 0.5,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.1,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -29
+   },
+   "means": "조각 '■'이 글줄 끝에 붙음"
+  },
+  {
+   "id": "origin_tile1",
+   "at": 19.33,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.08,
+    "gain_db": -30,
+    "click": 0
+   },
+   "means": "글자 타일 'G'가 튕겨 나와 자리 잡음"
+  },
+  {
+   "id": "origin_tile2",
+   "at": 19.63,
+   "kind": "tick",
+   "params": {
+    "freq": 302,
+    "decay": 0.08,
+    "gain_db": -30,
+    "click": 0
+   },
+   "means": "글자 타일 'P'가 튕겨 나와 자리 잡음"
+  },
+  {
+   "id": "origin_tile3",
+   "at": 19.93,
+   "kind": "tick",
+   "params": {
+    "freq": 342,
+    "decay": 0.08,
+    "gain_db": -30,
+    "click": 0
+   },
+   "means": "글자 타일 'T'가 튕겨 나와 자리 잡음"
+  },
+  {
+   "id": "origin_G",
+   "at": 23.062,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     147,
+     220
+    ],
+    "dur": 1.4,
+    "attack": 0.4,
+    "gain_db": -32
+   },
+   "means": "첫 글자 G가 난색으로 강조됨"
+  },
+  {
+   "id": "origin_make1",
+   "at": 31.668,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -31,
+    "click": 0
+   },
+   "means": "기계가 새 조각 하나를 만들어 붙임(1)"
+  },
+  {
+   "id": "origin_make2",
+   "at": 32.118,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -31,
+    "click": 0
+   },
+   "means": "기계가 새 조각 하나를 만들어 붙임(2)"
+  },
+  {
+   "id": "origin_make3",
+   "at": 32.568,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -31,
+    "click": 0
+   },
+   "means": "기계가 새 조각 하나를 만들어 붙임(3)"
+  },
+  {
+   "id": "origin_make4",
+   "at": 33.018,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -31,
+    "click": 0
+   },
+   "means": "기계가 새 조각 하나를 만들어 붙임(4)"
+  },
+  {
+   "id": "origin_make5",
+   "at": 33.468,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -31,
+    "click": 0
+   },
+   "means": "기계가 새 조각 하나를 만들어 붙임(5)"
+  },
+  {
+   "id": "origin_make6",
+   "at": 33.918,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -31,
+    "click": 0
+   },
+   "means": "기계가 새 조각 하나를 만들어 붙임(6)"
+  },
+  {
+   "id": "essence_read",
+   "at": 37.413,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     131,
+     196
+    ],
+    "dur": 1.6,
+    "attack": 0.4,
+    "gain_db": -32
+   },
+   "means": "지금까지의 글을 읽음(밑줄) → 기계로 펄스"
+  },
+  {
+   "id": "essence_attach",
+   "at": 40.349,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.25,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.12,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -28
+   },
+   "means": "조각 하나가 빈 자리를 채움"
+  },
+  {
+   "id": "token_cut1",
+   "at": 45.213,
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.05,
+    "gain_db": -28,
+    "click": 0
+   },
+   "means": "자르는 선 1이 그어짐(60 ms 간격)"
+  },
+  {
+   "id": "token_cut2",
+   "at": 45.273,
+   "kind": "tick",
+   "params": {
+    "freq": 340,
+    "decay": 0.05,
+    "gain_db": -28,
+    "click": 0
+   },
+   "means": "자르는 선 2이 그어짐(60 ms 간격)"
+  },
+  {
+   "id": "token_cut3",
+   "at": 45.333,
+   "kind": "tick",
+   "params": {
+    "freq": 380,
+    "decay": 0.05,
+    "gain_db": -28,
+    "click": 0
+   },
+   "means": "자르는 선 3이 그어짐(60 ms 간격)"
+  },
+  {
+   "id": "token_cut4",
+   "at": 45.393,
+   "kind": "tick",
+   "params": {
+    "freq": 420,
+    "decay": 0.05,
+    "gain_db": -28,
+    "click": 0
+   },
+   "means": "자르는 선 4이 그어짐(60 ms 간격)"
+  },
+  {
+   "id": "token_cut5",
+   "at": 45.453,
+   "kind": "tick",
+   "params": {
+    "freq": 460,
+    "decay": 0.05,
+    "gain_db": -28,
+    "click": 0
+   },
+   "means": "자르는 선 5이 그어짐(60 ms 간격)"
+  },
+  {
+   "id": "token_pullback",
+   "at": 51.335,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.8,
+    "f_start": 200,
+    "f_end": 520,
+    "q": 1.6,
+    "gain_db": -34
+   },
+   "means": "뒤로 빠짐: 막대 다섯이 조각 50,257가지의 기둥 맨 위임이 드러남"
+  },
+  {
+   "id": "token_return",
+   "at": 52.726,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.6,
+    "f_start": 520,
+    "f_end": 200,
+    "q": 1.6,
+    "gain_db": -34
+   },
+   "means": "기둥에서 막대 다섯으로 돌아옴"
+  },
+  {
+   "id": "token_read",
+   "at": 53.297,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     131,
+     196
+    ],
+    "dur": 1,
+    "attack": 0.4,
+    "gain_db": -34
+   },
+   "means": "질문을 읽음 → 기계로 펄스"
+  },
+  {
+   "id": "token_bar1",
+   "at": 54.307,
+   "kind": "tone",
+   "params": {
+    "freq": 410,
+    "dur": 0.35,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.15,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -32
+   },
+   "means": "확률 막대 '햇빛'가 62%까지 자람(높이 = 확률)"
+  },
+  {
+   "id": "token_bar2",
+   "at": 54.387,
+   "kind": "tone",
+   "params": {
+    "freq": 221,
+    "dur": 0.35,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.15,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -32
+   },
+   "means": "확률 막대 '공기'가 17%까지 자람(높이 = 확률)"
+  },
+  {
+   "id": "token_bar3",
+   "at": 54.467,
+   "kind": "tone",
+   "params": {
+    "freq": 188,
+    "dur": 0.35,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.15,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -32
+   },
+   "means": "확률 막대 '바다'가 9%까지 자람(높이 = 확률)"
+  },
+  {
+   "id": "token_bar4",
+   "at": 54.547,
+   "kind": "tone",
+   "params": {
+    "freq": 171,
+    "dur": 0.35,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.15,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -32
+   },
+   "means": "확률 막대 '하늘'가 5%까지 자람(높이 = 확률)"
+  },
+  {
+   "id": "token_bar5",
+   "at": 54.627,
+   "kind": "tone",
+   "params": {
+    "freq": 179,
+    "dur": 0.35,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.15,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -36
+   },
+   "means": "확률 막대 '그 밖'가 7%까지 자람(높이 = 확률)"
+  },
+  {
+   "id": "token_hi1",
+   "at": 58.767,
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.08,
+    "gain_db": -28,
+    "click": 0
+   },
+   "means": "'햇빛' 막대가 강조됨"
+  },
+  {
+   "id": "token_hi2",
+   "at": 60.23,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.08,
+    "gain_db": -28,
+    "click": 0
+   },
+   "means": "'공기' 막대가 강조됨"
+  },
+  {
+   "id": "token_hi3",
+   "at": 60.81,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.08,
+    "gain_db": -28,
+    "click": 0
+   },
+   "means": "'바다' 막대가 강조됨"
+  },
+  {
+   "id": "token_link1",
+   "at": 66.464,
+   "kind": "tick",
+   "params": {
+    "freq": 494,
+    "decay": 0.04,
+    "gain_db": -36,
+    "click": 0
+   },
+   "means": "읽어 둔 글의 '햇빛' 1이 햇빛 막대에 이어짐"
+  },
+  {
+   "id": "token_link2",
+   "at": 66.784,
+   "kind": "tick",
+   "params": {
+    "freq": 494,
+    "decay": 0.04,
+    "gain_db": -36,
+    "click": 0
+   },
+   "means": "읽어 둔 글의 '햇빛' 2이 햇빛 막대에 이어짐"
+  },
+  {
+   "id": "token_link3",
+   "at": 67.104,
+   "kind": "tick",
+   "params": {
+    "freq": 494,
+    "decay": 0.04,
+    "gain_db": -36,
+    "click": 0
+   },
+   "means": "읽어 둔 글의 '햇빛' 3이 햇빛 막대에 이어짐"
+  },
+  {
+   "id": "token_link4",
+   "at": 67.424,
+   "kind": "tick",
+   "params": {
+    "freq": 494,
+    "decay": 0.04,
+    "gain_db": -36,
+    "click": 0
+   },
+   "means": "읽어 둔 글의 '햇빛' 4이 햇빛 막대에 이어짐"
+  },
+  {
+   "id": "token_link5",
+   "at": 67.744,
+   "kind": "tick",
+   "params": {
+    "freq": 494,
+    "decay": 0.04,
+    "gain_db": -36,
+    "click": 0
+   },
+   "means": "읽어 둔 글의 '햇빛' 5이 햇빛 막대에 이어짐"
+  },
+  {
+   "id": "token_link6",
+   "at": 68.064,
+   "kind": "tick",
+   "params": {
+    "freq": 494,
+    "decay": 0.04,
+    "gain_db": -36,
+    "click": 0
+   },
+   "means": "읽어 둔 글의 '햇빛' 6이 햇빛 막대에 이어짐"
+  },
+  {
+   "id": "token_link7",
+   "at": 68.384,
+   "kind": "tick",
+   "params": {
+    "freq": 494,
+    "decay": 0.04,
+    "gain_db": -36,
+    "click": 0
+   },
+   "means": "읽어 둔 글의 '햇빛' 7이 햇빛 막대에 이어짐"
+  },
+  {
+   "id": "loop_pick",
+   "at": 73.084,
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.1,
+    "gain_db": -24,
+    "click": 0
+   },
+   "means": "표지가 띠의 햇빛 칸(62%)에 떨어짐 — 칸의 번쩍임과 같은 프레임"
+  },
+  {
+   "id": "loop_rise",
+   "at": 75.272,
+   "kind": "tone",
+   "params": {
+    "freq": 196,
+    "dur": 0.3,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.15,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -32
+   },
+   "means": "뽑힌 햇빛 조각이 칸에서 떠올라 글줄 쪽으로 감"
+  },
+  {
+   "id": "drop01",
+   "at": 77.405,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.07,
+    "gain_db": -30,
+    "click": 0
+   },
+   "means": "연달아 떨어지는 표지 1 — 공기 칸(칸마다 음높이가 다름)"
+  },
+  {
+   "id": "drop02",
+   "at": 77.685,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.07,
+    "gain_db": -30,
+    "click": 0
+   },
+   "means": "연달아 떨어지는 표지 2 — 햇빛 칸(칸마다 음높이가 다름)"
+  },
+  {
+   "id": "drop03",
+   "at": 77.965,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.07,
+    "gain_db": -30,
+    "click": 0
+   },
+   "means": "연달아 떨어지는 표지 3 — 햇빛 칸(칸마다 음높이가 다름)"
+  },
+  {
+   "id": "drop04",
+   "at": 78.245,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.07,
+    "gain_db": -30,
+    "click": 0
+   },
+   "means": "연달아 떨어지는 표지 4 — 햇빛 칸(칸마다 음높이가 다름)"
+  },
+  {
+   "id": "drop05",
+   "at": 78.525,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.07,
+    "gain_db": -30,
+    "click": 0
+   },
+   "means": "연달아 떨어지는 표지 5 — 공기 칸(칸마다 음높이가 다름)"
+  },
+  {
+   "id": "drop06",
+   "at": 78.805,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.07,
+    "gain_db": -30,
+    "click": 0
+   },
+   "means": "연달아 떨어지는 표지 6 — 햇빛 칸(칸마다 음높이가 다름)"
+  },
+  {
+   "id": "drop07",
+   "at": 79.085,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.07,
+    "gain_db": -30,
+    "click": 0
+   },
+   "means": "연달아 떨어지는 표지 7 — 햇빛 칸(칸마다 음높이가 다름)"
+  },
+  {
+   "id": "drop08",
+   "at": 79.365,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.07,
+    "gain_db": -30,
+    "click": 0
+   },
+   "means": "연달아 떨어지는 표지 8 — 햇빛 칸(칸마다 음높이가 다름)"
+  },
+  {
+   "id": "drop09",
+   "at": 79.645,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.07,
+    "gain_db": -30,
+    "click": 0
+   },
+   "means": "연달아 떨어지는 표지 9 — 햇빛 칸(칸마다 음높이가 다름)"
+  },
+  {
+   "id": "drop10",
+   "at": 79.925,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.07,
+    "gain_db": -30,
+    "click": 0
+   },
+   "means": "연달아 떨어지는 표지 10 — 하늘 칸(칸마다 음높이가 다름)"
+  },
+  {
+   "id": "drop11",
+   "at": 80.205,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.07,
+    "gain_db": -30,
+    "click": 0
+   },
+   "means": "연달아 떨어지는 표지 11 — 햇빛 칸(칸마다 음높이가 다름)"
+  },
+  {
+   "id": "drop12",
+   "at": 80.485,
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.07,
+    "gain_db": -24,
+    "click": 0
+   },
+   "means": "연달아 떨어지는 표지 12 — 바다 칸(칸마다 음높이가 다름)"
+  },
+  {
+   "id": "loop_attach",
+   "at": 85.329,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.25,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.12,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -28
+   },
+   "means": "햇빛 조각이 글줄 끝에 붙음"
+  },
+  {
+   "id": "loop_read",
+   "at": 87.403,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     131,
+     196
+    ],
+    "dur": 1.6,
+    "attack": 0.4,
+    "gain_db": -32
+   },
+   "means": "한 조각 길어진 글을 처음부터 다시 읽음(밑줄이 첫 조각부터)"
+  },
+  {
+   "id": "loop_redivide",
+   "at": 89.446,
+   "kind": "tone",
+   "params": {
+    "freq": 262,
+    "dur": 0.3,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.15,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -30
+   },
+   "means": "띠가 새 확률로 다시 나뉨"
+  },
+  {
+   "id": "step01",
+   "at": 90.446,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.08,
+    "gain_db": -27,
+    "click": 0
+   },
+   "means": "한 걸음(×1): 표지가 '의' 칸에 떨어짐"
+  },
+  {
+   "id": "step02_read",
+   "at": 90.866,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     131,
+     196
+    ],
+    "dur": 0.7,
+    "attack": 0.4,
+    "gain_db": -36
+   },
+   "means": "걸음 2: 처음부터 다시 읽음"
+  },
+  {
+   "id": "step02",
+   "at": 91.346,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.08,
+    "gain_db": -27,
+    "click": 0
+   },
+   "means": "한 걸음(×1): 표지가 '파란' 칸에 떨어짐"
+  },
+  {
+   "id": "step03_read",
+   "at": 91.766,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     131,
+     196
+    ],
+    "dur": 0.7,
+    "attack": 0.4,
+    "gain_db": -36
+   },
+   "means": "걸음 3: 처음부터 다시 읽음"
+  },
+  {
+   "id": "step03",
+   "at": 92.246,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.08,
+    "gain_db": -27,
+    "click": 0
+   },
+   "means": "한 걸음(×1): 표지가 '빛' 칸에 떨어짐"
+  },
+  {
+   "id": "steps_x2",
+   "at": 92.696,
+   "kind": "custom",
+   "params": {
+    "gain_db": -29,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.45,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.9,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     }
+    ]
+   },
+   "means": "빨리 감기 ×2: 표지가 떨어질 때마다 틱(배속이 오를수록 높고 촘촘하게)"
+  },
+  {
+   "id": "steps_x4",
+   "at": 93.816,
+   "kind": "custom",
+   "params": {
+    "gain_db": -29,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 466,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.22,
+      "params": {
+       "freq": 466,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.44,
+      "params": {
+       "freq": 466,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.66,
+      "params": {
+       "freq": 466,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     }
+    ]
+   },
+   "means": "빨리 감기 ×4: 표지가 떨어질 때마다 틱(배속이 오를수록 높고 촘촘하게)"
+  },
+  {
+   "id": "steps_x8",
+   "at": 94.586,
+   "kind": "custom",
+   "params": {
+    "gain_db": -29,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 554,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.11,
+      "params": {
+       "freq": 554,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.22,
+      "params": {
+       "freq": 554,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     }
+    ]
+   },
+   "means": "빨리 감기 ×8: 표지가 떨어질 때마다 틱(배속이 오를수록 높고 촘촘하게)"
+  },
+  {
+   "id": "end_pick",
+   "at": 94.916,
+   "kind": "tick",
+   "params": {
+    "freq": 554,
+    "decay": 0.05,
+    "gain_db": -29,
+    "click": 0
+   },
+   "means": "'■' 칸에 표지가 떨어짐"
+  },
+  {
+   "id": "end_attach",
+   "at": 95.316,
+   "kind": "tone",
+   "params": {
+    "freq": 220,
+    "dur": 0.6,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.3,
+    "sustain": 0.2,
+    "release": 0.08,
+    "gain_db": -26
+   },
+   "means": "끝 조각 '■'이 붙고 대답이 완성됨(맺음 음)"
+  },
+  {
+   "id": "dice_B",
+   "at": 99.422,
+   "kind": "custom",
+   "params": {
+    "gain_db": -29,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 271,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.3,
+      "params": {
+       "freq": 490,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.6,
+      "params": {
+       "freq": 472,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.9,
+      "params": {
+       "freq": 493,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.2,
+      "params": {
+       "freq": 484,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.5,
+      "params": {
+       "freq": 499,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.8,
+      "params": {
+       "freq": 490,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.1,
+      "params": {
+       "freq": 475,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.4,
+      "params": {
+       "freq": 484,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.7,
+      "params": {
+       "freq": 496,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 3,
+      "params": {
+       "freq": 466,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 3.3,
+      "params": {
+       "freq": 505,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 3.6,
+      "params": {
+       "freq": 490,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 3.9,
+      "params": {
+       "freq": 508,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 4.2,
+      "params": {
+       "freq": 490,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     }
+    ]
+   },
+   "means": "같은 질문을 다시: 대답 B가 빠르게 뽑힘(걸음마다 뽑힌 확률에 비례한 높이)"
+  },
+  {
+   "id": "dice_diff",
+   "at": 102.925,
+   "kind": "tone",
+   "params": {
+    "freq": 262,
+    "dur": 0.3,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.15,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -31
+   },
+   "means": "A와 다른 조각이 드러남"
+  },
+  {
+   "id": "dice_needle",
+   "at": 105.989,
+   "kind": "tone",
+   "params": {
+    "freq": 196,
+    "dur": 0.35,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.2,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -30
+   },
+   "means": "표지가 가장 넓은 칸에 붙는 고정 바늘로 바뀜"
+  },
+  {
+   "id": "dice_G1",
+   "at": 106.75,
+   "kind": "custom",
+   "params": {
+    "gain_db": -29,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 406,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.2,
+      "params": {
+       "freq": 493,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.4,
+      "params": {
+       "freq": 484,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.6,
+      "params": {
+       "freq": 499,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.8,
+      "params": {
+       "freq": 487,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1,
+      "params": {
+       "freq": 481,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.2,
+      "params": {
+       "freq": 496,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.4,
+      "params": {
+       "freq": 484,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.6,
+      "params": {
+       "freq": 490,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.8,
+      "params": {
+       "freq": 502,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2,
+      "params": {
+       "freq": 499,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.2,
+      "params": {
+       "freq": 505,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.4,
+      "params": {
+       "freq": 490,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.6,
+      "params": {
+       "freq": 508,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.8,
+      "params": {
+       "freq": 490,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     }
+    ]
+   },
+   "means": "가장 높은 것만(첫째): 같은 음 순서가 되풀이됨 — 대답이 A와 같음"
+  },
+  {
+   "id": "dice_G2",
+   "at": 110.194,
+   "kind": "custom",
+   "params": {
+    "gain_db": -29,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 406,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.11,
+      "params": {
+       "freq": 493,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.22,
+      "params": {
+       "freq": 484,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.33,
+      "params": {
+       "freq": 499,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.44,
+      "params": {
+       "freq": 487,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.55,
+      "params": {
+       "freq": 481,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.66,
+      "params": {
+       "freq": 496,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.77,
+      "params": {
+       "freq": 484,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.88,
+      "params": {
+       "freq": 490,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.99,
+      "params": {
+       "freq": 502,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.1,
+      "params": {
+       "freq": 499,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.21,
+      "params": {
+       "freq": 505,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.32,
+      "params": {
+       "freq": 490,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.43,
+      "params": {
+       "freq": 508,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.54,
+      "params": {
+       "freq": 490,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     }
+    ]
+   },
+   "means": "가장 높은 것만(둘째): 같은 음 순서가 되풀이됨 — 대답이 A와 같음"
+  },
+  {
+   "id": "chat_join",
+   "at": 118.119,
+   "kind": "tone",
+   "params": {
+    "freq": 196,
+    "dur": 0.35,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.18,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -32
+   },
+   "means": "질문·대답·다음 질문이 한 줄의 긴 글로 붙음"
+  },
+  {
+   "id": "chat_read",
+   "at": 120.343,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     131,
+     196
+    ],
+    "dur": 1.2,
+    "attack": 0.4,
+    "gain_db": -32
+   },
+   "means": "대화 전체가 처음부터 읽혀 기계로 들어감"
+  },
+  {
+   "id": "chat_steps",
+   "at": 121.693,
+   "kind": "custom",
+   "params": {
+    "gain_db": -29,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 330,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.5204,
+      "params": {
+       "freq": 330,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.0409,
+      "params": {
+       "freq": 330,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.5613,
+      "params": {
+       "freq": 330,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.0817,
+      "params": {
+       "freq": 330,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.6021,
+      "params": {
+       "freq": 330,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 3.1226,
+      "params": {
+       "freq": 330,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 3.643,
+      "params": {
+       "freq": 330,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 4.1634,
+      "params": {
+       "freq": 330,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 4.6839,
+      "params": {
+       "freq": 330,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 5.2043,
+      "params": {
+       "freq": 330,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 5.7247,
+      "params": {
+       "freq": 330,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 6.2451,
+      "params": {
+       "freq": 330,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 6.7656,
+      "params": {
+       "freq": 330,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 7.286,
+      "params": {
+       "freq": 220,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     }
+    ]
+   },
+   "means": "대화 뒤에 대답이 한 조각씩 뽑힘(걸음마다 틱)"
+  },
+  {
+   "id": "chat_reads",
+   "at": 121.905,
+   "kind": "custom",
+   "params": {
+    "gain_db": -40,
+    "layers": [
+     {
+      "kind": "swell",
+      "offset": 0,
+      "params": {
+       "freqs": [
+        131,
+        196
+       ],
+       "dur": 0.35,
+       "attack": 0.08,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "swell",
+      "offset": 0.5204,
+      "params": {
+       "freqs": [
+        131,
+        196
+       ],
+       "dur": 0.35,
+       "attack": 0.08,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "swell",
+      "offset": 1.0409,
+      "params": {
+       "freqs": [
+        131,
+        196
+       ],
+       "dur": 0.35,
+       "attack": 0.08,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "swell",
+      "offset": 1.5613,
+      "params": {
+       "freqs": [
+        131,
+        196
+       ],
+       "dur": 0.35,
+       "attack": 0.08,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "swell",
+      "offset": 2.0817,
+      "params": {
+       "freqs": [
+        131,
+        196
+       ],
+       "dur": 0.35,
+       "attack": 0.08,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "swell",
+      "offset": 2.6021,
+      "params": {
+       "freqs": [
+        131,
+        196
+       ],
+       "dur": 0.35,
+       "attack": 0.08,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "swell",
+      "offset": 3.1226,
+      "params": {
+       "freqs": [
+        131,
+        196
+       ],
+       "dur": 0.35,
+       "attack": 0.08,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "swell",
+      "offset": 3.643,
+      "params": {
+       "freqs": [
+        131,
+        196
+       ],
+       "dur": 0.35,
+       "attack": 0.08,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "swell",
+      "offset": 4.1634,
+      "params": {
+       "freqs": [
+        131,
+        196
+       ],
+       "dur": 0.35,
+       "attack": 0.08,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "swell",
+      "offset": 4.6839,
+      "params": {
+       "freqs": [
+        131,
+        196
+       ],
+       "dur": 0.35,
+       "attack": 0.08,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "swell",
+      "offset": 5.2043,
+      "params": {
+       "freqs": [
+        131,
+        196
+       ],
+       "dur": 0.35,
+       "attack": 0.08,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "swell",
+      "offset": 5.7247,
+      "params": {
+       "freqs": [
+        131,
+        196
+       ],
+       "dur": 0.35,
+       "attack": 0.08,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "swell",
+      "offset": 6.2451,
+      "params": {
+       "freqs": [
+        131,
+        196
+       ],
+       "dur": 0.35,
+       "attack": 0.08,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "swell",
+      "offset": 6.7656,
+      "params": {
+       "freqs": [
+        131,
+        196
+       ],
+       "dur": 0.35,
+       "attack": 0.08,
+       "gain_db": 0
+      }
+     }
+    ]
+   },
+   "means": "걸음마다 대화 전체를 첫 조각부터 다시 읽음(약한 스웰)"
+  },
+  {
+   "id": "wrong_pick",
+   "at": 131.889,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.2,
+    "gain_db": -24,
+    "click": 0
+   },
+   "means": "느리게: 표지가 좁은 '바다' 칸(9%)에 떨어짐"
+  },
+  {
+   "id": "wrong_steps",
+   "at": 132.71,
+   "kind": "custom",
+   "params": {
+    "gain_db": -29,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.4,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.8,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.2,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.6,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.4,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.8,
+      "params": {
+       "freq": 220,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     }
+    ]
+   },
+   "means": "틀린 설명이 매끄럽게 이어짐(걸음마다 넓은 칸)"
+  },
+  {
+   "id": "wrong_high",
+   "at": 142.156,
+   "kind": "tone",
+   "params": {
+    "freq": 147,
+    "dur": 0.6,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.3,
+    "sustain": 0.2,
+    "release": 0.08,
+    "gain_db": -27
+   },
+   "means": "확률이 높은 조각('때문' 93%)이 강조됨 — 그래도 틀린 설명"
+  },
+  {
+   "id": "close_emit1",
+   "at": 146.604,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.08,
+    "gain_db": -29,
+    "click": 0
+   },
+   "means": "챗GPT 기계가 조각 하나를 내놓음"
+  },
+  {
+   "id": "close_emit2",
+   "at": 147.445,
+   "kind": "tick",
+   "params": {
+    "freq": 292,
+    "decay": 0.08,
+    "gain_db": -29,
+    "click": 0
+   },
+   "means": "클로드 기계가 조각 하나를 내놓음"
+  },
+  {
+   "id": "close_emit3",
+   "at": 148.326,
+   "kind": "tick",
+   "params": {
+    "freq": 322,
+    "decay": 0.08,
+    "gain_db": -29,
+    "click": 0
+   },
+   "means": "제미나이 기계가 조각 하나를 내놓음"
+  },
+  {
+   "id": "close_emit_all",
+   "at": 150.71,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.08,
+    "gain_db": -28,
+    "click": 0
+   },
+   "means": "세 기계가 함께 다음 조각을 내놓음"
+  },
+  {
+   "id": "close_emit_all2",
+   "at": 151.511,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.08,
+    "gain_db": -28,
+    "click": 0
+   },
+   "means": "세 기계가 함께 그다음 조각을 내놓음"
+  },
+  {
+   "id": "close_steps",
+   "at": 153.639,
+   "kind": "custom",
+   "params": {
+    "gain_db": -30,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.6068,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.2135,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.8202,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.427,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     }
+    ]
+   },
+   "means": "기계 하나가 대답을 한 조각씩 다시 씀"
+  },
+  {
+   "id": "poster_end",
+   "at": 157.166,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     98,
+     147
+    ],
+    "dur": 1.8,
+    "attack": 0.4,
+    "gain_db": -32
+   },
+   "means": "포스터 구도로 돌아옴(맺음)"
+  },
+  {
+   "id": "close_poster",
+   "at": 157.366,
+   "kind": "custom",
+   "params": {
+    "gain_db": -31,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.5,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.5,
+      "params": {
+       "freq": 392,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     }
+    ]
+   },
+   "means": "포스터 구도: 0.5초마다 표지가 떨어짐(첫 화면과 같음)"
+  }
+ ],
+ "ambient": {
+  "kind": "pad",
+  "seed": 7,
+  "gain_db": -32,
+  "root_hz": 110,
+  "intervals": [
+   0,
+   7,
+   12,
+   16
+  ],
+  "enabled": false
+ },
+ "music": {
+  "id": "zabriskie_patriarch",
+  "under_db": 12,
+  "duck_db": 6,
+  "start_sec": 0,
+  "enabled": false,
+  "note": "음악 없음."
+ }
+}
