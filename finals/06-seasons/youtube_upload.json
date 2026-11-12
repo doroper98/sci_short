@@ -1,15 +1,15 @@
 {
- "video_id": "xSC_L470sNs",
- "url": "https://youtu.be/xSC_L470sNs",
- "studio_url": "https://studio.youtube.com/video/xSC_L470sNs/edit",
- "uploaded_at": "2026-11-07T07:36:04+00:00",
+ "video_id": "UpX7WyL4zaU",
+ "url": "https://youtu.be/UpX7WyL4zaU",
+ "studio_url": "https://studio.youtube.com/video/UpX7WyL4zaU/edit",
+ "uploaded_at": "2026-11-12T20:56:59+00:00",
  "privacy_status": "private",
  "channel_id": "UCZJSpmlBYUthLg0PSWcbU6w",
  "channel_title": "과학쑛츠",
  "video_file": "seasons.mp4",
  "video_bytes": 14648630,
  "video_md5": "97cfa5d2c5ce5fc17c5482f410e69d56",
- "title": "여름은 태양에 가까워서 더울까? | 계절이 생기는 진짜 이유",
+ "title": "여름은 태양에 가까워서 더울까? | 계절이 생기는 진짜 이유 #계절 #여름 #겨울 #지구 #지구과학 #천문학 #과학",
  "description_bytes": 613,
  "contains_synthetic_media": true,
  "made_for_kids": false,
@@ -21,9 +21,23 @@
  "thumbnail_file": "thumbnail.jpg",
  "thumbnail_error": null,
  "thumbnail_after_processing": true,
- "thumbnail_set_at": "2026-11-07T07:36:39+00:00",
+ "thumbnail_set_at": "2026-11-12T20:57:48+00:00",
  "number": 6,
  "slug": "seasons",
  "source": "api",
+ "previous": [
+  {
+   "video_id": "xSC_L470sNs",
+   "url": "https://youtu.be/xSC_L470sNs",
+   "title": "여름은 태양에 가까워서 더울까? | 계절이 생기는 진짜 이유",
+   "uploaded_at": "2026-11-07T07:36:04+00:00",
+   "views_at_republish": 4,
+   "privacy_at_republish": "public",
+   "republished_at": "2026-11-12T20:56:55+00:00",
+   "reason": "republish",
+   "privatize_error": "옛 판 비공개 전환 실패 HTTP 403 insufficientPermissions Request had insufficient authentication scopes. — 토큰 범위 부족. docs/YOUTUBE_AUTO_UPLOAD.md '권한'대로 다시 받으십시오"
+  }
+ ],
+ "privatized_at": null,
  "schema_version": 1
 }
