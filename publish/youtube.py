@@ -1,6 +1,7 @@
 """완성된 쇼츠를 유튜브 채널에 **비공개(private)** 로 올리는 도구.
 
 공개 전환은 사용자가 YouTube Studio 에서 직접 한다. 이 도구는 어떤 설정으로도 public·unlisted 로 올리지 않는다.
+바꿀 수 있는 것은 다시 올린 편의 옛 판을 공개 → 비공개로 돌리는 것 하나뿐이다(set_private, 2026-11-12). 삭제는 없다.
 
 사용법
     python -m publish.youtube finals/<NN>-<slug> --dry-run   # 입력·메타데이터·영상 규격 검증만 (비밀값 불필요)
@@ -9,6 +10,7 @@
     python -m publish.youtube --whoami                        # 토큰이 가리키는 채널 이름·ID 확인
     python -m publish.youtube --list                          # finals 상태표
     python -m publish.youtube finals/<ep> --mark-uploaded <video id>   # 이미 손으로 올린 편을 기록해 건너뛰게 함
+    python -m publish.youtube --privatize-pending [--dry-run]           # 다시 올린 편의 옛 판을 비공개로(공개 → 비공개 한 방향만)
 
 입력은 최종본 보관함 규약(finals/README.md)을 그대로 쓴다.
     <slug>.mp4           폴더 안의 유일한 .mp4 (pipeline/catalog.py 와 같은 규칙)
@@ -84,6 +86,14 @@ class UploadError(RuntimeError):
 
 class TransportError(RuntimeError):
     """네트워크 수준 실패(재시도 대상)."""
+
+
+class ScopeError(UploadError):
+    """HTTP 403 — 토큰에 이 호출의 권한(범위)이 없다. 옛 판 비공개 전환은 youtube.force-ssl 이 있어야 한다."""
+
+
+class PrivatizeRefused(UploadError):
+    """옛 판을 비공개로 돌리지 않기로 한 영구적인 거절(다른 채널 영상, 조회수가 기준 이상, 보호 목록). 다시 시도하지 않는다."""
 
 
 # ───────────────────────────── 전송(HTTP) ─────────────────────────────
@@ -476,8 +486,9 @@ def _api_error(r: Response, what: str) -> UploadError:
         hint = " — 하루 할당량 소진. 태평양 시간 자정(한국 오후 4~5시) 이후 다시"
     elif r.status == 401:
         hint = " — 액세스 토큰 거부. 토큰 범위에 youtube.upload·youtube.readonly 가 있는지 확인"
-    elif r.status == 403 and "insufficientPermissions" in reasons:
-        hint = " — 토큰 범위 부족. python -m publish.oauth 로 다시 받으십시오"
+    elif r.status == 403 and ("insufficientPermissions" in reasons or "scope" in msg.lower()):
+        return ScopeError(f"{what} 실패 HTTP {r.status} {','.join(x for x in reasons if x)} {msg} — 토큰 범위 부족. "
+                          "docs/YOUTUBE_AUTO_UPLOAD.md '권한'대로 다시 받으십시오")
     return UploadError(f"{what} 실패 HTTP {r.status} {','.join(x for x in reasons if x)} {msg}{hint}".strip())
 
 
@@ -574,8 +585,8 @@ def upload_caption(send: Transport, cfg: Config, token: str, video_id: str, srt:
     if r.status != 200:
         err = _api_error(r, "자막 업로드")
         if r.status in (401, 403):
-            raise UploadError(f"{err} — 자막 업로드에는 youtube.force-ssl 권한이 필요한데, 이 체계는 그 권한을 "
-                              "받지 않습니다(영상 삭제까지 포함하는 권한이라 최소 권한 원칙으로 뺐습니다). "
+            raise UploadError(f"{err} — 자막 업로드에는 youtube.force-ssl 권한이 필요합니다(2026-11-12 사용자 결정으로 "
+                              "옛 판 비공개 전환용으로 받기로 했으나 토큰을 아직 다시 받지 않았을 수 있습니다). "
                               "자막은 화면에 새겨져 있어 기본적으로 올리지 않습니다. docs/YOUTUBE_AUTO_UPLOAD.md '권한'")
         raise err
     cid = r.json().get("id")
@@ -634,6 +645,62 @@ def video_status(send: Transport, token: str, ids: list[str]) -> dict[str, dict[
     return out
 
 
+# videos.update(part=status) 로 되돌려 보내 지킬 status 필드. 공식 문서(videos/update, 2026-11-12 확인):
+#   "If you are submitting an update request, and your request does not specify a value for a property that already
+#    has a value, the property's existing value will be deleted. The following fields are exempt from this behavior and
+#    will only update if explicitly set: status.selfDeclaredMadeForKids status.containsSyntheticMedia"
+# 그래서 지워질 수 있는 셋(embeddable·license·publicStatsViewable)은 지금 값을 그대로 보내고, 예외인 둘은 보내지 않는다
+# (보내지 않으면 바뀌지 않는다). status.publishAt 은 보내지 않는다 — 문서(videos 리소스)상 과거 시각을 넣으면
+# "the same as of changing the video's privacyStatus from private to public" 이다.
+PRESERVED_STATUS_KEYS: tuple[str, ...] = ("embeddable", "license", "publicStatsViewable")
+PRIVATE = "private"   # set_private 가 보내는 유일한 공개 상태 값. public·unlisted 로 바꾸는 경로는 없다
+
+
+def set_private(send: Transport, token: str, cfg: Config, video_id: str, *, max_views: int) -> dict[str, Any]:
+    """우리 채널의 공개 영상 하나를 비공개로 돌린다(공개 → 비공개 한 방향만, 2026-11-12 사용자: "조회수 100회 미만인 애들
+    비공개로 돌린다던지"). 삭제는 하지 않는다.
+
+    1) videos.list(part=snippet,status,statistics) 1단위 — 채널·현재 status·조회수를 읽는다.
+       없으면 result 'not-found', 이미 비공개면 'already-private'.
+       다른 채널 영상이거나 조회수 ≥ max_views(노출을 받은 영상)면 PrivatizeRefused.
+    2) videos.update(part=status) 50단위 — 지금 status 의 지워질 수 있는 필드를 그대로 두고 privacyStatus 만 "private".
+       문서: "This request requires authorization with at least one of the following scopes" — youtubepartner,
+       youtube, youtube.force-ssl. 이 체계는 youtube.force-ssl 을 쓴다. 범위가 없으면 403 → ScopeError."""
+    if not cfg.channel_id:
+        raise UploadError("config/youtube.json 의 channel_id 가 없어 옛 판 비공개 전환을 하지 않습니다(채널 확인 불가)")
+    auth = {"Authorization": f"Bearer {token}"}
+    url = VIDEOS_URL + "?" + urllib.parse.urlencode({"part": "snippet,status,statistics", "id": video_id})
+    r = send("GET", url, auth, None)
+    if r.status != 200:
+        raise _api_error(r, "옛 판 상태 확인")
+    items = r.json().get("items") or []
+    if not items:
+        return {"video_id": video_id, "result": "not-found"}
+    v = items[0]
+    if v.get("snippet", {}).get("channelId") != cfg.channel_id:
+        raise PrivatizeRefused(f"{video_id} 는 설정 채널({cfg.channel_id})의 영상이 아닙니다 — 건드리지 않음")
+    st = v.get("status") or {}
+    views = int(v.get("statistics", {}).get("viewCount", 0) or 0)
+    if st.get("privacyStatus") == PRIVATE:
+        return {"video_id": video_id, "result": "already-private", "views": views}
+    if views >= max_views:
+        raise PrivatizeRefused(f"{video_id} 조회수 {views}회 ≥ {max_views} — 노출을 받은 영상이라 비공개로 돌리지 않습니다")
+    missing = [k for k in PRESERVED_STATUS_KEYS if k not in st]
+    if missing:   # 빠진 값을 보내지 않으면 유튜브가 지운다(기본값으로 돌아감) — 모르는 채로 바꾸지 않는다
+        raise UploadError(f"{video_id} 의 현재 status 에 {', '.join(missing)} 가 없어 그대로 보존할 수 없습니다 — 바꾸지 않음")
+    status = {k: st[k] for k in PRESERVED_STATUS_KEYS}
+    status["privacyStatus"] = PRIVATE
+    body = json.dumps({"id": video_id, "status": status}, ensure_ascii=False).encode("utf-8")
+    r = send("PUT", VIDEOS_URL + "?" + urllib.parse.urlencode({"part": "status"}),
+             {**auth, "Content-Type": "application/json; charset=UTF-8"}, body)
+    if r.status != 200:
+        raise _api_error(r, "옛 판 비공개 전환")
+    got = r.json().get("status", {}).get("privacyStatus")
+    if got not in (None, PRIVATE):
+        raise UploadError(f"{video_id} 비공개 전환 응답의 공개 상태가 {got!r} 입니다 — 스튜디오에서 확인하십시오")
+    return {"video_id": video_id, "result": "privatized", "views": views, "privacy_before": st.get("privacyStatus", "")}
+
+
 def upload_thumbnail(send: Transport, token: str, video_id: str, image: Path) -> None:
     """thumbnails.set — 채널이 맞춤 썸네일을 쓸 수 있어야 한다(전화 인증). 할당량 50단위."""
     ctype = "image/png" if image.suffix.lower() == ".png" else "image/jpeg"
@@ -674,6 +741,7 @@ class Record:
     slug: str = ""
     source: str = "api"                   # api(이 도구가 올림) · manual(손으로 올린 것을 --mark-uploaded 로 기록)
     previous: list[dict[str, Any]] = field(default_factory=list)   # 다시 올리기 전의 판들(최근 것이 앞)
+    privatized_at: str | None = None      # 이 판(video_id)을 비공개로 돌린 시각(config/republish.json privatize_only)
     schema_version: int = 1
 
 
@@ -730,17 +798,50 @@ def apply_thumbnail(send: Transport, cfg: Config, token: str, rec: Record, image
     return True
 
 
+PRIVATIZE_HINT = "옛 판 비공개 전환 실패 — 토큰에 youtube.force-ssl 권한이 있는지 확인하세요: "
+
+
+def privatize_entry(send: Transport, token: str, cfg: Config, entry: dict[str, Any], video_id: str, *, max_views: int,
+                    protected: frozenset[str] = frozenset()) -> dict[str, Any]:
+    """set_private 를 부르고 결과를 entry(기록의 previous 항목 등)에 적는다. 예외를 밖으로 내지 않는다 — 업로드를 막지 않는다.
+
+    성공(privatized·already-private·not-found)이면 privatized_at·privatize_result, 영구 거절이면 privatize_refused,
+    그 밖의 실패면 privatize_error(짧은 글, 비밀값 없음). 돌려주는 dict 의 result: privatized · already-private ·
+    not-found · refused · no-scope · error."""
+    out: dict[str, Any] = {"video_id": video_id, "url": WATCH_URL_PREFIX + video_id}
+    try:
+        if video_id in protected:
+            raise PrivatizeRefused(f"{video_id} 는 보호 목록(config/republish.json never_privatize)에 있어 건드리지 않습니다")
+        r = set_private(send, token, cfg, video_id, max_views=max_views)
+    except PrivatizeRefused as ex:
+        entry["privatize_refused"] = str(ex)[:300]
+        entry.pop("privatize_error", None)
+        out.update(result="refused", error=str(ex)[:300])
+        return out
+    except (UploadError, TransportError, ValueError) as ex:
+        entry["privatize_error"] = str(ex)[:300]
+        out.update(result="no-scope" if isinstance(ex, ScopeError) else "error", error=str(ex)[:300])
+        return out
+    entry["privatized_at"], entry["privatize_result"] = _now(), r["result"]
+    entry.pop("privatize_error", None)
+    out.update(result=r["result"], views=r.get("views"))
+    return out
+
+
 def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport | None = None,
                     env: dict[str, str] | None = None, caption: bool | None = None, thumbnail: bool | None = None,
                     synthetic: bool | None = None, made_for_kids: bool | None = None, not_shorts: bool = False,
                     allow_reupload: bool = False, sleep: Callable[[float], None] = time.sleep, auto: bool = False,
-                    republish: bool = False, republish_min_views: int = 50,
+                    republish: bool = False, republish_min_views: int = 100, republish_previous_id: str | None = None,
+                    privatize_protected: frozenset[str] = frozenset(),
                     morning: set[int] | None = None) -> dict[str, Any]:
     """에피소드 하나. 결과 dict 의 status: uploaded · skipped · dry-run · error.
 
     republish=True(다시 올리기, 2026-11-08): 같은 영상이라도 새 영상으로 올린다. 몰아 공개해 노출을 못 받은 편을
     하루 1편씩 새로 올리려는 것이다. 이전 판의 조회수가 republish_min_views 이상이면(그사이 노출을 받음) 올리지 않는다.
-    이전 판은 기록의 previous 에 남기고, 비공개 전환은 사용자가 스튜디오에서 한다(이 토큰에는 수정 권한이 없다).
+    기록이 없는(손으로 올린) 편은 republish_previous_id(config/republish.json previous_ids)로 이전 판을 안다.
+    이전 판은 기록의 previous 에 남기고, 새 판이 올라간 뒤 이전 판을 비공개로 돌린다(2026-11-12 사용자 "권한을 너한테
+    주면 되잖아"). 비공개 전환이 실패해도(토큰에 youtube.force-ssl 이 아직 없음 등) 업로드는 성공으로 두고 경고만 남긴다.
 
     auto=True(push 자동 실행): 번호가 cfg.auto_from_number 이상이거나 meta.json auto_publish=true 인 편만 처리한다.
     01~21 은 손으로 올린 편이 섞여 있어, 폴더를 고친 PR 이 병합돼도 다시 올라가지 않게 한다(2026-11-07).
@@ -822,19 +923,23 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
         _log(f"채널: {ch['title']} ({ch['id']})")
         prev_info: dict[str, Any] | None = None
         if republish:
-            if prev is not None:
-                st = video_status(tx, token, [prev.video_id]).get(prev.video_id)
-                prev_info = {"video_id": prev.video_id, "url": prev.url, "title": prev.title, "uploaded_at": prev.uploaded_at,
-                             "views_at_republish": st["views"] if st else None,
-                             "privacy_at_republish": st["privacy"] if st else "not-found",
-                             "republished_at": _now(), "reason": "republish"}
+            old_id = prev.video_id if prev is not None else republish_previous_id
+            if old_id:
+                st = video_status(tx, token, [old_id]).get(old_id)
+                prev_info = ({"video_id": prev.video_id, "url": prev.url, "title": prev.title, "uploaded_at": prev.uploaded_at}
+                             if prev is not None else
+                             {"video_id": old_id, "url": WATCH_URL_PREFIX + old_id,
+                              "note": "손으로 올린 이전 판(config/republish.json previous_ids)"})
+                prev_info.update({"views_at_republish": st["views"] if st else None,
+                                  "privacy_at_republish": st["privacy"] if st else "not-found",
+                                  "republished_at": _now(), "reason": "republish"})
                 if st and st["views"] >= republish_min_views:
-                    res.update(status="skipped", video_id=prev.video_id, url=prev.url, studio_url=prev.studio_url,
-                               previous_views=st["views"])
+                    res.update(status="skipped", video_id=old_id, url=WATCH_URL_PREFIX + old_id,
+                               studio_url=STUDIO_URL.format(video_id=old_id), previous_views=st["views"])
                     res["warnings"].append(f"이전 판이 그사이 노출을 받았습니다({st['views']}회 ≥ {republish_min_views}) — 다시 올리지 않음")
                     _log(res["warnings"][-1])
                     return res
-                _log(f"다시 올리기: 이전 판 {prev.url} 조회 {st['views'] if st else '없음(지워짐)'}회")
+                _log(f"다시 올리기: 이전 판 {WATCH_URL_PREFIX + old_id} 조회 {st['views'] if st else '없음(지워짐)'}회")
             else:
                 prev_info = {"video_id": None, "note": "손으로 올린 이전 판(ID 미기록)", "republished_at": _now(), "reason": "republish"}
         vid = upload_video(tx, cfg, token, ep.video, meta, sleep=sleep, log=_log)
@@ -850,6 +955,18 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
             res.update(republish=True, previous_video=prev_info.get("url"), previous_views=prev_info.get("views_at_republish"))
         write_record(dir_, rec)   # 자막·썸네일이 실패해도 영상 기록은 남는다
         _log(f"영상 업로드 완료(비공개) {rec.url} · Studio {rec.studio_url}")
+        if prev_info is not None and prev_info.get("video_id"):
+            # 새 판이 올라가고 기록이 남은 뒤에만 옛 판을 비공개로(공개 → 비공개). 실패해도 업로드는 성공이다.
+            pv = privatize_entry(tx, token, cfg, rec.previous[0], prev_info["video_id"], max_views=republish_min_views,
+                                 protected=privatize_protected)
+            write_record(dir_, rec)
+            res["privatize"] = pv
+            if pv["result"] in ("privatized", "already-private", "not-found"):
+                _log(f"옛 판 {pv['url']} 비공개 전환: {pv['result']}")
+            else:
+                res["warnings"].append((PRIVATIZE_HINT if pv["result"] in ("no-scope", "error") else "옛 판 비공개 전환 안 함: ")
+                                       + pv.get("error", ""))
+                _log(res["warnings"][-1])
         if ep.thumbnail is not None:
             apply_thumbnail(tx, cfg, token, rec, ep.thumbnail, res, sleep)
             write_record(dir_, rec)
@@ -943,30 +1060,209 @@ def daily_next(cfg: Config, daily_path: Path, republish_path: Path, finals: Path
     1) 최근 hold 일 안에 올린 영상이 아직 비공개면 쉰다 — hold 가 0 이면 쉬지 않는다
        (2026-11-11 사용자: "비공개가 있어도 예정된 스케줄의 영상들을 올리도록 해", 설정 0).
     2) 대기열(config/daily.json)에서 만들어 두고 아직 안 올린 첫 편을 비공개로 올린다.
-    3) 그런 편이 없으면 다시 올리기 대기열(config/republish.json)에서 한 편을 올린다. 하루 한 편만."""
+    3) 그런 편이 없으면 다시 올리기 대기열(config/republish.json)에서 한 편을 올린다. 하루 한 편만.
+    4) republish.json 의 alternate_with_new 가 true 면(2026-11-12 사용자 "하루씩 번갈아") 새 편과 다시 올리기를 번갈아
+       올린다. 마지막 업로드가 새 편이면 다시 올리기 차례, 다시 올리기(또는 기록 없음)면 새 편 차례. 다시 올리기 차례인데
+       올릴 편이 없으면(모두 min_views 이상으로 건너뜀·대기열 끝·시작 전) 같은 실행에서 새 편을 올린다. 한 실행에 한 편.
+    먼저(쉬는 날에도) 비공개로 돌리지 못한 옛 판을 다시 시도한다(privatize_pending). 그 결과는 업로드를 막지 않는다."""
     daily = load_daily(daily_path)
     hold_days = int(daily.get("hold_if_private_within_days", 3))
     empty = {"uploaded": 0, "skipped": 0, "dry-run": 0, "error": 0}
+    rc = load_republish(republish_path)
+    catch = privatize_pending(cfg, republish_path, finals, dry_run=dry_run, send=send, env=env) if rc else None
+
+    def done(out: dict[str, Any]) -> dict[str, Any]:
+        if catch is not None:
+            out["privatize"] = catch.get("items", [])
+            if catch.get("warnings"):
+                out["warnings"] = out.get("warnings", []) + catch["warnings"]
+        return out
+
     if not dry_run and recently_uploaded(finals, RECENT_HOURS):
-        return {"ok": True, "counts": empty, "results": [],
-                "note": f"최근 {RECENT_HOURS}시간 안에 올린 영상이 있어 쉽니다(예비 실행이 하루 두 편을 올리지 않게)"}
+        return done({"ok": True, "counts": empty, "results": [],
+                     "note": f"최근 {RECENT_HOURS}시간 안에 올린 영상이 있어 쉽니다(예비 실행이 하루 두 편을 올리지 않게)"})
     if not dry_run and hold_days > 0:
         tx = send or urllib_transport(cfg.timeout_sec)
         waiting = private_waiting(tx, access_token(tx, read_secrets(env)), finals, today, hold_days)
         if waiting:
-            return {"ok": True, "counts": empty, "results": [], "note": WAITING_NOTE + ", ".join(waiting)}
+            return done({"ok": True, "counts": empty, "results": [], "note": WAITING_NOTE + ", ".join(waiting)})
         send = tx
     ready = morning_dirs(daily, finals)
+    turn = ""
+    pre: list[dict[str, Any]] = []
+    if ready and rc and rc.get("alternate_with_new"):
+        avail, why = republish_available(rc, today)
+        last, last_dir = last_upload(finals)
+        last_txt = f"마지막 업로드({_rel(last_dir)})" if last_dir else ""
+        if not avail:
+            turn = f"번갈아 올리기: 다시 올릴 편이 없어({why}) 새 편"
+        elif last == "new":
+            out = republish_next(cfg, republish_path, finals, today=today, dry_run=dry_run, send=send, env=env, sleep=sleep,
+                                 skip_hold=True)
+            c = out["counts"]
+            if c["uploaded"] or c["error"] or c["dry-run"]:
+                out["kind"] = "republish"
+                out["note"] = (f"번갈아 올리기: {last_txt}가 새 편이라 오늘은 다시 올리기 차례 — "
+                               + out.get("note", f"다시 올리기 {out['results'][-1]['dir']}") + f" (새 편 대기 {len(ready)}편)")
+                return done(out)
+            pre = out["results"]
+            turn = (f"번갈아 올리기: 다시 올리기 차례였지만 남은 옛 판 {len(pre)}편이 모두 조회수 기준 이상이라 "
+                    "건너뛰고 새 편" if pre else f"번갈아 올리기: 다시 올리기 차례였지만 올릴 편이 없어({out.get('note', '')}) 새 편")
+        else:
+            turn = (f"번갈아 올리기: {last_txt}가 다시 올리기라 오늘은 새 편 차례" if last == "republish" else
+                    "번갈아 올리기: 업로드 기록이 없어 새 편부터")
     if ready:
         res = process_episode(ready[0], cfg, dry_run=dry_run, send=send, env=env, sleep=sleep)
-        counts = {s: int(res["status"] == s) for s in empty}
-        return {"ok": res["status"] != "error", "counts": counts, "results": [res], "kind": "new",
-                "note": f"새 편 {_rel(ready[0])}" + (f" · 대기 {len(ready) - 1}편 더" if len(ready) > 1 else "")}
+        results = pre + [res]
+        counts = {s: sum(1 for r in results if r["status"] == s) for s in empty}
+        return done({"ok": counts["error"] == 0, "counts": counts, "results": results, "kind": "new",
+                     "note": (f"{turn} — " if turn else "") + f"새 편 {_rel(ready[0])}"
+                     + (f" · 대기 {len(ready) - 1}편 더" if len(ready) > 1 else "")})
     out = republish_next(cfg, republish_path, finals, today=today, dry_run=dry_run, send=send, env=env, sleep=sleep,
                          skip_hold=True)
     out["kind"] = "republish"
     out["note"] = "올릴 새 편이 없어 다시 올리기 대기열에서 — " + out.get("note", "한 편")
+    return done(out)
+
+
+def load_republish(path: Path) -> dict[str, Any]:
+    """config/republish.json. 없으면 빈 dict(다시 올리기·번갈아·비공개 전환 모두 꺼짐)."""
+    return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+
+
+def republish_todo(rc: dict[str, Any]) -> list[Path]:
+    """대기열에서 아직 다시 올리지 않은 편(경로는 저장소 기준)."""
+    return [REPO / q for q in rc.get("queue", []) if not republished(read_record(REPO / q))]
+
+
+def republish_available(rc: dict[str, Any], today: dt.date) -> tuple[bool, str]:
+    """다시 올리기에 할 일이 있는가(시작일이 지났고 대기열이 남음). 이전 판 조회수는 실제 실행 때 본다."""
+    start = dt.date.fromisoformat(rc["start"]) if rc.get("start") else None
+    if start is None or today < start:
+        return False, f"시작 전({start.isoformat() if start else '시작일 없음'})"
+    if not republish_todo(rc):
+        return False, "대기열 끝"
+    return True, ""
+
+
+def last_upload_kind(finals: Path) -> str:
+    """API 로 올린 기록 중 가장 최근 것이 다시 올리기였으면 'republish', 아니면 'new'. 기록이 없으면 'republish'(새 편 먼저)."""
+    return last_upload(finals)[0]
+
+
+def last_upload(finals: Path) -> tuple[str, Path | None]:
+    """(last_upload_kind, 그 기록의 폴더)."""
+    latest: tuple[dt.datetime, Record, Path] | None = None
+    for d in episode_dirs(finals):
+        rec = read_record(d)
+        if rec is None or rec.source != "api" or not rec.uploaded_at:
+            continue
+        try:
+            up = dt.datetime.fromisoformat(rec.uploaded_at)
+        except ValueError:
+            continue
+        up = up if up.tzinfo else up.replace(tzinfo=dt.timezone.utc)
+        if latest is None or up > latest[0]:
+            latest = (up, rec, d)
+    if latest is None:
+        return "republish", None
+    prev = latest[1].previous
+    return ("republish" if prev and prev[0].get("reason") == "republish" else "new"), latest[2]
+
+
+def privatize_targets(rc: dict[str, Any], finals: Path) -> list[dict[str, Any]]:
+    """아직 비공개로 돌리지 못한 옛 판. ① 기록 previous 의 다시 올리기 항목(video_id 있고 privatized_at·privatize_refused 없음)
+    ② config/republish.json privatize_only(그 편 기록에 privatized_at 이 없을 때)."""
+    out: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for d in episode_dirs(finals):
+        rec = read_record(d)
+        if rec is None:
+            continue
+        for i, p in enumerate(rec.previous):
+            vid = p.get("video_id")
+            if (p.get("reason") == "republish" and vid and not p.get("privatized_at") and not p.get("privatize_refused")
+                    and vid not in seen):
+                seen.add(vid)
+                out.append({"dir": d, "video_id": vid, "kind": "previous", "index": i})
+    for item in rc.get("privatize_only", []):
+        vid, d = str(item.get("video_id", "")), REPO / str(item.get("episode", ""))
+        if not vid or vid in seen:
+            continue
+        rec = read_record(d)
+        if rec is None:
+            continue   # 기록 없는 편에는 상태를 남길 곳이 없다 — 대상에서 뺀다
+        if rec.video_id == vid and rec.privatized_at:
+            continue
+        if rec.video_id != vid and any(p.get("video_id") == vid and (p.get("privatized_at") or p.get("privatize_refused"))
+                                       for p in rec.previous):
+            continue
+        seen.add(vid)
+        out.append({"dir": d, "video_id": vid, "kind": "only"})
     return out
+
+
+def privatize_pending(cfg: Config, republish_path: Path, finals: Path, *, dry_run: bool, send: Transport | None = None,
+                      env: dict[str, str] | None = None) -> dict[str, Any]:
+    """비공개로 돌리지 못한 옛 판을 다시 시도한다(아침 업로드 시작마다, --privatize-pending). 토큰에 youtube.force-ssl 이
+    생기면 저절로 따라잡는다. dry_run 이면 목록만. 어떤 실패도 예외로 내보내지 않는다(그날 업로드를 막지 않는다).
+    첫 시도가 범위 부족(403)이면 나머지는 시도하지 않고 경고 한 줄만 남긴다."""
+    rc = load_republish(republish_path)
+    max_views = int(rc.get("min_views", 100))
+    protected = frozenset(str(x) for x in rc.get("never_privatize", []))
+    items: list[dict[str, Any]] = []
+    warnings: list[str] = []
+    try:
+        targets = privatize_targets(rc, finals)
+    except UploadError as ex:
+        return {"ok": True, "items": [], "warnings": [f"옛 판 비공개 전환 대상을 읽지 못함: {ex}"]}
+    if not targets:
+        return {"ok": True, "items": [], "warnings": [], "note": "비공개로 돌릴 옛 판 없음"}
+    if dry_run:
+        return {"ok": True, "warnings": [], "note": f"비공개로 돌릴 옛 판 {len(targets)}개(dry-run — 바꾸지 않음)",
+                "items": [{"dir": _rel(t["dir"]), "video_id": t["video_id"], "url": WATCH_URL_PREFIX + t["video_id"],
+                           "result": "dry-run"} for t in targets]}
+    try:
+        tx = send or urllib_transport(cfg.timeout_sec)
+        token = access_token(tx, read_secrets(env))
+    except (UploadError, TransportError) as ex:
+        return {"ok": True, "items": [], "warnings": [f"옛 판 비공개 전환을 건너뜀(토큰): {ex}"]}
+    for n, t in enumerate(targets):
+        try:
+            rec = read_record(t["dir"])
+        except UploadError as ex:
+            warnings.append(f"{_rel(t['dir'])}: {ex}")
+            continue
+        if rec is None:
+            continue
+        if t["kind"] == "previous":
+            entry = rec.previous[t["index"]]
+        elif rec.video_id == t["video_id"]:
+            entry = {}
+        else:
+            entry = next((p for p in rec.previous if p.get("video_id") == t["video_id"]), None)
+            if entry is None:
+                entry = {"video_id": t["video_id"], "url": WATCH_URL_PREFIX + t["video_id"], "reason": "privatize_only"}
+                rec.previous.append(entry)
+        pv = privatize_entry(tx, token, cfg, entry, t["video_id"], max_views=max_views, protected=protected)
+        pv["dir"] = _rel(t["dir"])
+        if t["kind"] == "only" and rec.video_id == t["video_id"] and entry.get("privatized_at"):
+            rec.privatized_at = entry["privatized_at"]   # 지금 판 자체를 비공개로 돌림(01 중력파 새 판)
+        if pv["result"] == "no-scope" and n == 0:
+            warnings.append(PRIVATIZE_HINT + f"범위 부족(403)이라 옛 판 {len(targets)}개를 모두 건너뜁니다. "
+                            "토큰을 다시 받으면 다음 아침부터 저절로 처리합니다")
+            _log(warnings[-1])
+            return {"ok": True, "items": [], "warnings": warnings}
+        if t["kind"] == "previous" or rec.video_id != t["video_id"] or entry.get("privatized_at"):
+            write_record(t["dir"], rec)
+        items.append(pv)
+        if pv["result"] in ("privatized", "already-private", "not-found"):
+            _log(f"옛 판 {pv['url']} 비공개 전환: {pv['result']} ({pv['dir']})")
+        else:
+            warnings.append(f"{pv['dir']}: " + (PRIVATIZE_HINT if pv["result"] in ("no-scope", "error") else
+                                                "옛 판 비공개 전환 안 함: ") + pv.get("error", ""))
+            _log(warnings[-1])
+    return {"ok": True, "items": items, "warnings": warnings}
 
 
 def republish_next(cfg: Config, queue_path: Path, finals: Path, *, today: dt.date, dry_run: bool,
@@ -975,15 +1271,18 @@ def republish_next(cfg: Config, queue_path: Path, finals: Path, *, today: dt.dat
     """대기열(config/republish.json)에서 다음 한 편을 다시 올린다. 아침 업로드(daily_next)가 새 편이 없는 날 부른다.
 
     쉬는 경우: 시작일 전 · 대기열 끝 · 최근 hold_days 안에 올린 영상이 아직 비공개(사용자가 공개하기 전, hold_days 0 이면 보지 않음).
-    이전 판이 그사이 min_views 이상이면 그 편은 건너뛰고 다음 편으로 간다. 한 번에 최대 한 편만 올린다."""
+    이전 판이 그사이 min_views 이상이면 그 편은 건너뛰고 다음 편으로 간다. 한 번에 최대 한 편만 올린다.
+    기록이 없는(손으로 올린) 편의 이전 판은 previous_ids 로 안다. 올린 뒤 이전 판을 비공개로 돌린다(process_episode)."""
     rc = json.loads(queue_path.read_text(encoding="utf-8"))
-    min_views = int(rc.get("min_views", 50))
+    min_views = int(rc.get("min_views", 100))
     hold_days = int(rc.get("hold_if_private_within_days", 3))
+    previous_ids = {str(k): str(v) for k, v in rc.get("previous_ids", {}).items()}
+    protected = frozenset(str(x) for x in rc.get("never_privatize", []))
     empty = {"uploaded": 0, "skipped": 0, "dry-run": 0, "error": 0}
     start = dt.date.fromisoformat(rc["start"])
     if today < start:
         return {"ok": True, "counts": empty, "results": [], "note": f"다시 올리기 시작 전입니다({start.isoformat()}부터)"}
-    todo = [REPO / q for q in rc.get("queue", []) if not republished(read_record(REPO / q))]
+    todo = republish_todo(rc)
     if not todo:
         return {"ok": True, "counts": empty, "results": [], "note": "다시 올리기 대기열이 끝났습니다"}
     if not dry_run and not skip_hold and hold_days > 0:
@@ -995,7 +1294,8 @@ def republish_next(cfg: Config, queue_path: Path, finals: Path, *, today: dt.dat
     results = []
     for d in todo:
         res = process_episode(d, cfg, dry_run=dry_run, send=send, env=env, sleep=sleep, republish=True,
-                              republish_min_views=min_views)
+                              republish_min_views=min_views, privatize_protected=protected,
+                              republish_previous_id=previous_ids.get(d.relative_to(REPO).as_posix()))
         results.append(res)
         if res["status"] != "skipped":          # 올렸거나(또는 dry-run·오류) 멈춘다 — 하루 한 편
             break
@@ -1088,7 +1388,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--republish", action="store_true", help="지정한 편을 새 영상으로 다시 올린다(이전 판이 min-views 이상이면 건너뜀)")
     ap.add_argument("--republish-next", action="store_true", help="대기열(config/republish.json)에서 다음 한 편을 다시 올린다")
     ap.add_argument("--republish-config", type=Path, default=DEFAULT_REPUBLISH)
-    ap.add_argument("--republish-min-views", type=int, default=50)
+    ap.add_argument("--republish-min-views", type=int, default=None, help="기본 config/republish.json min_views")
+    ap.add_argument("--privatize-pending", action="store_true",
+                    help="다시 올린 편의 옛 판·privatize_only 를 비공개로(공개 → 비공개만). --dry-run 이면 목록만")
     ap.add_argument("--daily-next", action="store_true", help="아침 업로드 한 번: 대기열(config/daily.json)의 새 편, 없으면 다시 올리기 한 편")
     ap.add_argument("--daily-config", type=Path, default=DEFAULT_DAILY)
     ap.add_argument("--today", help="기준일 YYYY-MM-DD(시험용)")
@@ -1112,6 +1414,12 @@ def main(argv: list[str] | None = None) -> int:
             _log(f"채널: {info['channel_title']} ({info['channel_id']})" +
                  ("" if info["matches_config"] is None else (" · 설정과 일치" if info["matches_config"] else " · 설정 channel_id 와 다름!")))
             out = {"ok": True, **info}
+        elif a.privatize_pending:
+            out = privatize_pending(cfg, a.republish_config, a.finals, dry_run=a.dry_run, env=env)
+            for it in out.get("items", []):
+                _log(f"{it.get('dir', '')}: 옛 판 {it['url']} — {it['result']}" + (f" ({it['error']})" if it.get("error") else ""))
+            if out.get("note"):
+                _log(out["note"])
         elif a.republish_next or a.daily_next:
             today = dt.date.fromisoformat(a.today) if a.today else dt.datetime.now(KST).date()
             if a.daily_next:
@@ -1135,11 +1443,24 @@ def main(argv: list[str] | None = None) -> int:
             if not dirs:
                 _log(f"{_rel(a.finals)}: 에피소드 폴더가 없습니다 — 할 일 없음")
             caption = True if a.caption else (False if a.no_caption else None)
+            rc = load_republish(a.republish_config) if a.republish else {}
+            min_views = a.republish_min_views if a.republish_min_views is not None else int(rc.get("min_views", 100))
+            prev_ids = {str(k): str(v) for k, v in rc.get("previous_ids", {}).items()}
+
+            def prev_id(d: Path) -> str | None:
+                try:
+                    return prev_ids.get(d.resolve().relative_to(REPO).as_posix())
+                except ValueError:
+                    return None
+
             results = [process_episode(d, cfg, dry_run=a.dry_run, caption=caption, thumbnail=False if a.no_thumbnail else None,
                                        synthetic=None if a.synthetic_media is None else a.synthetic_media == "yes",
                                        made_for_kids=None if a.made_for_kids is None else a.made_for_kids == "yes",
                                        not_shorts=a.not_shorts, allow_reupload=a.allow_reupload, env=env, auto=a.auto,
-                                       republish=a.republish, republish_min_views=a.republish_min_views) for d in dirs]
+                                       republish=a.republish, republish_min_views=min_views,
+                                       republish_previous_id=prev_id(d) if a.republish else None,
+                                       privatize_protected=frozenset(str(x) for x in rc.get("never_privatize", [])))
+                       for d in dirs]
             counts = {s: sum(1 for r in results if r["status"] == s) for s in ("uploaded", "skipped", "dry-run", "error")}
             out = {"ok": counts["error"] == 0, "counts": counts, "results": results}
             if not dirs:
