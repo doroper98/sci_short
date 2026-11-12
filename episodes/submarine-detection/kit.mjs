@@ -88,7 +88,7 @@ export function bigNum(stage, val, unit, t, t0, a = 1, o = {}) {
 // =====================================================================================================
 // camera, surfY and scene transitions (PLAN §3.2)
 // =====================================================================================================
-export const SURF = {hook: 640, origin: 640, essence: 400, sonar: 560, layer: 560, buoy: 560, mad: 790, mast: 640, close: 640};
+export const SURF = {hook: 640, origin: 800, essence: 400, sonar: 560, layer: 560, buoy: 560, mad: 790, mast: 800, close: 640};   // origin·mast 800 (2026-11-12 검수: 떠 있는 잠수함 아래 물이 비어 보여 수면을 내림)
 /** camera constants per scene: screen x = x0 + (X − X0)·kx, screen y = surfY + Z·kz (X, Z in m; px scenes use kx = kz = 1) */
 export const CAMS = {
   sonar: {x0: 150, X0: 0, kx: 0.44, kz: 0.44},

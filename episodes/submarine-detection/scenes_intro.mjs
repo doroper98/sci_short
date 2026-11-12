@@ -50,6 +50,8 @@ function drawField(stage, lines, dx, dy, o = {}) {
 }
 /** water clip for sound (never above the surface, never into the strip) */
 const clipWater = ys => (x, y) => y > ys + 2 && y < 1112;
+/** field strength for a hull of length L (production session 2026-11-12: M = 0.22·110³, rmin 90 at L = 300 — no crossing lines) */
+const fieldOpt = L => { const k = L / 300; return {M: 0.22 * 110 ** 3 * k ** 3, rmin: 90 * k}; };
 
 // =====================================================================================================
 // TIME PLAN
@@ -57,7 +59,7 @@ const clipWater = ys => (x, y) => y > ys + 2 && y < 1112;
 export function planIntro(tl, P) {
   const W_ = (s, w, f) => wd(tl, s, w, f), at = r => tl.at(r), SC = P.sc;
   // field lines around a hull centre at (0, 0) — translated for hook / close (poster: 5 lines)
-  const REL = fieldLines(0, 0, {xs: [-150, -75, 0, 75, 150], y0: -900, y1: 900});
+  const REL = fieldLines(0, 0, {xs: [-280, -210, -140, -70, 0, 70, 140, 210, 280], y0: -900, y1: 900, ...fieldOpt(400)});
   // ---------------- hook (s01–s02)
   {
     const H = {};
@@ -92,7 +94,7 @@ export function planIntro(tl, P) {
     O.batt = keyed([[SC.origin.start, 0.45], [O.rise0, 0.25], [O.surfaced, 0.25], [at('s03:end'), 0.85, 'lin']]);
     // the patrol aircraft (y 470: a little lower than PLAN's 430 so the big number's sub-line clears it)
     O.plane0 = W_('s03', '비행기의', 0.3) - 1.6; O.planeIn = 1.4;
-    O.plane = {y: 470, len: 300, v: 22};
+    O.plane = {y: 480, len: 300, v: 22};
     O.planeX = t => {
       if (t < O.plane0) return -200;
       const q = (t - O.plane0) / O.planeIn;
@@ -104,10 +106,10 @@ export function planIntro(tl, P) {
     // radar pulses every 1.7 s from tR: a surfaced sail is hit (echo → peak), a submerged hull is not (dies at the surface)
     O.tR = W_('s03', '레이더에', 0.3) - 0.2; O.beam = 0.8;
     O.pulses = [];
-    for (let te = O.tR; te + 2 * O.beam < SC.origin.end - 0.4; te += 1.7) {
+    for (let te = O.tR; te + O.beam < SC.origin.end - 0.5; te += 1.7) {
       const th = te + O.beam, sail = O.sail(th), from = O.nose(te);
-      if (sail[1] < SURF0 - 8) O.pulses.push({te, th, kind: 'sail', from, to: [sail[0], sail[1] + 10], back: te + 2 * O.beam});
-      else O.pulses.push({te, th, kind: 'surf', from, to: [clamp(from[0] + 160, 390, 910), SURF0], back: null});
+      if (sail[1] < SURF0 - 8 && te + 2 * O.beam < SC.origin.end - 0.4) O.pulses.push({te, th, kind: 'sail', from, to: [sail[0], sail[1] + 10], back: te + 2 * O.beam});
+      else O.pulses.push({te, th, kind: 'surf', from, to: [O.sub.x, SURF0], back: null});
     }
     O.echoes = O.pulses.filter(p => p.kind === 'sail').map(p => p.back);
     O.firstSurf = O.pulses.find(p => p.kind === 'surf' && p.te > O.tR)?.th ?? Infinity;
@@ -132,9 +134,9 @@ export function planIntro(tl, P) {
     E.dimT = W_('s07', '가려도', 0.48) - 0.3; E.boostT = W_('s07', '흔적까지', 0.4);
     E.boost = t => lerp(1, 1.25, smooth((t - E.boostT) / 0.4));
     E.arrivals = E.emits.map(te => ({t: te + dMic / E.V, k: E.boost(te + dMic / E.V)}));
-    E.lines = fieldLines(E.sub.x, E.sub.y, {y0: 280, y1: 1120});          // 13 lines at x = 60, 140, …, 1020 (PLAN §4.4)
+    E.lines = fieldLines(E.sub.x, E.sub.y, {y0: 280, y1: 1120, ...fieldOpt(E.sub.len)});          // 13 lines at x = 60, 140, …, 1020 (PLAN §4.4)
     // measuring point: passes the hull at 180 px above it; the record is the same ruler shifted +180 px into the right half
-    E.d0 = 180; E.passX = [360, 760]; E.recDX = 180; E.passDur = 2.2;
+    E.d0 = 130; E.passX = [360, 760]; E.recDX = 180; E.passDur = 2.2;
     E.passes = [E.warmT, E.boostT];
     E.passAt = (t0, x) => t0 + E.passDur * (x - E.passX[0]) / (E.passX[1] - E.passX[0]);
     E.passHull = E.passes.map(t0 => E.passAt(t0, E.sub.x));            // the record's bump forms here
@@ -189,7 +191,7 @@ function posterProps(stage, G, H, sb, a, ys, grow = 0) {
   if (a <= 0) return;
   const c = stage.ctx, tail = sb.prop, clip = (x, y) => y > ys + 2 && y < 1340;
   H.rings.forEach((r, i) => ringWave(G.GW, tail[0], tail[1], r + grow, {crests: 2, gap: 14, amp: a * [1, 0.8, 0.6][i], clip}));
-  withAlpha(c, a, () => drawField(stage, H.rel, sb.center[0], sb.center[1], {warm: 0.55, yTop: ys + 2, yBot: 1340, hole: {cx: sb.center[0], cy: sb.center[1], rx: sb.len / 2 + 6, ry: sb.h * 0.62}, lw: 2}));
+  withAlpha(c, a, () => drawField(stage, H.rel, sb.center[0], sb.center[1], {neutral: 0.18, warm: 0.6, yTop: ys + 20, yBot: 1330, hole: {cx: sb.center[0], cy: sb.center[1], rx: sb.len / 2 + 6, ry: sb.h * 0.62}, lw: 2}));
   const bu = buoy(stage, H.buoy[0], ys, {a});
   cable(stage, [bu.bottom, [H.mic[0], H.mic[1] - 10]], a);
   // the microphone is on the first front's path: it is lit by the sound from the submarine
@@ -210,7 +212,7 @@ function hookScene(stage, t, p, ctx) {
   if (live > 0) { tieLine(stage, dS[0], ys + 4, live * 0.8); tieLine(stage, H.sub.x, H.sub.y + 30, live * 0.8); }
   // ---- bodies
   const pl = plane(stage, H.planeX(t), H.plane.y, {len: H.plane.len, dir: 1, prop: t * TAU * 3});
-  const sb = sub(stage, H.sub.x, H.sub.y, {len: H.sub.len, dir: -1, dim: lerp(0.45, 0.6, smooth((t - m0) / 0.8)), prop: t * TAU * 1.0});
+  const sb = sub(stage, H.sub.x, H.sub.y, {len: H.sub.len, dir: -1, dim: lerp(0.2, 0.6, smooth((t - m0) / 0.8)), prop: t * TAU * 1.0});
   // ---- poster props (fade out over the morph); fronts keep spreading at the sound's own pace while they fade
   posterProps(stage, G, H, sb, postA, ys, 330 * t);
   // ---- radar pulses: nose → surface point S (cool), a short burst where they die
@@ -229,7 +231,7 @@ function hookScene(stage, t, p, ctx) {
   const h0 = H.hits[0], lq = clamp((t - h0) / 0.4);
   if (lq > 0) {
     const [cx, cy] = H.lens.c, R = H.lens.r, Ls = lens(stage, cx, cy, R, dS, lq);
-    const surfL = cy - R / 2, cmPx = 60, wx = cx + 40, amp0 = 34, lam = 46;
+    const surfL = cy - R / 2, cmPx = 60, wx = cx + 52, amp0 = 32, lam = 46;
     const lastHit = H.hits.filter(x => t >= x).pop() ?? h0;
     const front = cy - R + (2 * R) * clamp((t - lastHit) / 0.9);
     Ls.clipLens(rr => {
@@ -239,7 +241,7 @@ function hookScene(stage, t, p, ctx) {
       c.fillStyle = g; c.fillRect(cx - rr, surfL, 2 * rr, cy + rr - surfL);
       line(c, [[cx - rr, surfL], [cx + rr, surfL]], rgba('#4A8AA0', 0.9), 2);
       // depth ruler 0–3 cm (1 cm = 60 px)
-      const rx = cx - 40;
+      const rx = cx - 22;
       line(c, [[rx, surfL], [rx, surfL + 3 * cmPx]], rgba(PAL.muted, 0.6), 1.4);
       for (let k = 0; k <= 3; k++) { const y = surfL + k * cmPx; line(c, [[rx - 8, y], [rx, y]], rgba(PAL.muted, 0.8), 1.4); stage.text(k === 3 ? '3 cm' : String(k), rx - 12, y, {size: 24, weight: 500, color: PAL.muted, align: 'right'}); }
       // envelope e^(−z / 1 cm), faint
@@ -250,7 +252,7 @@ function hookScene(stage, t, p, ctx) {
       for (let y = cy - rr; y <= Math.min(front, cy + rr); y += 2) pts.push([wx + env(y) * Math.sin((y - (cy - R)) / lam * TAU - ph), y]);
       if (pts.length > 1) {
         line(c, pts, rgba(PAL.cool, 0.85), 2.4);
-        for (let i = 0; i < pts.length; i += 4) { const k = env(pts[i][1]) / amp0; if (k > 0.04) GC.splat(pts[i][0], pts[i][1], 5, COOL, 0.32 * k); }
+        for (let i = 0; i < pts.length; i += 4) { const k = env(pts[i][1]) / amp0; if (k > 0.04 && Math.hypot(pts[i][0] - cx, pts[i][1] - cy) < rr - 8) GC.splat(pts[i][0], pts[i][1], 5, COOL, 0.32 * k); }
       }
     });
     Ls.frame();
@@ -384,7 +386,7 @@ function essenceScene(stage, t, p, ctx) {
   const spin = Math.max(0, t - E.t0) * TAU * 1.5;
   sub(stage, E.sub.x, E.sub.y, {len: E.sub.len, dir: -1, dim, prop: spin});
   // ---- sound fronts from the propeller (warm), 330 px/s, one per 0.7 s
-  for (const te of E.emits) { const r = E.V * (t - te); if (r <= 0 || r > E.rmax) continue; ringWave(GW, E.tail[0], E.tail[1], r, {crests: 2, gap: 15, amp: boost * (1 - smooth((r - 700) / 200)), clip}); }
+  for (const te of E.emits) { const r = E.V * (t - te); if (r <= 0 || r > E.rmax) continue; ringWave(GW, E.tail[0], E.tail[1], r, {crests: 2, gap: 15, amp: 0.7 * boost * (1 - smooth((r - 700) / 200)), clip}); }
   // ---- measuring point passes 180 px above the hull; a dashed tie to the pen on the record
   const passIdx = E.passes.map((t0, i) => (t >= t0 && t <= t0 + E.passDur + 0.3 ? i : -1)).filter(i => i >= 0).pop();
   if (passIdx != null) {
@@ -448,7 +450,7 @@ function closeScene(stage, t, p, ctx) {
   // ---- field: ③ flashes, then stays from '소리와'; at the poster it settles to the poster's 0.55
   const fA = Math.max(0.9 * fadeIn(t, C.c3 - 0.05, 0.1) * fadeOut(t, C.c3 + 0.45, 0.2), 0.7 * fadeIn(t, C.fieldT, 0.4));
   const geo = subGeo(sx, sy, sl, -1);
-  if (fA > 0 && post < 1) withAlpha(c, 1 - post, () => drawField(stage, C.rel, sx, sy, {warm: fA, yTop: ys + 2, yBot: 1112, hole: {cx: sx, cy: sy, rx: sl / 2 + 6, ry: geo.h * 0.62}, lw: 2}));
+  if (fA > 0 && post < 1) withAlpha(c, 1 - post, () => drawField(stage, C.rel, sx, sy, {neutral: 0.18 * fA, warm: fA, yTop: ys + 2, yBot: 1112, hole: {cx: sx, cy: sy, rx: sl / 2 + 6, ry: geo.h * 0.62}, lw: 2}));
   // ---- ship (appears at the scene start; leaves at the poster)
   const shipA = fadeIn(t, SC.close.start, 0.4) * (1 - post);
   const echoBack = C.c2, domeWarm = Math.max(hitAny(t, C.emits.map(e => e.arr), 0.35), hitFlash(t, echoBack, 0.5));
@@ -457,12 +459,12 @@ function closeScene(stage, t, p, ctx) {
   const px = C.planeX(t);
   plane(stage, px, 430, {len: 300, dir: 1, prop: t * TAU * 3});
   // ---- submarine: mast up, then down while the hull sinks into the dark (s23 '가려도'); poster: dim 0.45, length 400
-  const dim = lerp(lerp(0.3, 0.92, sinkQ), 0.45, post);
+  const dim = lerp(lerp(0.3, 0.92, sinkQ), 0.2, post);
   const mastLit = hitFlash(t, C.radarHit, 0.3);
   const sb = sub(stage, sx, sy, {len: sl, dir: -1, dim, mast: C.mast(t), mastLit, mastLitCol: PAL.cool, lit: hitFlash(t, C.pingHit, 0.3), litCol: PAL.cool, prop: t * TAU * 1.2});
   // ---- ① sound fronts from the tail (warm), stop at the poster
   const ringsA = 1 - post;
-  if (ringsA > 0) for (const e of C.emits) { const r = C.V * (t - e.te); if (r <= 0 || r > 1100) continue; ringWave(GW, e.p[0], e.p[1], r, {crests: 2, gap: 15, amp: ringsA * (1 - smooth((r - 800) / 300)), clip}); }
+  if (ringsA > 0) for (const e of C.emits) { const r = C.V * (t - e.te); if (r <= 0 || r > 1100) continue; ringWave(GW, e.p[0], e.p[1], r, {crests: 2, gap: 15, amp: 0.75 * ringsA * (1 - smooth((r - 800) / 300)), clip}); }
   // ---- ② ping (cool) → hull → echo (warm)
   { const r = C.V * (t - C.ping); if (r > 0 && r < 1200) ringWave(GC, C.dome[0], C.dome[1], r, {crests: 3, amp: 1 - smooth((r - 800) / 400), clip});
     const re = C.V * (t - C.pingHit); if (re > 0 && re < 1100) ringWave(GW, C.subPos(C.pingHit)[0], C.subPos(C.pingHit)[1], re, {crests: 2, amp: 1 - smooth((re - 700) / 400), clip}); }

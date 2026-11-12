@@ -52,7 +52,7 @@ export function planAir(tl, P) {
     B.mic0 = W_('s17', '마이크를', 0.3) - 0.2;
     B.micStart = B.bx.map((_, i) => B.mic0 + 0.15 * i); B.micLand = B.micStart.map(s => s + 1.3);
     B.te0 = Math.max(W_('s17', '들은', 0.4) - 1.0, ...B.lev.map((l, i) => B.micLand[i] - l.dt + 0.1));
-    B.pings = []; for (let te = B.te0; te < sc.end - 0.3; te += 0.8) B.pings.push(te);
+    B.pings = []; for (let te = B.te0; te < sc.end - 0.3; te += 1.5) B.pings.push(te);
     B.hits = B.lev.map(l => B.pings.map(te => te + l.dt).filter(x => x < sc.end - 0.1));
     B.radioV = 900;
     B.tip = (i, ys) => [B.bx[i], ys - 44 * 0.45 - 28];         // kit buoy(): antenna end
@@ -73,7 +73,7 @@ export function planAir(tl, P) {
     M.Crel = 120; M.yLrel = -120; M.yHrel = -360;                // C (540, 910), yL 670, yH 430
     M.d0 = M.Crel - M.yLrel; M.dH = M.Crel - M.yHrel;            // 240, 480 px
     M.field0 = sc.start + 0.4; M.fieldDur = 0.9;
-    M.lines = fieldLines(540, 790 + M.Crel, {y0: 285, y1: 1112});
+    M.lines = fieldLines(540, 790 + M.Crel, {y0: 285, y1: 1112, M: 0.22 * 110 ** 3, rmin: 90});   // 2026-11-12 review: PLAN's M crossed lines
     // passes: record point = tail-boom tip; it crosses x 540 at T
     const T1 = W_('s19', '금속도', 0.4) + 0.2;
     let T2 = Math.max(W_('s20', '팔분의', 0.4) - 0.1, T1 + 3.9);
@@ -182,9 +182,9 @@ function buoyScene(stage, t, p, ctx) {
   for (const te of B.pings) {
     const R = 1500 * (t - te); if (R <= 0 || R > 6300) continue;
     // weaker with distance (spreading): the bars the buoys report shrink the same way
-    const amp = (1 - smooth((R - 5000) / 1300)) * Math.sqrt(700 / Math.max(R, 700));
-    for (let j = 0; j < 1; j++) {
-      const Rj = R, k = 0.42 * amp; if (Rj <= 0) continue;
+    const amp = (1 - smooth((R - 5000) / 1300)) * clamp(600 / R, 0.25, 1);
+    for (let j = 0; j < 2; j++) {
+      const Rj = R - 110 * j, k = 0.5 * amp * (j ? 0.3 : 1); if (Rj <= 0) continue;
       for (let Z = 140; Z <= 330; Z += 5) {
         const dz = Z - B.sub.Z; if (Math.abs(dz) > Rj) continue;
         const hx = 0.075 * Math.sqrt(Rj * Rj - dz * dz), y = cm.sy(Z);
@@ -303,7 +303,8 @@ function madScene(stage, t, p, ctx) {
     const bxp = 540 + pass.v * (t - pass.T), y = ys + pass.yRel, s = magS(bxp - 540, pass.d, M.d0);
     if (t >= M.metalT - 0.2 && t <= M.metalT + 1.4 && pass === M.passes[0]) {
       const ha = win(t, M.metalT, M.metalT + 1.2, 0.2), x = bxp + BOOM + 20;
-      withAlpha(c, ha, () => { const g = c.createRadialGradient(x, y, 0, x, y, 70); g.addColorStop(0, rgba(PAL.warm, 0.25)); g.addColorStop(0.7, rgba(PAL.warm, 0.12)); g.addColorStop(1, rgba(PAL.warm, 0)); c.fillStyle = g; c.beginPath(); c.arc(x, y, 70, 0, TAU); c.fill(); });
+      // the aircraft's own metal disturbs the field too: neutral (not from the submarine) — faint fill + dashed ring
+      withAlpha(c, ha, () => { c.beginPath(); c.arc(x, y, 70, 0, TAU); c.fillStyle = rgba(PAL.field, 0.12); c.fill(); c.setLineDash([5, 7]); c.strokeStyle = rgba(PAL.field, 0.6); c.lineWidth = 1.4; c.stroke(); c.setLineDash([]); });
     }
     const pl = plane(stage, bxp + BOOM, y, {len: PL, dir: 1, boomLit: clamp(s), prop: t * TAU * 3});
     boom = pl.boom;
