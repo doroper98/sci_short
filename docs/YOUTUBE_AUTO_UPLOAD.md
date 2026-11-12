@@ -24,7 +24,7 @@
 
 | 경로 | 역할 |
 |---|---|
-| `publish/youtube.py` | 업로더 CLI. 표준 라이브러리만 사용. `--dry-run` `--all` `--list` `--whoami` `--mark-uploaded` |
+| `publish/youtube.py` | 업로더 CLI. 표준 라이브러리만 사용. `--dry-run` `--all` `--list` `--whoami` `--mark-uploaded` `--daily-next` `--privatize-pending` |
 | `publish/oauth.py` | 리프레시 토큰 1회 발급(사용자 PC, 루프백 OAuth + PKCE). **프로덕션 게시 확인 없이는 발급 거부** |
 | `config/youtube.json` | 채널 공통 설정. `privacy_status` 는 `private` 만 허용 |
 | `finals/<NN>-<slug>/upload.md` | 제목 / 설명 / 태그(기존 규약 그대로). 두 형식(태그 한 줄 · 태그 블록) 모두 읽음. **'인스타그램(릴스) 설명' 블록은 유튜브에 올라가지 않습니다** — 머리말이 `제목`·`설명`·`태그` 와 정확히 일치할 때만 읽습니다 |
@@ -58,13 +58,14 @@
 
 같은 Google 계정이 두 채널을 소유하면 A 로 충분합니다. 리프레시 토큰은 **동의할 때 고른 채널**에 묶이므로 채널만 다르게 고르면 됩니다.
 
-## 권한 — 최소한만 받는다 (2026-11-07)
+## 권한 — 꼭 필요한 것만 받는다 (2026-11-07, 2026-11-12 하나 더함)
 
 | 권한 | 쓰는 곳 | 영상 수정·삭제 |
 |---|---|---|
 | `youtube.upload` | `videos.insert`(업로드), `thumbnails.set`(썸네일) | 불가 |
 | `youtube.readonly` | `channels.list(mine=true)` — 업로드 전 채널 확인, 영상 처리 상태, 주간 보고서의 영상 목록·조회수 | 불가 |
 | `yt-analytics.readonly` (2026-11-08 추가) | 주간 채널 보고서(`publish/analytics.py`)의 시청 시간·평균 시청 비율·유입 경로·구독 증가 | 불가 |
+| `youtube.force-ssl` (2026-11-12 추가) | `videos.update(part=status)` — 다시 올린 편의 **옛 판을 비공개로** 돌리는 데만(`set_private`) | **권한상 가능**(코드는 비공개 전환만) |
 
 **분석 권한을 더한 토큰 다시 받기(2026-11-08, 한 번).** 업로드는 지금 토큰으로 계속 됩니다. 이 절차를 마치기 전까지 주간 보고서에는 조회수·좋아요만 나옵니다.
 1. 구글 클라우드 콘솔에서 프로젝트 **Osint Gen** → API 및 서비스 → 라이브러리 → **YouTube Analytics API** → 사용.
@@ -75,11 +76,27 @@
 5. 새 Refresh token 을 저장소 Secrets 의 `YT_REFRESH_TOKEN` 에 덮어쓴다(채팅에 붙이지 않는다).
 6. Actions → youtube-token-check(채널 확인) → youtube-analytics 수동 실행으로 확인.
 
-**`youtube.force-ssl` 은 받지 않습니다.** 동의 화면에 "동영상, 평가, 댓글, 자막 보기, 수정 및 **완전 삭제**"로 표시되는 권한입니다.
-GitHub Secrets 에 오래 두는 토큰이 새면 채널 영상을 지울 수 있어 뺐습니다.
-대가로 `captions.insert`(자막 파일 업로드)를 쓸 수 없습니다. 자막은 화면에 새겨져 있어 2026-11-03 결정대로 원래 올리지 않습니다.
-YouTube API 공식 문서로 확인한 범위: `videos.insert`·`thumbnails.set` 은 `youtube.upload` 로 되고, `videos.delete` 와 `captions.insert` 는 `youtube.upload` 로 안 됩니다.
-`channels.list(mine=true)` 는 문서가 "인증된 요청"이라고만 적고 범위를 나열하지 않아, 첫 `--whoami` 실행으로 확인합니다.
+**`youtube.force-ssl` 을 받습니다(2026-11-12 사용자 결정, 2026-11-07 의 "받지 않는다"를 바꿈).**
+조회수가 한 자리인 공개 편 19개를 두고 사용자가 "…은 다시 올려야 될거 같아 조회수가 거의 한자리수야. 내가 유튜브 내 게정에서 삭제해두면 돼?",
+"그것들을 다 니가 할 수 있어? 이미 있는 영상중 조회수 100회 미만인 애들 비공개로 돌린다던지, 돌리고 재업로드를 한다던지",
+"권한을 너한테 주면 되잖아"라고 했습니다. 공개 상태를 바꾸는 `videos.update` 는 공식 문서상 `youtubepartner`·`youtube`·`youtube.force-ssl` 중 하나가 있어야 합니다
+("This request requires authorization with at least one of the following scopes"). 셋 중 가장 좁은 `youtube.force-ssl` 을 씁니다.
+- **코드가 하는 일은 공개 → 비공개 하나뿐입니다.** `publish/youtube.py set_private` 는 `privacyStatus` 에 문자 그대로 `"private"` 만 보내고, public·unlisted 로 바꾸는 매개변수·경로가 없습니다. 삭제(`videos.delete`) 호출은 어디에도 없습니다.
+- **위험은 그대로 적어 둡니다.** 이 권한은 동의 화면에 "동영상, 평가, 댓글, 자막 보기, 수정 및 **완전 삭제**"로 표시됩니다. GitHub Secrets 의 토큰이 새면 채널 영상을 지울 수 있습니다. 토큰 값은 Secrets 에만 두고 로그·채팅에 남기지 않습니다.
+- 공식 문서(videos/update)의 주의: "Note that this method will override the existing values for all of the mutable properties that are contained in any parts that the parameter value specifies." "If the request body does not specify a value, the existing privacy setting will be removed and the video will revert to the default privacy setting." "If you are submitting an update request, and your request does not specify a value for a property that already has a value, the property's existing value will be deleted. The following fields are exempt from this behavior and will only update if explicitly set: status.selfDeclaredMadeForKids status.containsSyntheticMedia"
+  → 먼저 `videos.list(part=snippet,status,statistics)`(1단위)로 지금 값을 읽고, 지워질 수 있는 `embeddable`·`license`·`publicStatsViewable` 은 그대로 되돌려 보내고 `privacyStatus` 만 `private` 로 바꿉니다(`videos.update` "a quota cost of 50 units"). 예외인 `selfDeclaredMadeForKids`·`containsSyntheticMedia` 는 보내지 않아 바뀌지 않습니다. `publishAt` 은 보내지 않습니다(문서: 과거 시각이면 "the same as of changing the video's privacyStatus from private to public").
+- 지키는 조건: 설정 채널(`channel_id`)의 영상만, 조회수가 `min_views`(100) 미만인 것만, `never_privatize` 목록 제외. 이미 비공개거나 없는 영상은 바꾸지 않고 끝난 것으로 적습니다.
+- 자막 업로드(`captions.insert`)도 같은 권한으로 가능해지지만, 자막은 화면에 새겨져 있어 2026-11-03 결정대로 그대로 올리지 않습니다.
+- YouTube API 공식 문서로 확인한 범위: `videos.insert`·`thumbnails.set` 은 `youtube.upload` 로 되고, `videos.delete` 와 `captions.insert` 는 `youtube.upload` 로 안 됩니다. `channels.list(mine=true)` 는 문서가 "인증된 요청"이라고만 적고 범위를 나열하지 않아, 첫 `--whoami` 실행으로 확인했습니다.
+
+**네 권한으로 토큰 다시 받기(2026-11-12, 사용자가 한 번).** 받기 전에도 업로드는 지금 토큰으로 그대로 됩니다. 옛 판 비공개 전환만 403(범위 부족)으로 건너뛰고 경고를 남기며, 토큰을 바꾼 다음 아침부터 밀린 것을 저절로 처리합니다.
+1. 구글 인증 플랫폼 → 데이터 액세스 → 범위 추가에서 `.../auth/youtube.force-ssl` 을 더하고 저장(민감 범위 — 미검수 앱 경고가 떠도 소유자 본인은 쓸 수 있음).
+2. OAuth Playground(톱니바퀴 → 내 클라이언트 ID·비밀번호, 위 분석 권한 때와 같은 방법)에서 범위 칸에 네 개를 띄어쓰기로 넣는다:
+   `https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly https://www.googleapis.com/auth/youtube.force-ssl`
+3. Authorize APIs → 계정 → **과학쑛츠** 채널 선택 → 허용 → Exchange authorization code for tokens.
+4. 새 Refresh token 을 저장소 Secrets 의 `YT_REFRESH_TOKEN` 에 덮어쓴다(채팅에 붙이지 않는다).
+5. Actions → youtube-token-check 로 채널 확인. 옛 판 비공개 전환은 다음 아침 `youtube-daily` 실행에서 확인된다(작업 요약의 '옛 판 비공개 전환' 절).
+PC 의 `python -m publish.oauth` 도 네 권한을 요청합니다.
 
 ## 1회 설정 절차
 
@@ -174,7 +191,7 @@ python -m publish.youtube finals/13-gamma-ray-burst --env-file .env   # 비공�
 - **썸네일만 다시 지정.** 기록의 `thumbnail_after_processing` 이 true 가 아닌 편(옛 기록·처리 대기 초과)은, 같은 편을 다시 실행하면 영상은 두고 썸네일만 다시 지정합니다. 수동 실행에서 `episode` 에 그 폴더를 적거나, 그 폴더를 바꾼 PR 을 병합하면 됩니다. 손으로 올린 편(`source: manual`)은 건드리지 않습니다.
 - **API 로 안 될 때.** 처리 완료 뒤 지정해도 쇼츠에 맞춤 썸네일이 보이지 않으면 유튜브 휴대전화 앱 → 영상 수정 → 썸네일에서 첫 프레임을 고릅니다. 이 채널의 썸네일은 0초 프레임과 같은 그림이라 결과가 같습니다.
 - **쇼츠 분류.** 세로·정방형이고 180초 이하면 유튜브가 자동으로 쇼츠로 분류합니다. 13편 모두 1080×1920, 160~179초입니다.
-- **할당량(2026-11-03 공식 문서 확인).** videos.insert 는 별도 버킷 하루 100회. captions.insert 400단위, thumbnails.set 50단위, channels.list 1단위(기본 하루 10,000단위). 초과 시 `quotaExceeded` 로 멈추고 태평양 시간 자정(KST 오후 4~5시) 뒤 다시 됩니다.
+- **할당량(2026-11-03 공식 문서 확인).** videos.insert 는 별도 버킷 하루 100회. captions.insert 400단위, thumbnails.set 50단위, channels.list 1단위(기본 하루 10,000단위). 옛 판 비공개 전환은 videos.list 1단위 + videos.update 50단위(2026-11-12 문서 확인). 초과 시 `quotaExceeded` 로 멈추고 태평양 시간 자정(KST 오후 4~5시) 뒤 다시 됩니다.
 - **로컬·클라우드 세션에서 직접** 올릴 수도 있습니다: `python -m publish.youtube finals/<ep> --env-file .env`.
 
 ## 아침 업로드 (2026-11-08)
@@ -190,7 +207,9 @@ python -m publish.youtube finals/13-gamma-ray-burst --env-file .env   # 비공�
 
 - 예약 시각(2026-11-10 다시 바뀜): **매시간**, 아침 창 05~10시 KST 에 돈 실행만 일한다(GitHub 예약이 6~10시간 늦게 돈 실측 때문). 그 전(11-09): 05:47·06:27·07:07 KST 세 번. 첫날 06:37 예약이 70분 넘게 돌지 않아(GitHub 예약 실행은 늦거나 빠질 수 있다) 앞당기고 예비를 두었다. 먼저 돈 실행만 올리고, 나머지는 '최근 6시간 안에 올린 것이 있으면 쉼' 안전장치로 아무것도 하지 않는다.
 - 비공개 보류는 꺼져 있다(2026-11-11 사용자: "비공개가 있어도 예정된 스케줄의 영상들을 올리도록 해 규칙 개선건이야"): `hold_if_private_within_days` 0. 앞서 올린 영상이 아직 비공개여도 다음 편을 올린다. 1 이상으로 되돌리면 그 일수 안에 올린 영상이 비공개일 때 쉰다(2026-11-08~11-10 의 동작). 6시간 안전장치(같은 아침 두 편 방지)는 그대로다.
-- 새 편이 없는 날(목록이 끝났거나 밤 제작이 실패한 날)에는 아래 '다시 올리기' 대기열에서 한 편을 올린다. 하루 한 편은 그대로다.
+- **새 편과 다시 올리기를 하루씩 번갈아 올린다**(2026-11-12 사용자 결정 "하루씩 번갈아", `config/republish.json` `alternate_with_new: true`). 그 전에는 새 편이 있으면 늘 새 편이 먼저라 11-11 시작 뒤에도 다시 올린 편이 0이었다. 가장 최근 API 업로드가 새 편이면 오늘은 다시 올리기, 다시 올리기면 새 편 차례다. 다시 올리기 차례인데 남은 옛 판이 모두 조회수 기준 이상이거나 대기열이 끝났으면 같은 실행에서 새 편을 올린다. 둘 중 하나만 있으면 그것을 올린다. 하루 한 편·6시간 안전장치는 그대로다. `--daily-next --dry-run` 의 `note` 에 누구 차례이고 왜인지 나온다.
+- 새 편이 없는 날(목록이 끝났거나 밤 제작이 실패한 날)에는 아래 '다시 올리기' 대기열에서 한 편을 올린다.
+- 실행마다 맨 먼저 비공개로 돌리지 못한 옛 판을 다시 시도한다(아래 '다시 올리기'). 쉬는 실행에서도 돌고, 실패해도 그날 업로드는 막지 않는다.
 - 인스타(2026-11-08 사용자 결정 "아침 업로드와 동시에"): 같은 실행에서 유튜브 단계 직후 한 편을 게시한다(즉시 공개). 오늘 올린 편이 먼저, 없으면 옛 편. 옛 편은 17시 `instagram-evening`에서도 한 편씩(따라잡을 때까지). 자세히는 `docs/INSTAGRAM_AUTO_POST.md`.
 - 손으로 한 번: Actions → youtube-daily → Run workflow(검증만 하려면 dry_run).
 - 알림(2026-11-08): '공개 전환 대기'·실패 이슈와 주간 보고서 이슈는 저장소 주인을 **담당자로 지정**해 연다. '할당됨' 알림은 지켜보기 설정과 상관없이 온다. 휴대전화 푸시는 GitHub 모바일 앱(설정 → 알림 → 푸시 켜기, '할당됨' 포함)에서 받는다. 밤 제작 결과는 제작하는 Claude 세션이 Claude 앱 푸시로 알린다.
@@ -198,19 +217,24 @@ python -m publish.youtube finals/13-gamma-ray-burst --env-file .env   # 비공�
 ## 다시 올리기 (2026-11-08)
 
 한꺼번에 공개해 노출을 못 받은 편을 **새 영상으로** 하루 1편씩 다시 올립니다(`docs/CHANNEL_GROWTH.md` H3).
-- 대기열과 규칙: `config/republish.json`(시작일, `min_views` 50, 비공개 보류 0 = 끔, 2026-11-11)
-- 실행: 아침 업로드(`.github/workflows/youtube-daily.yml`, 06:37 KST)가 올릴 새 편이 없는 날 대기열에서 한 편(`--daily-next` 안에서 `--republish-next` 와 같은 규칙)
-- 이전 판의 조회수를 `videos.list(part=status,statistics)`로 확인해 `min_views` 이상이면 건너뜁니다
+- 대기열과 규칙: `config/republish.json`(시작일, 비공개 보류 0 = 끔(2026-11-11), `min_views` 100(2026-11-12, 전에는 50), `alternate_with_new` true(2026-11-12))
+- 실행: 아침 업로드(`.github/workflows/youtube-daily.yml`)가 새 편과 하루씩 번갈아 대기열에서 한 편(`--daily-next` 안에서 `--republish-next` 와 같은 규칙). 새 편이 없는 날도 한 편
+- 이전 판의 조회수를 `videos.list(part=status,statistics)`로 확인해 `min_views`(100) 이상이면 건너뜁니다(사용자: "조회수 100회 미만인 애들")
+- 기록(`youtube_upload.json`)이 없는 손으로 올린 편(10·13·14·20·21)은 `previous_ids` 의 옛 판 ID 로 조회수를 보고, 같은 ID 를 `previous` 에 남깁니다. ID 는 2026-11-09 주간 보고서(`reports/youtube/2026-11-09.json`)의 제목과 대조해 넣었습니다
 - 앞서 올린 영상이 비공개여도 쉬지 않습니다(2026-11-11 사용자 결정, 보류 0)
 - 새 기록의 `previous`에 이전 판(영상 ID, 다시 올릴 때의 조회수·공개 상태)이 남습니다
-- 알림 이슈에 "이전 판 비공개로 전환" 체크가 붙습니다. 이 토큰에는 수정 권한이 없어 사람이 합니다
-- 한 편만 손으로: `python -m publish.youtube finals/<ep> --republish`
+- **옛 판 비공개 전환(2026-11-12 사용자 "권한을 너한테 주면 되잖아").** 새 판이 올라가고 기록이 남은 뒤 코드가 옛 판을 공개 → 비공개로 돌리고 `previous[0].privatized_at` 을 적습니다. 실패하면(토큰에 `youtube.force-ssl` 이 아직 없어 403, 네트워크 등) 업로드는 성공으로 두고 `previous[0].privatize_error` 와 경고 "옛 판 비공개 전환 실패 — 토큰에 youtube.force-ssl 권한이 있는지 확인하세요: …" 를 남깁니다. 다른 채널 영상·조회수 100 이상·`never_privatize` 는 `privatize_refused` 로 적고 다시 시도하지 않습니다
+- **밀린 것 다시 시도**: 아침 실행마다(또는 `python -m publish.youtube --privatize-pending`, `--dry-run` 이면 목록만) `privatized_at` 이 없는 옛 판과 `privatize_only` 를 다시 시도합니다. 첫 시도가 범위 부족(403)이면 나머지는 건드리지 않고 경고 한 줄만 남깁니다. 그래서 토큰을 바꾸면 저절로 따라잡습니다
+- `privatize_only`: 다시 올리지 않고 비공개만 할 영상. 지금은 01 중력파 새 판 `3n4MJZM6trk`(11-09 보고서 3회) 하나 — 옛 판 `GMkRzXt78TI`(654회)가 공개되어 살아 있어서입니다. `GMkRzXt78TI` 는 `never_privatize` 에 넣어 어떤 경로로도 건드리지 않습니다. 성공하면 01 기록의 `privatized_at` 에 적습니다
+- 결과는 작업 요약의 '옛 판 비공개 전환' 절과 '공개 전환 대기' 이슈에 "옛 판 <주소> 비공개 전환됨" 또는 실패 이유로 나옵니다. 실패했을 때만 이슈에 "이전 판을 비공개로 전환" 체크가 붙습니다
+- 한 편만 손으로: `python -m publish.youtube finals/<ep> --republish`(같은 규칙, `previous_ids` 도 읽음)
 
 ## 안전장치
 
 | 위험 | 장치 |
 |---|---|
 | 실수로 공개 업로드 | `privacy_status` 가 private 이외면 설정 로드 실패. 요청 본문도 항상 `private` 고정 |
+| 옛 판 비공개 전환이 다른 것을 바꿈 | `set_private` 는 `privacyStatus` 를 `"private"` 로만 보내고(공개·일부 공개 경로 없음, 삭제 호출 없음), 지금 status 를 읽어 지워질 수 있는 필드를 되돌려 보냄. 다른 채널·조회수 100 이상·`never_privatize` 는 거절. 시험이 본문을 확인 |
 | 다른 채널에 업로드 | 업로드 전 `channels.list` 로 확인, `channel_id` 불일치면 중단. 기록에 채널 이름 저장 |
 | 백로그 일괄 업로드 사고 | push 트리거는 바뀐 폴더만. 전체는 수동 `all=true` 에서만. 손으로 올린 편은 `--mark-uploaded` |
 | 같은 영상 두 번 | md5 기록으로 건너뜀. 동시 실행은 Actions concurrency 로 직렬화 |
@@ -230,8 +254,9 @@ python -m publish.youtube finals/13-gamma-ray-burst --env-file .env   # 비공�
 | `썸네일 설정 실패 … forbidden` | 채널 전화 인증(맞춤 썸네일 권한) 필요. Studio 에서 직접 고르거나 `upload_thumbnail: false` |
 | 쇼츠 썸네일이 중간 장면 | 처리 완료 전에 지정된 것. 같은 편을 다시 실행하면 썸네일만 다시 지정(위 '운영'). 그래도 안 되면 휴대전화 앱에서 첫 프레임 선택 |
 | `영상 처리 대기 … 초과` | 유튜브 처리가 늦음. 영상은 올라감. 나중에 같은 편을 다시 실행 |
-| `HTTP 401/403 insufficientPermissions` | 범위 부족. 위 '토큰 발급'대로 다시 받습니다(youtube.upload + youtube.readonly) |
-| `자막 업로드 실패 … force-ssl` | 의도된 동작입니다. 자막 업로드 권한은 받지 않습니다('권한' 절) |
+| `HTTP 401/403 insufficientPermissions` | 범위 부족. '권한' 절의 '네 권한으로 토큰 다시 받기'대로 다시 받습니다 |
+| `옛 판 비공개 전환 실패 — 토큰에 youtube.force-ssl …` | 토큰을 아직 네 권한으로 다시 받지 않았음. 업로드는 그대로 됐습니다. 토큰을 바꾸면 다음 아침에 밀린 옛 판을 저절로 비공개로 돌립니다 |
+| `자막 업로드 실패 … force-ssl` | 토큰을 아직 다시 받지 않았음. 자막은 원래 올리지 않습니다('권한' 절) |
 | `quotaExceeded` / `uploadLimitExceeded` | 하루 한도. 다음 날 다시 |
 | 기록 커밋 push 실패 | main 에 보호 규칙이 있으면 `github-actions[bot]` 의 push 를 허용 |
 | push 트리거가 아무것도 안 올림 | 그 push 에서 바뀐 finals 폴더가 없거나 기록 파일만 바뀜. 수동 실행으로 폴더 지정 |

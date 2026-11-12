@@ -81,6 +81,29 @@ def cell(text: str) -> str:
     return str(text).replace("|", "\\|").replace("\n", " ")
 
 
+PRIVATIZE_DONE = ("privatized", "already-private", "not-found")
+
+
+def privatize_section(data: dict) -> str:
+    """옛 판 비공개 전환(publish.youtube privatize_pending — 아침 실행 시작 때 밀린 것을 다시 시도) 결과를 요약에 쓴다.
+    공개 → 비공개 한 방향만 한다(2026-11-12). 실패 이유(토큰 범위 등)는 경고로 보인다."""
+    items = data.get("privatize") or []
+    warns = [w for w in data.get("warnings", []) if "비공개 전환" in w]
+    if not items and not warns:
+        return ""
+    lines = ["## 옛 판 비공개 전환 (공개 → 비공개만)", ""]
+    for it in items:
+        if it.get("result") in PRIVATIZE_DONE:
+            lines.append(f"- 옛 판 {it.get('url')} 비공개 전환됨({it.get('result')}) — `{it.get('dir', '')}`")
+        elif it.get("result") == "dry-run":
+            lines.append(f"- 옛 판 {it.get('url')} 비공개 전환 예정(dry-run) — `{it.get('dir', '')}`")
+        else:
+            lines.append(f"- 옛 판 {it.get('url')} {it.get('result')}: {cell(it.get('error', ''))} — `{it.get('dir', '')}`")
+    lines += [f"- {cell(w)}" for w in warns]
+    summary("\n".join(lines))
+    return "\n".join(lines[2:]) + "\n"
+
+
 def instagram_section(ig: dict | None) -> dict[str, dict]:
     """인스타 결과를 요약에 쓰고 실패 이슈를 만든다. 폴더 → 결과 사전을 돌려준다(유튜브 이슈 본문에 주소를 넣으려고)."""
     if ig is None:
@@ -135,6 +158,7 @@ def cmd_report(path: str, ig_path: str | None = None, tt_path: str | None = None
     if data is None:
         summary("## 유튜브 업로드\n결과 파일이 없습니다 — 업로드 단계가 시작 전에 실패했습니다(비밀값·설정 확인). " + RUN_URL)
         return 0
+    pv_md = privatize_section(data)
     if data.get("note") and not data.get("results"):
         summary(f"## 유튜브 아침 업로드\n{data['note']}")       # 쉬는 날(비공개 대기·시작 전·대기열 끝)
         return tiktok_issues(tt, tt_done)
@@ -168,8 +192,13 @@ def cmd_report(path: str, ig_path: str | None = None, tt_path: str | None = None
             if r["dir"] in tt_by_dir:
                 tt_part = "\n" + tiktok_instructions(tt_by_dir[r["dir"]]) + "\n- [ ] 틱톡에 게시\n"
                 tt_done.add(r["dir"])
-            prev_line = (f"- **다시 올림**: 이전 판 {r['previous_video']} (조회 {r.get('previous_views')}회). 새 판을 공개한 뒤 "
-                         "**이전 판은 비공개로** 돌리십시오(같은 영상이 두 개 공개되지 않게)\n" if r.get("previous_video") else
+            pv = r.get("privatize") or {}
+            pv_done = pv.get("result") in PRIVATIZE_DONE
+            prev_line = (f"- **다시 올림**: 이전 판 {r['previous_video']} (조회 {r.get('previous_views')}회) — "
+                         + (f"옛 판 {pv.get('url')} 비공개 전환됨({pv.get('result')}, 자동)\n" if pv_done else
+                            f"옛 판 비공개 전환 실패: {pv.get('error', '?')}. 토큰에 youtube.force-ssl 이 생기면 다음 아침에 "
+                            "자동으로 다시 시도합니다. 급하면 스튜디오에서 **이전 판을 비공개로** 돌리십시오\n")
+                         if r.get("previous_video") else
                          "- **다시 올림**: 이전 판은 손으로 올린 것이라 ID 기록이 없습니다. 스튜디오에서 찾아 비공개로 돌리십시오\n"
                          if r.get("republish") else "")
             body = (f"비공개로 올라갔습니다. YouTube Studio 에서 내용·자막을 확인한 뒤 **공개**로 바꾸고 이 이슈를 닫으십시오.\n"
@@ -177,8 +206,8 @@ def cmd_report(path: str, ig_path: str | None = None, tt_path: str | None = None
                     f"- 폴더: `{r['dir']}`\n- 채널: {r.get('channel', '')}\n- 보기: {r['url']}\n- Studio: {r['studio_url']}\n{ig_line}{prev_line}\n"
                     f"경고:\n{warns}\n\n확인할 것:\n- [ ] 영상·음성·자막이 맞는가\n- [ ] 제목·설명·태그가 맞는가\n"
                     f"- [ ] 아동용 선언·합성 콘텐츠 표시가 맞는가\n- [ ] 공개(또는 예약 공개)로 전환\n"
-                    + ("- [ ] 이전 판을 비공개로 전환\n" if (r.get("previous_video") or r.get("republish")) else "")
-                    + tt_part + f"\n실행: {RUN_URL}")
+                    + ("- [ ] 이전 판을 비공개로 전환\n" if (r.get("previous_video") or r.get("republish")) and not pv_done else "")
+                    + tt_part + (f"\n옛 판 비공개 전환(밀린 것 다시 시도):\n{pv_md}" if pv_md else "") + f"\n실행: {RUN_URL}")
             create_issue_once(title, body, LABEL_REVIEW, review)
         elif r["status"] == "error":
             title = f"유튜브 업로드 실패: {r['dir']}"

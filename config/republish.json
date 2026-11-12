@@ -1,11 +1,23 @@
 {
- "_purpose": "다시 올리기 대기열(publish/youtube.py --republish-next, .github/workflows/youtube-daily.yml 이 올릴 새 편이 없는 날 실행). 2026-11-08 사용자 요청: \"재업로드(2번)가 되도록 구성해봐\" + \"소나 영상의 태그와 해쉬태그를 보완했었어. 그거까지 같이 고려해서\".",
+ "_purpose": "다시 올리기 대기열(publish/youtube.py --republish-next, .github/workflows/youtube-daily.yml 의 --daily-next 가 새 편과 번갈아 실행). 2026-11-08 사용자 요청: \"재업로드(2번)가 되도록 구성해봐\" + \"소나 영상의 태그와 해쉬태그를 보완했었어. 그거까지 같이 고려해서\".",
  "_why": "2026-11-07 한꺼번에 공개한 14편은 하루 반이 지나도 1~20회였고, 같은 체계로 올려 혼자 공개한 27 소나는 몇 시간 만에 635회였다(docs/CHANNEL_GROWTH.md 가설 H3). 노출을 못 받은 편을 하루 1편씩 새 영상으로 다시 올린다.",
- "_rules": "시작일(start) 전에는 쉰다. 2026-11-11 사용자 결정으로 hold_if_private_within_days 를 0 으로 두어 앞서 올린 영상이 비공개여도 쉬지 않는다(1 이상이면 그 일수 안의 비공개 영상이 있을 때 쉰다). 이전 판 조회수가 min_views 이상이면 그 편은 건너뛴다. 한 번에 한 편만 올린다. 이전 판의 비공개 전환은 사용자가 스튜디오에서 한다.",
+ "_rules": "시작일(start) 전에는 쉰다. 2026-11-11 사용자 결정으로 hold_if_private_within_days 를 0 으로 두어 앞서 올린 영상이 비공개여도 쉬지 않는다(1 이상이면 그 일수 안의 비공개 영상이 있을 때 쉰다). 이전 판 조회수가 min_views 이상이면 그 편은 건너뛴다. 한 번에 한 편만 올린다. 2026-11-12 사용자 결정: ① min_views 100(\"이미 있는 영상중 조회수 100회 미만인 애들 비공개로 돌린다던지, 돌리고 재업로드를 한다던지\", 전에는 50). ② alternate_with_new — 새 편과 다시 올리기를 하루씩 번갈아(\"하루씩 번갈아\"). 마지막 업로드가 새 편이면 다시 올리기 차례, 다시 올리기면 새 편 차례. 다시 올리기 차례인데 대기열의 옛 판이 모두 min_views 이상이면 같은 아침에 새 편을 올린다. 하루 한 편은 그대로. ③ 새 판을 올린 뒤 옛 판을 코드가 비공개로 돌린다(\"권한을 너한테 주면 되잖아\" — 토큰에 youtube.force-ssl 추가). 공개 → 비공개 한 방향만, 조회수가 min_views 이상인 옛 판·다른 채널 영상·never_privatize 는 건드리지 않고, 삭제는 하지 않는다. 토큰에 아직 권한이 없으면 경고만 남기고 업로드는 그대로이며, 아침 실행마다 다시 시도해 토큰을 바꾸면 저절로 따라잡는다. previous_ids 는 기록(youtube_upload.json)이 없는 손으로 올린 편의 옛 판 ID(2026-11-09 주간 보고서에서 제목으로 대조). privatize_only 는 다시 올리지 않고 비공개만 할 영상.",
  "_order": "동종 채널에서 잘된 유형(일상 역설·규모·화제)에 가깝고, 이웃한 날 같은 계열(핵·우주)이 겹치지 않게 섞은 제안 순서. 01 중력파는 옛 판(653회)이 살아 있어 넣지 않았다(새 판은 비공개로 돌리기만 권함). 2026-11-12 사용자: \"감기주사 편, 감마선 폭발편, 오로라편, 수소폭탄 위력 편, 히로시마 원폭 편 … 다시 올려야 될거 같아 조회수가 거의 한자리수야\" → 14·21·10·20·13 을 끝에 더했다(핵 두 편은 하루 띄움). 사용자가 함께 꼽은 01 은 옛 판이 살아 있어 사용자 결정 전까지 넣지 않는다.",
  "start": "2026-11-11",
- "min_views": 50,
+ "min_views": 100,
  "hold_if_private_within_days": 0,
+ "alternate_with_new": true,
+ "previous_ids": {
+  "finals/10-aurora": "J1LfK2E3qlE",
+  "finals/13-gamma-ray-burst": "QuJldGMtJFM",
+  "finals/14-cold-vaccine": "vex6YCVxVFE",
+  "finals/20-atomic-bomb": "R3LOd0XLZy0",
+  "finals/21-hydrogen-bomb": "1WnSLOOM5ys"
+ },
+ "privatize_only": [
+  {"video_id": "3n4MJZM6trk", "episode": "finals/01-gravitational-waves", "why": "01 중력파 새 판(11-09 보고서 3회). 옛 판 GMkRzXt78TI(654회)가 공개되어 살아 있어 다시 올리지 않고 비공개만 한다."}
+ ],
+ "never_privatize": ["GMkRzXt78TI"],
  "queue": [
   "finals/06-seasons",
   "finals/23-orbit-altitudes",
