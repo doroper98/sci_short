@@ -28,7 +28,8 @@ export function planCore(tl, P) {
     S.tp3 = W_('s11', '쏘면', 0.16) - 0.1;
     S.pings = [S.tp1, S.tp2, S.tp3];
     S.quiet = S.tp1 - 0.3;                                              // background hum softens from here
-    S.hum = []; for (let te = SC.sonar.start - 0.8; te < SC.sonar.end; te += 0.6) S.hum.push({te, amp: te < S.quiet ? 0.7 : 0.3, arr: te + S.dTail});
+    // background hum: every 0.6 s (amp 0.7) while only listening; every 1.2 s (amp 0.15) once the active sonar is in use
+    S.hum = []; for (let te = SC.sonar.start - 0.8; te < SC.sonar.end; te += te < S.quiet ? 0.6 : 1.2) S.hum.push({te, amp: te < S.quiet ? 0.7 : 0.15, arr: te + S.dTail});
     P.sonar = S;
   }
   // ---------------- layer (depth ×13, rays 4× faster)
@@ -54,8 +55,8 @@ export function planCore(tl, P) {
     L.D = {X: 0, Z: 6}; L.TOW = {X: 1975, Z: 200}; L.DIP = {X: 4600, Z: 200}; L.SUB = {X: 6500, Z: 220};
     L.rays1 = [-1.6, -0.9, 0.4, 1.1, 1.7, 2.05, 2.3, 2.7, 3.3, 4.1, 5.2, 6.6, 8.3, 10.5].map(th => ({th, pts: traceRay(L.D.X, L.D.Z, th, o)}));
     L.limit = L.rays1.find(r => r.th === 2.05);
-    L.rays2 = [-9, -6.5, -4, -2, 0.5, 2.5, 4.5, 6.5].map(th => ({th, pts: traceRay(L.TOW.X, L.TOW.Z, th, o)}));
-    L.rays3 = [-7, -3.5, -1, 1.5, 4, 7].map(th => ({th, pts: traceRay(L.DIP.X, L.DIP.Z, th, o)}));
+    L.rays2 = [-9, -4, 0.5, 2.5, 6.5].map(th => ({th, pts: traceRay(L.TOW.X, L.TOW.Z, th, o)}));
+    L.rays3 = [-7, 1.5, 7].map(th => ({th, pts: traceRay(L.DIP.X, L.DIP.Z, th, o)}));
     const aim2 = aimRay(L.TOW.X, L.TOW.Z, L.SUB.X, L.SUB.Z), aim3 = aimRay(L.DIP.X, L.DIP.Z, L.SUB.X, L.SUB.Z);
     L.aim2 = {th: aim2.th, pts: aim2.pts.slice(0, aim2.i + 1), tHit: aim2.t, miss: aim2.miss};
     L.aim3 = {th: aim3.th, pts: aim3.pts.slice(0, aim3.i + 1), tHit: aim3.t, miss: aim3.miss};
@@ -108,7 +109,7 @@ function sonarScene(stage, t, p, ctx) {
   });
   // ---- bodies
   const domeWarm = hitAny(t, backT.slice(0, 2), 0.5);
-  const sh = ship(stage, 60, ys, {len: 250, dir: 1, domeWarm, domeLit: hitAny(t, S.pings, 0.25)});
+  const sh = ship(stage, D[0] - 0.36 * 170, ys, {len: 170, dir: 1, domeWarm, domeLit: hitAny(t, S.pings, 0.25)});
   const sb = sub(stage, Sb[0], Sb[1], {len: 260, dir: -1, dim: 0.25, lit: hitAny(t, hitT), litCol: PAL.cool, prop: t * TAU * 1.5});
   // ---- s11: the hull hears the ping → a line back to the ship, the ship outlined (cool, = sent by the searcher)
   const rv = hitT[2], ra = fadeIn(t, rv, 0.08);
@@ -131,11 +132,11 @@ function sonarScene(stage, t, p, ctx) {
   recordLine(stage, wpts, {col: PAL.rec, alpha: 0.8, G: null});
   // warm overlay where a burst is present (the sound came from the submarine)
   { let seg = []; const segs = [];
-    for (const [x, y] of wpts) { const tt = t - (940 - x) / 420, on = arrivals.some(a => tt - a.t >= 0 && tt - a.t < 0.42); if (on) seg.push([x, y]); else if (seg.length) { segs.push(seg); seg = []; } }
+    for (const [x, y] of wpts) { const tt = t - (940 - x) / 420, on = arrivals.some(a => a.k > 0.5 && tt - a.t >= 0 && tt - a.t < 0.42); if (on) seg.push([x, y]); else if (seg.length) { segs.push(seg); seg = []; } }
     if (seg.length) segs.push(seg);
     for (const s of segs) if (s.length > 1) line(c, s, rgba(PAL.warm, 0.95), 2); }
   // newest end glows when a burst is arriving
-  { const on = arrivals.reduce((m, a) => Math.max(m, hitFlash(t, a.t, 0.35) * a.k), 0); if (on > 0) GW.splat(940, WY, 9, WARM, 0.5 * Math.min(1, on)); }
+  { const on = arrivals.reduce((m, a) => Math.max(m, hitFlash(t, a.t, 0.35) * (a.k > 0.5 ? a.k : 0)), 0); if (on > 0) GW.splat(940, WY, 9, WARM, 0.5 * Math.min(1, on)); }
   // range row: peak at 1,500 m when the echo arrives
   const ticks = [{x: 150, label: '0'}, {x: 370, label: '500'}, {x: 590, label: '1,000'}, {x: 810, label: '1,500 m'}];
   axisTicks(stage, ticks, 1, {x0: 100, x1: 940});
@@ -231,14 +232,14 @@ function layerScene(stage, t, p, ctx) {
       const isLim = r.th === 2.05, firstTau = tauOf(L.pings1[0]);
       const lw = isLim ? lerp(1.6, 3, smooth((t - L.shadowT) / 0.6)) : 1.6;
       if (ghost1 < 1) rayPath(stage, r.pts, cm, firstTau, {col: PAL.cool, lw, alpha: 0.5 * (1 - ghost1), G: null});
-      if (ghost1 > 0) rayPath(stage, r.pts, cm, 1e9, {col: PAL.cool, lw: 1.2, alpha: 0.14 * ghost1, dash: [4, 6]});
+      if (ghost1 > 0 && L.rays1.indexOf(r) % 2 === 0) rayPath(stage, r.pts, cm, 1e9, {col: PAL.cool, lw: 1.2, alpha: 0.10 * ghost1, dash: [4, 6]});
       const dn = r.th >= 2.05 ? Math.sin(Math.PI * clamp((t - L.downT) / 0.8)) * (1 - ghost1) : 0;
       if (dn > 0) { const i0 = r.pts.findIndex(q => q.z >= 140); if (i0 > 0) line(c, rayScreen(r.pts.slice(i0, Math.min(r.pts.length, i0 + 400)), cm), rgba(PAL.coolHi, 0.75 * dn), 2.2); }
       for (const te of L.pings1) { const tau = tauOf(te); if (tau > 0 && tau < r.pts[r.pts.length - 1].t) { const h = rayHead(r.pts, cm, tau); GC.splat(h.p[0], h.p[1], 7, COOL, 0.8); } }
     }
   }
   // the shadow: right of the limiting ray, under the layer
-  const shA = smooth((t - L.shadowT) / 0.6) * lerp(1, 0.25 / 0.45, ghost1);
+  const shA = smooth((t - L.shadowT) / 0.6) * lerp(1, 0.25 / 0.45, ghost1) * (1 - smooth((t - L.tq2) / 0.5));   // the lowered sonar reaches it: no longer a shadow
   if (shA > 0) {
     const lim = L.limit.pts, i0 = lim.findIndex(q => q.z >= 140), poly = [];
     for (let i = i0; i < lim.length; i++) poly.push([cm.sx(lim[i].x), cm.sy(lim[i].z)]);
@@ -275,20 +276,16 @@ function layerScene(stage, t, p, ctx) {
   const subA = fadeIn(t, L.subT, 0.6);
   if (subA > 0) withAlpha(c, subA, () => sub(stage, cm.sx(L.SUB.X), cm.sy(L.SUB.Z), {len: 230, dir: -1, dim: 0.35, lit: hitAny(t, L.subHits), litCol: PAL.cool, prop: t * TAU * 1.2}));
   // ---------------- lowered sonar rays (towed, then dipping) + the aimed ray and its echo
-  const lowered = (pings, rays, aim, hitS, ghostT) => {
+  const lowered = (pings, rays, aim, echoes) => {
     if (!pings.length || t < pings[0]) return;
-    const gh = ghostT == null ? 0 : smooth((t - ghostT) / 0.6);
+    const dimQ = smooth((t - echoes[0]) / 0.6);         // after the first echo is back, the fan steps back
     const firstTau = tauOf(pings[0]);
-    for (const r of rays) {
-      if (gh < 1) rayPath(stage, r.pts, cm, firstTau, {col: PAL.cool, lw: 1.6, alpha: 0.5 * (1 - gh)});
-      if (gh > 0) rayPath(stage, r.pts, cm, 1e9, {col: PAL.cool, lw: 1.2, alpha: 0.14 * gh, dash: [4, 6]});
-    }
-    if (gh < 1) rayPath(stage, aim.pts, cm, firstTau, {col: PAL.cool, lw: 2.4, alpha: 0.75 * (1 - gh)});
-    if (gh > 0) rayPath(stage, aim.pts, cm, 1e9, {col: PAL.cool, lw: 1.4, alpha: 0.16 * gh, dash: [4, 6]});
-    for (const te of pings) {
+    for (const r of rays) rayPath(stage, r.pts, cm, firstTau, {col: PAL.cool, lw: 1.6, alpha: lerp(0.5, 0.22, dimQ)});
+    rayPath(stage, aim.pts, cm, firstTau, {col: PAL.cool, lw: 2.4, alpha: lerp(0.75, 0.4, dimQ)});
+    pings.forEach((te, k) => {
       const tau = tauOf(te);
-      if (tau <= 0) continue;
-      for (const r of rays) if (tau < r.pts[r.pts.length - 1].t) { const h = rayHead(r.pts, cm, tau); GC.splat(h.p[0], h.p[1], 7, COOL, 0.75); }
+      if (tau <= 0) return;
+      if (k === 0) for (const r of rays) if (tau < r.pts[r.pts.length - 1].t) { const h = rayHead(r.pts, cm, tau); GC.splat(h.p[0], h.p[1], 7, COOL, 0.75); }   // repeats: the aimed ray only
       if (tau < aim.tHit) { const h = rayHead(aim.pts, cm, tau); GC.splat(h.p[0], h.p[1], 8, COOL, 1.0); }
       else if (tau < 2 * aim.tHit) {          // the echo runs back along the same path (warm = from the submarine)
         const back = 2 * aim.tHit - tau, h = rayHead(aim.pts, cm, back);
@@ -296,10 +293,10 @@ function layerScene(stage, t, p, ctx) {
         line(c, seg, rgba(PAL.warm, 0.85), 2.2);
         GW.splat(h.p[0], h.p[1], 8, WARM, 1.0);
       }
-    }
+    });
   };
-  lowered(L.pings2, L.rays2, L.aim2, L.hit2, L.pings3.length ? L.dip0 + 0.6 : null);
-  lowered(L.pings3, L.rays3, L.aim3, L.hit3, null);
+  lowered(L.pings2, L.rays2, L.aim2, L.echo2);
+  lowered(L.pings3, L.rays3, L.aim3, L.echo3);
   // ---------------- instrument strip: returned echoes, x = the world's ruler
   panel(stage, 1);
   panelLabel(stage, '돌아온 메아리', 1);
@@ -311,11 +308,10 @@ function layerScene(stage, t, p, ctx) {
     const e2 = L.echo2.filter(x => t >= x), e3 = L.echo3.filter(x => t >= x);
     const h2 = e2.length ? easeOut((t - e2[0]) / 0.25) : 0, h3 = e3.length ? easeOut((t - e3[0]) / 0.25) : 0;
     const bump2 = e2.reduce((m, x) => Math.max(m, hitFlash(t, x, 0.5)), 0), bump3 = e3.reduce((m, x) => Math.max(m, hitFlash(t, x, 0.5)), 0);
-    const hNow = h3 > 0 ? 96 * h3 : 84 * h2;
+    const hNow = h3 > 0 ? (h2 > 0 ? lerp(84, 96, h3) : 96 * h3) : 84 * h2;   // a second echo makes the same peak rise higher
     const fy = x => peakY(x, subX, hNow * (1 + 0.06 * Math.max(bump2, bump3)), 9) - recNoise(x, 2, 7);
     const pts = sampleRec(fy, 222, reach, 3);
     recordLine(stage, pts, {col: PAL.rec, alpha: 0.85, G: reach < 942 ? GC : null});
-    if (h3 > 0 && h2 > 0) line(c, sampleRec(x => peakY(x, subX, 84, 9), subX - 30, subX + 30, 2), rgba(PAL.warm, 0.35), 2, {dash: [3, 4]});
     if (hNow > 0) { line(c, sampleRec(x => peakY(x, subX, hNow, 9), subX - 26, subX + 26, 2), rgba(PAL.warm, 0.95), 2.4); const f = Math.max(bump2, bump3); if (f > 0) GW.splat(subX, REC_BASE - hNow, 9, WARM, 0.9 * f); }
     // empty dashed box where the submarine should be — until the first echo comes back
     emptyBox(stage, subX, fadeIn(t, L.subT, 0.6) * (1 - h2), {w: 60, h: 70});
@@ -327,7 +323,7 @@ function layerScene(stage, t, p, ctx) {
   const endA = fadeOut(t, L.lensClose + 0.2, 0.4);
   if (t > L.warmT - 0.1) tag(stage, '따뜻한 물 · 빠름', 560, 592, {size: 26, color: PAL.ink, a: fadeIn(t, L.warmT - 0.1, 0.3) * fadeOut(t, L.tow0 - 0.3, 0.4)});
   if (t > L.coldT - 0.1) tag(stage, '찬 물 · 느림', 330, 742, {size: 26, color: PAL.ink, a: fadeIn(t, L.coldT - 0.1, 0.3) * fadeOut(t, L.tow0 - 0.3, 0.4)});
-  if (t > L.shadeLab - 0.1) tag(stage, '소리 그늘', 850, 930, {size: 28, color: PAL.muted, a: fadeIn(t, L.shadeLab - 0.1, 0.4) * fadeOut(t, L.dip0, 0.5)});
+  if (t > L.shadeLab - 0.1) tag(stage, '소리 그늘', 850, 930, {size: 28, color: PAL.muted, a: fadeIn(t, L.shadeLab - 0.1, 0.4) * fadeOut(t, L.tq2, 0.5)});
   if (t > L.towLab - 0.1) tag(stage, '끄는 소나', 380, 806, {size: 26, color: PAL.ink, a: fadeIn(t, L.towLab - 0.1, 0.3)});
   if (dip && t > L.dipArr - 0.1) tag(stage, '담그는 소나', 590, 806, {size: 26, color: PAL.ink, a: fadeIn(t, L.dipArr - 0.1, 0.3)});
   void endA; void sh;
@@ -356,7 +352,7 @@ export function soundCore(tl, P) {
   const ping = (id, t0, means) => ev.push(snd.tone(id, t0, 440, 0.22, -30, means, {decay: 0.06, sustain: 0}));
   const echo = (id, t0, means, g = -33) => ev.push(snd.tone(id, t0, 330, 0.2, g, means, {decay: 0.08, sustain: 0.2}));
   // ---- sonar
-  ev.push(snd.train('hum_sonar', S.hum.filter(h => h.te >= SC.sonar.start && h.te < SC.sonar.end).map(h => [h.te, 'tick', humTick(h.amp > 0.5 ? 0 : -7)]), -40,
+  ev.push(snd.train('hum_sonar', S.hum.filter(h => h.te >= SC.sonar.start && h.te < SC.sonar.end).map(h => [h.te, 'tick', humTick(h.amp > 0.5 ? 0 : -13)]), -40,
     'sonar: 잠수함 프로펠러의 소리 파면이 하나 나올 때마다 낮은 박동(능동 소나를 쏘는 동안은 약하게)'));
   S.pings.forEach((te, i) => {
     ping('sonar_ping' + (i + 1), te, `능동 소나를 쏨(${i + 1}) — 군함 소나에서 한색 파면이 떠나는 프레임`);
