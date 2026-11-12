@@ -63,9 +63,9 @@
 | 34 | 망원경의 종류 — 빛을 모으는 방법 | 158.6초 | [34-telescope-types/](34-telescope-types/) | [upload.md](34-telescope-types/upload.md) | 2026-11-07 |
 | 36 | 강착원반 — 별이 블랙홀 둘레에서 원반이 되는 이유 | 174.4초 | [36-accretion-disk/](36-accretion-disk/) | [upload.md](36-accretion-disk/upload.md) | 2026-11-10 |
 | 38 | 잠수함은 어떻게 찾을까 — 바다는 모습을 가려도, 소리와 자기장의 흔적까지 다 가리지는 못한다 | 170.6초 | [38-submarine-detection/](38-submarine-detection/) | [upload.md](38-submarine-detection/upload.md) | 2026-11-12 |
-| 43 | GPT는 대답을 어떻게 쓸까 — 다음 조각 하나를 뽑는 일을 되풀이해서, 한 조각씩 써 내려간다 | 159.4초 | [43-gpt-generative/](43-gpt-generative/) | [upload.md](43-gpt-generative/upload.md) | uncommitted |
-| 44 | GPT는 어떻게 배웠을까 — 다음 조각 맞히기를 되풀이하며, 틀린 만큼 속의 숫자를 고쳤다 | 162.3초 | [44-gpt-pretrained/](44-gpt-pretrained/) | [upload.md](44-gpt-pretrained/upload.md) | uncommitted |
-| 45 | GPT는 문맥을 어떻게 읽을까 — 낱말마다 앞의 낱말들을 살펴, 같은 글자도 문맥에 맞는 뜻으로 바뀐다 | 164.3초 | [45-gpt-transformer/](45-gpt-transformer/) | [upload.md](45-gpt-transformer/upload.md) | uncommitted |
+| 43 | GPT는 대답을 어떻게 쓸까 — 다음 조각 하나를 뽑는 일을 되풀이해서, 한 조각씩 써 내려간다 | 159.4초 | [43-gpt-generative/](43-gpt-generative/) | [upload.md](43-gpt-generative/upload.md) | 2026-11-12 |
+| 44 | GPT는 어떻게 배웠을까 — 다음 조각 맞히기를 되풀이하며, 틀린 만큼 속의 숫자를 고쳤다 | 162.3초 | [44-gpt-pretrained/](44-gpt-pretrained/) | [upload.md](44-gpt-pretrained/upload.md) | 2026-11-12 |
+| 45 | GPT는 문맥을 어떻게 읽을까 — 낱말마다 앞의 낱말들을 살펴, 같은 글자도 문맥에 맞는 뜻으로 바뀐다 | 164.3초 | [45-gpt-transformer/](45-gpt-transformer/) | [upload.md](45-gpt-transformer/upload.md) | 2026-11-12 |
 
 합계 37편, 103.0분, 810 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
 <!-- catalog:end -->
