@@ -96,7 +96,7 @@ function sonarScene(stage, t, p, ctx) {
   c.globalAlpha = A;
   const D = [S.D[0], S.D[1] + (ys - 560)], Sb = [S.Sb[0], S.Sb[1] + (ys - 560)], clip = clipWater(ys);
   // ---- world ruler (depth) — 100 m ticks under the iso camera
-  depthTicks(stage, cm, [0, 100, 200, 300, 400, 500], 0.9, {x0: 60, x1: 72, xl: 56 + 60, across: true, acrossTo: W});
+  depthTicks(stage, cm, [100, 200, 300, 400, 500], 0.9, {x0: 40, x1: 52, xl: 58, align: 'left', acrossTo: W});
   // ---- passive hum: warm rings from the propeller (crests 2)
   for (const h of S.hum) { const age = t - h.te, r = S.V * age; if (age < 0 || r > 1500) continue; ringWave(GW, S.tail[0], S.tail[1] + (ys - 560), r, {crests: 2, amp: h.amp * (1 - smooth((r - 1100) / 400)), clip}); }
   // ---- active pings: cool ring from D; warm echo ring from the hull 1.0 s later

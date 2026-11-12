@@ -1,20 +1,18 @@
-# 에피소드 폴더 `submarine-detection`
+# 38 `submarine-detection` — 잠수함은 어떻게 찾을까
 
-`python pipeline/new_episode.py <slug> --title "…"`로 만든 폴더입니다. 직접 쓰는 파일은 셋입니다.
+계획: `PLAN.md`(정본), 기획: `brief.md`. 실행은 `run.sh`(템플릿 그대로).
 
 | 파일 | 내용 |
 |---|---|
-| `script.json` | 문장(표시 `text` / 발음 `tts`), 장면 id, 문장 뒤 쉼 `gap`. 스키마: `pipeline/narration/script_schema.py` |
-| `scenes.mjs` | `theme`, `scenes.{id}(stage, t, p, ctx)`, 선택 `overlays`, `titles`, `captionLayout`, `events` |
-| `sound.json` | 설명용 소리 사건(`events`)과 선택 배경음(`ambient`, 기본 꺼짐). 사건 시각은 화면과 공유 |
-
-`brief.md`는 기획·단순화·검증 메모, `render.mjs`와 `run.sh`는 보통 고치지 않습니다.
+| `model.mjs` | 물리 모형(그림 없음): 소리 빠르기 `c(z)`, 음선 `traceRay`/`aimRay`, 부표 세기 `levelDb`·`barH`, 자기 이상 `S(x,d)`·`fieldLines` |
+| `kit.mjs` | 팔레트·도우미(`wd` 낱말 기준점 포함)·카메라/`surfY`·배경·무광 물체 6+1종·신호(Glow)·계기 띠·머리글·포스터·소리 사건 도우미 |
+| `scenes_core.mjs` | sonar, layer 장면 (`planCore`, `soundCore`, `titles`) |
+| `scenes_intro.mjs` / `scenes_air.mjs` | hook·origin·essence·close / buoy·mad·mast (있으면 `scenes.mjs`가 자동으로 읽음, 없으면 임시 장면) |
+| `scenes.mjs` | 모음: `theme, captionLayout, scenes, overlays, background, plan, soundEvents`; `--emit-sound` |
+| `sound.json` | `node episodes/submarine-detection/scenes.mjs --emit-sound`가 씀(손으로 고치지 않음) |
 
 ```bash
-episodes/submarine-detection/run.sh                       # narrate → stills → render → sfx → mix → finish → validate
-episodes/submarine-detection/run.sh stills                # 스틸만 다시 (outputs/submarine-detection/stills/contact-sheet.jpg)
-SCISHORT_ROOT=$PWD node episodes/submarine-detection/render.mjs --stills --safe   # 플랫폼 UI 영역 겹쳐 보기
+node episodes/submarine-detection/scenes.mjs --emit-sound
+SCISHORT_ROOT=$PWD node episodes/submarine-detection/render.mjs --stills
+node outputs/submarine-detection/check.mjs bodies layer layer2 sonar   # 미리보기 (outputs/…/preview/)
 ```
-
-`scenes.mjs`의 장면 id는 `script.json`의 `scene` 값과 같아야 합니다. 예시는 "얼음은 왜 물에 뜰까"이며 내용은 바꿉니다.
-자세한 순서와 API는 [pipeline/README.md](../../pipeline/README.md).
