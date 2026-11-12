@@ -1,0 +1,1466 @@
+{
+ "version": 1,
+ "notes": "설명용 합성음입니다(녹음 아님). 모든 사건은 `node episodes/gpt-transformer/scenes.mjs --emit-sound`가 model.mjs·각 장면 모듈의 같은 시간 계획에서 써 넣습니다(손으로 고치지 마세요). 대응: 주의의 선이 뻗음 → 부드러운 음(196·294 Hz), 주의 막대가 자람 → 길이에 따른 높이의 짧은 음(220~520 Hz), 낱말·점이 찍힘 → 틱, 기억 덩어리가 한 칸 건너뜀 → 첫 낱말의 몫에 따라 낮아지는 틱, 점이 탈것 쪽으로 끌려감 → 올라가는 음, 과일 쪽 → 내려가는 음, 층 → 층마다 한 음씩 높아짐, 큰 숫자 → 147 Hz 틱. 모든 기본음 700 Hz 아래, 모노(패닝 없음). 배경음악·배경음 없음. 타임라인이 바뀌면 다시 실행하세요.",
+ "events": [
+  {
+   "id": "poster",
+   "at": 0.05,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     196,
+     294
+    ],
+    "dur": 1.6,
+    "attack": 0.4,
+    "gain_db": -36
+   },
+   "means": "첫 화면(썸네일): 주의의 선과 끌려가는 점",
+   "model": {
+    "sig": "164.300/162.100/5.375,11.313,21.074,32.176,48.913,57.525,59.743/78.166,87.059,89.784,103.501,107.802,110.866/117.304,127.830,134.483,141.367,152.513,156.800"
+   }
+  },
+  {
+   "id": "hook_whip1",
+   "at": 1.6,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.3,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.12,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -32
+   },
+   "means": "훅: 주의의 선이 채찍처럼 뻗음(1)"
+  },
+  {
+   "id": "hook_whip2",
+   "at": 4.2,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.3,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.12,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -32
+   },
+   "means": "훅: 주의의 선이 채찍처럼 뻗음(2)"
+  },
+  {
+   "id": "hook_same1",
+   "at": 8.481,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.1,
+    "gain_db": -32,
+    "click": 0
+   },
+   "means": "s02: 첫 '배'에서 내려온 선이 같은 점에 닿음"
+  },
+  {
+   "id": "hook_same2",
+   "at": 8.631,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.1,
+    "gain_db": -32,
+    "click": 0
+   },
+   "means": "s02: 둘째 '배'에서 내려온 선이 같은 점에 닿음"
+  },
+  {
+   "id": "hook_bars",
+   "at": 11.313,
+   "kind": "tone",
+   "params": {
+    "freq": 220,
+    "dur": 0.35,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.2,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -33
+   },
+   "means": "s03: 다음에 올 말의 확률 막대(처음 자리: 엇비슷)"
+  },
+  {
+   "id": "hook_ctx",
+   "at": 15.002,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.08,
+    "gain_db": -36,
+    "click": 0
+   },
+   "means": "s03: '문맥' 괄호"
+  },
+  {
+   "id": "hook_which",
+   "at": 16.145,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.08,
+    "gain_db": -36,
+    "click": 0
+   },
+   "means": "s03: 어느 배인지 — 배 점에 고리"
+  },
+  {
+   "id": "old_start",
+   "at": 21.074,
+   "kind": "tick",
+   "params": {
+    "freq": 494,
+    "decay": 0.08,
+    "gain_db": -34,
+    "click": 0
+   },
+   "means": "s04: 기억 덩어리가 첫 낱말에서 출발"
+  },
+  {
+   "id": "old_hop1",
+   "at": 21.924,
+   "kind": "tick",
+   "params": {
+    "freq": 382,
+    "decay": 0.09,
+    "gain_db": -33,
+    "click": 0
+   },
+   "means": "s04: 덩어리가 한 칸 건너뜀(1) — 첫 낱말의 몫 60%, 몫만큼 낮아지는 음"
+  },
+  {
+   "id": "old_hop2",
+   "at": 22.674,
+   "kind": "tick",
+   "params": {
+    "freq": 317,
+    "decay": 0.09,
+    "gain_db": -33,
+    "click": 0
+   },
+   "means": "s04: 덩어리가 한 칸 건너뜀(2) — 첫 낱말의 몫 36%, 몫만큼 낮아지는 음"
+  },
+  {
+   "id": "old_hop3",
+   "at": 23.354,
+   "kind": "tick",
+   "params": {
+    "freq": 278,
+    "decay": 0.09,
+    "gain_db": -33,
+    "click": 0
+   },
+   "means": "s04: 덩어리가 한 칸 건너뜀(3) — 첫 낱말의 몫 22%, 몫만큼 낮아지는 음"
+  },
+  {
+   "id": "old_hop4",
+   "at": 23.964,
+   "kind": "tick",
+   "params": {
+    "freq": 255,
+    "decay": 0.09,
+    "gain_db": -33,
+    "click": 0
+   },
+   "means": "s04: 덩어리가 한 칸 건너뜀(4) — 첫 낱말의 몫 13%, 몫만큼 낮아지는 음"
+  },
+  {
+   "id": "old_hop5",
+   "at": 24.504,
+   "kind": "tick",
+   "params": {
+    "freq": 241,
+    "decay": 0.09,
+    "gain_db": -33,
+    "click": 0
+   },
+   "means": "s04: 덩어리가 한 칸 건너뜀(5) — 첫 낱말의 몫 8%, 몫만큼 낮아지는 음"
+  },
+  {
+   "id": "old_hop6",
+   "at": 24.974,
+   "kind": "tick",
+   "params": {
+    "freq": 233,
+    "decay": 0.09,
+    "gain_db": -33,
+    "click": 0
+   },
+   "means": "s04: 덩어리가 한 칸 건너뜀(6) — 첫 낱말의 몫 5%, 몫만큼 낮아지는 음"
+  },
+  {
+   "id": "old_hop7",
+   "at": 25.374,
+   "kind": "tick",
+   "params": {
+    "freq": 228,
+    "decay": 0.09,
+    "gain_db": -33,
+    "click": 0
+   },
+   "means": "s04: 덩어리가 한 칸 건너뜀(7) — 첫 낱말의 몫 3%, 몫만큼 낮아지는 음"
+  },
+  {
+   "id": "tf_burst",
+   "at": 32.176,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     196,
+     294
+    ],
+    "dur": 1.4,
+    "attack": 0.4,
+    "gain_db": -32
+   },
+   "means": "s05: '배'에서 앞의 모든 낱말로 선이 한꺼번에 뻗음"
+  },
+  {
+   "id": "tf_again",
+   "at": 34.161,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.3,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.12,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -36
+   },
+   "means": "s05: 주의의 선이 한 번 더 한꺼번에 뻗음"
+  },
+  {
+   "id": "tf_tile1",
+   "at": 35.527,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -34,
+    "click": 0
+   },
+   "means": "s05: 글자 타일 G 가 떨어져 닿음"
+  },
+  {
+   "id": "tf_tile2",
+   "at": 35.627,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -34,
+    "click": 0
+   },
+   "means": "s05: 글자 타일 P 가 떨어져 닿음"
+  },
+  {
+   "id": "tf_tile3",
+   "at": 35.727,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -34,
+    "click": 0
+   },
+   "means": "s05: 글자 타일 T 가 떨어져 닿음"
+  },
+  {
+   "id": "tf_T",
+   "at": 36.005,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.3,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.15,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -33
+   },
+   "means": "s05: 'T' 강조"
+  },
+  {
+   "id": "ess_meaning",
+   "at": 41.84,
+   "kind": "tone",
+   "params": {
+    "freq": 262,
+    "dur": 0.4,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.2,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -34
+   },
+   "means": "s06: '배'에서 지도(빈 판)로 선이 내려옴"
+  },
+  {
+   "id": "ess_fan1",
+   "at": 48.913,
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.07,
+    "gain_db": -35,
+    "click": 0
+   },
+   "means": "s07: 항구를의 숫자 묶음이 펼쳐짐"
+  },
+  {
+   "id": "ess_fan2",
+   "at": 49.063,
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.07,
+    "gain_db": -35,
+    "click": 0
+   },
+   "means": "s07: 떠난의 숫자 묶음이 펼쳐짐"
+  },
+  {
+   "id": "ess_fan3",
+   "at": 49.213,
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.07,
+    "gain_db": -35,
+    "click": 0
+   },
+   "means": "s07: 배의 숫자 묶음이 펼쳐짐"
+  },
+  {
+   "id": "ess_column",
+   "at": 50.235,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.8,
+    "f_start": 200,
+    "f_end": 120,
+    "q": 1.6,
+    "gain_db": -38
+   },
+   "means": "s07: 숫자 묶음이 12,288개의 기둥으로 뻗음"
+  },
+  {
+   "id": "ess_big",
+   "at": 50.255,
+   "kind": "tick",
+   "params": {
+    "freq": 147,
+    "decay": 0.14,
+    "gain_db": -34,
+    "click": 0
+   },
+   "means": "s07: 큰 숫자 12,288개"
+  },
+  {
+   "id": "ess_dot1",
+   "at": 54.945,
+   "kind": "tick",
+   "params": {
+    "freq": 294,
+    "decay": 0.1,
+    "gain_db": -32,
+    "click": 0
+   },
+   "means": "s08: 항구를의 점이 지도에 찍힘"
+  },
+  {
+   "id": "ess_dot2",
+   "at": 56.108,
+   "kind": "tick",
+   "params": {
+    "freq": 294,
+    "decay": 0.1,
+    "gain_db": -32,
+    "click": 0
+   },
+   "means": "s08: 떠난의 점이 지도에 찍힘"
+  },
+  {
+   "id": "ess_dot3",
+   "at": 57.525,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.1,
+    "gain_db": -32,
+    "click": 0
+   },
+   "means": "s08: 배의 점이 지도에 찍힘"
+  },
+  {
+   "id": "ess_backdrop",
+   "at": 60.043,
+   "kind": "custom",
+   "params": {
+    "gain_db": -40,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 262,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.13,
+      "params": {
+       "freq": 262,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.26,
+      "params": {
+       "freq": 262,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.39,
+      "params": {
+       "freq": 262,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.52,
+      "params": {
+       "freq": 262,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.65,
+      "params": {
+       "freq": 262,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.78,
+      "params": {
+       "freq": 262,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.91,
+      "params": {
+       "freq": 262,
+       "decay": 0.06,
+       "click": 0,
+       "gain_db": 0
+      }
+     }
+    ]
+   },
+   "means": "s09: 다른 낱말의 점들이 지도에 찍힘"
+  },
+  {
+   "id": "ess_regions",
+   "at": 62.049,
+   "kind": "tone",
+   "params": {
+    "freq": 196,
+    "dur": 0.5,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.25,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -36
+   },
+   "means": "s09: 가까운 것끼리 영역 타원"
+  },
+  {
+   "id": "att_drop1",
+   "at": 69.62,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.1,
+    "gain_db": -30,
+    "click": 0
+   },
+   "means": "s10: 첫 문장의 '배'가 지도의 출발점에 찍힘"
+  },
+  {
+   "id": "att_drop2",
+   "at": 71.414,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.1,
+    "gain_db": -30,
+    "click": 0
+   },
+   "means": "s10: 둘째 문장의 '배'도 같은 자리에 찍힘(같은 음)"
+  },
+  {
+   "id": "att_ghost",
+   "at": 72.206,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.12,
+    "gain_db": -36,
+    "click": 0
+   },
+   "means": "s10: 출발점 고리가 남음"
+  },
+  {
+   "id": "att_look",
+   "at": 78.166,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     196,
+     294
+    ],
+    "dur": 1.2,
+    "attack": 0.4,
+    "gain_db": -34
+   },
+   "means": "s11: '배'에서 앞의 두 낱말로 주의의 선이 한꺼번에 뻗음"
+  },
+  {
+   "id": "att_eval1",
+   "at": 80.229,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.07,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "s11: 관련 정도를 따짐(항구를)"
+  },
+  {
+   "id": "att_eval2",
+   "at": 80.69,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.07,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "s11: 관련 정도를 따짐(떠난)"
+  },
+  {
+   "id": "att_eval3",
+   "at": 81.291,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.07,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "s11: 관련 정도를 따짐(자기)"
+  },
+  {
+   "id": "att_bar1",
+   "at": 87.059,
+   "kind": "tone",
+   "params": {
+    "freq": 397,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.1,
+    "sustain": 0.1,
+    "release": 0.07333333333333333,
+    "gain_db": -32
+   },
+   "means": "s12: 주의 막대 항구를 59% — 길이에 따른 높이"
+  },
+  {
+   "id": "att_bar2",
+   "at": 87.179,
+   "kind": "tone",
+   "params": {
+    "freq": 317,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.1,
+    "sustain": 0.1,
+    "release": 0.07333333333333333,
+    "gain_db": -32
+   },
+   "means": "s12: 주의 막대 떠난 32% — 길이에 따른 높이"
+  },
+  {
+   "id": "att_bar3",
+   "at": 87.299,
+   "kind": "tone",
+   "params": {
+    "freq": 246,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.1,
+    "sustain": 0.1,
+    "release": 0.07333333333333333,
+    "gain_db": -32
+   },
+   "means": "s12: 주의 막대 배 9% — 길이에 따른 높이"
+  },
+  {
+   "id": "att_band",
+   "at": 89.784,
+   "kind": "tick",
+   "params": {
+    "freq": 147,
+    "decay": 0.14,
+    "gain_db": -32,
+    "click": 0
+   },
+   "means": "s12: 막대가 붙어 100% 띠가 됨, 큰 숫자 100%"
+  },
+  {
+   "id": "att_hi1",
+   "at": 94.549,
+   "kind": "tick",
+   "params": {
+    "freq": 294,
+    "decay": 0.08,
+    "gain_db": -34,
+    "click": 0
+   },
+   "means": "s13: '항구를' 선·막대·점 강조"
+  },
+  {
+   "id": "att_hi2",
+   "at": 95.007,
+   "kind": "tick",
+   "params": {
+    "freq": 294,
+    "decay": 0.08,
+    "gain_db": -34,
+    "click": 0
+   },
+   "means": "s13: '떠난' 선·막대·점 강조"
+  },
+  {
+   "id": "att_mix",
+   "at": 100.838,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.1,
+    "gain_db": -36,
+    "click": 0
+   },
+   "means": "s14: 지도에서 두 낱말의 점이 배의 점으로 선을 뻗음"
+  },
+  {
+   "id": "att_pull",
+   "at": 103.501,
+   "kind": "chirp",
+   "params": {
+    "gain_db": -36,
+    "harmonics": [
+     1,
+     0.25
+    ],
+    "fade": 0.03,
+    "points": [
+     [
+      0,
+      247,
+      0
+     ],
+     [
+      0.05,
+      247,
+      0.7
+     ],
+     [
+      0.72,
+      392,
+      0.7
+     ],
+     [
+      1.2,
+      392,
+      0
+     ]
+    ]
+   },
+   "means": "s14: '배'의 점이 1층 값만큼 탈것 쪽으로 끌려감(올라가는 음)"
+  },
+  {
+   "id": "swap_chg",
+   "at": 107.802,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.1,
+    "gain_db": -32,
+    "click": 0
+   },
+   "means": "s15: 앞의 두 낱말이 '달게 익은'으로 바뀜"
+  },
+  {
+   "id": "swap_snap",
+   "at": 108.543,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.32,
+    "f_start": 300,
+    "f_end": 160,
+    "q": 1.6,
+    "gain_db": -38
+   },
+   "means": "s15: '배'의 점이 출발점으로 휙 돌아옴"
+  },
+  {
+   "id": "swap_look",
+   "at": 109.444,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     196,
+     294
+    ],
+    "dur": 1,
+    "attack": 0.4,
+    "gain_db": -35
+   },
+   "means": "s15: 새 주의의 선이 뻗음"
+  },
+  {
+   "id": "swap_pull",
+   "at": 110.866,
+   "kind": "chirp",
+   "params": {
+    "gain_db": -36,
+    "harmonics": [
+     1,
+     0.25
+    ],
+    "fade": 0.03,
+    "points": [
+     [
+      0,
+      392,
+      0
+     ],
+     [
+      0.05,
+      392,
+      0.7
+     ],
+     [
+      0.66,
+      247,
+      0.7
+     ],
+     [
+      1.1,
+      247,
+      0
+     ]
+    ]
+   },
+   "means": "s15: 같은 '배'가 과일 쪽으로 옮겨 감(내려가는 음)"
+  },
+  {
+   "id": "lay_look",
+   "at": 115.06,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     196,
+     294
+    ],
+    "dur": 1,
+    "attack": 0.4,
+    "gain_db": -35
+   },
+   "means": "s16: 모든 낱말이 저마다 앞을 살핌(선이 낱말마다)"
+  },
+  {
+   "id": "lay_move1",
+   "at": 117.304,
+   "kind": "tone",
+   "params": {
+    "freq": 262,
+    "dur": 0.35,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.15,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -32
+   },
+   "means": "1층: 세 점이 함께 옮겨 감(옮기는 폭 0.36 — 층마다 한 음씩 높고 작게)"
+  },
+  {
+   "id": "lay_one",
+   "at": 120.048,
+   "kind": "tick",
+   "params": {
+    "freq": 147,
+    "decay": 0.14,
+    "gain_db": -34,
+    "click": 0
+   },
+   "means": "s16: 큰 숫자 1층"
+  },
+  {
+   "id": "lay_move2",
+   "at": 123.06,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.35,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.15,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -33.5
+   },
+   "means": "2층: 세 점이 함께 옮겨 감(옮기는 폭 0.20 — 층마다 한 음씩 높고 작게)"
+  },
+  {
+   "id": "lay_move3",
+   "at": 124.51,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.35,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.15,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -35
+   },
+   "means": "3층: 세 점이 함께 옮겨 감(옮기는 폭 0.11 — 층마다 한 음씩 높고 작게)"
+  },
+  {
+   "id": "lay_move4",
+   "at": 125.96,
+   "kind": "tone",
+   "params": {
+    "freq": 349,
+    "dur": 0.35,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.15,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -36.5
+   },
+   "means": "4층: 세 점이 함께 옮겨 감(옮기는 폭 0.06 — 층마다 한 음씩 높고 작게)"
+  },
+  {
+   "id": "lay_96",
+   "at": 127.83,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.75,
+    "f_start": 160,
+    "f_end": 420,
+    "q": 1.6,
+    "gain_db": -36
+   },
+   "means": "s17: 층 칸이 96까지 솟구침"
+  },
+  {
+   "id": "lay_96s",
+   "at": 128.58,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     147,
+     220
+    ],
+    "dur": 1.2,
+    "attack": 0.4,
+    "gain_db": -36
+   },
+   "means": "s17: 큰 숫자 96층"
+  },
+  {
+   "id": "lay_lit",
+   "at": 130.311,
+   "kind": "whoosh",
+   "params": {
+    "dur": 1,
+    "f_start": 140,
+    "f_end": 320,
+    "q": 1.6,
+    "gain_db": -40
+   },
+   "means": "s18: 96층을 아래에서 위로 지나감"
+  },
+  {
+   "id": "lay_end",
+   "at": 132.879,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.1,
+    "gain_db": -32,
+    "click": 0
+   },
+   "means": "s18: 마지막 층의 '배' 점"
+  },
+  {
+   "id": "lay_bar1",
+   "at": 134.483,
+   "kind": "tone",
+   "params": {
+    "freq": 378,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.1,
+    "sustain": 0.1,
+    "release": 0.07333333333333333,
+    "gain_db": -33
+   },
+   "means": "s18: 다음 말 막대 한 척이 46% — 길이에 따른 높이"
+  },
+  {
+   "id": "lay_bar2",
+   "at": 134.633,
+   "kind": "tone",
+   "params": {
+    "freq": 361,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.1,
+    "sustain": 0.1,
+    "release": 0.07333333333333333,
+    "gain_db": -33
+   },
+   "means": "s18: 다음 말 막대 위에서 41% — 길이에 따른 높이"
+  },
+  {
+   "id": "lay_bar3",
+   "at": 134.783,
+   "kind": "tone",
+   "params": {
+    "freq": 196,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.1,
+    "sustain": 0.1,
+    "release": 0.07333333333333333,
+    "gain_db": -33
+   },
+   "means": "s18: 다음 말 막대 맛이 0% — 길이에 따른 높이"
+  },
+  {
+   "id": "lay_bar4",
+   "at": 134.933,
+   "kind": "tone",
+   "params": {
+    "freq": 196,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.1,
+    "sustain": 0.1,
+    "release": 0.07333333333333333,
+    "gain_db": -33
+   },
+   "means": "s18: 다음 말 막대 한 개를 0% — 길이에 따른 높이"
+  },
+  {
+   "id": "lay_bar5",
+   "at": 135.083,
+   "kind": "tone",
+   "params": {
+    "freq": 249,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.1,
+    "sustain": 0.1,
+    "release": 0.07333333333333333,
+    "gain_db": -33
+   },
+   "means": "s18: 다음 말 막대 그 밖 13% — 길이에 따른 높이"
+  },
+  {
+   "id": "lay_top",
+   "at": 137.885,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.1,
+    "gain_db": -34,
+    "click": 0
+   },
+   "means": "s18: 맨 윗말 '한 척이'이 빈 자리에 흐리게"
+  },
+  {
+   "id": "far_line",
+   "at": 141.367,
+   "kind": "chirp",
+   "params": {
+    "gain_db": -34,
+    "harmonics": [
+     1,
+     0.25
+    ],
+    "fade": 0.03,
+    "points": [
+     [
+      0,
+      220,
+      0
+     ],
+     [
+      0.02,
+      220,
+      0.8
+     ],
+     [
+      0.2,
+      440,
+      0.8
+     ],
+     [
+      0.8,
+      440,
+      0
+     ]
+    ]
+   },
+   "means": "s19: '배'에서 맨 앞 낱말로 한 획에 닿음(긴 음)"
+  },
+  {
+   "id": "far_res",
+   "at": 141.567,
+   "kind": "tick",
+   "params": {
+    "freq": 147,
+    "decay": 0.14,
+    "gain_db": -34,
+    "click": 0
+   },
+   "means": "s19: 왼쪽 결과 37%(트랜스포머)가 뜸"
+  },
+  {
+   "id": "far_crawl",
+   "at": 142.0899,
+   "kind": "custom",
+   "params": {
+    "gain_db": -40,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 382,
+       "decay": 0.08,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.7229,
+      "params": {
+       "freq": 317,
+       "decay": 0.08,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.4457,
+      "params": {
+       "freq": 278,
+       "decay": 0.08,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.1686,
+      "params": {
+       "freq": 255,
+       "decay": 0.08,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.8914,
+      "params": {
+       "freq": 241,
+       "decay": 0.08,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 3.6143,
+      "params": {
+       "freq": 233,
+       "decay": 0.08,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 4.3371,
+      "params": {
+       "freq": 228,
+       "decay": 0.08,
+       "click": 0,
+       "gain_db": 0
+      }
+     }
+    ]
+   },
+   "means": "s19: 예전 방식의 기억 덩어리가 느리게 한 칸씩 기어감(몫만큼 낮아지는 틱)"
+  },
+  {
+   "id": "far_old",
+   "at": 146.427,
+   "kind": "tick",
+   "params": {
+    "freq": 147,
+    "decay": 0.14,
+    "gain_db": -36,
+    "click": 0
+   },
+   "means": "s19: 기억 덩어리가 '배'에 닿음 — 예전 방식 3%"
+  },
+  {
+   "id": "learn_look",
+   "at": 149.167,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     196,
+     294
+    ],
+    "dur": 1,
+    "attack": 0.4,
+    "gain_db": -36
+   },
+   "means": "s20: 처음에는 같은 굵기의 선"
+  },
+  {
+   "id": "learn_flow",
+   "at": 151.329,
+   "kind": "custom",
+   "params": {
+    "gain_db": -42,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 247,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.62,
+      "params": {
+       "freq": 247,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.24,
+      "params": {
+       "freq": 247,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.86,
+      "params": {
+       "freq": 247,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.48,
+      "params": {
+       "freq": 247,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 3.1,
+      "params": {
+       "freq": 247,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 3.72,
+      "params": {
+       "freq": 247,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 4.34,
+      "params": {
+       "freq": 247,
+       "decay": 0.05,
+       "click": 0,
+       "gain_db": 0
+      }
+     }
+    ]
+   },
+   "means": "s20: 다른 글줄이 하나 지나갈 때마다 약한 틱(익히는 동안)"
+  },
+  {
+   "id": "learn_tag",
+   "at": 154.656,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.4,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.2,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -36
+   },
+   "means": "s20: 굵기가 지금 값으로 갈림, 꼬리표 '글을 읽으며 익힘'"
+  },
+  {
+   "id": "close_whip1",
+   "at": 156.8,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.3,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.12,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -32
+   },
+   "means": "s21: 주의의 선이 뻗음(항구를 떠난 배)"
+  },
+  {
+   "id": "close_whip2",
+   "at": 160.05,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.3,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.12,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -32
+   },
+   "means": "s21: 주의의 선이 뻗음(달게 익은 배)"
+  },
+  {
+   "id": "poster_end",
+   "at": 162.1,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     196,
+     294
+    ],
+    "dur": 1.6,
+    "attack": 0.4,
+    "gain_db": -35
+   },
+   "means": "포스터 구도로 돌아옴"
+  },
+  {
+   "id": "close_whip3",
+   "at": 163.3,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.3,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.12,
+    "sustain": 0.1,
+    "release": 0.08,
+    "gain_db": -32
+   },
+   "means": "s21: 주의의 선이 뻗음(항구를 떠난 배)"
+  }
+ ],
+ "ambient": {
+  "kind": "pad",
+  "seed": 7,
+  "gain_db": -32,
+  "root_hz": 110,
+  "intervals": [
+   0,
+   7,
+   12,
+   16
+  ],
+  "enabled": false
+ },
+ "music": {
+  "id": "zabriskie_patriarch",
+  "under_db": 12,
+  "duck_db": 6,
+  "start_sec": 0,
+  "enabled": false,
+  "note": "음악 없음."
+ }
+}
