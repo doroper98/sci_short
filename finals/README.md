@@ -62,7 +62,7 @@
 | 33 | 합성개구레이더(SAR) — 움직이며 받은 메아리를 이어 붙여, 거대한 안테나를 만든다 | 169.9초 | [33-sar/](33-sar/) | [upload.md](33-sar/upload.md) | 2026-11-10 |
 | 34 | 망원경의 종류 — 빛을 모으는 방법 | 158.6초 | [34-telescope-types/](34-telescope-types/) | [upload.md](34-telescope-types/upload.md) | 2026-11-07 |
 | 36 | 강착원반 — 별이 블랙홀 둘레에서 원반이 되는 이유 | 174.4초 | [36-accretion-disk/](36-accretion-disk/) | [upload.md](36-accretion-disk/upload.md) | 2026-11-10 |
-| 38 | 잠수함은 어떻게 찾을까 — 바다는 모습을 가려도, 소리와 자기장의 흔적까지 다 가리지는 못한다 | 170.6초 | [38-submarine-detection/](38-submarine-detection/) | [upload.md](38-submarine-detection/upload.md) | uncommitted |
+| 38 | 잠수함은 어떻게 찾을까 — 바다는 모습을 가려도, 소리와 자기장의 흔적까지 다 가리지는 못한다 | 170.6초 | [38-submarine-detection/](38-submarine-detection/) | [upload.md](38-submarine-detection/upload.md) | 2026-11-12 |
 
 합계 34편, 95.0분, 760 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
 <!-- catalog:end -->
