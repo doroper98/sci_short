@@ -1,0 +1,2301 @@
+{
+ "version": 1,
+ "notes": "설명용 합성음입니다(녹음 아님). 모든 사건은 `node episodes/submarine-detection/scenes.mjs --emit-sound`가 model.mjs·각 장면 모듈의 같은 시간 계획에서 써 넣습니다(손으로 고치지 마세요). 대응: 잠수함 프로펠러 파면 → 82 Hz 낮은 박동, 능동 소나를 쏨 → 440 Hz 짧은 음, 메아리 도착 → 330 Hz(sonar 장면은 쏜 뒤 정확히 2.0초, layer 장면은 화면 4배 빠르기의 도착 프레임), 위치가 드러남 → 220 Hz, 소리 묶음이 꺾임 → 300→220 Hz, 소리 그늘 → 침묵, 소나를 내림 → 낮은 쉬익, 큰 숫자 → 147 Hz 틱. 모든 기본음 700 Hz 아래, 모노. 배경음악·배경음 없음. 타임라인이 바뀌면 다시 실행하세요.",
+ "events": [
+  {
+   "id": "poster",
+   "at": 0.05,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     98,
+     147
+    ],
+    "dur": 1.8,
+    "attack": 0.4,
+    "gain_db": -34
+   },
+   "means": "첫 화면(썸네일): 포스터 구도",
+   "model": {
+    "sig": "170.574/64.168/69.545/93.814/106.015/111.906/168.374//7.036,20.403,41.095,165.708/air:129.572:127.787:126.012:126.751:125.287:141.917:148.307:151.269:149.095:159.215:161.415"
+   }
+  },
+  {
+   "id": "hook_radar1",
+   "at": 4.436,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "초계기가 레이더 펄스를 쏨(1)"
+  },
+  {
+   "id": "hook_surface1",
+   "at": 5.236,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.4,
+    "f_start": 220,
+    "f_end": 110,
+    "q": 1.6,
+    "gain_db": -40
+   },
+   "means": "전파가 수면에서 사라짐(1) — 수면 혹만"
+  },
+  {
+   "id": "hook_radar2",
+   "at": 7.036,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "초계기가 레이더 펄스를 쏨(2)"
+  },
+  {
+   "id": "hook_surface2",
+   "at": 7.836,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.4,
+    "f_start": 220,
+    "f_end": 110,
+    "q": 1.6,
+    "gain_db": -40
+   },
+   "means": "전파가 수면에서 사라짐(2) — 확대 원의 물결이 1 cm 안에서 줄어듦"
+  },
+  {
+   "id": "hook_1cm",
+   "at": 8.919,
+   "kind": "tick",
+   "params": {
+    "freq": 147,
+    "decay": 0.12,
+    "gain_db": -35,
+    "click": 0
+   },
+   "means": "큰 숫자 \"약 1 cm\""
+  },
+  {
+   "id": "hook_radar3",
+   "at": 9.636,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "초계기가 레이더 펄스를 쏨(3)"
+  },
+  {
+   "id": "hook_surface3",
+   "at": 10.436,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.4,
+    "f_start": 220,
+    "f_end": 110,
+    "q": 1.6,
+    "gain_db": -40
+   },
+   "means": "전파가 수면에서 사라짐(3) — 확대 원의 물결이 1 cm 안에서 줄어듦"
+  },
+  {
+   "id": "hook_radar4",
+   "at": 12.236,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "초계기가 레이더 펄스를 쏨(4)"
+  },
+  {
+   "id": "hook_surface4",
+   "at": 13.036,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.4,
+    "f_start": 220,
+    "f_end": 110,
+    "q": 1.6,
+    "gain_db": -40
+   },
+   "means": "전파가 수면에서 사라짐(4) — 확대 원의 물결이 1 cm 안에서 줄어듦"
+  },
+  {
+   "id": "origin_radar1",
+   "at": 20.403,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "초계기 레이더 펄스(1)"
+  },
+  {
+   "id": "origin_echo1",
+   "at": 22.003,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.16,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.15,
+    "release": 0.05333333333333334,
+    "gain_db": -32
+   },
+   "means": "떠오른 잠수함에 맞은 메아리가 도착(1) — 레이더 화면의 봉우리와 같은 프레임"
+  },
+  {
+   "id": "origin_radar2",
+   "at": 22.103,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "초계기 레이더 펄스(2)"
+  },
+  {
+   "id": "origin_echo2",
+   "at": 23.703,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.16,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.15,
+    "release": 0.05333333333333334,
+    "gain_db": -32
+   },
+   "means": "떠오른 잠수함에 맞은 메아리가 도착(2) — 레이더 화면의 봉우리와 같은 프레임"
+  },
+  {
+   "id": "origin_radar3",
+   "at": 23.803,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "초계기 레이더 펄스(3)"
+  },
+  {
+   "id": "origin_echo3",
+   "at": 25.403,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.16,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.15,
+    "release": 0.05333333333333334,
+    "gain_db": -32
+   },
+   "means": "떠오른 잠수함에 맞은 메아리가 도착(3) — 레이더 화면의 봉우리와 같은 프레임"
+  },
+  {
+   "id": "origin_radar4",
+   "at": 25.503,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "초계기 레이더 펄스(4)"
+  },
+  {
+   "id": "origin_hanja",
+   "at": 26.357,
+   "kind": "tick",
+   "params": {
+    "freq": 147,
+    "decay": 0.12,
+    "gain_db": -35,
+    "click": 0
+   },
+   "means": "한자 칸 哨戒가 뜸"
+  },
+  {
+   "id": "origin_echo4",
+   "at": 27.103,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.16,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.15,
+    "release": 0.05333333333333334,
+    "gain_db": -32
+   },
+   "means": "떠오른 잠수함에 맞은 메아리가 도착(4) — 레이더 화면의 봉우리와 같은 프레임"
+  },
+  {
+   "id": "origin_radar5",
+   "at": 27.203,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "초계기 레이더 펄스(5)"
+  },
+  {
+   "id": "origin_echo5",
+   "at": 28.803,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.16,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.15,
+    "release": 0.05333333333333334,
+    "gain_db": -32
+   },
+   "means": "떠오른 잠수함에 맞은 메아리가 도착(5) — 레이더 화면의 봉우리와 같은 프레임"
+  },
+  {
+   "id": "origin_radar6",
+   "at": 28.903,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "초계기 레이더 펄스(6)"
+  },
+  {
+   "id": "origin_1955",
+   "at": 30.444,
+   "kind": "tick",
+   "params": {
+    "freq": 147,
+    "decay": 0.12,
+    "gain_db": -35,
+    "click": 0
+   },
+   "means": "큰 숫자 \"1955\""
+  },
+  {
+   "id": "origin_echo6",
+   "at": 30.503,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.16,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.15,
+    "release": 0.05333333333333334,
+    "gain_db": -32
+   },
+   "means": "떠오른 잠수함에 맞은 메아리가 도착(6) — 레이더 화면의 봉우리와 같은 프레임"
+  },
+  {
+   "id": "origin_radar7",
+   "at": 30.603,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "초계기 레이더 펄스(7)"
+  },
+  {
+   "id": "origin_echo7",
+   "at": 32.203,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.16,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.15,
+    "release": 0.05333333333333334,
+    "gain_db": -32
+   },
+   "means": "떠오른 잠수함에 맞은 메아리가 도착(7) — 레이더 화면의 봉우리와 같은 프레임"
+  },
+  {
+   "id": "origin_radar8",
+   "at": 32.303,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "초계기 레이더 펄스(8)"
+  },
+  {
+   "id": "origin_echo8",
+   "at": 33.903,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.16,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.15,
+    "release": 0.05333333333333334,
+    "gain_db": -32
+   },
+   "means": "떠오른 잠수함에 맞은 메아리가 도착(8) — 레이더 화면의 봉우리와 같은 프레임"
+  },
+  {
+   "id": "origin_radar9",
+   "at": 34.003,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "초계기 레이더 펄스(9)"
+  },
+  {
+   "id": "origin_surface9",
+   "at": 34.803,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.4,
+    "f_start": 220,
+    "f_end": 110,
+    "q": 1.6,
+    "gain_db": -40
+   },
+   "means": "잠긴 잠수함: 전파가 수면에서 사라짐(9)"
+  },
+  {
+   "id": "origin_radar10",
+   "at": 35.703,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "초계기 레이더 펄스(10)"
+  },
+  {
+   "id": "origin_surface10",
+   "at": 36.503,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.4,
+    "f_start": 220,
+    "f_end": 110,
+    "q": 1.6,
+    "gain_db": -40
+   },
+   "means": "잠긴 잠수함: 전파가 수면에서 사라짐(10)"
+  },
+  {
+   "id": "origin_radar11",
+   "at": 37.403,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "초계기 레이더 펄스(11)"
+  },
+  {
+   "id": "origin_surface11",
+   "at": 38.203,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.4,
+    "f_start": 220,
+    "f_end": 110,
+    "q": 1.6,
+    "gain_db": -40
+   },
+   "means": "잠긴 잠수함: 전파가 수면에서 사라짐(11)"
+  },
+  {
+   "id": "hum_essence",
+   "at": 41.095,
+   "kind": "custom",
+   "params": {
+    "gain_db": -40,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.7,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.4,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.1,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.8,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 3.5,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 4.2,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 4.9,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 5.6,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 6.3,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 7,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 7.7,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 8.4,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 9.1,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 9.8,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 1.5
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 10.5,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 1.5
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 11.2,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 1.5
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 11.9,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 1.5
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 12.6,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 1.5
+      }
+     }
+    ]
+   },
+   "means": "essence: 프로펠러에서 난색 소리 파면이 하나 나올 때마다 낮은 박동"
+  },
+  {
+   "id": "hum_sonar",
+   "at": 54.732,
+   "kind": "custom",
+   "params": {
+    "gain_db": -40,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.6,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.2,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.8,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.4,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 3,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 3.6,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 4.2,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 4.8,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 5.4,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 6,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 6.6,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 7.2,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 7.8,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 8.4,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 9,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 9.6,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": -13
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 10.8,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": -13
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 12,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": -13
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 13.2,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": -13
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 14.4,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": -13
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 15.6,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": -13
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 16.8,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": -13
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 18,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": -13
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 19.2,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": -13
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 20.4,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": -13
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 21.6,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": -13
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 22.8,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": -13
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 24,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": -13
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 25.2,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": -13
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 26.4,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": -13
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 27.6,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": -13
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 28.8,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": -13
+      }
+     }
+    ]
+   },
+   "means": "sonar: 잠수함 프로펠러의 소리 파면이 하나 나올 때마다 낮은 박동(능동 소나를 쏘는 동안은 약하게)"
+  },
+  {
+   "id": "sonar_ping1",
+   "at": 64.168,
+   "kind": "tone",
+   "params": {
+    "freq": 440,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.06,
+    "sustain": 0,
+    "release": 0.07333333333333333,
+    "gain_db": -30
+   },
+   "means": "능동 소나를 쏨(1) — 군함 소나에서 한색 파면이 떠나는 프레임"
+  },
+  {
+   "id": "sonar_echo1",
+   "at": 66.168,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.2,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.2,
+    "release": 0.06666666666666667,
+    "gain_db": -33
+   },
+   "means": "메아리가 군함에 도착(1) — 쏜 뒤 정확히 2.0초, 거리 축의 1,500 m 봉우리와 같은 프레임"
+  },
+  {
+   "id": "sonar_ping2",
+   "at": 69.545,
+   "kind": "tone",
+   "params": {
+    "freq": 440,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.06,
+    "sustain": 0,
+    "release": 0.07333333333333333,
+    "gain_db": -30
+   },
+   "means": "능동 소나를 쏨(2) — 군함 소나에서 한색 파면이 떠나는 프레임"
+  },
+  {
+   "id": "sonar_echo2",
+   "at": 71.545,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.2,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.2,
+    "release": 0.06666666666666667,
+    "gain_db": -33
+   },
+   "means": "메아리가 군함에 도착(2) — 쏜 뒤 정확히 2.0초, 거리 축의 1,500 m 봉우리와 같은 프레임"
+  },
+  {
+   "id": "sonar_1500",
+   "at": 75.758,
+   "kind": "tick",
+   "params": {
+    "freq": 147,
+    "decay": 0.12,
+    "gain_db": -35,
+    "click": 0
+   },
+   "means": "큰 숫자 \"1,500 m\"가 뜸"
+  },
+  {
+   "id": "sonar_ping3",
+   "at": 78.586,
+   "kind": "tone",
+   "params": {
+    "freq": 440,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.06,
+    "sustain": 0,
+    "release": 0.07333333333333333,
+    "gain_db": -30
+   },
+   "means": "능동 소나를 쏨(3) — 군함 소나에서 한색 파면이 떠나는 프레임"
+  },
+  {
+   "id": "sonar_reveal",
+   "at": 79.586,
+   "kind": "tone",
+   "params": {
+    "freq": 220,
+    "dur": 0.3,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.15,
+    "sustain": 0.2,
+    "release": 0.08,
+    "gain_db": -34
+   },
+   "means": "쏜 소리가 잠수함에 닿아 군함의 위치가 드러남(잠수함에서 군함으로 선)"
+  },
+  {
+   "id": "sonar_echo3",
+   "at": 80.586,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.2,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.2,
+    "release": 0.06666666666666667,
+    "gain_db": -39
+   },
+   "means": "메아리가 군함에 도착(3) — 쏜 뒤 정확히 2.0초, 거리 축의 1,500 m 봉우리와 같은 프레임"
+  },
+  {
+   "id": "layer_bend1",
+   "at": 89.3106,
+   "kind": "chirp",
+   "params": {
+    "gain_db": -40,
+    "harmonics": [
+     1,
+     0.25
+    ],
+    "fade": 0.03,
+    "points": [
+     [
+      0,
+      300,
+      0
+     ],
+     [
+      0.1,
+      300,
+      0.6
+     ],
+     [
+      0.7,
+      220,
+      0.6
+     ],
+     [
+      0.8,
+      220,
+      0
+     ]
+    ]
+   },
+   "means": "확대 원: 소리 묶음이 층 경계를 넘으며 찬 쪽으로 꺾임(1)"
+  },
+  {
+   "id": "layer_bend2",
+   "at": 90.3176,
+   "kind": "chirp",
+   "params": {
+    "gain_db": -40,
+    "harmonics": [
+     1,
+     0.25
+    ],
+    "fade": 0.03,
+    "points": [
+     [
+      0,
+      300,
+      0
+     ],
+     [
+      0.1,
+      300,
+      0.6
+     ],
+     [
+      0.7,
+      220,
+      0.6
+     ],
+     [
+      0.8,
+      220,
+      0
+     ]
+    ]
+   },
+   "means": "확대 원: 소리 묶음이 층 경계를 넘으며 찬 쪽으로 꺾임(2)"
+  },
+  {
+   "id": "layer_ping_hull1",
+   "at": 93.814,
+   "kind": "tone",
+   "params": {
+    "freq": 440,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.06,
+    "sustain": 0,
+    "release": 0.07333333333333333,
+    "gain_db": -30
+   },
+   "means": "군함 소나가 층 위에서 쏨(1) — 메아리 없음(그늘: 침묵이 설명)"
+  },
+  {
+   "id": "layer_ping_hull2",
+   "at": 97.014,
+   "kind": "tone",
+   "params": {
+    "freq": 440,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.06,
+    "sustain": 0,
+    "release": 0.07333333333333333,
+    "gain_db": -30
+   },
+   "means": "군함 소나가 층 위에서 쏨(2) — 메아리 없음(그늘: 침묵이 설명)"
+  },
+  {
+   "id": "layer_ping_hull3",
+   "at": 100.214,
+   "kind": "tone",
+   "params": {
+    "freq": 440,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.06,
+    "sustain": 0,
+    "release": 0.07333333333333333,
+    "gain_db": -30
+   },
+   "means": "군함 소나가 층 위에서 쏨(3) — 메아리 없음(그늘: 침묵이 설명)"
+  },
+  {
+   "id": "layer_tow_down",
+   "at": 104.565,
+   "kind": "whoosh",
+   "params": {
+    "dur": 1.5,
+    "f_start": 260,
+    "f_end": 140,
+    "q": 1.6,
+    "gain_db": -40
+   },
+   "means": "끄는 소나가 줄을 타고 층 아래로 내려감"
+  },
+  {
+   "id": "layer_ping_tow1",
+   "at": 106.015,
+   "kind": "tone",
+   "params": {
+    "freq": 440,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.06,
+    "sustain": 0,
+    "release": 0.07333333333333333,
+    "gain_db": -30
+   },
+   "means": "끄는 소나가 층 아래에서 쏨(1)"
+  },
+  {
+   "id": "layer_echo_tow1",
+   "at": 107.5266,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.2,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.2,
+    "release": 0.06666666666666667,
+    "gain_db": -33
+   },
+   "means": "잠수함 메아리가 끄는 소나에 도착(1) — 계기 봉우리와 같은 프레임(화면 4배 빠르기)"
+  },
+  {
+   "id": "layer_ping_tow2",
+   "at": 108.615,
+   "kind": "tone",
+   "params": {
+    "freq": 440,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.06,
+    "sustain": 0,
+    "release": 0.07333333333333333,
+    "gain_db": -30
+   },
+   "means": "끄는 소나가 층 아래에서 쏨(2)"
+  },
+  {
+   "id": "layer_echo_tow2",
+   "at": 110.1266,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.2,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.2,
+    "release": 0.06666666666666667,
+    "gain_db": -33
+   },
+   "means": "잠수함 메아리가 끄는 소나에 도착(2) — 계기 봉우리와 같은 프레임(화면 4배 빠르기)"
+  },
+  {
+   "id": "layer_dip_down",
+   "at": 110.556,
+   "kind": "whoosh",
+   "params": {
+    "dur": 1.3,
+    "f_start": 260,
+    "f_end": 140,
+    "q": 1.6,
+    "gain_db": -40
+   },
+   "means": "헬리콥터가 담그는 소나를 내림"
+  },
+  {
+   "id": "layer_ping_dip1",
+   "at": 111.906,
+   "kind": "tone",
+   "params": {
+    "freq": 440,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.06,
+    "sustain": 0,
+    "release": 0.07333333333333333,
+    "gain_db": -30
+   },
+   "means": "담그는 소나가 쏨(1)"
+  },
+  {
+   "id": "layer_echo_dip1",
+   "at": 112.5401,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.2,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.2,
+    "release": 0.06666666666666667,
+    "gain_db": -33
+   },
+   "means": "메아리가 담그는 소나에 도착(1) — 둘째 봉우리"
+  },
+  {
+   "id": "buoy_10x",
+   "at": 115.508,
+   "kind": "tick",
+   "params": {
+    "freq": 147,
+    "decay": 0.12,
+    "gain_db": -35,
+    "click": 0
+   },
+   "means": "큰 숫자 \"10배\"가 뜸"
+  },
+  {
+   "id": "buoy_splash1",
+   "at": 117.2693,
+   "kind": "tick",
+   "params": {
+    "freq": 165,
+    "decay": 0.09,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "부표 1이 물에 닿음(수면의 작은 고리와 같은 프레임)"
+  },
+  {
+   "id": "buoy_splash2",
+   "at": 118.469,
+   "kind": "tick",
+   "params": {
+    "freq": 165,
+    "decay": 0.09,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "부표 2이 물에 닿음(수면의 작은 고리와 같은 프레임)"
+  },
+  {
+   "id": "buoy_splash3",
+   "at": 119.6687,
+   "kind": "tick",
+   "params": {
+    "freq": 165,
+    "decay": 0.09,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "부표 3이 물에 닿음(수면의 작은 고리와 같은 프레임)"
+  },
+  {
+   "id": "buoy_splash4",
+   "at": 120.8683,
+   "kind": "tick",
+   "params": {
+    "freq": 165,
+    "decay": 0.09,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "부표 4이 물에 닿음(수면의 작은 고리와 같은 프레임)"
+  },
+  {
+   "id": "hum_buoy",
+   "at": 125.287,
+   "kind": "custom",
+   "params": {
+    "gain_db": -40,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.5,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 3,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 4.5,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 6,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 7.5,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 9,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     }
+    ]
+   },
+   "means": "buoy: 잠수함에서 난색 소리 파면이 하나 나올 때마다 낮은 프로펠러 박동"
+  },
+  {
+   "id": "buoy_bar3",
+   "at": 126.012,
+   "kind": "tone",
+   "params": {
+    "freq": 392,
+    "dur": 0.18,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.15,
+    "release": 0.06,
+    "gain_db": -34
+   },
+   "means": "부표 3의 무선이 초계기에 닿아 막대가 섬(높이 150 px, 음높이가 세기를 따름)"
+  },
+  {
+   "id": "buoy_bar4",
+   "at": 126.7507,
+   "kind": "tone",
+   "params": {
+    "freq": 316,
+    "dur": 0.18,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.15,
+    "release": 0.06,
+    "gain_db": -34
+   },
+   "means": "부표 4의 무선이 초계기에 닿아 막대가 섬(높이 92 px, 음높이가 세기를 따름)"
+  },
+  {
+   "id": "buoy_bar2",
+   "at": 127.7872,
+   "kind": "tone",
+   "params": {
+    "freq": 284,
+    "dur": 0.18,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.15,
+    "release": 0.06,
+    "gain_db": -34
+   },
+   "means": "부표 2의 무선이 초계기에 닿아 막대가 섬(높이 68 px, 음높이가 세기를 따름)"
+  },
+  {
+   "id": "buoy_bar1",
+   "at": 129.5719,
+   "kind": "tone",
+   "params": {
+    "freq": 246,
+    "dur": 0.18,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.15,
+    "release": 0.06,
+    "gain_db": -34
+   },
+   "means": "부표 1의 무선이 초계기에 닿아 막대가 섬(높이 38 px, 음높이가 세기를 따름)"
+  },
+  {
+   "id": "mad_pass1",
+   "at": 141.017,
+   "kind": "chirp",
+   "params": {
+    "gain_db": -34,
+    "harmonics": [
+     1,
+     0.25
+    ],
+    "fade": 0.03,
+    "points": [
+     [
+      0,
+      220,
+      0.07
+     ],
+     [
+      0.1,
+      220,
+      0.105
+     ],
+     [
+      0.2,
+      220,
+      0.152
+     ],
+     [
+      0.3,
+      220,
+      0.212
+     ],
+     [
+      0.4,
+      220,
+      0.285
+     ],
+     [
+      0.5,
+      220,
+      0.367
+     ],
+     [
+      0.6,
+      220,
+      0.452
+     ],
+     [
+      0.7,
+      220,
+      0.528
+     ],
+     [
+      0.8,
+      220,
+      0.581
+     ],
+     [
+      0.9,
+      220,
+      0.6
+     ],
+     [
+      1,
+      220,
+      0.581
+     ],
+     [
+      1.1,
+      220,
+      0.528
+     ],
+     [
+      1.2,
+      220,
+      0.452
+     ],
+     [
+      1.3,
+      220,
+      0.367
+     ],
+     [
+      1.4,
+      220,
+      0.285
+     ],
+     [
+      1.5,
+      220,
+      0.212
+     ],
+     [
+      1.6,
+      220,
+      0.152
+     ],
+     [
+      1.7,
+      220,
+      0.105
+     ],
+     [
+      1.8,
+      220,
+      0.07
+     ]
+    ]
+   },
+   "means": "자기 탐지기 통과 1(낮게: 큰 혹) — 기록선의 혹과 같은 시각, 세기가 |S|를 따라감"
+  },
+  {
+   "id": "mad_pass2",
+   "at": 147.407,
+   "kind": "chirp",
+   "params": {
+    "gain_db": -34,
+    "harmonics": [
+     1,
+     0.25
+    ],
+    "fade": 0.03,
+    "points": [
+     [
+      0,
+      220,
+      0.007
+     ],
+     [
+      0.1,
+      220,
+      0.012
+     ],
+     [
+      0.2,
+      220,
+      0.017
+     ],
+     [
+      0.3,
+      220,
+      0.025
+     ],
+     [
+      0.4,
+      220,
+      0.034
+     ],
+     [
+      0.5,
+      220,
+      0.044
+     ],
+     [
+      0.6,
+      220,
+      0.055
+     ],
+     [
+      0.7,
+      220,
+      0.065
+     ],
+     [
+      0.8,
+      220,
+      0.072
+     ],
+     [
+      0.9,
+      220,
+      0.075
+     ],
+     [
+      1,
+      220,
+      0.072
+     ],
+     [
+      1.1,
+      220,
+      0.065
+     ],
+     [
+      1.2,
+      220,
+      0.055
+     ],
+     [
+      1.3,
+      220,
+      0.044
+     ],
+     [
+      1.4,
+      220,
+      0.034
+     ],
+     [
+      1.5,
+      220,
+      0.025
+     ],
+     [
+      1.6,
+      220,
+      0.017
+     ],
+     [
+      1.7,
+      220,
+      0.012
+     ],
+     [
+      1.8,
+      220,
+      0.007
+     ]
+    ]
+   },
+   "means": "자기 탐지기 통과 2(두 배 높이: 혹 1/8) — 기록선의 혹과 같은 시각, 세기가 |S|를 따라감"
+  },
+  {
+   "id": "mad_eighth",
+   "at": 149.0955,
+   "kind": "tick",
+   "params": {
+    "freq": 147,
+    "decay": 0.12,
+    "gain_db": -35,
+    "click": 0
+   },
+   "means": "큰 숫자 \"1/8\"이 뜸"
+  },
+  {
+   "id": "mad_pass3",
+   "at": 150.369,
+   "kind": "chirp",
+   "params": {
+    "gain_db": -34,
+    "harmonics": [
+     1,
+     0.25
+    ],
+    "fade": 0.03,
+    "points": [
+     [
+      0,
+      220,
+      0
+     ],
+     [
+      0.1,
+      220,
+      0
+     ],
+     [
+      0.2,
+      220,
+      0
+     ],
+     [
+      0.3,
+      220,
+      0.008
+     ],
+     [
+      0.4,
+      220,
+      0.036
+     ],
+     [
+      0.5,
+      220,
+      0.092
+     ],
+     [
+      0.6,
+      220,
+      0.196
+     ],
+     [
+      0.7,
+      220,
+      0.354
+     ],
+     [
+      0.8,
+      220,
+      0.522
+     ],
+     [
+      0.9,
+      220,
+      0.6
+     ],
+     [
+      1,
+      220,
+      0.522
+     ],
+     [
+      1.1,
+      220,
+      0.354
+     ],
+     [
+      1.2,
+      220,
+      0.196
+     ],
+     [
+      1.3,
+      220,
+      0.092
+     ],
+     [
+      1.4,
+      220,
+      0.036
+     ],
+     [
+      1.5,
+      220,
+      0.008
+     ],
+     [
+      1.6,
+      220,
+      0
+     ],
+     [
+      1.7,
+      220,
+      0
+     ],
+     [
+      1.8,
+      220,
+      0
+     ]
+    ]
+   },
+   "means": "자기 탐지기 통과 3(낮게: 큰 혹) — 기록선의 혹과 같은 시각, 세기가 |S|를 따라감"
+  },
+  {
+   "id": "mad_confirm",
+   "at": 151.669,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     110,
+     165,
+     220
+    ],
+    "dur": 1.2,
+    "attack": 0.4,
+    "gain_db": -33
+   },
+   "means": "셋째 통과: 혹 꼭대기에서 잠수함까지 선이 닿고 위치 확인 고리"
+  },
+  {
+   "id": "mast_radar1",
+   "at": 159.215,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.08,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "초계기가 레이더 펄스를 쏨(1)"
+  },
+  {
+   "id": "mast_echo1",
+   "at": 160.615,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.16,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.1,
+    "release": 0.05333333333333334,
+    "gain_db": -32
+   },
+   "means": "물 밖 관에 맞은 메아리가 초계기에 도착 — 레이더 화면의 봉우리(1)"
+  },
+  {
+   "id": "mast_radar2",
+   "at": 161.415,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.08,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "초계기가 레이더 펄스를 쏨(2)"
+  },
+  {
+   "id": "mast_echo2",
+   "at": 162.815,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.16,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.1,
+    "release": 0.05333333333333334,
+    "gain_db": -32
+   },
+   "means": "물 밖 관에 맞은 메아리가 초계기에 도착 — 레이더 화면의 봉우리(2)"
+  },
+  {
+   "id": "close_ping",
+   "at": 163.644,
+   "kind": "tone",
+   "params": {
+    "freq": 440,
+    "dur": 0.22,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.06,
+    "sustain": 0,
+    "release": 0.07333333333333333,
+    "gain_db": -30
+   },
+   "means": "close ②: 군함 소나가 쏨"
+  },
+  {
+   "id": "hum_close",
+   "at": 163.7913,
+   "kind": "custom",
+   "params": {
+    "gain_db": -40,
+    "layers": [
+     {
+      "kind": "tick",
+      "offset": 0,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 0.7,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 1.4,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.1,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 2.8,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 3.5,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "tick",
+      "offset": 4.2,
+      "params": {
+       "freq": 82,
+       "decay": 0.18,
+       "click": 0,
+       "gain_db": 0
+      }
+     }
+    ]
+   },
+   "means": "close: 잠수함 꼬리의 소리 파면마다 낮은 박동(① 듣기)"
+  },
+  {
+   "id": "close_radar",
+   "at": 164.808,
+   "kind": "tick",
+   "params": {
+    "freq": 196,
+    "decay": 0.1,
+    "gain_db": -38,
+    "click": 0
+   },
+   "means": "close ④: 초계기 레이더 펄스(관을 향해)"
+  },
+  {
+   "id": "close_echo",
+   "at": 164.8424,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.2,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.2,
+    "release": 0.06666666666666667,
+    "gain_db": -33
+   },
+   "means": "close ②: 메아리가 군함에 도착 — 메아리 칸이 켜짐"
+  },
+  {
+   "id": "close_field",
+   "at": 165.2752,
+   "kind": "chirp",
+   "params": {
+    "gain_db": -34,
+    "harmonics": [
+     1,
+     0.25
+    ],
+    "fade": 0.03,
+    "points": [
+     [
+      0,
+      220,
+      0
+     ],
+     [
+      0.15,
+      220,
+      0.6
+     ],
+     [
+      0.45,
+      220,
+      0.6
+     ],
+     [
+      0.6,
+      220,
+      0
+     ]
+    ]
+   },
+   "means": "close ③: 휜 자기장 선이 난색으로 — 자기장 칸이 켜짐"
+  },
+  {
+   "id": "close_radar_echo",
+   "at": 165.708,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.16,
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.005,
+    "decay": 0.08,
+    "sustain": 0.15,
+    "release": 0.05333333333333334,
+    "gain_db": -32
+   },
+   "means": "close ④: 관에 맞은 메아리 도착 — 레이더 칸이 켜짐"
+  },
+  {
+   "id": "poster_end",
+   "at": 168.374,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     98,
+     147
+    ],
+    "dur": 1.8,
+    "attack": 0.4,
+    "gain_db": -34
+   },
+   "means": "포스터 구도로 돌아옴"
+  }
+ ],
+ "ambient": {
+  "kind": "pad",
+  "seed": 7,
+  "gain_db": -32,
+  "root_hz": 110,
+  "intervals": [
+   0,
+   7,
+   12,
+   16
+  ],
+  "enabled": false
+ },
+ "music": {
+  "id": "zabriskie_patriarch",
+  "under_db": 12,
+  "duck_db": 6,
+  "start_sec": 0,
+  "enabled": false,
+  "note": "음악 없음."
+ }
+}
