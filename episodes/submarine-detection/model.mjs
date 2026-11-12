@@ -91,7 +91,7 @@ export const rangeOf = tRound => V_SOUND * tRound / 2;          // m
 export const levelDb = r => -20 * Math.log10(Math.max(r, 600) / 600);
 /** bar height in px */
 export const barH = db => 150 * Math.min(1, Math.max(0.12, 1 + db / 26));
-export const BUOY = {X: [2000, 4500, 7000, 9500], Zmic: 200, sub: {X: 7600, Z: 220}};
+export const BUOY = {X: [2000, 4500, 7000, 9500], Zmic: 200, sub: {X: 7600, Z: 260}};   // sub Z 220 → 260 (2026-11-12 검수: 3번 마이크가 선체에 닿지 않게)
 /** per buoy: {X, r, db, h, dt (s, arrival after emission)} */
 export function buoyLevels(B = BUOY) {
   return B.X.map(X => { const r = Math.hypot(X - B.sub.X, B.Zmic - B.sub.Z), db = levelDb(r); return {X, r, db, h: barH(db), dt: r / V_SOUND}; });

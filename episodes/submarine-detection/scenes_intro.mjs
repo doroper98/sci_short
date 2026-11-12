@@ -5,7 +5,7 @@
 // Colour roles: warm = came from the submarine (its sound, its echo, its field disturbance, a detection on the record);
 // cool = sent by the searchers (radar, sonar ping). Field lines / ties / rulers are near-neutral PAL.field.
 import {PAL, WARM, COOL, PX0, PX1, PY0, PY1, REC_BASE, W, rgba, mix, clamp, lerp, smooth, easeInOut, easeOut, easeIn, line, circle, ring, rect, withAlpha, TAU,
-  fadeIn, fadeOut, keyed, hitFlash, hitAny, wd, tag, tagLeader, bigNum, cam, actorAlpha,
+  fadeIn, fadeOut, keyed, hitFlash, hitAny, wd, tag, tagLeader, bigNum, cam, actorAlpha, SURF,
   sub, plane, ship, buoy, hydro, cable, glowBegin, glowFlush, ringWave, beamPulse, splatBurst,
   panel, panelLabel, axisTicks, recordLine, peakY, sampleRec, recNoise, tieLine, emptyBox, lens, snd} from './kit.mjs';
 import {S as magS, fieldLines} from './model.mjs';
@@ -13,7 +13,7 @@ import {S as magS, fieldLines} from './model.mjs';
 // =====================================================================================================
 // small local helpers (not in kit)
 // =====================================================================================================
-const SURF0 = 640;                                          // surfY of hook / origin / close
+const SURF0 = 640;                                          // surfY of hook / close (origin uses SURF.origin, all y relative)
 /** sub geometry (mirrors kit.sub): sail top centre and mast top for a hull centre (x, y), length L, dir */
 const subGeo = (x, y, L, dir = -1, mast = 0) => {
   const Hh = L * 0.13, sH = 0.7 * Hh, s0 = 0.16 * L, s1 = 0.30 * L, mx = s0 + 0.35 * (s1 - s0);
@@ -73,18 +73,22 @@ export function planIntro(tl, P) {
     H.tA = W_('s02', '전파는', 0.15) - 0.1;
     H.pulses = [H.tA, H.tA + 2.6, H.tA + 5.2].filter(te => te <= SC.hook.end - 0.6);
     H.hits = H.pulses.map(te => te + H.beam);
+    // s01: the radar already sweeps (dies at the surface; only the surface bump on the screen; lens and number from tA)
+    H.pre = []; for (let k = 1; H.tA - 2.6 * k >= 2.2; k++) H.pre.unshift(H.tA - 2.6 * k);
+    H.allPulses = [...H.pre, ...H.pulses]; H.allHits = H.allPulses.map(te => te + H.beam);
     H.cmT = W_('s02', '센티미터', 0.4);
     H.dotT = W_('s02', '잠수함까지', 0.62);
-    H.lens = {c: [760, 830], r: 150};
+    H.lens = {c: [360, 880], r: 150};
     H.rings = [150, 260, 370];                                          // poster: sound fronts from the tail (px)
-    H.buoy = [880, SURF0]; H.mic = [880, 860];
+    H.buoy = [930, SURF0]; H.mic = [930, 1085];
     H.rel = REL;
     P.hook = H;
   }
   // ---------------- origin (s03–s05)
   {
     const O = {};
-    O.sub = {x: 700, y0: 930, yUp: 652, len: 380};
+    const sy0 = SURF.origin; O.surf = sy0;                            // plan y are for this surface; the scene adds (cm.surf − sy0)
+    O.sub = {x: 700, y0: sy0 + 230, yUp: sy0 + 12, len: 460};
     O.rise0 = W_('s03', '충전하러', 0.25) - 0.6; O.surfaced = O.rise0 + 2.0;
     O.sink0 = W_('s05', '원자력', 0.45) - 0.2; O.sunk = O.sink0 + 1.8;
     O.subY = keyed([[SC.origin.start, O.sub.y0], [O.rise0, O.sub.y0], [O.surfaced, O.sub.yUp, 'io'], [O.sink0, O.sub.yUp], [O.sunk, O.sub.y0, 'io']]);
@@ -94,7 +98,7 @@ export function planIntro(tl, P) {
     O.batt = keyed([[SC.origin.start, 0.45], [O.rise0, 0.25], [O.surfaced, 0.25], [at('s03:end'), 0.85, 'lin']]);
     // the patrol aircraft (y 470: a little lower than PLAN's 430 so the big number's sub-line clears it)
     O.plane0 = W_('s03', '비행기의', 0.3) - 1.6; O.planeIn = 1.4;
-    O.plane = {y: 480, len: 300, v: 22};
+    O.plane = {y: sy0 - 320, len: 340, v: 22};
     O.planeX = t => {
       if (t < O.plane0) return -200;
       const q = (t - O.plane0) / O.planeIn;
@@ -108,8 +112,8 @@ export function planIntro(tl, P) {
     O.pulses = [];
     for (let te = O.tR; te + O.beam < SC.origin.end - 0.5; te += 1.7) {
       const th = te + O.beam, sail = O.sail(th), from = O.nose(te);
-      if (sail[1] < SURF0 - 8 && te + 2 * O.beam < SC.origin.end - 0.4) O.pulses.push({te, th, kind: 'sail', from, to: [sail[0], sail[1] + 10], back: te + 2 * O.beam});
-      else O.pulses.push({te, th, kind: 'surf', from, to: [O.sub.x, SURF0], back: null});
+      if (sail[1] < sy0 - 8 && te + 2 * O.beam < SC.origin.end - 0.4) O.pulses.push({te, th, kind: 'sail', from, to: [sail[0], sail[1] + 10], back: te + 2 * O.beam});
+      else O.pulses.push({te, th, kind: 'surf', from, to: [O.sub.x, sy0], back: null});
     }
     O.echoes = O.pulses.filter(p => p.kind === 'sail').map(p => p.back);
     O.firstSurf = O.pulses.find(p => p.kind === 'surf' && p.te > O.tR)?.th ?? Infinity;
@@ -216,9 +220,9 @@ function hookScene(stage, t, p, ctx) {
   // ---- poster props (fade out over the morph); fronts keep spreading at the sound's own pace while they fade
   posterProps(stage, G, H, sb, postA, ys, 330 * t);
   // ---- radar pulses: nose → surface point S (cool), a short burst where they die
-  H.pulses.forEach((te, i) => {
+  H.allPulses.forEach((te, i) => {
     const q = (t - te) / H.beam; if (q >= 0 && q <= 1) beamPulse(GC, H.nose(te), dS, q, {amp: 1});
-    const f = hitFlash(t, H.hits[i], 0.3); if (f > 0) splatBurst(GC, dS[0], dS[1] + 2, 26, 0.9 * f, COOL);
+    const f = hitFlash(t, H.allHits[i], 0.3); if (f > 0) splatBurst(GC, dS[0], dS[1] + 2, 26, 0.9 * f, COOL);
   });
   // ---- dotted path from S to the hull: the radar does not get there (s02 '잠수함까지')
   const dq = clamp((t - H.dotT) / 0.6);
@@ -265,7 +269,7 @@ function hookScene(stage, t, p, ctx) {
     withAlpha(c, live, () => {
       panel(stage, 1); panelLabel(stage, '레이더 화면', 1);
       axisTicks(stage, [{x: dS[0], label: '수면'}], 1, {x0: 100, x1: 940});
-      const got = H.hits.filter(x => t >= x), first = got.length ? got[0] : null;
+      const got = H.allHits.filter(x => t >= x), first = got.length ? got[0] : null;
       const bump = first == null ? 0 : 22 * easeOut((t - first) / 0.2) + got.reduce((m, x) => Math.max(m, 18 * Math.exp(-(t - x) / 0.5) * smooth((t - x) / 0.08)), 0);
       const pts = sampleRec(x => peakY(x, dS[0], bump, 8) - recNoise(x, 1.5, 11), 100, 940, 3);
       recordLine(stage, pts, {col: PAL.rec, alpha: 0.8});
@@ -280,14 +284,14 @@ function hookScene(stage, t, p, ctx) {
 }
 
 // =====================================================================================================
-// ORIGIN (s03–s05) — surfY 640. Surfaced to charge → seen by radar; the name 哨戒; 1955: stays down for months.
+// ORIGIN (s03–s05) — surfY SURF.origin (800); every water y is relative to the surface. Surfaced to charge → seen by radar; the name 哨戒; 1955: stays down for months.
 // =====================================================================================================
 const BAT = {x: 116, y: 1214, w: 200, h: 34}, RAD = {x0: 360, x1: 940};
 function originScene(stage, t, p, ctx) {
   const P = planOf(ctx), O = P.origin, SC = P.sc, c = stage.ctx, cm = cam('origin', t, ctx.tl), A = actorAlpha(t, SC.origin, ctx.tl), ys = cm.surf;
   const {GW, GC} = glowBegin();
   c.globalAlpha = A;
-  const subY = O.subY(t);
+  const dy = ys - O.surf, subY = O.subY(t) + dy;
   // ---- ties
   tieLine(stage, O.sub.x, subY + 30, 0.7);
   // ---- bodies
@@ -297,8 +301,9 @@ function originScene(stage, t, p, ctx) {
   const pl = px > -190 ? plane(stage, px, O.plane.y, {len: O.plane.len, dir: 1, prop: t * TAU * 3}) : null;
   // ---- radar pulses: out (cool) → sail hit (lit) → echo back (warm)  |  or die at the surface
   for (const q of O.pulses) {
-    const qo = (t - q.te) / O.beam; if (qo >= 0 && qo <= 1) beamPulse(GC, q.from, q.to, qo);
-    if (q.kind === 'sail') { const qb = (t - q.th) / O.beam; if (qb >= 0 && qb <= 1) beamPulse(GW, q.to, O.nose(q.back), qb); }
+    const to = [q.to[0], q.to[1] + dy];
+    const qo = (t - q.te) / O.beam; if (qo >= 0 && qo <= 1) beamPulse(GC, q.from, to, qo);
+    if (q.kind === 'sail') { const qb = (t - q.th) / O.beam; if (qb >= 0 && qb <= 1) beamPulse(GW, to, O.nose(q.back), qb); }
     else { const f = hitFlash(t, q.th, 0.3); if (f > 0) splatBurst(GC, q.to[0], ys + 2, 22, 0.85 * f, COOL); }
   }
   // ---- glow
@@ -446,7 +451,7 @@ function closeScene(stage, t, p, ctx) {
   const G = glowBegin(), {GW, GC} = G;
   c.globalAlpha = A;
   const post = smooth((t - P.poster) / 0.8), live = 1 - smooth((t - (P.poster - 0.4)) / 0.4), clip = clipWater(ys);
-  const [sx, sy] = C.subPos(t), sl = C.subLen(t), sinkQ = C.subQ(t);
+  const dyC = ys - SURF0, [sx, sy0_] = C.subPos(t), sy = sy0_ + dyC, sl = C.subLen(t), sinkQ = C.subQ(t);
   // ---- field: ③ flashes, then stays from '소리와'; at the poster it settles to the poster's 0.55
   const fA = Math.max(0.9 * fadeIn(t, C.c3 - 0.05, 0.1) * fadeOut(t, C.c3 + 0.45, 0.2), 0.7 * fadeIn(t, C.fieldT, 0.4));
   const geo = subGeo(sx, sy, sl, -1);
@@ -464,10 +469,10 @@ function closeScene(stage, t, p, ctx) {
   const sb = sub(stage, sx, sy, {len: sl, dir: -1, dim, mast: C.mast(t), mastLit, mastLitCol: PAL.cool, lit: hitFlash(t, C.pingHit, 0.3), litCol: PAL.cool, prop: t * TAU * 1.2});
   // ---- ① sound fronts from the tail (warm), stop at the poster
   const ringsA = 1 - post;
-  if (ringsA > 0) for (const e of C.emits) { const r = C.V * (t - e.te); if (r <= 0 || r > 1100) continue; ringWave(GW, e.p[0], e.p[1], r, {crests: 2, gap: 15, amp: 0.75 * ringsA * (1 - smooth((r - 800) / 300)), clip}); }
+  if (ringsA > 0) for (const e of C.emits) { const r = C.V * (t - e.te); if (r <= 0 || r > 1100) continue; ringWave(GW, e.p[0], e.p[1] + dyC, r, {crests: 2, gap: 15, amp: 0.75 * ringsA * (1 - smooth((r - 800) / 300)), clip}); }
   // ---- ② ping (cool) → hull → echo (warm)
-  { const r = C.V * (t - C.ping); if (r > 0 && r < 1200) ringWave(GC, C.dome[0], C.dome[1], r, {crests: 3, amp: 1 - smooth((r - 800) / 400), clip});
-    const re = C.V * (t - C.pingHit); if (re > 0 && re < 1100) ringWave(GW, C.subPos(C.pingHit)[0], C.subPos(C.pingHit)[1], re, {crests: 2, amp: 1 - smooth((re - 700) / 400), clip}); }
+  { const r = C.V * (t - C.ping); if (r > 0 && r < 1200) ringWave(GC, C.dome[0], C.dome[1] + dyC, r, {crests: 3, amp: 1 - smooth((r - 800) / 400), clip});
+    const re = C.V * (t - C.pingHit); if (re > 0 && re < 1100) ringWave(GW, C.subPos(C.pingHit)[0], C.subPos(C.pingHit)[1] + dyC, re, {crests: 2, amp: 1 - smooth((re - 700) / 400), clip}); }
   // ---- ④ radar pulse to the mast and its echo
   { const from = C.nose(C.radar0), to = C.mastAt(C.radarHit);
     const q1 = (t - C.radar0) / C.radarTr; if (q1 >= 0 && q1 <= 1) beamPulse(GC, from, to, q1);
@@ -525,9 +530,9 @@ export function soundIntro(tl, P) {
   ev.push(snd.swell('poster', 0.05, [98, 147], 1.8, -34, '첫 화면(썸네일): 포스터 구도'));
   ev.push(snd.swell('poster_end', P.poster, [98, 147], 1.8, -34, '포스터 구도로 돌아옴'));
   // ---- hook
-  H.pulses.forEach((te, i) => {
+  H.allPulses.forEach((te, i) => {
     ev.push(snd.tick('hook_radar' + (i + 1), te, 196, -38, `초계기가 레이더 펄스를 쏨(${i + 1})`, {decay: 0.1}));
-    ev.push(snd.whoosh('hook_surface' + (i + 1), H.hits[i], 0.4, 220, 110, -40, `전파가 수면에서 사라짐(${i + 1}) — 확대 원의 물결이 1 cm 안에서 줄어듦`));
+    ev.push(snd.whoosh('hook_surface' + (i + 1), H.allHits[i], 0.4, 220, 110, -40, `전파가 수면에서 사라짐(${i + 1})` + (te >= H.tA ? ' — 확대 원의 물결이 1 cm 안에서 줄어듦' : ' — 수면 혹만')));
   });
   ev.push(snd.tick('hook_1cm', H.cmT, 147, -35, '큰 숫자 "약 1 cm"', {decay: 0.12}));
   // ---- origin

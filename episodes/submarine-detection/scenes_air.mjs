@@ -73,7 +73,8 @@ export function planAir(tl, P) {
     M.Crel = 120; M.yLrel = -120; M.yHrel = -360;                // C (540, 910), yL 670, yH 430
     M.d0 = M.Crel - M.yLrel; M.dH = M.Crel - M.yHrel;            // 240, 480 px
     M.field0 = sc.start + 0.4; M.fieldDur = 0.9;
-    M.lines = fieldLines(540, 790 + M.Crel, {y0: 285, y1: 1112, M: 0.22 * 110 ** 3, rmin: 90});   // 2026-11-12 review: PLAN's M crossed lines
+    M.subLen = 360; const ks = M.subLen / 300;                  // field scaled with the hull (M ∝ length³, rmin ∝ length; reference 300)
+    M.lines = fieldLines(540, 790 + M.Crel, {y0: 285, y1: 1112, M: 0.22 * 110 ** 3 * ks ** 3, rmin: 90 * ks});   // 2026-11-12 review: PLAN's M crossed lines
     // passes: record point = tail-boom tip; it crosses x 540 at T
     const T1 = W_('s19', '금속도', 0.4) + 0.2;
     let T2 = Math.max(W_('s20', '팔분의', 0.4) - 0.1, T1 + 3.9);
@@ -103,13 +104,15 @@ export function planAir(tl, P) {
   {
     const Q = {}, sc = SC.mast;
     Q.t0 = sc.start;
-    Q.px = t => 240 + 30 * (t - Q.t0); Q.pyRel = -210; Q.pLen = 300;
+    Q.px = t => 240 + 30 * (t - Q.t0); Q.pyRel = -330; Q.pLen = 340;                 // 2026-11-12 review: surface at 800, bodies larger
     Q.nose = (t, ys) => [Q.px(t) + 0.5 * Q.pLen, ys + Q.pyRel + Q.pLen * 0.052 * 0.1];
-    Q.subX = 700; Q.subLen = 380;
-    Q.rise0 = W_('s21', '디젤', 0.3) - 0.2; Q.riseDur = 1.6; Q.yRel0 = 290; Q.yRel1 = 76;
+    Q.subX = 700; Q.subLen = 460;
+    Q.rise0 = W_('s21', '디젤', 0.3) - 0.2; Q.riseDur = 1.6; Q.yRel0 = 230;
     Q.mast0 = W_('s21', '관만', 0.5) - 0.5; Q.mastDur = 0.6; Q.mastFull = Q.mast0 + Q.mastDur;
     // the frame the tube breaks the surface: sail top (Hh/2 + 0.7Hh above the centre) + 64·q
-    const Hh = Q.subLen * 0.13, sailTop = Hh / 2 + 0.7 * Hh, need = Q.yRel1 - sailTop;
+    const Hh = Q.subLen * 0.13, sailTop = Hh / 2 + 0.7 * Hh;
+    Q.yRel1 = sailTop + 64 - 46;                                 // tube top 46 px above the surface at full height (sail top 18 px under it)
+    const need = Q.yRel1 - sailTop;
     Q.pierce = Q.mast0 + Q.mastDur * invert(u => 64 * easeOut(u), need);
     const tm = W_('s21', '레이더에', 0.5) - 1.5;
     Q.pings = [tm, tm + 2.2].filter(x => x + 1.4 < sc.end - 0.15);
@@ -177,7 +180,7 @@ function buoyScene(stage, t, p, ctx) {
   const micY = B.bx.map((_, i) => (t < B.micStart[i] ? null : lerp(ys + 24, ys + B.Zmic, easeInOut((t - B.micStart[i]) / 1.3))));
   B.bx.forEach((x, i) => { if (micY[i] != null) tieLine(stage, x, micY[i] + 12, 0.7 * fadeIn(t, B.micLand[i] - 0.2, 0.4)); });
   // ---------------- the submarine (source of the sound)
-  sub(stage, B.sub.x, cm.sy(B.sub.Z), {len: 220, dir: 1, dim: 0.4, prop: t * TAU * 1.5});
+  sub(stage, B.sub.x, cm.sy(B.sub.Z), {len: 280, dir: 1, dim: 0.25, prop: t * TAU * 1.5});
   // ---------------- its sound below the layer: rings at real speed R = 1500 (t − te) m, drawn only for Z 140–330 m
   for (const te of B.pings) {
     const R = 1500 * (t - te); if (R <= 0 || R > 6300) continue;
@@ -289,11 +292,11 @@ function madScene(stage, t, p, ctx) {
   }
   // ---------------- the distance ruler (거리 1 with the first pass, 거리 2 grows before the high pass)
   const r1 = fadeIn(t, M.r1T, 0.4), r2 = clamp((t - M.r2T) / 0.8);
-  const hullTop = C[1] - 22;
+  const hullTop = C[1] - M.subLen * 0.065;
   if (r1 > 0) withAlpha(c, r1, () => { line(c, [[566, hullTop], [566, yL]], rgba(PAL.ink, 0.6), 1.5, {dash: [4, 6]}); for (const y of [hullTop, yL]) line(c, [[559, y], [573, y]], rgba(PAL.ink, 0.6), 1.5); });
   if (r2 > 0) { const yTop = lerp(hullTop, yH, easeInOut(r2)); line(c, [[604, hullTop], [604, yTop]], rgba(PAL.ink, 0.6), 1.5, {dash: [4, 6]}); for (const y of [hullTop, yTop]) line(c, [[597, y], [611, y]], rgba(PAL.ink, 0.6), 1.5); }
   // ---------------- the submarine
-  sub(stage, C[0], C[1], {len: 300, dir: -1, dim: 0.3, prop: 0.6});
+  sub(stage, C[0], C[1], {len: M.subLen, dir: -1, dim: 0.3, prop: 0.6});
   // ---------------- confirm (pass 3): a warm dotted line rises from the hump's top to the hull, a ring stays around it
   const cq = clamp((t - M.confirm) / 0.4);
   // ---------------- the aircraft (one pass at a time)
