@@ -1772,9 +1772,12 @@ class ScheduledPublishAtTest(unittest.TestCase):
 
     def test_repo_config_scheduled(self) -> None:
         sp = yu.load_daily()["scheduled_publish"]
-        # 2026-11-13 사용자: "아침에도 예약공개로 하자", "저녁편 등록 시점을 17시로 바꿀 수 있어?" — 아침 06:00 은 "그럼 아침 공개는 06시에 공개로 바뀌게 해줘."
+        # 2026-11-13 사용자: "아침에도 예약공개로 하자", "저녁편 등록 시점을 17시로 바꿀 수 있어?",
+        # "그럼 아침 공개는 06시에 공개로 바뀌게 해줘. 이것도 출근길 노출을 노리는거야"(07:00 제안을 바꿈)
         self.assertIs(sp["enabled"], True)
         self.assertEqual((sp["morning_kst"], sp["evening_kst"]), ("06:00", "17:00"))
+        self.assertEqual(sp["late_grace_hours"], 4)                              # 제작 세션의 제안
+        self.assertIn("그럼 아침 공개는 06시에 공개로 바뀌게 해줘", yu.load_daily()["_scheduled_publish"])
         self.assertIn("아침에도 예약공개로 하자", yu.load_daily()["_scheduled_publish"])
         self.assertIn("제작 세션의 제안", yu.load_daily()["_scheduled_publish"])
 
@@ -1897,6 +1900,237 @@ class ScheduledPublishFlowTest(unittest.TestCase):
             (ep / yu.RECORD_NAME).write_text(json.dumps(raw), encoding="utf-8")
             self.assertIsNone(yu.read_record(ep).publish_at)
             self.assertEqual(yu.read_record(ep).video_id, rec.video_id)
+
+
+SCHED2 = {"enabled": True, "morning_kst": "06:00", "evening_kst": "17:00", "min_lead_min": 15, "late_grace_hours": 4}
+
+
+class DueTargetsTest(unittest.TestCase):
+    """GitHub 예약 실행이 5~9.5시간 간격으로 돌아 목표 전에 미리 올린다(2026-11-13). 아침 06:00(사용자 "그럼 아침 공개는 06시에
+    공개로 바뀌게 해줘. 이것도 출근길 노출을 노리는거야"), 저녁 17:00. 유예 4시간은 제작 세션의 제안."""
+
+    def _due(self, h: int, mi: int = 0, day: int = 13) -> list[tuple[str, str, bool]]:
+        return [(t["slot"], t["key"], t["late"]) for t in yu.due_targets({"scheduled_publish": SCHED2}, _kst(2026, 11, day, h, mi))]
+
+    def test_by_hour(self) -> None:
+        M13, E13, M14 = ("morning", "2026-11-13-morning"), ("evening", "2026-11-13-evening"), ("morning", "2026-11-14-morning")
+        self.assertEqual(self._due(3), [(*M13, False)])
+        self.assertEqual(self._due(6, 30), [(*M13, True), (*E13, False)])
+        self.assertEqual(self._due(10, 30), [(*E13, False)])                    # 늦은 아침은 유예 밖
+        self.assertEqual(self._due(12), [(*E13, False)])
+        self.assertEqual(self._due(17, 30), [(*E13, True), (*M14, False)])
+        self.assertEqual(self._due(21, 30), [(*M14, False)])
+        self.assertEqual(self._due(23, 30), [(*M14, False)])
+        self.assertEqual(self._due(0, 30, day=14), [(*M14, False)])
+        self.assertEqual(self._due(6), [(*M13, True), (*E13, False)])          # 목표 정각은 지난 목표(늦음, 지금부터 15분 뒤)
+        t = yu.due_targets({"scheduled_publish": SCHED2}, _kst(2026, 11, 13, 21, 30))[0]["target"]
+        self.assertEqual(t, _kst(2026, 11, 14, 6, 0))
+
+    def test_disabled_and_invalid(self) -> None:
+        for daily in ({}, {"scheduled_publish": {**SCHED2, "enabled": False}}):
+            self.assertEqual(yu.due_targets(daily, _kst(2026, 11, 13, 12, 0)), [])
+        for bad in (-1, True, "4", 11):                                          # 11시간 = 06→17 간격 — 늦은 편과 다음 편이 겹칠 수 있음
+            with self.assertRaises(ValueError, msg=bad):
+                yu.due_targets({"scheduled_publish": {**SCHED2, "late_grace_hours": bad}}, _kst(2026, 11, 13, 12, 0))
+        with self.assertRaises(ValueError):
+            yu.due_targets({"scheduled_publish": {**SCHED2, "morning_kst": "6:00"}}, _kst(2026, 11, 13, 12, 0))
+
+
+class InsertLogApi(FakeApi):
+    """모든 videos.insert 본문(업로드 세션 시작)을 차례로 남긴다."""
+
+    def __init__(self, **kw) -> None:
+        super().__init__(**kw)
+        self.inserts: list[dict] = []
+
+    def __call__(self, method: str, url: str, headers: dict[str, str], data: bytes | None) -> yu.Response:
+        if url.startswith(yu.UPLOAD_URL):
+            self.inserts.append(json.loads(data or b"{}"))
+        return super().__call__(method, url, headers, data)
+
+
+@mock.patch.object(yu, "probe_video", lambda p: dict(PROBE_OK))
+class AutoSlotTest(unittest.TestCase):
+    """--slot auto: 맡을 예약 목표(늦은 것 하나 + 다음 것 하나)를 미리 올리고 slot_key 로 한 번만."""
+
+    def _setup(self, root: Path, api: FakeApi, *, sched: dict | None = SCHED2, queue_old: bool = True,
+               evening: dict | None = EVENING, **rq) -> tuple:
+        old, new, daily, q = EveningSlotTest._setup(self, root, api, evening=evening, queue_old=queue_old, **rq)
+        body = json.loads(daily.read_text(encoding="utf-8"))
+        if sched is not None:
+            body["scheduled_publish"] = sched
+        daily.write_text(json.dumps(body, ensure_ascii=False), encoding="utf-8")
+        return old, new, daily, q
+
+    def _run(self, cfg, daily, q, root, now, api, *, dry_run: bool = False, slot: str = "auto") -> dict:
+        with mock.patch.object(yu, "_utcnow", lambda: now):
+            return yu.daily_next(cfg, daily, q, root, today=now.astimezone(yu.KST).date(), dry_run=dry_run, send=api, env=ENV,
+                                 sleep=lambda s: None, slot=slot, now=now)
+
+    def _assert_never_public(self, api: InsertLogApi) -> None:
+        for b in api.inserts:
+            self.assertEqual(b["status"]["privacyStatus"], "private")
+        for u in api.updates:
+            self.assertNotIn("publishAt", u.get("status", {}))
+            self.assertEqual(u["status"]["privacyStatus"], "private")
+
+    def test_evening_run_uploads_next_morning_then_later_run_is_done(self) -> None:
+        api, cfg = InsertLogApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            old, new, daily, q = self._setup(root, api, queue_old=False)         # 다시 올릴 편 없음
+            out = self._run(cfg, daily, q, root, _kst(2026, 11, 13, 18, 30), api)
+            self.assertEqual(out["slot"], "auto")
+            self.assertEqual([(s["slot"], s["status"]) for s in out["slots"]],
+                             [("evening", "nothing-to-upload"), ("morning", "uploaded")])
+            self.assertEqual([(r["dir"], r["status"]) for r in out["results"] if r["status"] == "uploaded"], [(yu._rel(new), "uploaded")])
+            self.assertEqual(api.uploads, 1)
+            self.assertEqual(api.inserts[0]["status"]["publishAt"], "2026-11-13T21:00:00Z")   # 11-14 06:00 KST
+            rec = yu.read_record(new)
+            self.assertEqual((rec.slot_key, rec.publish_at), ("2026-11-14-morning", "2026-11-13T21:00:00Z"))
+            up = [r for r in out["results"] if r["status"] == "uploaded"][0]
+            self.assertEqual((up["slot"], up["slot_key"], up["publish_at"]), ("morning", "2026-11-14-morning", "2026-11-13T21:00:00Z"))
+            n = len(api.calls)
+            later = self._run(cfg, daily, q, root, _kst(2026, 11, 13, 23, 30), api)
+            self.assertEqual([(s["key"], s["status"]) for s in later["slots"]], [("2026-11-14-morning", "done-before")])
+            self.assertNotIn("start", api.calls[n:])
+            self.assertEqual(api.uploads, 1)
+
+    def test_daytime_run_uploads_evening_reupload_not_new(self) -> None:
+        api, cfg = InsertLogApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            old, new, daily, q = self._setup(root, api)
+            out = self._run(cfg, daily, q, root, _kst(2026, 11, 13, 11, 0), api)
+            self.assertEqual([(s["key"], s["status"]) for s in out["slots"]], [("2026-11-13-evening", "uploaded")])
+            self.assertEqual(api.uploads, 1)
+            self.assertEqual(api.inserts[0]["status"]["publishAt"], "2026-11-13T08:00:00Z")   # 17:00 KST
+            self.assertEqual(yu.read_record(old).slot_key, "2026-11-13-evening")
+            self.assertIsNone(yu.read_record(new))                               # 새 편은 이 실행에서 올리지 않는다
+            self._assert_never_public(api)
+
+    def test_late_evening_and_next_morning_in_one_run(self) -> None:
+        api, cfg = InsertLogApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            old, new, daily, q = self._setup(root, api)
+            out = self._run(cfg, daily, q, root, _kst(2026, 11, 13, 17, 30), api)
+            self.assertEqual([(r["dir"], r["status"], r["slot"]) for r in out["results"]],
+                             [(yu._rel(old), "uploaded", "evening"), (yu._rel(new), "uploaded", "morning")])
+            self.assertEqual([b["status"]["publishAt"] for b in api.inserts],
+                             ["2026-11-13T08:45:00Z", "2026-11-13T21:00:00Z"])  # 17:45(늦음, 지금 + 15분) · 다음 날 06:00
+            self.assertEqual(out["counts"]["uploaded"], 2)
+            self.assertEqual([s["late"] for s in out["slots"]], [True, False])
+            self.assertEqual((yu.read_record(old).slot_key, yu.read_record(new).slot_key), ("2026-11-13-evening", "2026-11-14-morning"))
+            self.assertEqual([u["id"] for u in api.updates], ["OA"])             # 옛 판 비공개 전환(공개 → 비공개)만
+            self._assert_never_public(api)
+
+    def test_late_morning_then_evening(self) -> None:
+        api, cfg = InsertLogApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            old, new, daily, q = self._setup(root, api)
+            out = self._run(cfg, daily, q, root, _kst(2026, 11, 13, 6, 20), api)
+            self.assertEqual([(s["key"], s["late"], s["status"]) for s in out["slots"]],
+                             [("2026-11-13-morning", True, "uploaded"), ("2026-11-13-evening", False, "uploaded")])
+            self.assertEqual([b["status"]["publishAt"] for b in api.inserts],
+                             ["2026-11-12T21:35:00Z", "2026-11-13T08:00:00Z"])  # 06:35 · 17:00 KST
+            self.assertEqual(yu.read_record(new).slot_key, "2026-11-13-morning")
+            self.assertEqual(yu.read_record(old).slot_key, "2026-11-13-evening")
+            self._assert_never_public(api)
+
+    def test_unkeyed_recent_upload_blocks_only_within_six_hours(self) -> None:
+        for hours, blocked in ((2, True), (7, False)):
+            api, cfg = InsertLogApi(), _cfg(channel_id="UC1")
+            now = _kst(2026, 11, 13, 11, 0)
+            with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+                root = Path(d)
+                old, new, daily, q = self._setup(root, api)
+                push = _episode(root, name="50-push", slug="push")              # 병합 push 로 올린 편(자리 키 없음)
+                _record(push, "PUSH", uploaded=now - dt.timedelta(hours=hours))
+                out = self._run(cfg, daily, q, root, now, api)
+                self.assertEqual(out["slots"][0]["status"], "done-before" if blocked else "uploaded", hours)
+                self.assertEqual(api.uploads, 0 if blocked else 1)
+
+    def test_disabled_auto_maps_hour_to_old_windows(self) -> None:
+        cfg = _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:                     # 6시: 아침(저녁 꺼짐 → 번갈아)
+            api = FakeApi()
+            old, _, daily, q = self._setup(Path(d), api, sched=None, evening=None)
+            out = self._run(cfg, daily, q, Path(d), _kst(2026, 11, 13, 6, 0), api, dry_run=True)
+            self.assertEqual((out["kind"], out["slot"], out["auto"]), ("republish", "morning", True))
+            self.assertIn("다시 올리기 차례", out["note"])
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:                     # 12시: 쉼
+            api = FakeApi()
+            _, new, daily, q = self._setup(Path(d), api, sched=None)
+            out = self._run(cfg, daily, q, Path(d), _kst(2026, 11, 13, 12, 0), api)
+            self.assertEqual((out["slot"], out["counts"]["uploaded"], api.calls), ("auto", 0, []))
+            self.assertIn("시간 창 밖", out["note"])
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:                     # 17시: 저녁(예약 없음)
+            api = InsertLogApi()
+            old, new, daily, q = self._setup(Path(d), api, sched={**SCHED2, "enabled": False})
+            out = self._run(cfg, daily, q, Path(d), _kst(2026, 11, 13, 17, 0), api)
+            self.assertEqual((out["slot"], out["kind"], out["counts"]["uploaded"]), ("evening", "republish", 1))
+            self.assertNotIn("publishAt", api.inserts[0]["status"])
+            self.assertIsNone(yu.read_record(old).slot_key)
+            self.assertIsNone(yu.read_record(new))
+
+    def test_explicit_evening_keys_target_for_later_auto_run(self) -> None:
+        api, cfg = InsertLogApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d, mock.patch.object(yu, "RECENT_HOURS", 0):
+            root = Path(d)
+            old, new, daily, q = self._setup(root, api)
+            out = self._run(cfg, daily, q, root, _kst(2026, 11, 13, 16, 25), api, slot="evening")
+            self.assertEqual((out["slot"], out["counts"]["uploaded"]), ("evening", 1))
+            self.assertEqual(yu.read_record(old).slot_key, "2026-11-13-evening")
+            self.assertEqual(out["results"][0]["slot_key"], "2026-11-13-evening")
+            auto = self._run(cfg, daily, q, root, _kst(2026, 11, 13, 16, 40), api)
+            self.assertEqual([(s["key"], s["status"]) for s in auto["slots"]], [("2026-11-13-evening", "done-before")])
+            self.assertEqual(api.uploads, 1)
+
+    def test_explicit_slot_does_not_repeat_a_target_already_uploaded(self) -> None:
+        """자동 실행이 저녁 몫을 올린 뒤 6시간이 지나 손으로 slot=evening 을 돌려도 같은 몫을 다시 올리지 않는다.
+        (6시간 안전장치를 꺼서 slot_key 확인만으로 막히는지 본다 — 기록의 uploaded_at 은 실제 시계라 시험에서 흉내 낼 수 없다.)"""
+        api, cfg = InsertLogApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d, mock.patch.object(yu, "RECENT_HOURS", 0):
+            root = Path(d)
+            old, new, daily, q = self._setup(root, api)
+            auto = self._run(cfg, daily, q, root, _kst(2026, 11, 13, 10, 30), api)             # 저녁 몫을 미리 올림(17:00 예약)
+            self.assertEqual([(s["key"], s["status"]) for s in auto["slots"]], [("2026-11-13-evening", "uploaded")])
+            n = api.uploads
+            out = self._run(cfg, daily, q, root, _kst(2026, 11, 13, 16, 40), api, slot="evening")   # 6시간 10분 뒤 손으로
+            self.assertEqual((out["counts"]["uploaded"], api.uploads), (0, n))
+            self.assertIn("이미 올렸습니다", out["note"])
+            self._assert_never_public(api)
+
+    def test_sweep_and_privatize_once_per_run(self) -> None:
+        api, cfg = InsertLogApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            old, new, daily, q = self._setup(root, api, auto_sweep=SWEEP)
+            with mock.patch.object(yu, "run_sweep", return_value={"ok": True, "items": [], "warnings": [], "note": "점검"}) as sw, \
+                    mock.patch.object(yu, "privatize_pending", return_value={"items": [], "warnings": []}) as pv:
+                out = self._run(cfg, daily, q, root, _kst(2026, 11, 13, 17, 30), api)
+            self.assertEqual(out["counts"]["uploaded"], 2)
+            self.assertEqual((sw.call_count, pv.call_count), (1, 1))
+            self.assertEqual(out["sweep"]["note"], "점검")
+
+    def test_dry_run_plans_each_target_once_without_secrets(self) -> None:
+        cfg = _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            old, new, daily, q = self._setup(root, FakeApi())
+            with mock.patch.object(yu, "_utcnow", lambda: _kst(2026, 11, 13, 17, 30)):
+                out = yu.daily_next(cfg, daily, q, root, today=dt.date(2026, 11, 13), dry_run=True, slot="auto",
+                                    now=_kst(2026, 11, 13, 17, 30))
+            self.assertEqual([(r["dir"], r["status"], r["publish_at"]) for r in out["results"]],
+                             [(yu._rel(old), "dry-run", "2026-11-13T08:45:00Z"), (yu._rel(new), "dry-run", "2026-11-13T21:00:00Z")])
+            self.assertIn("예약 공개", out["note"])
+
+    def test_invalid_slot(self) -> None:
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d, self.assertRaises(ValueError):
+            yu.daily_next(_cfg(), Path(d) / "daily.json", Path(d) / "none.json", Path(d), today=dt.date(2026, 11, 13),
+                          dry_run=True, slot="noon")
 
 
 @mock.patch.object(yu, "probe_video", lambda p: dict(PROBE_OK))
