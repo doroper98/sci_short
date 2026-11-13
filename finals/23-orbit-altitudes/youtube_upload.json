@@ -1,15 +1,15 @@
 {
- "video_id": "ORlV-iqUq7M",
- "url": "https://youtu.be/ORlV-iqUq7M",
- "studio_url": "https://studio.youtube.com/video/ORlV-iqUq7M/edit",
- "uploaded_at": "2026-11-07T09:57:00+00:00",
+ "video_id": "pW8I_5kL8p4",
+ "url": "https://youtu.be/pW8I_5kL8p4",
+ "studio_url": "https://studio.youtube.com/video/pW8I_5kL8p4/edit",
+ "uploaded_at": "2026-11-13T09:44:07+00:00",
  "privacy_status": "private",
  "channel_id": "UCZJSpmlBYUthLg0PSWcbU6w",
  "channel_title": "과학쑛츠",
  "video_file": "orbit-altitudes.mp4",
- "video_bytes": 17640658,
- "video_md5": "94706a5e8382a06348f3e61ef8074255",
- "title": "제임스웹은 얼마나 높이 있을까? | 산에서 우주까지 #제임스웹 #인공위성 #과학",
+ "video_bytes": 17620647,
+ "video_md5": "126c47bde2e4e5401c6345bd3a75baf5",
+ "title": "제임스웹은 얼마나 높이 있을까? | 산에서 우주까지 #제임스웹 #인공위성 #스타링크 #NASA #우주 #천문학 #과학",
  "description_bytes": 1386,
  "contains_synthetic_media": true,
  "made_for_kids": false,
@@ -21,9 +21,27 @@
  "thumbnail_file": "poster.jpg",
  "thumbnail_error": null,
  "thumbnail_after_processing": true,
- "thumbnail_set_at": "2026-11-07T09:57:34+00:00",
+ "thumbnail_set_at": "2026-11-13T09:44:40+00:00",
  "number": 23,
  "slug": "orbit-altitudes",
  "source": "api",
- "schema_version": 1
+ "previous": [
+  {
+   "video_id": "ORlV-iqUq7M",
+   "url": "https://youtu.be/ORlV-iqUq7M",
+   "title": "제임스웹은 얼마나 높이 있을까? | 산에서 우주까지 #제임스웹 #인공위성 #과학",
+   "uploaded_at": "2026-11-07T09:57:00+00:00",
+   "views_at_republish": 13,
+   "privacy_at_republish": "public",
+   "republished_at": "2026-11-13T09:44:04+00:00",
+   "reason": "republish",
+   "privatized_at": "2026-11-13T09:44:08+00:00",
+   "privatize_result": "privatized"
+  }
+ ],
+ "privatized_at": null,
+ "sweep": null,
+ "publish_at": "2026-11-13T10:00:00Z",
+ "schema_version": 1,
+ "slot_key": "2026-11-13-evening"
 }

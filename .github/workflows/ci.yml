@@ -47,10 +47,9 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
       - name: 단위 시험
         run: python -m unittest discover -s tests -v
-      - name: 아침·저녁 업로드 모의 실행 (dry-run, 다음 아침·저녁에 무엇을 올릴지)
+      - name: 예약 업로드 모의 실행 (dry-run, 지금 맡을 예약 목표마다 무엇을 올리고 언제 공개할지)
         run: |
-          python -m publish.youtube --daily-next --dry-run
-          python -m publish.youtube --daily-next --slot evening --dry-run   # 저녁 다시 올리기(2026-11-13)
+          python -m publish.youtube --daily-next --slot auto --dry-run   # 예약 실행과 같은 경로(2026-11-13 예약 공개)
           python -m publish.instagram --next evening --dry-run | tail -1    # 인스타 17시 다음 편
       - name: 바뀐 finals 에피소드 사전 검증 (dry-run)
         run: |
