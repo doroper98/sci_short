@@ -8,6 +8,9 @@
 #         2026-11-12 사용자 "하루씩 번갈아": alternate_with_new 면 새 편과 다시 올리기를 하루씩 번갈아(하루 한 편 그대로).
 #         다시 올린 뒤 옛 판은 코드가 비공개로 돌린다(공개 → 비공개만, 토큰에 youtube.force-ssl 필요 — 없으면 경고만).
 #         실행마다 먼저 밀린 옛 판 비공개 전환을 다시 시도한다(실패해도 업로드는 그대로).
+#         2026-11-13 사용자 "업로드 48시간 지났는데 조회수 50회 미만인 애들은 비공개로 바꾸고 업로드 일정에 다시 넣어서 재업로드":
+#         --daily-next 가 맨 먼저 48시간 점검을 한다(config/republish.json auto_sweep, 실패해도 업로드는 그대로).
+# - 수동 실행에서 sweep_only 를 켜면 48시간 점검과 밀린 비공개 전환만 하고 기록을 커밋한다(업로드·인스타·틱톡 없음).
 # - 올리면 '공개 전환 대기' 이슈가 열린다. 공개는 사용자가 한다(이 워크플로는 비공개로만 올린다).
 # - 인스타(2026-11-08 사용자 결정 "아침 업로드와 동시에"): 유튜브 단계 직후 한 편을 게시한다(즉시 공개).
 #   오늘 유튜브에 올린 편이 먼저, 없으면 아직 인스타에 없는 옛 편. 옛 편은 17시(instagram-evening)에도 한 편씩.
@@ -22,6 +25,10 @@ on:
     inputs:
       dry_run:
         description: "검증만 하고 올리지 않음"
+        type: boolean
+        default: false
+      sweep_only:
+        description: "48시간 점검(조회수 기준 미만 → 비공개 + 다시 올리기 대상)과 밀린 비공개 전환만 — 올리지 않음"
         type: boolean
         default: false
 
@@ -56,24 +63,27 @@ jobs:
     env:
       PYTHONUTF8: "1"
       DRY_RUN: ${{ inputs.dry_run }}
+      SWEEP_ONLY: ${{ inputs.sweep_only }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: ffprobe 설치
+        if: ${{ inputs.sweep_only != true }}
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
-      - name: 아침 한 편 올리기 (항상 비공개)
+      - name: 아침 한 편 올리기 (항상 비공개) · 점검만이면 48시간 점검
         env:
           YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
           YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
           YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
         run: |
           ARGS=(--daily-next --report upload-report.json)
+          if [ "$SWEEP_ONLY" = "true" ]; then ARGS=(--sweep --report upload-report.json); fi
           if [ "$DRY_RUN" = "true" ]; then ARGS+=(--dry-run); fi
           python -m publish.youtube "${ARGS[@]}"
       - name: 인스타 릴스 아침 게시 (즉시 공개)
-        if: ${{ always() }}
+        if: ${{ always() && inputs.sweep_only != true }}
         env:
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
         run: |
@@ -85,7 +95,7 @@ jobs:
           if [ "$DRY_RUN" = "true" ]; then ARGS+=(--dry-run); fi
           python -m publish.instagram "${ARGS[@]}"
       - name: 틱톡 직접 게시 안내 (올리지 않음)
-        if: ${{ always() }}
+        if: ${{ always() && inputs.sweep_only != true }}
         run: |
           ARGS=(--next --report tiktok-report.json)
           while read -r p; do
@@ -101,7 +111,9 @@ jobs:
           MISSING=0
           python .github/scripts/stage_records.py upload-report.json instagram-report.json tiktok-report.json || MISSING=1
           if git diff --cached --quiet; then echo "기록 변경 없음"; exit $MISSING; fi
-          git commit -m "publish: 유튜브·인스타 아침 기록 [skip ci]"
+          MSG="publish: 유튜브·인스타 아침 기록 [skip ci]"
+          if [ "$SWEEP_ONLY" = "true" ]; then MSG="publish: 유튜브 48시간 점검 기록 [skip ci]"; fi
+          git commit -m "$MSG"
           git pull --rebase origin "$GITHUB_REF_NAME"
           git push origin "HEAD:$GITHUB_REF_NAME"
           exit $MISSING

@@ -88,7 +88,7 @@ def privatize_section(data: dict) -> str:
     """옛 판 비공개 전환(publish.youtube privatize_pending — 아침 실행 시작 때 밀린 것을 다시 시도) 결과를 요약에 쓴다.
     공개 → 비공개 한 방향만 한다(2026-11-12). 실패 이유(토큰 범위 등)는 경고로 보인다."""
     items = data.get("privatize") or []
-    warns = [w for w in data.get("warnings", []) if "비공개 전환" in w]
+    warns = [w for w in data.get("warnings", []) if "비공개 전환" in w and not w.startswith(SWEEP_WARN)]
     if not items and not warns:
         return ""
     lines = ["## 옛 판 비공개 전환 (공개 → 비공개만)", ""]
@@ -99,6 +99,36 @@ def privatize_section(data: dict) -> str:
             lines.append(f"- 옛 판 {it.get('url')} 비공개 전환 예정(dry-run) — `{it.get('dir', '')}`")
         else:
             lines.append(f"- 옛 판 {it.get('url')} {it.get('result')}: {cell(it.get('error', ''))} — `{it.get('dir', '')}`")
+    lines += [f"- {cell(w)}" for w in warns]
+    summary("\n".join(lines))
+    return "\n".join(lines[2:]) + "\n"
+
+
+SWEEP_WARN = "48시간 점검: "        # publish/youtube.py SWEEP_WARN 과 같은 머리말
+
+
+def sweep_section(data: dict) -> str:
+    """48시간 점검(publish.youtube sweep_low_views, 2026-11-13 사용자 "업로드 48시간 지났는데 조회수 50회 미만인 애들은
+    비공개로 바꾸고 … 재업로드") 결과를 요약에 쓴다. 비공개로 돌린 편·통과한 편·상한에 이른 편만 짧게."""
+    sw = data.get("sweep") or {}
+    items = [it for it in sw.get("items", []) if it.get("result") in ("flagged", "ok", "exhausted")]
+    warns = [w for w in data.get("warnings", []) if w.startswith(SWEEP_WARN)]
+    if not items and not warns and not sw.get("note"):
+        return ""
+    lines = ["## 48시간 점검 (공개 48시간 뒤 조회수 기준 미만 → 비공개 + 다시 올리기)", ""]
+    if sw.get("note"):
+        lines.append(f"- {cell(sw['note'])}")
+    for it in items:
+        what = f"`{it.get('dir', '')}` {it.get('url', '')} — 조회 {it.get('views')}회 · 공개 {it.get('age_hours')}시간"
+        if it["result"] == "flagged":
+            pv = it.get("privatize")
+            state = ("비공개 전환됨" if pv in PRIVATIZE_DONE else "비공개 전환 예정(dry-run)" if pv == "dry-run" else
+                     f"비공개 전환 실패(다음 실행에서 다시 시도): {cell(it.get('error', pv or '?'))}")
+            lines.append(f"- 다시 올리기 대상: {what} · {state}")
+        elif it["result"] == "ok":
+            lines.append(f"- 통과: {what}")
+        else:
+            lines.append(f"- 다시 올리기 상한 도달(공개 그대로): {what}")
     lines += [f"- {cell(w)}" for w in warns]
     summary("\n".join(lines))
     return "\n".join(lines[2:]) + "\n"
@@ -158,7 +188,10 @@ def cmd_report(path: str, ig_path: str | None = None, tt_path: str | None = None
     if data is None:
         summary("## 유튜브 업로드\n결과 파일이 없습니다 — 업로드 단계가 시작 전에 실패했습니다(비밀값·설정 확인). " + RUN_URL)
         return 0
+    sw_md = sweep_section(data)
     pv_md = privatize_section(data)
+    if data.get("kind") == "sweep":                            # 점검만 한 수동 실행(sweep_only) — 업로드 없음
+        return tiktok_issues(tt, tt_done)
     if data.get("note") and not data.get("results"):
         summary(f"## 유튜브 아침 업로드\n{data['note']}")       # 쉬는 날(비공개 대기·시작 전·대기열 끝)
         return tiktok_issues(tt, tt_done)
@@ -207,7 +240,8 @@ def cmd_report(path: str, ig_path: str | None = None, tt_path: str | None = None
                     f"경고:\n{warns}\n\n확인할 것:\n- [ ] 영상·음성·자막이 맞는가\n- [ ] 제목·설명·태그가 맞는가\n"
                     f"- [ ] 아동용 선언·합성 콘텐츠 표시가 맞는가\n- [ ] 공개(또는 예약 공개)로 전환\n"
                     + ("- [ ] 이전 판을 비공개로 전환\n" if (r.get("previous_video") or r.get("republish")) and not pv_done else "")
-                    + tt_part + (f"\n옛 판 비공개 전환(밀린 것 다시 시도):\n{pv_md}" if pv_md else "") + f"\n실행: {RUN_URL}")
+                    + tt_part + (f"\n48시간 점검:\n{sw_md}" if sw_md else "")
+                    + (f"\n옛 판 비공개 전환(밀린 것 다시 시도):\n{pv_md}" if pv_md else "") + f"\n실행: {RUN_URL}")
             create_issue_once(title, body, LABEL_REVIEW, review)
         elif r["status"] == "error":
             title = f"유튜브 업로드 실패: {r['dir']}"
