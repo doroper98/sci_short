@@ -1,8 +1,13 @@
 """완성된 쇼츠를 유튜브 채널에 **비공개(private)** 로 올리는 도구.
 
-공개 전환은 사용자가 YouTube Studio 에서 직접 한다. 이 도구는 어떤 설정으로도 public·unlisted 로 올리지 않는다.
-바꿀 수 있는 것은 영상을 공개 → 비공개로 돌리는 것 하나뿐이다(set_private — 다시 올린 편의 옛 판 2026-11-12,
-48시간 점검에서 조회수 기준 미만인 판 2026-11-13). 삭제는 없다.
+videos.insert 의 privacyStatus 는 언제나 "private" 다. 이 도구는 어떤 설정으로도 public·unlisted 를 보내지 않는다.
+예약 공개(2026-11-13 사용자: "오 좋다 예약 공개. …", "아침에도 예약공개로 하자"): 아침·저녁 업로드(daily_next,
+youtube-daily)만 비공개로 올리면서 status.publishAt(예약 공개 시각, config/daily.json scheduled_publish — 아침 07:00 ·
+저녁 17:00 KST, 실행이 늦으면 지금부터 min_lead_min 분 뒤)을 함께 보내고, 그 시각에 유튜브가 공개한다.
+publishAt 은 새 영상의 insert 본문에만 넣고 videos.update 에는 보내지 않는다. 병합 push(--auto)·폴더 지정·--all·
+--republish 업로드는 예약 없이 비공개로만 올리고, 공개는 사용자가 YouTube Studio 에서 직접 한다.
+이미 올라간 영상에 대해 바꿀 수 있는 것은 공개 → 비공개 하나뿐이다(set_private — 다시 올린 편의 옛 판 2026-11-12,
+48시간 점검에서 조회수 기준 미만인 판 2026-11-13). 비공개 → 공개 전환과 삭제는 없다.
 
 사용법
     python -m publish.youtube finals/<NN>-<slug> --dry-run   # 입력·메타데이터·영상 규격 검증만 (비밀값 불필요)
@@ -337,15 +342,21 @@ class Metadata:
     contains_synthetic_media: bool
     made_for_kids: bool
     privacy_status: str = "private"
+    publish_at: str | None = None    # 예약 공개 시각(UTC "YYYY-MM-DDTHH:MM:SSZ"). daily_next 만 넣는다. None = 예약 없음
 
     def body(self) -> dict[str, Any]:
-        """videos.insert 요청 본문. privacyStatus 는 어떤 경로로도 private 이외가 될 수 없다."""
+        """videos.insert 요청 본문. privacyStatus 는 어떤 경로로도 private 이외가 될 수 없다.
+        publish_at 이 있으면 status.publishAt(예약 공개)을 함께 보낸다 — 영상은 비공개로 올라가고, 그 시각에 유튜브가
+        공개한다. 이 도구가 영상을 공개하는 길은 이것뿐이며 insert 본문에만 있다(videos.update 에는 보내지 않는다)."""
+        status: dict[str, Any] = {"privacyStatus": "private", "selfDeclaredMadeForKids": self.made_for_kids,
+                                  "containsSyntheticMedia": self.contains_synthetic_media}
+        if self.publish_at:
+            status["publishAt"] = self.publish_at
         return {
             "snippet": {"title": self.title, "description": self.description, "tags": self.tags,
                         "categoryId": self.category_id, "defaultLanguage": self.default_language,
                         "defaultAudioLanguage": self.default_language},
-            "status": {"privacyStatus": "private", "selfDeclaredMadeForKids": self.made_for_kids,
-                       "containsSyntheticMedia": self.contains_synthetic_media},
+            "status": status,
         }
 
 
@@ -398,7 +409,72 @@ def validate_metadata(meta: Metadata) -> list[str]:
         errs.append(f"태그 합계 {tag_len}자 — 한도 {TAGS_MAX_CHARS}자")
     if meta.privacy_status != "private":
         errs.append("privacy_status 가 private 이 아닙니다")
+    if meta.publish_at is not None:
+        if not PUBLISH_AT_RE.fullmatch(str(meta.publish_at)) or _parse_time(meta.publish_at) is None:
+            errs.append(f"예약 공개 시각 형식 오류 {meta.publish_at!r} — UTC 'YYYY-MM-DDTHH:MM:SSZ' 여야 합니다")
     return errs
+
+
+# ───────────────────────────── 예약 공개 ─────────────────────────────
+# 2026-11-13 사용자: "오 좋다 예약 공개. …", "아침에도 예약공개로 하자". 저녁 17:00 은 사용자 결정("저녁편 등록 시점을 17시로"),
+# 아침 07:00·최소 여유 15분·daily_next 밖 업로드는 예약하지 않는 것은 제작 세션의 제안(config/daily.json _scheduled_publish).
+
+PUBLISH_AT_RE = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z")
+PUBLISH_AT_MIN_AHEAD_MIN = 5       # 업로드 직전 검사: 지금부터 이 분 수보다 가까우면 거절(지난 시각 = 즉시 공개가 되는 것을 막는다)
+PUBLISH_AT_MAX_AHEAD_DAYS = 7      # 업로드 직전 검사: 이보다 먼 예약은 설정 오류로 본다
+HHMM_RE = re.compile(r"([01]\d|2[0-3]):([0-5]\d)")
+
+
+def _utcnow() -> dt.datetime:
+    return dt.datetime.now(dt.timezone.utc)
+
+
+def scheduled_publish_at(daily: dict[str, Any], slot: str, now: dt.datetime) -> str | None:
+    """config/daily.json scheduled_publish → 이 자리(slot: morning·evening) 업로드의 예약 공개 시각(UTC 'YYYY-MM-DDTHH:MM:SSZ').
+
+    꺼져 있거나(enabled 아님·키 없음) '<slot>_kst' 가 없으면 None(예약 없이 비공개로만).
+    목표 = now 의 KST 날짜의 HH:MM KST. 실행이 늦어 목표까지 min_lead_min(기본 15)분이 안 남으면 now + min_lead_min 을
+    다음 정분으로 올린 시각. 다음 날로 미루거나 지난 시각을 쓰지 않는다. HH:MM 형식이 틀리면 ValueError(추측하지 않는다)."""
+    sp = daily.get("scheduled_publish")
+    if not isinstance(sp, dict) or not sp.get("enabled"):
+        return None
+    hhmm = sp.get(f"{slot}_kst")
+    if not hhmm:
+        return None
+    m = HHMM_RE.fullmatch(str(hhmm))
+    if not m:
+        raise ValueError(f"config/daily.json scheduled_publish.{slot}_kst 는 'HH:MM'(24시간, KST) 이어야 합니다: {hhmm!r}")
+    lead = sp.get("min_lead_min", 15)
+    if isinstance(lead, bool) or not isinstance(lead, int) or lead < PUBLISH_AT_MIN_AHEAD_MIN:
+        raise ValueError(f"config/daily.json scheduled_publish.min_lead_min 은 {PUBLISH_AT_MIN_AHEAD_MIN} 이상의 정수여야 합니다: {lead!r}")
+    now = now if now.tzinfo else now.replace(tzinfo=dt.timezone.utc)
+    day = now.astimezone(KST).date()
+    target = dt.datetime(day.year, day.month, day.day, int(m.group(1)), int(m.group(2)), tzinfo=KST)
+    earliest = now + dt.timedelta(minutes=lead)
+    if earliest.second or earliest.microsecond:
+        earliest = earliest.replace(second=0, microsecond=0) + dt.timedelta(minutes=1)
+    return max(target, earliest).astimezone(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def check_publish_at(publish_at: str, now: dt.datetime) -> list[str]:
+    """업로드 직전 검사. 예약 시각이 지금부터 5분 안(또는 지난 시각)이거나 7일보다 멀면 오류. 빈 목록이면 통과."""
+    t = _parse_time(publish_at) if PUBLISH_AT_RE.fullmatch(str(publish_at)) else None
+    if t is None:
+        return [f"예약 공개 시각 형식 오류 {publish_at!r} — UTC 'YYYY-MM-DDTHH:MM:SSZ' 여야 합니다"]
+    now = now if now.tzinfo else now.replace(tzinfo=dt.timezone.utc)
+    if t < now + dt.timedelta(minutes=PUBLISH_AT_MIN_AHEAD_MIN):
+        return [f"예약 공개 시각 {kst_label(publish_at)} 이 지금부터 {PUBLISH_AT_MIN_AHEAD_MIN}분 안이거나 지났습니다 — 올리지 않음"]
+    if t > now + dt.timedelta(days=PUBLISH_AT_MAX_AHEAD_DAYS):
+        return [f"예약 공개 시각 {kst_label(publish_at)} 이 지금부터 {PUBLISH_AT_MAX_AHEAD_DAYS}일보다 멉니다 — 올리지 않음"]
+    return []
+
+
+def kst_label(publish_at: str, *, date: bool = True) -> str:
+    """'2026-11-14T08:00:00Z' → '2026-11-14 17:00 KST'(date=False 면 '17:00')."""
+    t = _parse_time(publish_at)
+    if t is None:
+        return str(publish_at)
+    return t.astimezone(KST).strftime("%Y-%m-%d %H:%M KST" if date else "%H:%M")
 
 
 # ───────────────────────────── 영상 규격 ─────────────────────────────
@@ -763,6 +839,7 @@ class Record:
     previous: list[dict[str, Any]] = field(default_factory=list)   # 다시 올리기 전의 판들(최근 것이 앞)
     privatized_at: str | None = None      # 이 판(video_id)을 비공개로 돌린 시각(privatize_only · 48시간 점검)
     sweep: dict[str, Any] | None = None   # 이 판의 48시간 점검 결과(sweep_low_views, 2026-11-13). 다시 올리면 previous[0].sweep 으로
+    publish_at: str | None = None         # 이 판의 예약 공개 시각(UTC, 2026-11-13). None = 예약 없음(사용자가 직접 공개)
     schema_version: int = 1
 
 
@@ -855,8 +932,13 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
                     allow_reupload: bool = False, sleep: Callable[[float], None] = time.sleep, auto: bool = False,
                     republish: bool = False, republish_min_views: int = 100, republish_previous_id: str | None = None,
                     privatize_protected: frozenset[str] = frozenset(),
-                    morning: set[int] | None = None, republish_path: Path | None = None) -> dict[str, Any]:
+                    morning: set[int] | None = None, republish_path: Path | None = None,
+                    publish_at: str | None = None) -> dict[str, Any]:
     """에피소드 하나. 결과 dict 의 status: uploaded · skipped · dry-run · error.
+
+    publish_at(예약 공개, 2026-11-13): daily_next 만 넘긴다. 주면 비공개로 올리면서 status.publishAt 을 함께 보내고
+    (그 시각에 유튜브가 공개), 기록·결과에 publish_at 을 남긴다. 실제 업로드 직전에 check_publish_at 으로 다시 확인하고
+    맞지 않으면 올리지 않는다(예약 없는 업로드나 즉시 공개로 바꾸지 않는다). None 이면 예약 없이 비공개로만.
 
     기록이 있는데 영상 파일이 바뀐 편은 보통 --allow-reupload 없이는 거절한다. 다만 다시 올리기 대기 중인 편
     (republish_path 의 대기열에 있고 아직 다시 올리지 않았거나, 48시간 점검이 지금 판을 flagged 로 적은 편)은
@@ -890,7 +972,10 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
             _log(f"{_rel(dir_)}: {res['warnings'][-1]}")
             return res
         meta = build_metadata(ep, cfg, synthetic=synthetic, made_for_kids=made_for_kids)
+        meta.publish_at = publish_at
         res["title"] = meta.title
+        if publish_at is not None:
+            res["publish_at"] = publish_at
         errs = validate_metadata(meta)
         probe = probe_video(ep.video)
         verrs, vwarns = check_video(probe, cfg, not_shorts=not_shorts)
@@ -905,7 +990,8 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
         _log(f"{_rel(dir_)}: 제목 「{meta.title}」 · 설명 {_nbytes(meta.description)}B · 태그 {len(meta.tags)}개 · 영상 {size / MB:.1f}MB"
              + (f" · {probe['width']}×{probe['height']} {probe['duration_sec']:.1f}s" if probe else "")
              + f" · 자막 {'올림' if ep.srt else '안 올림'} · 썸네일 {ep.thumbnail.name if ep.thumbnail else '없음'}"
-             + f" · 비공개 · 합성표시={meta.contains_synthetic_media} · 아동용={meta.made_for_kids}")
+             + " · 비공개" + (f" · 예약 공개 {kst_label(publish_at)}" if publish_at else "")
+             + f" · 합성표시={meta.contains_synthetic_media} · 아동용={meta.made_for_kids}")
         prev = read_record(dir_)
         if prev is not None and not republish:
             if prev.video_md5 == md5:
@@ -976,6 +1062,11 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
                 _log(f"다시 올리기: 이전 판 {WATCH_URL_PREFIX + old_id} 조회 {st['views'] if st else '없음(지워짐)'}회")
             else:
                 prev_info = {"video_id": None, "note": "손으로 올린 이전 판(ID 미기록)", "republished_at": _now(), "reason": "republish"}
+        if publish_at is not None:
+            perrs = check_publish_at(publish_at, _utcnow())
+            if perrs:   # 예약 없는 업로드·즉시 공개로 바꾸지 않는다 — 올리지 않고 오류로 남긴다
+                raise UploadError("예약 공개 검사 실패: " + " · ".join(perrs))
+            _log(f"예약 공개 {kst_label(publish_at)}")
         vid = upload_video(tx, cfg, token, ep.video, meta, sleep=sleep, log=_log)
         rec = Record(video_id=vid, url=WATCH_URL_PREFIX + vid, studio_url=STUDIO_URL.format(video_id=vid),
                      uploaded_at=_now(), privacy_status="private",
@@ -983,12 +1074,13 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
                      title=meta.title, description_bytes=_nbytes(meta.description),
                      contains_synthetic_media=meta.contains_synthetic_media, made_for_kids=meta.made_for_kids,
                      duration_sec=probe["duration_sec"] if probe else None, width=probe["width"] if probe else None,
-                     height=probe["height"] if probe else None, number=ep.number, slug=ep.slug, source="api")
+                     height=probe["height"] if probe else None, number=ep.number, slug=ep.slug, source="api",
+                     publish_at=publish_at)
         if prev_info is not None:
             rec.previous = [prev_info] + (prev.previous if prev is not None else [])
             res.update(republish=True, previous_video=prev_info.get("url"), previous_views=prev_info.get("views_at_republish"))
         write_record(dir_, rec)   # 자막·썸네일이 실패해도 영상 기록은 남는다
-        _log(f"영상 업로드 완료(비공개) {rec.url} · Studio {rec.studio_url}")
+        _log(f"영상 업로드 완료(비공개{' · 예약 공개 ' + kst_label(publish_at) if publish_at else ''}) {rec.url} · Studio {rec.studio_url}")
         if prev_info is not None and prev_info.get("video_id"):
             # 새 판이 올라가고 기록이 남은 뒤에만 옛 판을 비공개로(공개 → 비공개). 실패해도 업로드는 성공이다.
             pv = privatize_entry(tx, token, cfg, rec.previous[0], prev_info["video_id"], max_views=republish_min_views,
@@ -1094,7 +1186,8 @@ def evening_enabled(daily: dict[str, Any]) -> bool:
 
 def daily_next(cfg: Config, daily_path: Path, republish_path: Path, finals: Path, *, today: dt.date, dry_run: bool,
                send: Transport | None = None, env: dict[str, str] | None = None,
-               sleep: Callable[[float], None] = time.sleep, slot: str = "morning") -> dict[str, Any]:
+               sleep: Callable[[float], None] = time.sleep, slot: str = "morning",
+               now: dt.datetime | None = None) -> dict[str, Any]:
     """하루 업로드 한 번(youtube-daily 워크플로). 아침(slot="morning")은 2026-11-08 사용자 결정, 저녁(slot="evening")은
     2026-11-13 사용자 "저녁에도 한편 더 올리자."(어느 종류를 어느 자리에 두는지는 제작 세션의 제안).
 
@@ -1111,7 +1204,10 @@ def daily_next(cfg: Config, daily_path: Path, republish_path: Path, finals: Path
     다시 올리기 대상이 된다.
     저녁: evening.enabled 일 때만, 다시 올리기 한 편(republish_next). 올릴 편이 없으면 쉰다. 새 편은 올리지 않고
     48시간 점검도 하지 않는다(아침 몫).
-    아침·저녁 모두 비공개로 돌리지 못한 옛 판을 다시 시도한다(privatize_pending). 점검·재시도가 실패해도 업로드를 막지 않는다."""
+    아침·저녁 모두 비공개로 돌리지 못한 옛 판을 다시 시도한다(privatize_pending). 점검·재시도가 실패해도 업로드를 막지 않는다.
+    예약 공개(2026-11-13 사용자 "아침에도 예약공개로 하자"): config/daily.json scheduled_publish 가 켜져 있으면 이 실행에서
+    올리는 편(아침 새 편·아침 다시 올리기·저녁 다시 올리기)에 scheduled_publish_at(daily, slot, now) 를 걸어 올린다.
+    꺼져 있거나 없으면 예전처럼 예약 없이 비공개로만."""
     if slot not in ("morning", "evening"):
         raise ValueError(f"slot 은 morning 또는 evening 입니다: {slot!r}")
     daily = load_daily(daily_path)
@@ -1121,6 +1217,7 @@ def daily_next(cfg: Config, daily_path: Path, republish_path: Path, finals: Path
     if slot == "evening" and not evening:
         return {"ok": True, "counts": dict(empty), "results": [], "slot": "evening",
                 "note": "저녁 업로드 꺼짐(config/daily.json evening.enabled) — 쉼"}
+    publish_at = scheduled_publish_at(daily, slot, now or _utcnow())   # 형식 오류면 ValueError — 아무것도 하기 전에 멈춘다
     rc = load_republish(republish_path)
     sweep = (run_sweep(cfg, republish_path, finals, dry_run=dry_run, send=send, env=env)
              if slot == "morning" and rc.get("auto_sweep") else None)
@@ -1136,6 +1233,9 @@ def daily_next(cfg: Config, daily_path: Path, republish_path: Path, finals: Path
             if catch.get("warnings"):
                 out["warnings"] = out.get("warnings", []) + catch["warnings"]
         out["slot"] = slot
+        if publish_at and any(r.get("status") in ("uploaded", "dry-run") for r in out.get("results", [])):
+            out["publish_at"] = publish_at
+            out["note"] = out.get("note", "") + f" · 예약 공개 {kst_label(publish_at, date=False)} KST"
         return out
 
     if not dry_run and recently_uploaded(finals, RECENT_HOURS):
@@ -1146,7 +1246,7 @@ def daily_next(cfg: Config, daily_path: Path, republish_path: Path, finals: Path
             return done({"ok": True, "counts": empty, "results": [], "kind": "republish",
                          "note": "저녁 다시 올리기 — 다시 올리기 설정(config/republish.json)이 없어 저녁은 쉽니다"})
         out = republish_next(cfg, republish_path, finals, today=today, dry_run=dry_run, send=send, env=env, sleep=sleep,
-                             skip_hold=True)
+                             skip_hold=True, publish_at=publish_at)
         out["kind"] = "republish"
         c = out["counts"]
         if c["uploaded"] or c["error"] or c["dry-run"]:
@@ -1175,7 +1275,7 @@ def daily_next(cfg: Config, daily_path: Path, republish_path: Path, finals: Path
             turn = f"번갈아 올리기: 다시 올릴 편이 없어({why}) 새 편"
         elif last == "new":
             out = republish_next(cfg, republish_path, finals, today=today, dry_run=dry_run, send=send, env=env, sleep=sleep,
-                                 skip_hold=True)
+                                 skip_hold=True, publish_at=publish_at)
             c = out["counts"]
             if c["uploaded"] or c["error"] or c["dry-run"]:
                 out["kind"] = "republish"
@@ -1189,14 +1289,14 @@ def daily_next(cfg: Config, daily_path: Path, republish_path: Path, finals: Path
             turn = (f"번갈아 올리기: {last_txt}가 다시 올리기라 오늘은 새 편 차례" if last == "republish" else
                     "번갈아 올리기: 업로드 기록이 없어 새 편부터")
     if ready:
-        res = process_episode(ready[0], cfg, dry_run=dry_run, send=send, env=env, sleep=sleep)
+        res = process_episode(ready[0], cfg, dry_run=dry_run, send=send, env=env, sleep=sleep, publish_at=publish_at)
         results = pre + [res]
         counts = {s: sum(1 for r in results if r["status"] == s) for s in empty}
         return done({"ok": counts["error"] == 0, "counts": counts, "results": results, "kind": "new",
                      "note": (f"{turn} — " if turn else "") + f"새 편 {_rel(ready[0])}"
                      + (f" · 대기 {len(ready) - 1}편 더" if len(ready) > 1 else "")})
     out = republish_next(cfg, republish_path, finals, today=today, dry_run=dry_run, send=send, env=env, sleep=sleep,
-                         skip_hold=True)
+                         skip_hold=True, publish_at=publish_at)
     out["kind"] = "republish"
     out["note"] = "올릴 새 편이 없어 다시 올리기 대기열에서 — " + out.get("note", "한 편")
     return done(out)
@@ -1509,8 +1609,14 @@ def sweep_low_views(cfg: Config, republish_path: Path, finals: Path, *, dry_run:
         if v["privacy"] != "public":
             it["result"] = "not-public"
             continue
+        sched = _parse_time(rec.publish_at) if rec is not None and rec.publish_at else None
+        if sched is not None and sched > now:   # 예약 공개 시각 전 — 아직 공개 전으로 본다
+            it["result"] = "not-public"
+            continue
         since, basis = _parse_time(v["published_at"]), "publishedAt"
-        if rec is not None and rec.source == "api":
+        if sched is not None:                   # 예약 공개한 판은 그 시각부터 잰다(publishedAt 모호함 우회 없음)
+            since, basis = sched, "publish_at"
+        elif rec is not None and rec.source == "api":
             up = _parse_time(rec.uploaded_at)
             if since is None or (up is not None and (since - up).total_seconds() < SWEEP_AMBIGUOUS_SEC):
                 sw = rec.sweep if isinstance(rec.sweep, dict) else {}
@@ -1532,6 +1638,8 @@ def sweep_low_views(cfg: Config, republish_path: Path, finals: Path, *, dry_run:
         snap: dict[str, Any] = {"checked_at": stamp, "views": v["views"], "age_hours": age, "published_at": v["published_at"]}
         if basis == "public_seen_at":
             snap["public_seen_at"] = since.isoformat(timespec="seconds")
+        elif basis == "publish_at":
+            snap["publish_at"] = rec.publish_at
         action = ("ok" if v["views"] >= threshold else
                   "exhausted" if rec is not None and republish_count(rec) >= cap else "flagged")
         it["result"] = action
@@ -1591,12 +1699,14 @@ def run_sweep(cfg: Config, republish_path: Path, finals: Path, *, dry_run: bool,
 
 def republish_next(cfg: Config, queue_path: Path, finals: Path, *, today: dt.date, dry_run: bool,
                    send: Transport | None = None, env: dict[str, str] | None = None,
-                   sleep: Callable[[float], None] = time.sleep, skip_hold: bool = False) -> dict[str, Any]:
+                   sleep: Callable[[float], None] = time.sleep, skip_hold: bool = False,
+                   publish_at: str | None = None) -> dict[str, Any]:
     """대기열(config/republish.json)에서 다음 한 편을 다시 올린다. 아침 업로드(daily_next)가 새 편이 없는 날 부른다.
 
     쉬는 경우: 시작일 전 · 대기열 끝 · 최근 hold_days 안에 올린 영상이 아직 비공개(사용자가 공개하기 전, hold_days 0 이면 보지 않음).
     이전 판이 그사이 min_views 이상이면 그 편은 건너뛰고 다음 편으로 간다. 한 번에 최대 한 편만 올린다.
-    기록이 없는(손으로 올린) 편의 이전 판은 previous_ids 로 안다. 올린 뒤 이전 판을 비공개로 돌린다(process_episode)."""
+    기록이 없는(손으로 올린) 편의 이전 판은 previous_ids 로 안다. 올린 뒤 이전 판을 비공개로 돌린다(process_episode).
+    publish_at(예약 공개)은 daily_next 만 넘긴다 — CLI --republish-next 는 예약 없이 올린다."""
     rc = json.loads(queue_path.read_text(encoding="utf-8"))
     min_views = int(rc.get("min_views", 100))
     hold_days = int(rc.get("hold_if_private_within_days", 3))
@@ -1619,7 +1729,7 @@ def republish_next(cfg: Config, queue_path: Path, finals: Path, *, today: dt.dat
     for d in todo:
         res = process_episode(d, cfg, dry_run=dry_run, send=send, env=env, sleep=sleep, republish=True,
                               republish_min_views=min_views, privatize_protected=protected,
-                              republish_previous_id=previous_ids.get(d.relative_to(REPO).as_posix()))
+                              republish_previous_id=previous_ids.get(d.relative_to(REPO).as_posix()), publish_at=publish_at)
         results.append(res)
         if res["status"] != "skipped":          # 올렸거나(또는 dry-run·오류) 멈춘다 — 하루 한 편
             break

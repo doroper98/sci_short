@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""GitHub Actions 보조 — 업로드·게시 결과를 작업 요약에 쓰고, '공개 전환 대기'·실패 이슈를 만든다. gh CLI(GH_TOKEN) 사용.
+"""GitHub Actions 보조 — 업로드·게시 결과를 작업 요약에 쓰고, '공개 전환 대기'('예약 공개' 편은 '예약 공개 HH:MM')·실패 이슈를 만든다. gh CLI(GH_TOKEN) 사용.
 
     youtube_report.py report upload-report.json [instagram-report.json]
     youtube_report.py token-check whoami-report.json <success|failure>
@@ -9,6 +9,7 @@
 
 from __future__ import annotations
 
+import datetime as dt
 import json
 import os
 import subprocess
@@ -74,6 +75,15 @@ def load(path: str) -> dict | None:
         return json.loads(p.read_text(encoding="utf-8"))
     except ValueError:
         return None
+
+
+def kst_hhmm(publish_at: str) -> str:
+    """예약 공개 시각(UTC 'YYYY-MM-DDTHH:MM:SSZ') → KST 'HH:MM'. 읽을 수 없으면 그대로."""
+    try:
+        t = dt.datetime.fromisoformat(str(publish_at).replace("Z", "+00:00"))
+    except ValueError:
+        return str(publish_at)
+    return t.astimezone(dt.timezone(dt.timedelta(hours=9))).strftime("%H:%M")
 
 
 def cell(text: str) -> str:
@@ -202,7 +212,8 @@ def cmd_report(path: str, ig_path: str | None = None, tt_path: str | None = None
         create_issue_once("유튜브 업로드 실패: 설정·비밀값", f"오류: {data.get('error', '?')}\n\n실행: {RUN_URL}", LABEL_ALERT, open_issues(LABEL_ALERT))
         return 0
     c = data.get("counts", {})
-    lines = ["## 유튜브 업로드 (항상 비공개)", "",
+    lines = ["## 유튜브 업로드 (항상 비공개" + (f" · 예약 공개 {kst_hhmm(data['publish_at'])} KST" if data.get("publish_at") else "")
+             + ")", "",
              f"업로드 {c.get('uploaded', 0)} · 건너뜀 {c.get('skipped', 0)} · dry-run {c.get('dry-run', 0)} · 오류 {c.get('error', 0)}", "",
              *([f"{when} 업로드: {data['note']}", ""] if data.get("note") else []),
              "| 폴더 | 상태 | 제목 | 링크 | 비고 |", "|---|---|---|---|---|"]
@@ -217,7 +228,9 @@ def cmd_report(path: str, ig_path: str | None = None, tt_path: str | None = None
     alerts = open_issues(LABEL_ALERT)
     for r in data["results"]:
         if r["status"] == "uploaded":
-            title = f"공개 전환 대기: {r.get('title', '')} ({r['video_id']})"
+            sched = r.get("publish_at")              # 2026-11-13 예약 공개(youtube-daily 편만) — 유튜브가 그 시각에 공개한다
+            title = (f"예약 공개 {kst_hhmm(sched)}: {r.get('title', '')} ({r['video_id']})" if sched else
+                     f"공개 전환 대기: {r.get('title', '')} ({r['video_id']})")
             warns = "\n".join(f"- {w}" for w in r.get("warnings", [])) or "- 없음"
             igr = ig_by_dir.get(r["dir"]) or {}
             ig_line = (f"- 인스타 릴스(이미 공개): {igr.get('permalink') or igr.get('media_id')}\n" if igr.get("status") == "posted" else
@@ -235,12 +248,17 @@ def cmd_report(path: str, ig_path: str | None = None, tt_path: str | None = None
                          if r.get("previous_video") else
                          "- **다시 올림**: 이전 판은 손으로 올린 것이라 ID 기록이 없습니다. 스튜디오에서 찾아 비공개로 돌리십시오\n"
                          if r.get("republish") else "")
-            body = (f"비공개로 올라갔습니다. YouTube Studio 에서 내용·자막을 확인한 뒤 **공개**로 바꾸고 이 이슈를 닫으십시오.\n"
+            head = (f"비공개로 올라갔고 **예약 공개**가 걸려 있습니다. 공개 전환은 할 필요가 없습니다 — {kst_hhmm(sched)} KST 에 "
+                    f"유튜브가 공개합니다. 시각을 바꾸거나 예약을 취소하려면 YouTube Studio({r['studio_url']})의 공개 상태에서 "
+                    f"하십시오. 아래를 확인한 뒤 이 이슈를 닫으십시오.\n\n" if sched else
+                    f"비공개로 올라갔습니다. YouTube Studio 에서 내용·자막을 확인한 뒤 **공개**로 바꾸고 이 이슈를 닫으십시오.\n"
                     f"공개는 한 편씩 따로 합니다. 아침 편은 아침에, 저녁 편은 저녁에 공개하고 여러 편을 한꺼번에 몰아 공개하지 않습니다"
-                    f"(docs/CHANNEL_GROWTH.md H3·H8).\n\n"
+                    f"(docs/CHANNEL_GROWTH.md H3·H8).\n\n")
+            body = (head +
                     f"- 폴더: `{r['dir']}`\n- 채널: {r.get('channel', '')}\n- 보기: {r['url']}\n- Studio: {r['studio_url']}\n{ig_line}{prev_line}\n"
                     f"경고:\n{warns}\n\n확인할 것:\n- [ ] 영상·음성·자막이 맞는가\n- [ ] 제목·설명·태그가 맞는가\n"
-                    f"- [ ] 아동용 선언·합성 콘텐츠 표시가 맞는가\n- [ ] 공개(또는 예약 공개)로 전환\n"
+                    f"- [ ] 아동용 선언·합성 콘텐츠 표시가 맞는가\n"
+                    + ("" if sched else "- [ ] 공개(또는 예약 공개)로 전환\n")
                     + ("- [ ] 이전 판을 비공개로 전환\n" if (r.get("previous_video") or r.get("republish")) and not pv_done else "")
                     + tt_part + (f"\n48시간 점검:\n{sw_md}" if sw_md else "")
                     + (f"\n옛 판 비공개 전환(밀린 것 다시 시도):\n{pv_md}" if pv_md else "") + f"\n실행: {RUN_URL}")

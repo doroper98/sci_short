@@ -1707,6 +1707,238 @@ class EveningSlotTest(unittest.TestCase):
         self.assertIn("제작 세션의 제안", daily["_evening"])                    # 자리 배정·저녁 창은 사용자 결정이 아니다
 
 
+SCHED = {"enabled": True, "morning_kst": "07:00", "evening_kst": "17:00", "min_lead_min": 15}
+
+
+def _kst(y: int, mo: int, d: int, h: int, mi: int, s: int = 0) -> dt.datetime:
+    return dt.datetime(y, mo, d, h, mi, s, tzinfo=yu.KST)
+
+
+class ScheduledPublishAtTest(unittest.TestCase):
+    """2026-11-13 사용자: "오 좋다 예약 공개. …", "아침에도 예약공개로 하자" — 저녁 17:00(사용자 "저녁편 등록 시점을 17시로"),
+    아침 07:00·최소 여유 15분은 제작 세션의 제안."""
+
+    def test_disabled_or_missing_is_none(self) -> None:
+        now = _kst(2026, 11, 13, 16, 25)
+        for daily in ({}, {"scheduled_publish": None}, {"scheduled_publish": {**SCHED, "enabled": False}},
+                      {"scheduled_publish": {"enabled": True}}):
+            self.assertIsNone(yu.scheduled_publish_at(daily, "evening", now), daily)
+
+    def test_on_time_runs(self) -> None:
+        d = {"scheduled_publish": SCHED}
+        self.assertEqual(yu.scheduled_publish_at(d, "evening", _kst(2026, 11, 13, 16, 25)), "2026-11-13T08:00:00Z")
+        self.assertEqual(yu.scheduled_publish_at(d, "morning", _kst(2026, 11, 13, 5, 25)), "2026-11-12T22:00:00Z")
+
+    def test_late_runs_use_now_plus_lead_same_day(self) -> None:
+        d = {"scheduled_publish": SCHED}
+        self.assertEqual(yu.scheduled_publish_at(d, "evening", _kst(2026, 11, 13, 16, 50)), "2026-11-13T08:05:00Z")  # 17:05 KST
+        self.assertEqual(yu.scheduled_publish_at(d, "evening", _kst(2026, 11, 13, 18, 10)), "2026-11-13T09:25:00Z")  # 18:25 KST
+        self.assertEqual(yu.scheduled_publish_at(d, "morning", _kst(2026, 11, 13, 9, 40)), "2026-11-13T00:55:00Z")   # 09:55 KST
+
+    def test_rounds_up_to_whole_minute(self) -> None:
+        d = {"scheduled_publish": SCHED}
+        self.assertEqual(yu.scheduled_publish_at(d, "evening", _kst(2026, 11, 13, 16, 50, 1)), "2026-11-13T08:06:00Z")
+        t = _kst(2026, 11, 13, 16, 50) + dt.timedelta(microseconds=1)
+        self.assertEqual(yu.scheduled_publish_at(d, "evening", t), "2026-11-13T08:06:00Z")
+
+    def test_malformed_time_raises(self) -> None:
+        for bad in ("7:00", "17", "24:00", "17:60", "17:00 KST", 1700):
+            with self.assertRaises(ValueError):
+                yu.scheduled_publish_at({"scheduled_publish": {**SCHED, "evening_kst": bad}}, "evening", _kst(2026, 11, 13, 16, 0))
+        with self.assertRaises(ValueError):
+            yu.scheduled_publish_at({"scheduled_publish": {**SCHED, "min_lead_min": 2}}, "evening", _kst(2026, 11, 13, 16, 0))
+
+    def test_metadata_body_publish_at_keeps_private(self) -> None:
+        m = yu.Metadata(title="t", description="d", tags=[], category_id="27", default_language="ko",
+                        contains_synthetic_media=True, made_for_kids=False)
+        self.assertNotIn("publishAt", m.body()["status"])
+        self.assertEqual(m.body()["status"]["privacyStatus"], "private")
+        self.assertEqual(yu.validate_metadata(m), [])
+        m.publish_at = "2026-11-14T08:00:00Z"
+        self.assertEqual(m.body()["status"]["publishAt"], "2026-11-14T08:00:00Z")
+        self.assertEqual(m.body()["status"]["privacyStatus"], "private")
+        self.assertEqual(yu.validate_metadata(m), [])
+        for bad in ("2026-11-14T17:00:00+09:00", "2026-11-14 08:00:00Z", "2026-11-14T08:00Z", "2026-13-14T08:00:00Z"):
+            m.publish_at = bad
+            self.assertIn("예약 공개", " ".join(yu.validate_metadata(m)), bad)
+
+    def test_check_publish_at_window(self) -> None:
+        now = dt.datetime(2026, 11, 13, 7, 0, tzinfo=dt.timezone.utc)
+        self.assertEqual(yu.check_publish_at("2026-11-13T07:15:00Z", now), [])
+        self.assertTrue(yu.check_publish_at("2026-11-13T07:02:00Z", now))     # 5분 안
+        self.assertTrue(yu.check_publish_at("2026-11-13T06:00:00Z", now))     # 지난 시각
+        self.assertTrue(yu.check_publish_at("2026-11-21T07:00:00Z", now))     # 8일 뒤
+        self.assertTrue(yu.check_publish_at("bogus", now))
+
+    def test_repo_config_scheduled(self) -> None:
+        sp = yu.load_daily()["scheduled_publish"]
+        # 2026-11-13 사용자: "아침에도 예약공개로 하자", "저녁편 등록 시점을 17시로 바꿀 수 있어?" — 아침 07:00 은 제작 세션의 제안
+        self.assertIs(sp["enabled"], True)
+        self.assertEqual((sp["morning_kst"], sp["evening_kst"]), ("07:00", "17:00"))
+        self.assertIn("아침에도 예약공개로 하자", yu.load_daily()["_scheduled_publish"])
+        self.assertIn("제작 세션의 제안", yu.load_daily()["_scheduled_publish"])
+
+
+@mock.patch.object(yu, "probe_video", lambda p: dict(PROBE_OK))
+@mock.patch.object(yu, "RECENT_HOURS", 0)
+class ScheduledPublishFlowTest(unittest.TestCase):
+    """예약 공개는 daily_next 가 올리는 편에만 걸린다. privacyStatus 는 어디서나 "private", publishAt 은 insert 본문에만."""
+
+    def _setup(self, root: Path, api: FakeApi, sched: dict | None = SCHED) -> tuple:
+        old, new, daily, q = EveningSlotTest._setup(self, root, api)
+        body = json.loads(daily.read_text(encoding="utf-8"))
+        if sched is not None:
+            body["scheduled_publish"] = sched
+        daily.write_text(json.dumps(body, ensure_ascii=False), encoding="utf-8")
+        return old, new, daily, q
+
+    def _insert_status(self, api: FakeApi) -> dict:
+        return json.loads(api.bodies["start"])["status"]
+
+    def _assert_never_public(self, api: FakeApi) -> None:
+        self.assertEqual(self._insert_status(api)["privacyStatus"], "private")
+        for u in api.updates:                                                    # 옛 판 비공개 전환 등 videos.update 전부
+            self.assertNotIn("publishAt", u.get("status", {}))
+            self.assertEqual(u["status"]["privacyStatus"], "private")
+
+    def test_evening_republish_scheduled_at_17(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        now = _kst(2026, 11, 13, 16, 25)
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d, mock.patch.object(yu, "_utcnow", lambda: now):
+            old, new, daily, q = self._setup(Path(d), api)
+            out = yu.daily_next(cfg, daily, q, Path(d), today=dt.date(2026, 11, 13), dry_run=False, send=api, env=ENV,
+                                sleep=lambda s: None, slot="evening", now=now)
+            self.assertEqual(out["counts"]["uploaded"], 1)
+            self.assertEqual(out["publish_at"], "2026-11-13T08:00:00Z")
+            self.assertTrue(out["note"].endswith(" · 예약 공개 17:00 KST"), out["note"])
+            st = self._insert_status(api)
+            self.assertEqual((st["privacyStatus"], st["publishAt"]), ("private", "2026-11-13T08:00:00Z"))
+            rec = yu.read_record(old)
+            self.assertEqual((rec.publish_at, rec.privacy_status), ("2026-11-13T08:00:00Z", "private"))
+            self.assertEqual(out["results"][0]["publish_at"], "2026-11-13T08:00:00Z")
+            self.assertEqual([u["id"] for u in api.updates], ["OA"])             # 옛 판 비공개 전환(공개 → 비공개)
+            self._assert_never_public(api)
+
+    def test_morning_new_episode_scheduled_at_07(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        now = _kst(2026, 11, 13, 5, 25)
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d, mock.patch.object(yu, "_utcnow", lambda: now):
+            old, new, daily, q = self._setup(Path(d), api)
+            dry = yu.daily_next(cfg, daily, q, Path(d), today=dt.date(2026, 11, 13), dry_run=True, now=now)
+            self.assertEqual((dry["kind"], dry["publish_at"], dry["results"][0]["publish_at"]),
+                             ("new", "2026-11-12T22:00:00Z", "2026-11-12T22:00:00Z"))
+            out = yu.daily_next(cfg, daily, q, Path(d), today=dt.date(2026, 11, 13), dry_run=False, send=api, env=ENV,
+                                sleep=lambda s: None, now=now)
+            self.assertEqual((out["kind"], out["publish_at"]), ("new", "2026-11-12T22:00:00Z"))
+            self.assertIn("예약 공개 07:00 KST", out["note"])
+            st = self._insert_status(api)
+            self.assertEqual((st["privacyStatus"], st["publishAt"]), ("private", "2026-11-12T22:00:00Z"))
+            self.assertEqual(yu.read_record(new).publish_at, "2026-11-12T22:00:00Z")
+            self._assert_never_public(api)
+
+    def test_morning_republish_fallback_is_scheduled(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        now = _kst(2026, 11, 13, 7, 40)                                          # 늦은 실행 → 07:55 KST
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d, mock.patch.object(yu, "_utcnow", lambda: now):
+            old, new, daily, q = self._setup(Path(d), api)
+            _record(new, "NEW33", uploaded=dt.datetime(2026, 11, 3, tzinfo=dt.timezone.utc))   # 새 편 없음
+            out = yu.daily_next(cfg, daily, q, Path(d), today=dt.date(2026, 11, 13), dry_run=False, send=api, env=ENV,
+                                sleep=lambda s: None, now=now)
+            self.assertEqual((out["kind"], out["publish_at"]), ("republish", "2026-11-12T22:55:00Z"))
+            self.assertEqual(self._insert_status(api)["publishAt"], "2026-11-12T22:55:00Z")
+            self.assertEqual(yu.read_record(old).publish_at, "2026-11-12T22:55:00Z")
+            self._assert_never_public(api)
+
+    def test_disabled_or_missing_sends_no_publish_at(self) -> None:
+        for sched in (None, {**SCHED, "enabled": False}):
+            api, cfg = FakeApi(), _cfg(channel_id="UC1")
+            with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+                old, new, daily, q = self._setup(Path(d), api, sched=sched)
+                out = yu.daily_next(cfg, daily, q, Path(d), today=dt.date(2026, 11, 13), dry_run=False, send=api, env=ENV,
+                                    sleep=lambda s: None, now=_kst(2026, 11, 13, 5, 25))
+                self.assertEqual(out["counts"]["uploaded"], 1)
+                self.assertNotIn("publish_at", out)
+                self.assertNotIn("예약 공개", out["note"])
+                self.assertNotIn("publishAt", self._insert_status(api))
+                self.assertIsNone(yu.read_record(new).publish_at)
+
+    def test_push_and_manual_paths_are_not_scheduled(self) -> None:
+        api = FakeApi()
+        with tempfile.TemporaryDirectory() as d:
+            ep = _episode(Path(d), name="50-x", slug="x")
+            res = yu.process_episode(ep, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None, auto=True, morning=set())
+            self.assertEqual(res["status"], "uploaded")
+            self.assertNotIn("publish_at", res)
+            st = self._insert_status(api)
+            self.assertNotIn("publishAt", st)
+            self.assertEqual(st["privacyStatus"], "private")
+            self.assertIsNone(yu.read_record(ep).publish_at)
+
+    def test_bad_publish_at_blocks_upload(self) -> None:
+        now = dt.datetime(2026, 11, 13, 7, 0, tzinfo=dt.timezone.utc)
+        for when in (now + dt.timedelta(minutes=2), now + dt.timedelta(days=8), now - dt.timedelta(minutes=1)):
+            api = FakeApi()
+            with tempfile.TemporaryDirectory() as d, mock.patch.object(yu, "_utcnow", lambda: now):
+                ep = _episode(Path(d))
+                res = yu.process_episode(ep, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None,
+                                         publish_at=_iso(when))
+                self.assertEqual(res["status"], "error", when)
+                self.assertIn("예약 공개 검사 실패", res["error"])
+                self.assertNotIn("start", api.calls)                             # insert 를 시작하지도 않았다
+                self.assertEqual(api.uploads, 0)
+                self.assertIsNone(yu.read_record(ep))
+
+    def test_old_records_without_publish_at_still_load(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            ep = _episode(Path(d))
+            rec = _record(ep, "V1", uploaded=NOW)
+            raw = json.loads((ep / yu.RECORD_NAME).read_text(encoding="utf-8"))
+            raw.pop("publish_at")
+            (ep / yu.RECORD_NAME).write_text(json.dumps(raw), encoding="utf-8")
+            self.assertIsNone(yu.read_record(ep).publish_at)
+            self.assertEqual(yu.read_record(ep).video_id, rec.video_id)
+
+
+@mock.patch.object(yu, "probe_video", lambda p: dict(PROBE_OK))
+class SweepScheduledTest(unittest.TestCase):
+    """예약 공개한 판은 48시간 점검을 예약 시각(publish_at)부터 잰다 — publishedAt 모호함 우회(watching)를 쓰지 않는다."""
+
+    def _scheduled(self, api: FakeApi, ep: Path, vid: str, views: int, publish_hours_ago: float) -> None:
+        rec = _record(ep, vid, uploaded=_ago(publish_hours_ago + 10))
+        rec.publish_at = _iso(_ago(publish_hours_ago))
+        yu.write_record(ep, rec)
+        api.video(vid, "public", views, published=_iso(_ago(publish_hours_ago + 10)))   # 업로드 시각과 같은 모호한 publishedAt
+
+    def test_counts_from_publish_at(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            old = _episode(root, name="06-old", slug="old")
+            young = _episode(root, name="07-young", slug="young")
+            self._scheduled(api, old, "S50", 3, 50)
+            self._scheduled(api, young, "S10", 3, 10)
+            q = _republish_cfg(root, min_views=50, auto_sweep=SWEEP)
+            out = yu.sweep_low_views(cfg, q, root, dry_run=False, send=api, env=ENV, now=NOW)
+            got = {it["video_id"]: (it["result"], it.get("age_from"), it.get("age_hours")) for it in out["items"]}
+            self.assertEqual(got, {"S50": ("flagged", "publish_at", 50.0), "S10": ("young", "publish_at", 10.0)})
+            self.assertEqual(yu.read_record(old).sweep["action"], "flagged")
+            self.assertEqual(yu.read_record(old).sweep["publish_at"], _iso(_ago(50)))
+            self.assertIsNone(yu.read_record(young).sweep)                       # watching 기록을 만들지 않는다
+            self.assertEqual([u["id"] for u in api.updates], ["S50"])
+
+    def test_future_publish_at_is_not_public(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep = _episode(root, name="06-later", slug="later")
+            self._scheduled(api, ep, "LATER", 0, -3)                             # 3시간 뒤 공개 예정
+            q = _republish_cfg(root, min_views=50, auto_sweep=SWEEP)
+            out = yu.sweep_low_views(cfg, q, root, dry_run=False, send=api, env=ENV, now=NOW)
+            self.assertEqual(out["items"][0]["result"], "not-public")
+            self.assertEqual(api.updates, [])
+            self.assertIsNone(yu.read_record(ep).sweep)
+
+
 @mock.patch.object(yu, "probe_video", lambda p: dict(PROBE_OK))
 class CliTest(unittest.TestCase):
     def _main(self, argv: list[str]) -> tuple[int, dict]:
