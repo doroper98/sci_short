@@ -131,7 +131,7 @@
       "height": 1920,
       "bytes": 10212922,
       "sha256": "e8b6be5ec3cf274e8cf63ab74bf63de73dd2158bee8232e54cbb0c75fb40c12d",
-      "video_date": "uncommitted",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/log-scale",
       "upload_info": "finals/08-log-scale/upload.md",
       "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완, 2026-11-13 사용자 지적으로 주제어 줄을 넣어 다시 렌더 — 흰 글 두 줄 \"지진 규모 6은\" / \"규모 3의 2배?\"와 큰 강조색 답 \"아니, 1000배\"). `thumbnail.jpg`도 같은 그림입니다."
@@ -471,7 +471,7 @@
       "height": 1920,
       "bytes": 35436184,
       "sha256": "7931bda6f1bfdc9c0e3ab4e8977a9e99665c7c24ba7b0746f3e09750ccb654b5",
-      "video_date": "uncommitted",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/fission-fusion",
       "upload_info": "finals/29-fission-fusion/upload.md",
       "thumbnail": "0초 프레임(흑연색 배경에서 막 둘로 갈라진 우라늄 원자핵, 흰 섬광과 퍼지는 가는 고리, 바깥으로 날아가는 중성자 점 셋, 오른쪽 위의 중수소·삼중수소, 흰 글 두 줄 \"핵분열과 핵융합\" / \"쪼개도 합쳐도 에너지?\"와 큰 주황 답 \"철을 향하기 때문\". 2026-11-13 사용자 지적으로 주제어 줄을 더해 그림을 다시 렌더함)"
