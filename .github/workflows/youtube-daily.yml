@@ -2,7 +2,7 @@
 # 2026-11-08 사용자: "내가 말하지 않아도 제작해서 비공개로 하나씩 올려. 올리는 시간은 아침 7시로 해. 내가 출근하면서 공개로 바꾸게."
 # 2026-11-13 사용자: "저녁에도 한편 더 올리자." — 하루 두 편(사용자 결정). 아래 자리 배정과 저녁 창은 제작 세션의 제안이다.
 # - 아침 창(05~10시 KST): 새 편(config/daily.json 순서), 없으면 다시 올리기 한 편. 48시간 점검은 아침에만 한다.
-# - 저녁 창(17~22시 KST): 다시 올리기 한 편(config/republish.json 대기열·48시간 점검 대상). 없으면 쉰다. 새 편은 올리지 않는다.
+# - 저녁 창(16~22시 KST — 2026-11-13 사용자 "저녁편 등록 시점을 17시로": 17시 전에 올라와 있게 16시부터): 다시 올리기 한 편(config/republish.json 대기열·48시간 점검 대상). 없으면 쉰다. 새 편은 올리지 않는다.
 #   인스타 아침 게시·틱톡 안내는 아침에만(인스타 옛 편은 17시 instagram-evening 이 따로). '공개 전환 대기' 이슈는 두 자리 모두.
 #   config/daily.json evening.enabled 가 false 면 저녁 실행은 쉬고, 아침은 아래 예전 규칙(하루씩 번갈아)으로 돌아간다.
 # - 2026-11-10 바뀜: GitHub 예약 실행이 6~10시간씩 늦게 돌아(11-09·10 실측) 매시간 걸고, 아침 창(05~10시 KST)에 돈 실행만 일한다.
@@ -61,7 +61,7 @@ jobs:
       slot: ${{ steps.w.outputs.slot }}
     steps:
       - id: w
-        name: 시간 창 확인(아침 5~10시 · 저녁 17~22시 KST, 수동 실행은 언제나)
+        name: 시간 창 확인(아침 5~10시 · 저녁 16~22시 KST, 수동 실행은 언제나)
         env:
           INPUT_SLOT: ${{ inputs.slot }}
         run: |
@@ -69,7 +69,7 @@ jobs:
           if [ "${{ github.event_name }}" = "schedule" ]; then
             if [ "$H" -ge 5 ] && [ "$H" -lt 10 ]; then
               echo "go=true" >> "$GITHUB_OUTPUT"; echo "slot=morning" >> "$GITHUB_OUTPUT"
-            elif [ "$H" -ge 17 ] && [ "$H" -lt 22 ]; then
+            elif [ "$H" -ge 16 ] && [ "$H" -lt 22 ]; then
               echo "go=true" >> "$GITHUB_OUTPUT"; echo "slot=evening" >> "$GITHUB_OUTPUT"
             else
               echo "go=false" >> "$GITHUB_OUTPUT"; echo "시간 창 밖(${H}시 KST) — 쉼" >> "$GITHUB_STEP_SUMMARY"
