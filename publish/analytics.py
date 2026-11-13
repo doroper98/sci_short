@@ -42,9 +42,11 @@ VIDEO_METRICS = ("views", "engagedViews", "estimatedMinutesWatched", "averageVie
 CHANNEL_START = "2026-10-01"      # 채널 첫 업로드 이전 날짜면 된다(누적 구간의 시작)
 HASHTAG_RE = re.compile(r"#\S+")
 
-# 진행 중인 실험(2026-11-08 사용자 결정). 판정 기준일이 지나면 보고서가 판정 줄을 붙인다.
+# 진행 중인 실험. 2026-11-08 사용자 결정으로 첫 문장 실험을 시작했으나(질문형 3편 대 오늘은형), 질문형 3편이 노출을 못 받아
+# 판정하지 못했다. 2026-11-13 사용자 결정("1,2다 적용해"): since 뒤에 만드는 편은 ① 무음 없이 시작하고 ② 첫 문장을 그 편의
+# 물음으로 한다. 기본 노출을 받은 편(min_views 이상)만, 참여 조회 비율(engagedViews ÷ views)로 견준다. need 편부터 견준다.
 EXPERIMENTS = {
-    "opener": {"title": "첫 문장 — 질문형 대 \"오늘은 ~ 알아볼까요?\"", "uploaded": "2026-11-07", "judge_on": "2026-11-14"},
+    "opener": {"title": "첫 순간 — 물음으로 바로 시작 대 \"오늘은 ~ 알아볼까요?\"", "since": "2026-11-14", "min_views": 300, "need": 4},
 }
 
 
@@ -400,18 +402,27 @@ def build_report(today: dt.date, ch: dict[str, Any], rows: list[VideoRow], *, ha
 
     out += ["", "## 실험", ""]
     e1 = EXPERIMENTS["opener"]
-    grp = [r for r in pub if r.published == e1["uploaded"] and r.episode]
-    q = [r for r in grp if r.opener == "question"]
-    t = [r for r in grp if r.opener == "today"]
+    seen = [r for r in pub if r.episode and (r.a_total.get("views", 0) if has_a else r.views) >= e1["min_views"]]
+    fresh = [r for r in seen if r.opener == "question" and r.published >= e1["since"]]
+    base = [r for r in seen if r.opener == "today"]
     gh = "| 무리 | 편 수 | 조회수 중앙값 |" + (" 평균 시청 비율 중앙값 | 참여 조회 비율 중앙값 |" if has_a else "")
     gs = "|---|---|---|" + ("---|---|" if has_a else "")
     out += [f"### {e1['title']}", "",
-            f"{e1['uploaded']}에 같은 날 공개한 편끼리 비교합니다. 판정일 {e1['judge_on']}.", "", gh, gs,
-            group_line("질문형", q, has_a), group_line("오늘은형", t, has_a), ""]
-    if today.isoformat() >= e1["judge_on"]:
-        out.append("> 판정일이 지났습니다. 위 표로 첫 문장 규칙(2026-11-01 결정)을 다시 정할지 사용자에게 묻습니다.")
+            f"2026-11-13 사용자 결정으로 {e1['since']} 뒤에 만드는 편은 무음 없이 시작하고 첫 문장을 그 편의 물음으로 합니다"
+            f"(둘을 함께 바꿔 어느 쪽 효과인지는 가를 수 없습니다). 기본 노출을 받은 편(조회수 {e1['min_views']:,}회 이상)만 견주고, "
+            "잣대는 참여 조회 비율(넘기지 않고 본 비율의 근사)입니다.", "", gh, gs,
+            group_line("새 형식(물음으로 시작)", fresh, has_a), group_line("이전 형식(오늘은형)", base, has_a), ""]
+
+    def eng_median(rs: list[VideoRow]) -> float | None:
+        return _median([r.a_total["engagedViews"] / r.a_total["views"] for r in rs if r.a_total.get("views")])
+
+    if has_a and len(fresh) >= e1["need"] and eng_median(fresh) is not None and eng_median(base) is not None:
+        diff = 100 * (eng_median(fresh) - eng_median(base))
+        out.append(f"> 새 형식 {len(fresh)}편이 모였습니다. 참여 조회 비율 중앙값 차이는 {diff:+.1f}%p 입니다. 편당 오차가 약 ±3%p 라 "
+                   "7%p 이상이면 뜻있는 차이로 봅니다. 이 결과를 사용자에게 알립니다.")
     else:
-        out.append("> 아직 판정 전입니다. 표본이 작아(질문형 3편) 큰 차이만 의미가 있습니다.")
+        out.append(f"> 새 형식 편이 아직 {len(fresh)}편입니다. {e1['need']}편부터 견줍니다"
+                   + ("." if has_a else "(분석 API 자료가 있어야 참여 조회 비율이 나옵니다)."))
     out += ["", "### 길이",
             "", "60초판 시험은 2026-11-08 사용자 결정으로 접었습니다(\"설명력이 떨어질 것 같아\"). 길이는 아래 동종 채널 비교의 "
             "'길이와 조회수' 표와 우리 편들의 평균 시청 비율로만 지켜봅니다."]

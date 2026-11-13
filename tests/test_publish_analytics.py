@@ -8,6 +8,7 @@ import tempfile
 import unittest
 import urllib.parse
 from pathlib import Path
+from unittest import mock
 
 from publish import analytics as an
 from publish import youtube as yu
@@ -133,8 +134,9 @@ class AnalyticsTest(unittest.TestCase):
         self.assertEqual(by["VM1"]["a_total"]["averageViewPercentage"], 30.0)
         self.assertIn("구독자 **21명** (지난 보고서보다 +2)", md)
         self.assertIn("+100", md)                                                # 1100 → 1200
-        self.assertIn("| 질문형 | 1 | 40 | 55% | 75% |", md)
-        self.assertIn("| 오늘은형 | 1 | 10 | 25% | 40% |", md)
+        self.assertIn("| 새 형식(물음으로 시작) | 0 | — | — | — |", md)           # 기본 노출(300회 이상)을 받은 새 형식 편이 아직 없다
+        self.assertIn("| 이전 형식(오늘은형) | 1 | 1,200 | 30% | 67% |", md)      # 300회 미만인 VT1 은 견주지 않는다
+        self.assertIn("새 형식 편이 아직 0편입니다. 4편부터 견줍니다.", md)
         self.assertIn("| SHORTS | 1,100 | 96% |", md)
         self.assertNotIn("비공개 편", md)                                         # 편별 표는 공개만
         self.assertIn("공개 영상 3편 · 비공개 1편", md)
@@ -148,9 +150,22 @@ class AnalyticsTest(unittest.TestCase):
         self.assertNotIn("평균 시청 비율 |", md.split("## 실험")[0])          # 분석 열 없이 표가 나온다
         self.assertEqual(api.calls.count("analytics:video"), 1)                  # 첫 거절에서 멈춘다
 
-    def test_judge_line_after_judge_date(self) -> None:
-        md, _ = an.run(FakeYT(), "AT", today=dt.date(2026, 11, 15), finals=self.finals, prev=None)
-        self.assertIn("판정일이 지났습니다", md)
+    def test_opening_experiment_compares_engaged_ratio(self) -> None:
+        """2026-11-13 사용자 "1,2다 적용해": 새 형식(물음으로 시작) 대 오늘은형을 참여 조회 비율로 견준다."""
+        with mock.patch.dict(an.EXPERIMENTS["opener"], {"since": "2026-11-01", "min_views": 0, "need": 1}):
+            md, _ = an.run(FakeYT(), "AT", today=dt.date(2026, 11, 15), finals=self.finals, prev=None)
+        self.assertIn("| 새 형식(물음으로 시작) | 1 | 40 | 55% | 75% |", md)       # VQ1: 30/40
+        self.assertIn("| 이전 형식(오늘은형) | 2 | 605 | 28% | 53% |", md)         # VT1 4/10, VM1 800/1200 → 중앙값 53%
+        self.assertIn("새 형식 1편이 모였습니다. 참여 조회 비율 중앙값 차이는 +21.7%p", md)
+        with mock.patch.dict(an.EXPERIMENTS["opener"], {"since": "2026-11-08", "min_views": 0, "need": 1}):
+            md, _ = an.run(FakeYT(), "AT", today=dt.date(2026, 11, 15), finals=self.finals, prev=None)
+        self.assertIn("| 새 형식(물음으로 시작) | 0 |", md)                        # since 앞에 공개한 질문형 편은 새 형식이 아니다
+        self.assertIn("새 형식 편이 아직 0편입니다", md)
+
+    def test_opening_experiment_without_analytics(self) -> None:
+        md, _ = an.run(FakeYT(analytics=False), "AT", today=TODAY, finals=self.finals, prev=None)
+        self.assertIn("분석 API 자료가 있어야 참여 조회 비율이 나옵니다", md)
+        self.assertIn("| 이전 형식(오늘은형) | 1 | 1,200 |", md)
 
     def test_benchmark_table_and_length_effect(self) -> None:
         cfg = {"recent": 50, "peers": [{"id": "UCPEER", "label": "동종A", "tier": "small"},
