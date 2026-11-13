@@ -1,7 +1,7 @@
 {
   "file": "fission-fusion.mp4",
-  "bytes": 35355432,
-  "sha256": "847ef0341f6c6cd2a330509bc953ce5309d60fc9f91a140d7a6fa847a7379ae8",
+  "bytes": 35436184,
+  "sha256": "7931bda6f1bfdc9c0e3ab4e8977a9e99665c7c24ba7b0746f3e09750ccb654b5",
   "created": "2026-11-07T13:44:25+00:00",
   "title": "핵분열과 핵융합 — 쪼개도 합쳐도 에너지가 나오는 까닭",
   "timeline_duration": 165.449,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2541056,
         "duration": "165.433333",
-        "bit_rate": "1530948",
+        "bit_rate": "1534852",
         "bits_per_raw_sample": "8",
         "nb_frames": "4963",
         "extradata_size": 50,
@@ -126,15 +126,15 @@
       }
     ],
     "format": {
-      "filename": "/home/user/sci_short/outputs/fission-fusion/final/fission-fusion.mp4",
+      "filename": "finals/29-fission-fusion/fission-fusion.mp4",
       "nb_streams": 2,
       "nb_programs": 0,
       "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "165.449000",
-      "size": "35355432",
-      "bit_rate": "1709550",
+      "size": "35436184",
+      "bit_rate": "1713455",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -183,5 +183,14 @@
     "direct_listening": "not performed",
     "physical_phone_playback": "not performed",
     "visual_review_of_stills": "not recorded by finish.py"
+  },
+  "picture_rerender": {
+    "date": "2026-11-13",
+    "reason": "첫 프레임(과 끝에 돌아오는 포스터)의 글에 주제어 줄 추가(사용자 지적)",
+    "method": "episodes/fission-fusion/run.sh render (finals timeline.json 그대로) → 새 visual.mp4의 영상 + 이전 최종본의 오디오를 스트림 복사(오디오 재인코딩 없음)",
+    "previous_sha256": "847ef0341f6c6cd2a330509bc953ce5309d60fc9f91a140d7a6fa847a7379ae8",
+    "audio_stream_md5_unchanged": "9df7d33b9990a1429fbdd9414a6d08e3",
+    "revalidated": "pipeline/validate.py 19/19 PASS(새 mp4, finals srt·timeline, 새 스틸), 전편 디코딩 통과",
+    "not_rerun": "finish.py의 loudnorm 측정(audio_mastering_input, encoded_audio)은 다시 재지 않음 — 오디오 스트림이 바이트 단위로 같아 이전 값이 그대로 유효"
   }
 }

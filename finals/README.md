@@ -36,7 +36,7 @@
 | 05 | 지구를 두른 바람의 띠 — 무역풍·무풍대·편서풍 | 179.0초 | [05-global-winds/](05-global-winds/) | [upload.md](05-global-winds/upload.md) | 2026-11-07 |
 | 06 | 계절은 왜 생길까 — 거리가 아니라 기울기 | 160.0초 | [06-seasons/](06-seasons/) | [upload.md](06-seasons/upload.md) | 2026-11-07 |
 | 07 | 지구 자전축의 느린 원 — 세차운동과 장동 | 173.9초 | [07-precession/](07-precession/) | [upload.md](07-precession/upload.md) | 2026-11-07 |
-| 08 | 한 칸에 열 배 — 지진 규모·데시벨·pH와 로그 | 165.8초 | [08-log-scale/](08-log-scale/) | [upload.md](08-log-scale/upload.md) | 2026-11-07 |
+| 08 | 한 칸에 열 배 — 지진 규모·데시벨·pH와 로그 | 165.8초 | [08-log-scale/](08-log-scale/) | [upload.md](08-log-scale/upload.md) | uncommitted |
 | 09 | 별은 왜 반짝일까 — 반짝임은 공기가 만든다 | 175.7초 | [09-twinkle/](09-twinkle/) | [upload.md](09-twinkle/upload.md) | 2026-11-07 |
 | 10 | 오로라는 왜 극지방에서만 보일까 | 161.3초 | [10-aurora/](10-aurora/) | [upload.md](10-aurora/upload.md) | 2026-11-07 |
 | 11 | 에딩턴 한계 — 빛이 별을 밀어낸다 | 171.5초 | [11-eddington-limit/](11-eddington-limit/) | [upload.md](11-eddington-limit/upload.md) | 2026-11-07 |
@@ -56,7 +56,7 @@
 | 25 | 태풍은 왜 우리나라 앞에서 꺾일까 — 스스로 돌지만, 길은 둘레의 바람이 정한다 | 170.3초 | [25-typhoon-track/](25-typhoon-track/) | [upload.md](25-typhoon-track/upload.md) | 2026-11-11 |
 | 27 | 예인 소나 — 긴 줄로 바닷속 소리를 듣는 법 | 149.2초 | [27-towed-array-sonar/](27-towed-array-sonar/) | [upload.md](27-towed-array-sonar/upload.md) | 2026-11-08 |
 | 28 | 밀물과 썰물 — 달은 가까운 쪽을 더 세게, 먼 쪽을 더 약하게 당긴다 | 173.8초 | [28-tides/](28-tides/) | [upload.md](28-tides/upload.md) | 2026-11-11 |
-| 29 | 핵분열과 핵융합 — 쪼개도 합쳐도 에너지가 나오는 까닭 | 165.4초 | [29-fission-fusion/](29-fission-fusion/) | [upload.md](29-fission-fusion/upload.md) | 2026-11-07 |
+| 29 | 핵분열과 핵융합 — 쪼개도 합쳐도 에너지가 나오는 까닭 | 165.4초 | [29-fission-fusion/](29-fission-fusion/) | [upload.md](29-fission-fusion/upload.md) | uncommitted |
 | 31 | 로켓은 어떻게 돌아올까 — 저궤도와 재사용 로켓 | 156.5초 | [31-reusable-rocket/](31-reusable-rocket/) | [upload.md](31-reusable-rocket/upload.md) | 2026-11-07 |
 | 32 | 레이더 — 전파의 메아리로 보고, 메아리를 줄여 숨는다 | 164.3초 | [32-radar/](32-radar/) | [upload.md](32-radar/upload.md) | 2026-11-08 |
 | 33 | 합성개구레이더(SAR) — 움직이며 받은 메아리를 이어 붙여, 거대한 안테나를 만든다 | 169.9초 | [33-sar/](33-sar/) | [upload.md](33-sar/upload.md) | 2026-11-10 |
