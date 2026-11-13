@@ -21,7 +21,7 @@ export const BOARD = {x: 200, y: 400, w: 680, h: 680};                          
 export const PBOARD = {x: 310, y: 836, w: 460, h: 460};                         // poster board (0 s): under the title, ends above y 1300
 export const PANEL = {x: 70, y: 1106, w: 940, h: 200};
 export const STRIP_Y = 1150, STRIP_H = 64, SX0 = 94, SX1 = 986;
-export const POSTER = {q: '그림을 어떻게 그릴까?', a: 'GPT', n: '#4', y: 440, y2: 648, AS: 240, qw: 920};   // 2026-11-13: 흰 물음 + 큰 주제어
+export const POSTER = {q: '그림을 어떻게 그릴까?', a: 'GPT', n: '4 of 4', y: 415, y2: 579, AS: 220, qw: 920};   // 2026-11-13: 흰 물음 + 큰 주제어
 export const CHIP_Y0 = 246;                                                     // prompt chips at 0 s (above the title); they slide to CH.y0 during the morph
 export const HEAD_BOTTOM = 262;
 export const WIN = {x0: 0, x1: 1080, y0: HEAD_BOTTOM + 16, y1: 1360};            // world window (full)

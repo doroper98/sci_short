@@ -150,7 +150,7 @@ function originScene(stage, t, p, ctx) {
 export const scenes = {hook: hookScene, origin: originScene};
 
 export const titles = {
-  hook: P => { const at = s => P.tl.at(s) - 0.4; return [[-Infinity, '오늘의 주제 · GPT #4', '그림을 어떻게 그릴까?'], [at('s02'), 'GPT가 원래 하는 일', '다음 글 조각 하나를 고른다'], [at('s03'), '', '그림도 글처럼 조각으로']]; },
+  hook: P => { const at = s => P.tl.at(s) - 0.4; return [[-Infinity, '오늘의 주제 · GPT 4 of 4', '그림을 어떻게 그릴까?'], [at('s02'), 'GPT가 원래 하는 일', '다음 글 조각 하나를 고른다'], [at('s03'), '', '그림도 글처럼 조각으로']]; },
   origin: P => [[-Infinity, '2021', '글 뒤에 그림 조각을 잇는 GPT'], [P.tl.at('s05') - 0.4, '2021', '이름은 DALL·E']],
 };
 

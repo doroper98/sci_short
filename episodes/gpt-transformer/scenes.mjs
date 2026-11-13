@@ -22,7 +22,7 @@ const MODS = [['Intro', intro], ['Core', core], ['Out', out]].filter(([, m]) => 
 export const theme = K.theme;
 export const captionLayout = K.captionLayout;
 export const background = K.background;
-export const POSTER = {q: '문맥을 어떻게 읽을까?', a: 'GPT', n: '#3', y: 620, y2: 822, AS: 230, qw: 920};   // 2026-11-13: 흰 물음 + 큰 주제어
+export const POSTER = {q: '문맥을 어떻게 읽을까?', a: 'GPT', n: '3 of 4', y: 580, y2: 740, AS: 210, qw: 920};   // 2026-11-13: 흰 물음 + 큰 주제어
 
 // =====================================================================================================
 // TIME PLAN — one object P for all modules (cached per timeline)
@@ -73,24 +73,23 @@ function posterTitle(stage, POSTER, q, a = 1) {
   const c = stage.ctx, Q = [].concat(POSTER.q), fnt = s => ({role: 'display', weight: 700, size: s, tracking: -0.03 * s});
   const fit = (s, w, max) => Math.min(max, max * w / stage.measure(s, fnt(max)));
   let S = PSIZE.get(POSTER);
-  if (!S) { S = {QS: Math.min(...Q.map(s => fit(s, POSTER.qw ?? 880, 104))), AS: fit(POSTER.a, 860, POSTER.AS ?? 150)}; PSIZE.set(POSTER, S); }
-  const {QS, AS} = S, LH = QS * 1.14, tr = K.lerp(-0.03, -0.011, q), s1 = K.lerp(QS, 56, q);
+  if (!S) { S = {QS: Math.min(...Q.map(s => fit(s, POSTER.qw ?? 880, POSTER.QM ?? 104))), AS: fit(POSTER.a, 860, POSTER.AS ?? 150)}; PSIZE.set(POSTER, S); }
+  const {QS, AS} = S, NS = POSTER.NS ?? QS * 0.85, LH = QS * 1.14, tr = K.lerp(-0.03, -0.011, q), s1 = K.lerp(QS, 56, q);
   const wf = Q.map(s => stage.measure(s, {role: 'display', weight: 700, size: 56, tracking: -0.011 * 56})), sp = 56 * 0.28;
   let xh = 540 - (wf.reduce((x, y) => x + y, 0) + sp * (Q.length - 1)) / 2;
   const hx = wf.map(w => { const x = xh + w / 2; xh += w + sp; return x; });
-  const yTop = POSTER.y - QS * 0.75, yBot = POSTER.y2 + AS * 0.55;
+  const yTop = POSTER.y - QS * 0.75, yBot = POSTER.y2 + AS * 0.55 + (POSTER.n ? NS * 1.4 : 0);
   if (q < 1) K.withAlpha(c, (1 - q) * a, () => { const g = c.createLinearGradient(0, yTop - 60, 0, yBot + 60); g.addColorStop(0, 'rgba(0,10,16,0)'); g.addColorStop(0.25, 'rgba(0,10,16,0.55)'); g.addColorStop(0.75, 'rgba(0,10,16,0.55)'); g.addColorStop(1, 'rgba(0,10,16,0)'); c.fillStyle = g; c.fillRect(0, yTop - 60, K.W, yBot - yTop + 120); });
   K.withAlpha(c, a, () => {
     const sh = 'rgba(0,0,0,0.9)';
     const qx = K.smooth(q / 0.45), qy = K.smooth((q - 0.4) / 0.6), yc = K.lerp(POSTER.y + (Q.length - 1) * LH / 2, 228, q), k = s1 / 56;
     Q.forEach((s, i) => stage.text(s, 540 + (hx[i] - 540) * k * qx, yc + (i - (Q.length - 1) / 2) * LH * (s1 / QS) * (1 - qy), {role: 'display', weight: 700, size: s1, color: '#FFFFFF', align: 'center', shadow: sh, shadowBlur: 22, tracking: tr * s1}));
-    // keyword + series number ("GPT #1"): the number at 0.6× the keyword's size, same baseline, a clear gap
-    const sa = K.lerp(AS, 34, q), sn = sa * 0.6, gap = sa * 0.2, yb = K.lerp(POSTER.y2, 292, q) + 0.36 * sa;
-    const ka = {role: 'display', weight: 700, size: sa, tracking: tr * sa}, na = {role: 'display', weight: 700, size: sn, tracking: tr * sn};
-    const wa = stage.measure(POSTER.a, ka), wn = POSTER.n ? stage.measure(POSTER.n, na) : 0, x0 = 540 - (wa + (POSTER.n ? gap + wn : 0)) / 2;
+    // keyword, and on its own centred line below it the series count ("1 of 4", 2026-11-13 owner: "줄 바꾸고 질문보다 살짝
+    // 작은 폰트로 가운데정렬해서 1 of 4"): white, NS px (default 0.85 × the question), baseline NS × 1.3 under the keyword's
+    const sa = K.lerp(AS, 34, q), k2 = sa / AS, yb = K.lerp(POSTER.y2, 292, q) + 0.36 * sa, sn = NS * k2;
     K.withAlpha(c, 1 - K.smooth(q / 0.6), () => {
-      stage.text(POSTER.a, x0, yb, {...ka, color: K.PAL.warm, align: 'left', baseline: 'alphabetic', shadow: sh, shadowBlur: 28});
-      if (POSTER.n) stage.text(POSTER.n, x0 + wa + gap, yb, {...na, color: K.PAL.warm, align: 'left', baseline: 'alphabetic', shadow: sh, shadowBlur: 22});
+      stage.text(POSTER.a, 540, yb, {role: 'display', weight: 700, size: sa, tracking: tr * sa, color: K.PAL.warm, align: 'center', baseline: 'alphabetic', shadow: sh, shadowBlur: 28});
+      if (POSTER.n) stage.text(POSTER.n, 540, yb + (POSTER.ngap ?? 1.3) * sn, {role: 'display', weight: 700, size: sn, tracking: -0.01 * sn, color: '#FFFFFF', align: 'center', baseline: 'alphabetic', shadow: sh, shadowBlur: 22});
     });
   });
 }
