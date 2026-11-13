@@ -42,5 +42,6 @@
  "privatized_at": null,
  "sweep": null,
  "publish_at": "2026-11-13T10:00:00Z",
- "schema_version": 1
+ "schema_version": 1,
+ "slot_key": "2026-11-13-evening"
 }
