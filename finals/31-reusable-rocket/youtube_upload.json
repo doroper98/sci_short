@@ -25,5 +25,14 @@
  "number": 31,
  "slug": "reusable-rocket",
  "source": "api",
+ "previous": [],
+ "privatized_at": null,
+ "sweep": {
+  "action": "watching",
+  "public_seen_at": "2026-11-13T17:53:58+00:00",
+  "published_at": "2026-11-07T10:05:40Z"
+ },
+ "publish_at": null,
+ "slot_key": null,
  "schema_version": 1
 }

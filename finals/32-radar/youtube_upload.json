@@ -26,5 +26,13 @@
  "slug": "radar",
  "source": "api",
  "previous": [],
+ "privatized_at": null,
+ "sweep": {
+  "action": "watching",
+  "public_seen_at": "2026-11-13T17:53:58+00:00",
+  "published_at": "2026-11-08T23:06:29Z"
+ },
+ "publish_at": null,
+ "slot_key": null,
  "schema_version": 1
 }

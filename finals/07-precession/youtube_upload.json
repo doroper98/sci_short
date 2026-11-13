@@ -25,5 +25,18 @@
  "number": 7,
  "slug": "precession",
  "source": "api",
+ "previous": [],
+ "privatized_at": "2026-11-13T17:54:06+00:00",
+ "sweep": {
+  "action": "flagged",
+  "checked_at": "2026-11-13T17:53:58+00:00",
+  "views": 29,
+  "age_hours": 152.3,
+  "published_at": "2026-11-07T09:38:43Z",
+  "privatized_at": "2026-11-13T17:54:06+00:00",
+  "privatize_result": "privatized"
+ },
+ "publish_at": null,
+ "slot_key": null,
  "schema_version": 1
 }
