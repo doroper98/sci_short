@@ -855,8 +855,13 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
                     allow_reupload: bool = False, sleep: Callable[[float], None] = time.sleep, auto: bool = False,
                     republish: bool = False, republish_min_views: int = 100, republish_previous_id: str | None = None,
                     privatize_protected: frozenset[str] = frozenset(),
-                    morning: set[int] | None = None) -> dict[str, Any]:
+                    morning: set[int] | None = None, republish_path: Path | None = None) -> dict[str, Any]:
     """에피소드 하나. 결과 dict 의 status: uploaded · skipped · dry-run · error.
+
+    기록이 있는데 영상 파일이 바뀐 편은 보통 --allow-reupload 없이는 거절한다. 다만 다시 올리기 대기 중인 편
+    (republish_path 의 대기열에 있고 아직 다시 올리지 않았거나, 48시간 점검이 지금 판을 flagged 로 적은 편)은
+    파일이 바뀌는 것이 예정된 일이므로 거절하지 않고 건너뛴다(skipped). 새 파일은 아침 다시 올리기 차례에
+    republish=True 로 새 영상이 되어 올라간다(2026-11-13).
 
     republish=True(다시 올리기, 2026-11-08): 같은 영상이라도 새 영상으로 올린다. 몰아 공개해 노출을 못 받은 편을
     하루 1편씩 새로 올리려는 것이다. 이전 판의 조회수가 republish_min_views 이상이면(그사이 노출을 받음) 올리지 않는다.
@@ -928,6 +933,12 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
                         res["warnings"].append(f"썸네일 다시 지정 완료({ep.thumbnail.name}, 영상 처리 완료 뒤)")
                 return res
             if not allow_reupload:
+                if republish_pending(dir_, DEFAULT_REPUBLISH if republish_path is None else republish_path):
+                    res.update(status="skipped", video_id=prev.video_id, url=prev.url, studio_url=prev.studio_url)
+                    res["warnings"].append(f"다시 올리기 대기 중인 편 — 영상 파일이 바뀌었습니다(md5 {prev.video_md5[:8]}→{md5[:8]}). "
+                                           "아침 다시 올리기 차례에 새 영상으로 올라갑니다(지금은 올리지 않음)")
+                    _log(f"{_rel(dir_)}: {res['warnings'][-1]}")
+                    return res
                 raise UploadError(f"기록({RECORD_NAME})이 있는데 영상 파일이 바뀌었습니다(md5 {prev.video_md5[:8]}→{md5[:8]}). "
                                   "다시 만든 편을 새 영상으로 올리는 것이 맞으면 --allow-reupload (기존 영상은 유튜브에 그대로 남습니다)")
             res["warnings"].append(f"기록을 덮어씁니다 — 이전 영상 {prev.url} 은 유튜브에 그대로 남아 있습니다")
@@ -1180,6 +1191,19 @@ def republish_todo(rc: dict[str, Any], finals: Path | None = None) -> list[Path]
             flagged.append((str(sw.get("checked_at", "")), d))
     have = {p.resolve() for p in manual}
     return manual + [d for _, d in sorted(flagged, key=lambda x: x[0]) if d.resolve() not in have]
+
+
+def republish_pending(dir_: Path, republish_path: Path) -> bool:
+    """이 편이 다시 올리기 차례를 기다리는가(republish_todo 에 있음). 설정이 없거나 읽지 못하면 False(대기 아님)."""
+    try:
+        rc = load_republish(republish_path)
+        if not rc:
+            return False
+        todo = republish_todo(rc, dir_.parent)
+    except (OSError, ValueError, TypeError, AttributeError):
+        return False
+    me = dir_.resolve()
+    return any(p.resolve() == me for p in todo)
 
 
 def republish_available(rc: dict[str, Any], today: dt.date, finals: Path | None = None) -> tuple[bool, str]:

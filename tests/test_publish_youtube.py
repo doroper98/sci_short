@@ -747,6 +747,92 @@ class UploadFlowTest(unittest.TestCase):
             res = yu.process_episode(ep, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None, allow_reupload=True)
             self.assertEqual(res["status"], "uploaded")
 
+    def _changed_after_upload(self, root: Path, api: FakeApi, **kw) -> tuple[Path, bytes]:
+        ep = _episode(root, **kw)
+        yu.process_episode(ep, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+        next(ep.glob("*.mp4")).write_bytes(b"\2" * 2000)                       # 첫 화면을 고쳐 다시 렌더한 편
+        return ep, (ep / yu.RECORD_NAME).read_bytes()
+
+    def test_changed_video_pending_republish_is_skipped_not_error(self) -> None:
+        """대기열(config/republish.json queue)의 편은 파일이 바뀌어도 거절하지 않고 아침 다시 올리기에 맡긴다(2026-11-13)."""
+        api = FakeApi()
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep, rec_before = self._changed_after_upload(root, api)
+            q = _republish_cfg(root, ep)
+            n = len(api.calls)
+            for dry in (True, False):
+                for auto in (False, True):
+                    res = yu.process_episode(ep, _cfg(auto_from_number=1), dry_run=dry, send=api, env=ENV,
+                                             sleep=lambda s: None, auto=auto, morning=set(), republish_path=q)
+                    self.assertEqual(res["status"], "skipped", res)
+                    self.assertEqual(res["video_id"], "VID123")
+                    self.assertTrue(any("다시 올리기" in w and "md5" in w for w in res["warnings"]), res["warnings"])
+            self.assertEqual(len(api.calls), n)                                 # 네트워크 호출 없음
+            self.assertEqual((ep / yu.RECORD_NAME).read_bytes(), rec_before)    # 기록 그대로
+
+    def test_changed_video_not_pending_is_still_refused(self) -> None:
+        api = FakeApi()
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep, _ = self._changed_after_upload(root, api)
+            other = _episode(root, name="02-other", slug="other")
+            for q in (_republish_cfg(root, other), root / "missing.json"):  # 대기열에 없음 · 설정 없음
+                res = yu.process_episode(ep, _cfg(), dry_run=True, env={}, republish_path=q)
+                self.assertEqual(res["status"], "error")
+                self.assertIn("allow-reupload", res["error"])
+            (root / "broken.json").write_text("{", encoding="utf-8")            # 읽지 못하는 설정도 대기 아님
+            res = yu.process_episode(ep, _cfg(), dry_run=True, env={}, republish_path=root / "broken.json")
+            self.assertIn("allow-reupload", res["error"])
+
+    def test_changed_video_already_republished_is_refused(self) -> None:
+        """대기열에 있어도 이미 다시 올린 편(대기열에서 끝남)은 대기 중이 아니다."""
+        api = FakeApi()
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep, _ = self._changed_after_upload(root, api)
+            rec = yu.read_record(ep)
+            rec.previous = [{"video_id": "OLD0", "reason": "republish"}]
+            yu.write_record(ep, rec)
+            res = yu.process_episode(ep, _cfg(), dry_run=True, env={}, republish_path=_republish_cfg(root, ep))
+            self.assertIn("allow-reupload", res["error"])
+
+    def test_changed_video_flagged_by_sweep_is_skipped(self) -> None:
+        api = FakeApi()
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep, _ = self._changed_after_upload(root, api)
+            rec = yu.read_record(ep)
+            rec.sweep = {"action": "flagged", "checked_at": "2026-11-13T00:00:00+00:00"}
+            yu.write_record(ep, rec)
+            rec_before = (ep / yu.RECORD_NAME).read_bytes()
+            q = _republish_cfg(root)                                            # 대기열은 비어 있음
+            n = len(api.calls)
+            for dry in (True, False):
+                res = yu.process_episode(ep, _cfg(), dry_run=dry, send=api, env=ENV, sleep=lambda s: None, republish_path=q)
+                self.assertEqual(res["status"], "skipped", res)
+                self.assertTrue(any("다시 올리기 대기" in w for w in res["warnings"]))
+            self.assertEqual(len(api.calls), n)
+            self.assertEqual((ep / yu.RECORD_NAME).read_bytes(), rec_before)
+
+    def test_changed_video_pending_republish_true_uploads_new_video(self) -> None:
+        api = FakeApi()
+        cfg = _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep, _ = self._changed_after_upload(root, api)
+            api.video("VID123", "public", 3)
+            q = _republish_cfg(root, ep)
+            res = yu.process_episode(ep, cfg, dry_run=True, env={}, republish=True, republish_path=q)
+            self.assertEqual(res["status"], "dry-run")
+            uploads = api.uploads
+            res = yu.process_episode(ep, cfg, dry_run=False, send=api, env=ENV, sleep=lambda s: None, republish=True,
+                                     republish_path=q)
+            self.assertEqual(res["status"], "uploaded", res)
+            self.assertTrue(res["republish"])
+            self.assertEqual(api.uploads, uploads + 1)
+            self.assertEqual(yu.read_record(ep).previous[0]["video_id"], "VID123")
+
     def test_channel_mismatch_blocks_before_upload(self) -> None:
         api = FakeApi(channel_id="UC_OTHER")
         with tempfile.TemporaryDirectory() as d:
