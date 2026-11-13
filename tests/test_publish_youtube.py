@@ -1569,6 +1569,144 @@ class SweepTest(unittest.TestCase):
         self.assertNotIn(yu.DEFAULT_FINALS / "01-gravitational-waves", yu.republish_todo(rc))
 
 
+EVENING = {"enabled": True, "ready_by_kst": "18:00"}
+
+
+@mock.patch.object(yu, "probe_video", lambda p: dict(PROBE_OK))
+class EveningSlotTest(unittest.TestCase):
+    """2026-11-13 사용자 "저녁에도 한편 더 올리자." — 아침 새 편, 저녁 다시 올리기 한 편(자리 배정은 제작 세션의 제안)."""
+
+    def _setup(self, root: Path, api: FakeApi, *, evening: dict | None = EVENING, queue_old: bool = True, **rq) -> tuple:
+        old = _episode(root, name="06-a", slug="a")                              # 노출을 못 받은 옛 편(다시 올리기 대상)
+        _record(old, "OA", uploaded=dt.datetime(2026, 11, 1, tzinfo=dt.timezone.utc))
+        api.video("OA", "public", 3, published="2026-11-01T02:00:00Z")
+        last = _episode(root, name="32-radar", slug="radar")                     # 마지막 업로드 = 새 편
+        _record(last, "NEW32", uploaded=dt.datetime(2026, 11, 2, tzinfo=dt.timezone.utc))
+        new = _episode(root, name="33-sar", slug="sar")                          # 만들어 두고 아직 안 올린 새 편
+        body: dict = {"hold_if_private_within_days": 0, "order": [{"number": 33, "topic": "SAR"}]}
+        if evening is not None:
+            body["evening"] = evening
+        daily = root / "daily.json"
+        daily.write_text(json.dumps(body, ensure_ascii=False), encoding="utf-8")
+        q = _republish_cfg(root, *((old,) if queue_old else ()), **rq)
+        return old, new, daily, q
+
+    @mock.patch.object(yu, "RECENT_HOURS", 0)
+    def test_evening_uploads_republish_not_new(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            old, new, daily, q = self._setup(Path(d), api)
+            out = yu.daily_next(cfg, daily, q, Path(d), today=dt.date(2026, 11, 13), dry_run=False, send=api, env=ENV,
+                                sleep=lambda s: None, slot="evening")
+            self.assertEqual((out["kind"], out["slot"]), ("republish", "evening"))
+            self.assertEqual([(r["dir"], r["status"]) for r in out["results"]], [(yu._rel(old), "uploaded")])
+            self.assertTrue(out["note"].startswith("저녁 다시 올리기 — "), out["note"])
+            self.assertEqual(api.uploads, 1)
+            self.assertTrue(yu.republished(yu.read_record(old)))
+            self.assertIsNone(yu.read_record(new))                               # 새 편은 저녁에 올리지 않는다
+
+    @mock.patch.object(yu, "RECENT_HOURS", 0)
+    def test_evening_rests_when_nothing_to_republish(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            _, new, daily, q = self._setup(Path(d), api, queue_old=False)        # 대기열 비었고 점검 대상도 없음
+            out = yu.daily_next(cfg, daily, q, Path(d), today=dt.date(2026, 11, 13), dry_run=False, send=api, env=ENV,
+                                sleep=lambda s: None, slot="evening")
+            self.assertTrue(out["ok"])
+            self.assertEqual(out["counts"]["uploaded"], 0)
+            self.assertEqual(out["slot"], "evening")
+            self.assertIn("저녁은 쉽니다", out["note"])
+            self.assertIn("대기열이 끝났습니다", out["note"])
+            self.assertEqual(api.uploads, 0)
+            self.assertNotIn("start", api.calls)
+            self.assertIsNone(yu.read_record(new))                               # 새 편이 준비돼 있어도 올리지 않는다
+
+    def test_evening_disabled_or_missing_rests(self) -> None:
+        for evening in (None, {"enabled": False, "ready_by_kst": "18:00"}):
+            api, cfg = FakeApi(), _cfg(channel_id="UC1")
+            with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+                old, new, daily, q = self._setup(Path(d), api, evening=evening)
+                out = yu.daily_next(cfg, daily, q, Path(d), today=dt.date(2026, 11, 13), dry_run=False, send=api, env=ENV,
+                                    sleep=lambda s: None, slot="evening")
+                self.assertEqual((out["counts"]["uploaded"], out["results"], out["slot"]), (0, [], "evening"))
+                self.assertIn("꺼짐", out["note"])
+                self.assertEqual(api.calls, [])                                  # 네트워크도 쓰지 않는다
+                self.assertIsNone(yu.read_record(new))
+                self.assertFalse(yu.republished(yu.read_record(old)))
+
+    @mock.patch.object(yu, "RECENT_HOURS", 0)
+    def test_evening_does_not_sweep(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            _, _, daily, q = self._setup(root, api, queue_old=False, min_views=50, auto_sweep=SWEEP)
+            low = _episode(root, name="07-low", slug="low")                      # 48시간 점검이면 걸릴 편
+            _record(low, "LOW", uploaded=_ago(101))
+            api.video("LOW", "public", 3, published=_iso(_ago(100)))
+            out = yu.daily_next(cfg, daily, q, root, today=dt.date(2026, 11, 13), dry_run=False, send=api, env=ENV,
+                                sleep=lambda s: None, slot="evening")
+            self.assertNotIn("sweep", out)
+            self.assertNotIn("full", api.calls)
+            self.assertEqual(api.updates, [])
+            self.assertIsNone(yu.read_record(low).sweep)
+            self.assertEqual(api.status_map["LOW"][0], "public")
+            self.assertEqual(out["counts"]["uploaded"], 0)
+            morning = yu.daily_next(cfg, daily, q, root, today=dt.date(2026, 11, 13), dry_run=True, send=api, env=ENV)
+            self.assertEqual({it["video_id"]: it["result"] for it in morning["sweep"]["items"]}.get("LOW"), "flagged")
+            self.assertEqual(api.updates, [])                                    # 아침 점검(dry-run)은 그대로 돈다
+
+    @mock.patch.object(yu, "RECENT_HOURS", 0)
+    def test_morning_with_evening_uploads_new_then_falls_back(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            old, new, daily, q = self._setup(root, api)
+            out = yu.daily_next(cfg, daily, q, root, today=dt.date(2026, 11, 13), dry_run=False, send=api, env=ENV,
+                                sleep=lambda s: None)
+            self.assertEqual((out["kind"], out["slot"]), ("new", "morning"))  # 마지막이 새 편이어도 번갈아 올리지 않는다
+            self.assertEqual([(r["dir"], r["status"]) for r in out["results"]], [(yu._rel(new), "uploaded")])
+            self.assertIn("다시 올리기는 저녁", out["note"])
+            self.assertNotIn("번갈아", out["note"])
+            self.assertFalse(yu.republished(yu.read_record(old)))
+            nxt = yu.daily_next(cfg, daily, q, root, today=dt.date(2026, 11, 14), dry_run=False, send=api, env=ENV,
+                                sleep=lambda s: None, slot="morning")
+            self.assertEqual((nxt["kind"], nxt["slot"]), ("republish", "morning"))   # 새 편이 없으면 다시 올리기
+            self.assertEqual([(r["dir"], r["status"]) for r in nxt["results"]], [(yu._rel(old), "uploaded")])
+            self.assertEqual(api.uploads, 2)
+
+    def test_morning_without_evening_keeps_alternation(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            old, _, daily, q = self._setup(Path(d), api, evening=None)
+            out = yu.daily_next(cfg, daily, q, Path(d), today=dt.date(2026, 11, 13), dry_run=True, slot="morning")
+            self.assertEqual((out["kind"], out["slot"]), ("republish", "morning"))
+            self.assertIn("다시 올리기 차례", out["note"])
+            self.assertEqual(out["results"][0]["dir"], yu._rel(old))
+
+    def test_evening_recent_upload_guard(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            old, new, daily, q = self._setup(Path(d), api)
+            _record(new, "NEW33", uploaded=dt.datetime.now(dt.timezone.utc) - dt.timedelta(hours=2))   # 아침에 막 올림
+            out = yu.daily_next(cfg, daily, q, Path(d), today=dt.date(2026, 11, 13), dry_run=False, send=api, env=ENV,
+                                sleep=lambda s: None, slot="evening")
+            self.assertIn("6시간", out["note"])
+            self.assertEqual((out["counts"]["uploaded"], out["slot"]), (0, "evening"))
+            self.assertEqual(api.uploads, 0)
+            self.assertFalse(yu.republished(yu.read_record(old)))
+
+    def test_invalid_slot(self) -> None:
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d, self.assertRaises(ValueError):
+            yu.daily_next(_cfg(), Path(d) / "daily.json", Path(d) / "none.json", Path(d), today=dt.date(2026, 11, 13),
+                          dry_run=True, slot="noon")
+
+    def test_repo_daily_evening_enabled(self) -> None:
+        daily = yu.load_daily()
+        self.assertIs(daily["evening"]["enabled"], True)                         # 2026-11-13 사용자 "저녁에도 한편 더 올리자."
+        self.assertIn("저녁에도 한편 더 올리자.", daily["_evening"])
+        self.assertIn("제작 세션의 제안", daily["_evening"])                    # 자리 배정·저녁 창은 사용자 결정이 아니다
+
+
 @mock.patch.object(yu, "probe_video", lambda p: dict(PROBE_OK))
 class CliTest(unittest.TestCase):
     def _main(self, argv: list[str]) -> tuple[int, dict]:
