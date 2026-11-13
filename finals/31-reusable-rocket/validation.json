@@ -1,7 +1,7 @@
 {
   "file": "reusable-rocket.mp4",
-  "bytes": 12014649,
-  "sha256": "315dc94fd2975c9bdbdb68938d41843f90279f22c450470f698b2fef969a98c2",
+  "bytes": 11989060,
+  "sha256": "f7e2b49779b944630223d0cf249f0c36de1a88263472a6a2d3384570476ef8b8",
   "created": "2026-11-07T09:49:21+00:00",
   "title": "로켓은 어떻게 돌아올까 — 저궤도와 재사용 로켓",
   "timeline_duration": 156.52,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2404352,
         "duration": "156.533333",
-        "bit_rate": "436277",
+        "bit_rate": "434964",
         "bits_per_raw_sample": "8",
         "nb_frames": "4696",
         "extradata_size": 50,
@@ -126,15 +126,15 @@
       }
     ],
     "format": {
-      "filename": "/home/user/sci_short/outputs/reusable-rocket/final/reusable-rocket.mp4",
+      "filename": "finals/31-reusable-rocket/reusable-rocket.mp4",
       "nb_streams": 2,
       "nb_programs": 0,
       "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "156.533333",
-      "size": "12014649",
-      "bit_rate": "614036",
+      "size": "11989060",
+      "bit_rate": "612728",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -183,5 +183,14 @@
     "direct_listening": "not performed",
     "physical_phone_playback": "not performed",
     "visual_review_of_stills": "not recorded by finish.py"
+  },
+  "picture_rerender": {
+    "date": "2026-11-13",
+    "reason": "사용자 결정(2026-11-13 \"주제어가 딱 보여야 해\"): 첫 프레임과 끝 포스터의 글을 \"위에 흰 물음, 아래에 가장 큰 주제어\"로 바꿈(답은 쓰지 않음)",
+    "method": "episodes/reusable-rocket/run.sh render (finals timeline.json 그대로)로 그림을 다시 만든 뒤, 영상 스트림을 키프레임 경계에서 스트림 복사로 이어 붙임: 새 렌더 [0, 8.333333) 초 + 이전 최종본 [8.333333, 147.733333) 초 + 새 렌더 [147.733333, 끝). 오디오는 이전 최종본을 스트림 복사(재인코딩 없음). 이어 붙인 까닭: 이 환경의 대체 글꼴 차이로 본문 59.8~78.1초의 아래첨자 ₁(m₁) 모양이 조금 달라져, 본문은 올라간 판을 그대로 둠.",
+    "previous_sha256": "315dc94fd2975c9bdbdb68938d41843f90279f22c450470f698b2fef969a98c2",
+    "audio_stream_md5_unchanged": "d34bdced4ca1204503cab74b6dd50547",
+    "revalidated": "pipeline/validate.py(새 mp4, finals srt·timeline, 새 스틸): RESULT: PASS  (19/19 not failing); 전편 디코딩 통과; 프레임별 해시 비교로 [8.333333, 147.733333) 초의 모든 프레임이 이전 최종본과 같고 나머지는 새 렌더와 같음을 확인(불일치 0), 프레임 간격 일정",
+    "not_rerun": "finish.py의 loudnorm 측정(audio_mastering_input, encoded_audio)은 다시 재지 않음 — 오디오 스트림이 바이트 단위로 같아 이전 값이 그대로 유효"
   }
 }

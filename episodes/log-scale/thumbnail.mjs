@@ -3,7 +3,7 @@
 // The hook of the video as one picture: a calm magnitude-3 seismogram and, at the SAME vertical scale,
 // the magnitude-6 trace — 10³ = 1000 times the amplitude — bursting out of its panel. Text: the question
 // "규모 6은 규모 3의 2배?" and the answer "아니, 1000배" (seismograph shaking, as stated in s02).
-// 2026-11-13: the question is "지진 규모 6은 / 규모 3의 2배?" (topic keyword on the thumbnail, owner's feedback). The finals
+// 2026-11-13: white question "지진 규모 3과 6의 / 차이는?" and the topic keyword "로그 스케일" as the big text (owner's decision). The finals
 // thumbnail.jpg is now frame 0 of the video; this script's --no-text output is the video's poster key picture.
 import fs from 'node:fs'; import path from 'node:path'; import {fileURLToPath, pathToFileURL} from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url)), root = path.resolve(here, '../..');
@@ -42,9 +42,9 @@ const band = c.createLinearGradient(0, 990, 0, 1600);
 band.addColorStop(0, 'rgba(0,6,12,0)'); band.addColorStop(0.18, 'rgba(0,6,12,0.82)'); band.addColorStop(0.85, 'rgba(0,6,12,0.82)'); band.addColorStop(1, 'rgba(0,6,12,0)');
 c.fillStyle = band; c.fillRect(0, 990, 1080, 610);
 const fit = (s, w, max, weight = 700) => Math.min(max, max * w / stage.measure(s, {role: 'display', weight, size: max}));
-// 2026-11-13: two white lines with the topic keyword (same words as the video's first frame, poster.json q_lines)
-for (const [l, y] of [['지진 규모 6은', 1080], ['규모 3의 2배?', 1180]]) stage.text(l, 540, y, {role: 'display', weight: 700, size: Math.min(fit('지진 규모 6은', 860, 92), fit('규모 3의 2배?', 860, 92)), color: T.ink, align: 'center', shadow: 'rgba(0,0,0,0.9)', shadowBlur: 18});
-stage.text('아니, 1000배', 540, 1370, {role: 'display', weight: 700, size: fit('아니, 1000배', 900, 210), color: '#FFB547', align: 'center', shadow: 'rgba(0,0,0,0.9)', shadowBlur: 26});
+// 2026-11-13: two white question lines and the topic keyword as the big text (same words as the video's first frame, poster.json)
+for (const [l, y] of [['지진 규모 3과 6의', 1080], ['차이는?', 1180]]) stage.text(l, 540, y, {role: 'display', weight: 700, size: fit('지진 규모 3과 6의', 860, 92), color: T.ink, align: 'center', shadow: 'rgba(0,0,0,0.9)', shadowBlur: 18});
+stage.text('로그 스케일', 540, 1370, {role: 'display', weight: 700, size: fit('로그 스케일', 900, 210), color: '#FFB547', align: 'center', shadow: 'rgba(0,0,0,0.9)', shadowBlur: 26});
 stage.text('지진계에 그려지는 흔들림 · 한 칸에 열 배', 540, 1520, {role: 'display', weight: 500, size: 40, color: T.light, align: 'center', shadow: 'rgba(0,0,0,0.85)', shadowBlur: 12});
 }
 

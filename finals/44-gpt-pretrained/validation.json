@@ -1,7 +1,7 @@
 {
   "file": "gpt-pretrained.mp4",
-  "bytes": 20214869,
-  "sha256": "81a01cf48ad08fa8552b17ea48c7e15df9417cf5c2b22ac953bac050935aeedd",
+  "bytes": 20240533,
+  "sha256": "c72245cdbd91d2d1f361f759db8b5b7ba434ecda76a897c094cc40c4d180a0cf",
   "created": "2026-11-12T13:22:21+00:00",
   "title": "GPT는 어떻게 배웠을까",
   "timeline_duration": 162.328,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2493440,
         "duration": "162.333333",
-        "bit_rate": "822989",
+        "bit_rate": "824253",
         "bits_per_raw_sample": "8",
         "nb_frames": "4870",
         "extradata_size": 50,
@@ -126,15 +126,15 @@
       }
     ],
     "format": {
-      "filename": "/home/user/sci_short/outputs/gpt-pretrained/final/gpt-pretrained.mp4",
+      "filename": "finals/44-gpt-pretrained/gpt-pretrained.mp4",
       "nb_streams": 2,
       "nb_programs": 0,
       "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "162.333333",
-      "size": "20214869",
-      "bit_rate": "996215",
+      "size": "20240533",
+      "bit_rate": "997480",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -183,5 +183,14 @@
     "direct_listening": "not performed",
     "physical_phone_playback": "not performed",
     "visual_review_of_stills": "not recorded by finish.py"
+  },
+  "picture_rerender": {
+    "date": "2026-11-13",
+    "reason": "첫 프레임(과 끝에 돌아오는 포스터)의 글을 '위에 흰 물음, 아래에 주제어를 가장 크게'로 바꿈(사용자 지시: \"주제어가 딱 보여야 해\"), 큰 글이던 답은 뺌. 주제어 GPT 뒤에 같은 줄로 시리즈 번호 #2를 붙임(사용자: \"GPT 는 시리즈니까 # 이후에 숫자를 붙여서 몇번째인지 알려줘.\"). 첫 머리글 줄도 새 물음으로 맞춤",
+    "method": "episodes/gpt-pretrained/run.sh render · stills (finals timeline.json 그대로) → 새 visual.mp4의 영상 + 이전 최종본의 오디오를 스트림 복사(오디오 재인코딩 없음, 언어·제목 메타데이터 옮김)",
+    "previous_sha256": "81a01cf48ad08fa8552b17ea48c7e15df9417cf5c2b22ac953bac050935aeedd",
+    "audio_stream_md5_unchanged": "810e3b87a30e6fec52db2c291f1dc934",
+    "revalidated": "pipeline/validate.py(새 mp4, finals srt·timeline, 새 스틸): RESULT: PASS  (19/19 not failing); 전편 디코딩 통과; 영상 길이·프레임 수·해상도·30fps 이전과 같음; 중간 세 시각(30·50·70%) 프레임 PSNR inf(같음); 프레임별 비교(PSNR, 전 4870프레임)로 달라진 곳은 프레임 0–478(0.00–15.97초), 프레임 4765–4869(158.83–162.33초)뿐 — 시작 포스터·모핑과 바뀐 첫 머리글(hook 장면 0–15.74초 안), 끝에 돌아오는 포스터. 눈에 보이는 차이(PSNR 50 dB 미만)는 0.00–15.70초, 160.13–162.33초뿐이고, 그 경계 뒤 몇 프레임은 부호화 잔차(50 dB 이상)입니다. 본문은 프레임 단위로 같음",
+    "not_rerun": "finish.py의 loudnorm 측정(audio_mastering_input, encoded_audio)은 다시 재지 않음 — 오디오 스트림이 바이트 단위로 같아 이전 값이 그대로 유효"
   }
 }

@@ -27,12 +27,12 @@
       "duration_sec": 175.5,
       "width": 1080,
       "height": 1920,
-      "bytes": 13259841,
-      "sha256": "f0976e98c1d701ffaa8b4cf3e3f0fddedee7872ffed1a72e373cfb6263327031",
-      "video_date": "2026-11-07",
+      "bytes": 13308720,
+      "sha256": "9cf3086b8d8722408f05fc34e60d6766330224095c1b1c1ee2253d2dbd838565",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/ligo-how-it-works",
       "upload_info": "finals/02-ligo-how-it-works/upload.md",
-      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완 — 흰 질문 \"LIGO가 잰 길이 변화는?\"과 큰 강조색 답 \"양성자의 수백분의 1\"). `thumbnail.jpg`도 같은 그림입니다."
+      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완; 2026-11-13 사용자 결정 \"위에 물음, 아래에 큰 주제어\"로 글을 고쳐 그림만 다시 렌더 — 위에 흰 물음 두 줄 \"양성자보다 작은 흔들림을\" / \"어떻게 잴까?\", 그 아래 가장 큰 강조색 주제어 \"LIGO\"). `thumbnail.jpg`도 같은 그림입니다."
     },
     {
       "number": 3,
@@ -44,12 +44,12 @@
       "duration_sec": 178.0,
       "width": 1080,
       "height": 1920,
-      "bytes": 17344898,
-      "sha256": "eeb1cd6781a72d31392ff691bdc00755a4af1fad3968e9c2e521d172b60c73f8",
-      "video_date": "2026-11-07",
+      "bytes": 17281231,
+      "sha256": "d1257a72241f5c20bd13719a4dd77f693bae9f39b4698dcb52ae44091765e078",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/el-nino-la-nina",
       "upload_info": "finals/03-el-nino-la-nina/upload.md",
-      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완 — 흰 질문 \"엘니뇨와 라니냐, 무엇이 다를까?\"과 큰 강조색 답 \"적도 바람의 세기\"). `thumbnail.jpg`도 같은 그림입니다."
+      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완; 2026-11-13 사용자 결정 \"위에 물음, 아래에 큰 주제어\"로 글을 고쳐 그림만 다시 렌더 — 위에 흰 물음 \"무엇이 다를까?\", 그 아래 가장 큰 강조색 주제어 \"엘니뇨와 라니냐\"). `thumbnail.jpg`도 같은 그림입니다."
     },
     {
       "number": 4,
@@ -61,12 +61,12 @@
       "duration_sec": 176.6,
       "width": 1080,
       "height": 1920,
-      "bytes": 22959019,
-      "sha256": "8eaef6a84b51657c833a06d7222325914d0e298dd8bd395e68b7906d9f7d73cd",
-      "video_date": "2026-11-07",
+      "bytes": 22921658,
+      "sha256": "57244dc207d2fc69d641d0728c0c6af2fd4208843b98c8ff7b409c2673613f34",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/wavelength",
       "upload_info": "finals/04-wavelength/upload.md",
-      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완 — 흰 질문 \"적외선은 빨간빛일까?\"과 큰 강조색 답 \"아니, 보이지 않는 빛\"). `thumbnail.jpg`도 같은 그림입니다."
+      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완 — 위에 흰 물음 \"정말 빨간빛일까?\", 그 아래 가장 큰 붉은 주제어 \"적외선\". 2026-11-13 사용자 결정 \"위에 물음, 아래에 큰 주제어\"로 글을 고쳐 첫·끝 구간의 그림만 다시 렌더함). `thumbnail.jpg`도 같은 그림입니다."
     },
     {
       "number": 5,
@@ -78,12 +78,12 @@
       "duration_sec": 179.0,
       "width": 1080,
       "height": 1920,
-      "bytes": 31258999,
-      "sha256": "faeef7eb06b4cefd83e6a8787fadd827d45c863be878c8166c7b2c4611c0eaad",
-      "video_date": "2026-11-07",
+      "bytes": 31191231,
+      "sha256": "ae3b268128435f1bd0aeedbc81110612e971cb8f05dc0b188f09415a8d36eac0",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/global-winds",
       "upload_info": "finals/05-global-winds/upload.md",
-      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완 — 흰 질문 \"무역풍은 왜 동쪽에서 불까?\"과 큰 강조색 답 \"자전이 바람을 휜다\"). `thumbnail.jpg`도 같은 그림입니다."
+      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완; 2026-11-13 사용자 결정 \"위에 물음, 아래에 큰 주제어\"로 글을 고쳐 그림만 다시 렌더 — 위에 흰 물음 \"왜 늘 동쪽에서 불까?\", 그 아래 가장 큰 강조색 주제어 \"무역풍\"). `thumbnail.jpg`도 같은 그림입니다."
     },
     {
       "number": 6,
@@ -112,12 +112,12 @@
       "duration_sec": 173.9,
       "width": 1080,
       "height": 1920,
-      "bytes": 30247409,
-      "sha256": "37cd0ade8ab3ba0e973946fc9e14df1036377064e8310b10a264f5d43b214300",
-      "video_date": "2026-11-07",
+      "bytes": 30255109,
+      "sha256": "d035c6ecdaa1c7d402a7f99b799c6d53863077f7da46dcd6cc06610dea2bb85e",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/precession",
       "upload_info": "finals/07-precession/upload.md",
-      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완 — 흰 질문 \"북극성은 영원할까?\"과 큰 강조색 답 \"아니, 언젠가는 베가\"). `thumbnail.jpg`도 같은 그림입니다."
+      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완; 2026-11-13 사용자 결정 \"위에 물음, 아래에 큰 주제어\"로 글을 고쳐 그림만 다시 렌더 — 위에 흰 물음 \"북극성은 영원할까?\", 그 아래 가장 큰 강조색 주제어 \"세차운동\"). `thumbnail.jpg`도 같은 그림입니다."
     },
     {
       "number": 8,
@@ -129,12 +129,12 @@
       "duration_sec": 165.8,
       "width": 1080,
       "height": 1920,
-      "bytes": 10212922,
-      "sha256": "e8b6be5ec3cf274e8cf63ab74bf63de73dd2158bee8232e54cbb0c75fb40c12d",
+      "bytes": 10206594,
+      "sha256": "ca003e92101ce9e7f1032b769652c74eb36e4ba49f8bc3e533e826497301bd94",
       "video_date": "2026-11-13",
       "episode_code": "episodes/log-scale",
       "upload_info": "finals/08-log-scale/upload.md",
-      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완, 2026-11-13 사용자 지적으로 주제어 줄을 넣어 다시 렌더 — 흰 글 두 줄 \"지진 규모 6은\" / \"규모 3의 2배?\"와 큰 강조색 답 \"아니, 1000배\"). `thumbnail.jpg`도 같은 그림입니다."
+      "thumbnail": "0초 프레임(2026-11-07 포스터 인트로 보완; 2026-11-13 사용자 결정 \"위에 물음, 아래에 큰 주제어\"로 글을 고쳐 그림만 다시 렌더 — 위에 흰 물음 두 줄 \"지진 규모 3과 6의\" / \"차이는?\", 그 아래 가장 큰 강조색 주제어 \"로그 스케일\"). `thumbnail.jpg`도 같은 그림입니다."
     },
     {
       "number": 9,
@@ -231,12 +231,12 @@
       "duration_sec": 172.1,
       "width": 1080,
       "height": 1920,
-      "bytes": 25479691,
-      "sha256": "de6602468a880dc1ce46748ab6d2d13054c3b019949fb36685bf531814bc414c",
-      "video_date": "2026-11-07",
+      "bytes": 25325711,
+      "sha256": "a6829cb952f8ac82feb9aecc25a30d6c92360ab3bf880b567785cfb7c3130f24",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/cold-vaccine",
       "upload_info": "finals/14-cold-vaccine/upload.md",
-      "thumbnail": "0초 프레임(모양·색이 저마다 다른 바이러스 무리 가운데 주사기 하나, 흰 질문 \"감기 주사는 왜 없을까?\"와 큰 주황 답 \"범인이 200가지\")"
+      "thumbnail": "0초 프레임(모양·색이 저마다 다른 바이러스 무리 가운데 주사기 하나, 위에 흰 물음 \"왜 아직 없을까?\", 그 아래 가장 큰 주황 주제어 \"감기 주사\". 2026-11-13 사용자 결정 \"위에 물음, 아래에 큰 주제어\"로 글을 고쳐 그림만 다시 렌더함)"
     },
     {
       "number": 15,
@@ -333,12 +333,12 @@
       "duration_sec": 170.3,
       "width": 1080,
       "height": 1920,
-      "bytes": 23503050,
-      "sha256": "94d8d86fdb5531ca879a548e1a33ad789b5930b8456e7e77156c787959d37d3e",
-      "video_date": "2026-11-07",
+      "bytes": 23378021,
+      "sha256": "eb3db9c7cd2735784d785c2e978c841203b624245ad283ebecd56555b074f0db",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/atomic-bomb",
       "upload_info": "finals/20-atomic-bomb/upload.md",
-      "thumbnail": "0초 프레임(눈부신 불덩이 둘레로 두 갈래씩 갈라지는 중성자 빛줄기와 충격파 고리, 흰 질문 \"히로시마 원폭, 에너지가 된 질량은?\"과 큰 호박색 답 \"단 0.7그램\")"
+      "thumbnail": "0초 프레임(눈부신 불덩이 둘레로 두 갈래씩 갈라지는 중성자 빛줄기와 충격파 고리, 위에 흰 물음 \"에너지가 된 질량은?\", 그 아래 가장 큰 호박색 주제어 \"히로시마 원폭\". 2026-11-13 사용자 결정 \"위에 물음, 아래에 큰 주제어\"로 글을 고쳐 그림만 다시 렌더함)"
     },
     {
       "number": 21,
@@ -350,12 +350,12 @@
       "duration_sec": 163.6,
       "width": 1080,
       "height": 1920,
-      "bytes": 15122460,
-      "sha256": "08f6a92fde09cd67942e2b0b47f73e1d0839aa0a99a7989410d8551dea7c4766",
-      "video_date": "2026-11-07",
+      "bytes": 15040745,
+      "sha256": "065796114ad51d0093ba11ed069b37a553ff3fca7441998cdaf06284c4ed0543",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/hydrogen-bomb",
       "upload_info": "finals/21-hydrogen-bomb/upload.md",
-      "thumbnail": "0초 프레임(수평선 위 불덩이와 대기층 선을 뚫고 오른 버섯구름, 흰 질문 \"가장 큰 수소폭탄의 위력은?\"과 큰 주황 답 \"히로시마의 3천 배\")"
+      "thumbnail": "0초 프레임(수평선 위 불덩이와 대기층 선을 뚫고 오른 버섯구름, 위에 흰 물음 \"가장 큰 것의 위력은?\", 그 아래 가장 큰 주황 주제어 \"수소폭탄\". 2026-11-13 사용자 결정 \"위에 물음, 아래에 큰 주제어\"로 글을 고쳐 그림만 다시 렌더함)"
     },
     {
       "number": 22,
@@ -367,12 +367,12 @@
       "duration_sec": 149.7,
       "width": 1080,
       "height": 1920,
-      "bytes": 42582962,
-      "sha256": "b1912ad4f1e42ac87269339097e0d47c6211cc0e725c369605e1c7b03b02010b",
-      "video_date": "2026-11-07",
+      "bytes": 42525276,
+      "sha256": "96afd366a5ef44c94462f0423d49b089a08454f5d995bc9d6afa0821f8718207",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/mushroom-cloud",
       "upload_info": "finals/22-mushroom-cloud/upload.md",
-      "thumbnail": "0초 프레임(어두운 바탕의 대기 단면 위, 빛나는 점과 가는 등고선으로 그린 큰 버섯구름과 km 고도 눈금, 흰 질문 \"버섯구름은 왜 버섯 모양?\"과 큰 주황 답 \"떠오르는 뜨거운 공기\")"
+      "thumbnail": "0초 프레임(어두운 바탕의 대기 단면 위, 빛나는 점과 가는 등고선으로 그린 큰 버섯구름과 km 고도 눈금, 위에 흰 물음 \"왜 버섯 모양일까?\", 그 아래 가장 큰 주황 주제어 \"버섯구름\". 2026-11-13 사용자 결정 \"위에 물음, 아래에 큰 주제어\"로 글을 고쳐 첫·끝 구간의 그림만 다시 렌더함)"
     },
     {
       "number": 23,
@@ -384,12 +384,12 @@
       "duration_sec": 163.6,
       "width": 1080,
       "height": 1920,
-      "bytes": 17640658,
-      "sha256": "6596305ff65f6795af4c5afea11f77bcd59ffd68246b54a49b1bde95a57733d2",
-      "video_date": "2026-11-07",
+      "bytes": 17620647,
+      "sha256": "8cb48e9203f32717051a01d3a6a1dc78110c53e9e2aad9471a88f8615edf98fd",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/orbit-altitudes",
       "upload_info": "finals/23-orbit-altitudes/upload.md",
-      "thumbnail": "0초 프레임(지구의 둥근 가장자리와 백두산·에베레스트에서 위로 뻗은 로그 높이 사다리, 꼭대기의 금빛 제임스웹과 달, 흰 질문 \"제임스웹은 얼마나 높이?\"와 큰 금빛 답 \"150만 km\")"
+      "thumbnail": "0초 프레임(지구의 둥근 가장자리와 백두산·에베레스트에서 위로 뻗은 로그 높이 사다리, 꼭대기의 금빛 제임스웹과 달, 위에 흰 물음 \"얼마나 높이 떠 있을까?\", 그 아래 가장 큰 금빛 주제어 \"제임스웹\". 2026-11-13 사용자 결정 \"위에 물음, 아래에 큰 주제어\"로 글을 고쳐 그림만 다시 렌더함)"
     },
     {
       "number": 24,
@@ -401,12 +401,12 @@
       "duration_sec": 158.5,
       "width": 1080,
       "height": 1920,
-      "bytes": 19128175,
-      "sha256": "8f25c080840469fccf11f7dc90bf204508664f3492cc8ec4ed6527cfc1645c29",
-      "video_date": "2026-11-07",
+      "bytes": 19010043,
+      "sha256": "11c6c038eab24586a3d0266ef106d354a89465f3ad701bdc189b2896210b11cb",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/lagrange-points",
       "upload_info": "finals/24-lagrange-points/upload.md",
-      "thumbnail": "0초 프레임(함께 도는 계의 등고선 위 태양·지구와 빛나는 다섯 점 L1~L5, 흰 질문 \"우주의 주차 자리는?\"과 큰 금빛 답 \"라그랑주 점 5곳\")"
+      "thumbnail": "0초 프레임(함께 도는 계의 등고선 위 태양·지구와 빛나는 다섯 점 L1~L5, 위에 흰 물음 \"우주의 주차 자리는?\", 그 아래 가장 큰 금빛 주제어 \"라그랑주 점\". 2026-11-13 사용자 결정 \"위에 물음, 아래에 큰 주제어\"로 글을 고쳐 그림만 다시 렌더함)"
     },
     {
       "number": 25,
@@ -418,12 +418,12 @@
       "duration_sec": 170.3,
       "width": 1080,
       "height": 1920,
-      "bytes": 19565226,
-      "sha256": "679285153f008a801c5aee5b37ecfcc63f13eb175b441c1bfc999b29001b813d",
-      "video_date": "2026-11-11",
+      "bytes": 19666827,
+      "sha256": "af61c9dc76986d815942ae80c25ba2d535bc8ea9d8ae76a3b4386c2dbf8afae2",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/typhoon-track",
       "upload_info": "finals/25-typhoon-track/upload.md",
-      "thumbnail": "0초 프레임(북서태평양 지도 위 휘어진 태풍의 길 점선과 우리나라 남해안 앞의 태풍, 흰 질문 \"태풍은 왜 꺾일까?\"와 큰 호박색 답 \"바람에 실려서\")"
+      "thumbnail": "0초 프레임(북서태평양 지도 위 휘어진 태풍의 길 점선과 우리나라 남해안 앞의 태풍, 흰 질문 두 줄 \"왜 우리나라 앞에서\" / \"꺾일까?\"와 그 아래 가장 큰 호박색 주제어 \"태풍의 길\". 2026-11-13 사용자 지시로 큰 글을 답에서 주제어로 바꾸어 그림만 다시 렌더함)"
     },
     {
       "number": 27,
@@ -469,12 +469,12 @@
       "duration_sec": 165.4,
       "width": 1080,
       "height": 1920,
-      "bytes": 35436184,
-      "sha256": "7931bda6f1bfdc9c0e3ab4e8977a9e99665c7c24ba7b0746f3e09750ccb654b5",
+      "bytes": 35367835,
+      "sha256": "411dc4d77a00313b41401c1f735958224d14ff8a6bf3631fec76639f6f4fca18",
       "video_date": "2026-11-13",
       "episode_code": "episodes/fission-fusion",
       "upload_info": "finals/29-fission-fusion/upload.md",
-      "thumbnail": "0초 프레임(흑연색 배경에서 막 둘로 갈라진 우라늄 원자핵, 흰 섬광과 퍼지는 가는 고리, 바깥으로 날아가는 중성자 점 셋, 오른쪽 위의 중수소·삼중수소, 흰 글 두 줄 \"핵분열과 핵융합\" / \"쪼개도 합쳐도 에너지?\"와 큰 주황 답 \"철을 향하기 때문\". 2026-11-13 사용자 지적으로 주제어 줄을 더해 그림을 다시 렌더함)"
+      "thumbnail": "0초 프레임(흑연색 배경에서 막 둘로 갈라진 우라늄 원자핵, 흰 섬광과 퍼지는 가는 고리, 바깥으로 날아가는 중성자 점 셋, 오른쪽 위의 중수소·삼중수소, 위에 흰 물음 두 줄 \"쪼개도 합쳐도\" / \"에너지가 나는 이유는?\", 그 아래 가장 큰 주황 주제어 \"핵분열과 핵융합\". 2026-11-13 사용자 결정 \"위에 물음, 아래에 큰 주제어\"로 글을 고쳐 그림만 다시 렌더함)"
     },
     {
       "number": 31,
@@ -486,12 +486,12 @@
       "duration_sec": 156.5,
       "width": 1080,
       "height": 1920,
-      "bytes": 12014649,
-      "sha256": "315dc94fd2975c9bdbdb68938d41843f90279f22c450470f698b2fef969a98c2",
-      "video_date": "2026-11-07",
+      "bytes": 11989060,
+      "sha256": "f7e2b49779b944630223d0cf249f0c36de1a88263472a6a2d3384570476ef8b8",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/reusable-rocket",
       "upload_info": "finals/31-reusable-rocket/upload.md",
-      "thumbnail": "0초 프레임(밤의 착륙장, 다리를 펴고 불꽃을 뿜으며 내려앉는 1단, 흰 질문 \"다 쓴 로켓, 버릴까?\"와 큰 주황 답 \"돌아와 다시 난다\")"
+      "thumbnail": "0초 프레임(밤의 착륙장, 다리를 펴고 불꽃을 뿜으며 내려앉는 1단, 위에 흰 물음 \"다 쓴 로켓, 버릴까?\", 그 아래 가장 큰 주황 주제어 \"재사용 로켓\". 2026-11-13 사용자 결정 \"위에 물음, 아래에 큰 주제어\"로 글을 고쳐 첫·끝 구간의 그림만 다시 렌더함)"
     },
     {
       "number": 32,
@@ -537,12 +537,12 @@
       "duration_sec": 158.6,
       "width": 1080,
       "height": 1920,
-      "bytes": 21084701,
-      "sha256": "5cd437c8f22b67988cd7d9fccd751d6bd67cd416c966966a55e87ec77a569e25",
-      "video_date": "2026-11-07",
+      "bytes": 21035293,
+      "sha256": "37852356bdfed60a39dedeca373a41442d1fe04643126028802e66e488e0b173",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/telescope-types",
       "upload_info": "finals/34-telescope-types/upload.md",
-      "thumbnail": "0초 프레임(오목거울 단면이 위에서 내려오는 별빛 광선 다발을 되비쳐 한 점에 모으고 그 초점이 빛남, 흰 질문 \"망원경의 핵심은 확대?\"와 큰 호박색 답 \"아니, 빛 모으기\")"
+      "thumbnail": "0초 프레임(오목거울 단면이 위에서 내려오는 별빛 광선 다발을 되비쳐 한 점에 모으고 그 초점이 빛남, 위에 흰 물음 \"핵심은 확대일까?\", 그 아래 가장 큰 호박색 주제어 \"망원경\". 2026-11-13 사용자 결정 \"위에 물음, 아래에 큰 주제어\"로 글을 고쳐 그림만 다시 렌더함)"
     },
     {
       "number": 36,
@@ -588,12 +588,12 @@
       "duration_sec": 159.4,
       "width": 1080,
       "height": 1920,
-      "bytes": 16093105,
-      "sha256": "ee76690c85327bfc1f8cc39f15d692cb879c107f056e248de46038eafb0be294",
-      "video_date": "2026-11-12",
+      "bytes": 16049480,
+      "sha256": "61db63f99ad1fc6172e04635680219d50be5a80d3709812bf66163c76a184e31",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/gpt-generative",
       "upload_info": "finals/43-gpt-generative/upload.md",
-      "thumbnail": "0초 프레임(조각으로 이어진 질문 \"하늘은 왜 파랄까?\"와 쓰이는 대답, 아래 뽑기 띠와 표지, 흰 질문 \"GPT는 대답을 어떻게 쓸까?\"와 큰 호박색 답 \"한 조각씩 뽑아서\")"
+      "thumbnail": "0초 프레임(조각으로 이어진 질문 \"하늘은 왜 파랄까?\"와 쓰이는 대답, 아래 뽑기 띠와 표지, 흰 질문 두 줄 \"대답을 어떻게\" / \"써 내려갈까?\"와 그 아래 가장 큰 호박색 주제어 \"GPT\"와 같은 줄에 작게 붙인 시리즈 번호 \"#1\"(큰 글 \"GPT #1\"). 2026-11-13 사용자 지시로 큰 글을 답에서 주제어로 바꾸어 그림만 다시 렌더함)"
     },
     {
       "number": 44,
@@ -605,12 +605,12 @@
       "duration_sec": 162.3,
       "width": 1080,
       "height": 1920,
-      "bytes": 20214869,
-      "sha256": "81a01cf48ad08fa8552b17ea48c7e15df9417cf5c2b22ac953bac050935aeedd",
-      "video_date": "2026-11-12",
+      "bytes": 20240533,
+      "sha256": "c72245cdbd91d2d1f361f759db8b5b7ba434ecda76a897c094cc40c4d180a0cf",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/gpt-pretrained",
       "upload_info": "finals/44-gpt-pretrained/upload.md",
-      "thumbnail": "0초 프레임(뒷부분이 가려진 글줄 \"해는 동쪽에서 ▨\", 아래 오르는 곡선, 흰 질문 \"GPT는 어떻게 배웠을까?\"와 큰 호박색 답 \"다음 말 맞히기로\")"
+      "thumbnail": "0초 프레임(뒷부분이 가려진 글줄 \"해는 동쪽에서 ▨\", 아래 오르는 곡선, 흰 질문 두 줄 \"글 쓰는 법을\" / \"어떻게 배웠을까?\"와 그 아래 가장 큰 호박색 주제어 \"GPT\"와 같은 줄에 작게 붙인 시리즈 번호 \"#2\"(큰 글 \"GPT #2\"). 2026-11-13 사용자 지시로 큰 글을 답에서 주제어로 바꾸어 그림만 다시 렌더함)"
     },
     {
       "number": 45,
@@ -622,12 +622,12 @@
       "duration_sec": 164.3,
       "width": 1080,
       "height": 1920,
-      "bytes": 13181216,
-      "sha256": "64626b03cfd3e302b505ed0b99458ad6a34f022fed233514567d99db53dc3341",
-      "video_date": "2026-11-12",
+      "bytes": 13074988,
+      "sha256": "e8a6f562adeb9a3017086fed21c5e8570a41f935a375c7f5c2706bf70eb3faab",
+      "video_date": "2026-11-13",
       "episode_code": "episodes/gpt-transformer",
       "upload_info": "finals/45-gpt-transformer/upload.md",
-      "thumbnail": "0초 프레임(낱말 줄 \"항구를 떠난 배\"와 '배'에서 앞 낱말로 뻗은 주의의 선, 아래 뜻의 지도에서 탈것 쪽으로 가는 점, 흰 질문 \"GPT는 문맥을 어떻게 읽을까?\"와 큰 호박색 답 \"앞말을 살펴서\")"
+      "thumbnail": "0초 프레임(낱말 줄 \"항구를 떠난 배\"와 '배'에서 앞 낱말로 뻗은 주의의 선, 아래 뜻의 지도에서 탈것 쪽으로 가는 점, 흰 질문 한 줄 \"문맥을 어떻게 읽을까?\"와 그 아래 가장 큰 호박색 주제어 \"GPT\"와 같은 줄에 작게 붙인 시리즈 번호 \"#3\"(큰 글 \"GPT #3\"). 2026-11-13 사용자 지시로 큰 글을 답에서 주제어로 바꾸어 그림만 다시 렌더함)"
     },
     {
       "number": 46,
@@ -639,12 +639,12 @@
       "duration_sec": 165.3,
       "width": 1080,
       "height": 1920,
-      "bytes": 26851487,
-      "sha256": "dd8240de9da18f872b67a4acfc1c37340f3dae31b30e86c8174c1620e256b642",
+      "bytes": 26776141,
+      "sha256": "f111a82de2a2da6d039404739f4cf7c31f8ad6e0c645bf97832d0549377ca6d4",
       "video_date": "2026-11-13",
       "episode_code": "episodes/gpt-image",
       "upload_info": "finals/46-gpt-image/upload.md",
-      "thumbnail": "0초 프레임(주문 글 조각 \"불을 뿜는 아기 용\", 위에서부터 칸이 채워지는 바둑판 그림과 무늬 뽑기 띠, 흰 질문 \"GPT는 그림을 어떻게 그릴까?\"와 큰 호박색 답 \"그림도 한 조각씩\")"
+      "thumbnail": "0초 프레임(주문 글 조각 \"불을 뿜는 아기 용\", 위에서부터 칸이 채워지는 바둑판 그림과 무늬 뽑기 띠, 흰 질문 한 줄 \"그림을 어떻게 그릴까?\"와 그 아래 가장 큰 호박색 주제어 \"GPT\"와 같은 줄에 작게 붙인 시리즈 번호 \"#4\"(큰 글 \"GPT #4\"). 2026-11-13 사용자 지시로 큰 글을 답에서 주제어로 바꾸어 그림만 다시 렌더함)"
     }
   ],
   "legacy": [

@@ -1,7 +1,7 @@
 {
   "file": "fission-fusion.mp4",
-  "bytes": 35436184,
-  "sha256": "7931bda6f1bfdc9c0e3ab4e8977a9e99665c7c24ba7b0746f3e09750ccb654b5",
+  "bytes": 35367835,
+  "sha256": "411dc4d77a00313b41401c1f735958224d14ff8a6bf3631fec76639f6f4fca18",
   "created": "2026-11-07T13:44:25+00:00",
   "title": "핵분열과 핵융합 — 쪼개도 합쳐도 에너지가 나오는 까닭",
   "timeline_duration": 165.449,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2541056,
         "duration": "165.433333",
-        "bit_rate": "1534852",
+        "bit_rate": "1531544",
         "bits_per_raw_sample": "8",
         "nb_frames": "4963",
         "extradata_size": 50,
@@ -69,8 +69,7 @@
         "tags": {
           "language": "und",
           "handler_name": "VideoHandler",
-          "vendor_id": "[0][0][0][0]",
-          "encoder": "Lavc60.31.102 libx264"
+          "vendor_id": "[0][0][0][0]"
         }
       },
       {
@@ -133,8 +132,8 @@
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "165.449000",
-      "size": "35436184",
-      "bit_rate": "1713455",
+      "size": "35367835",
+      "bit_rate": "1710150",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -186,11 +185,14 @@
   },
   "picture_rerender": {
     "date": "2026-11-13",
-    "reason": "첫 프레임(과 끝에 돌아오는 포스터)의 글에 주제어 줄 추가(사용자 지적)",
-    "method": "episodes/fission-fusion/run.sh render (finals timeline.json 그대로) → 새 visual.mp4의 영상 + 이전 최종본의 오디오를 스트림 복사(오디오 재인코딩 없음)",
-    "previous_sha256": "847ef0341f6c6cd2a330509bc953ce5309d60fc9f91a140d7a6fa847a7379ae8",
+    "reason": "첫 프레임(과 끝에 돌아오는 포스터)의 글을 \"위에 흰 물음, 아래에 가장 큰 주제어\"로 바꿈(사용자 결정 2026-11-13): \"쪼개도 합쳐도 / 에너지가 나는 이유는?\"(78 px) + \"핵분열과 핵융합\"(약 140 px, 물음의 약 1.8배), 답은 쓰지 않음",
+    "method": "episodes/fission-fusion/run.sh render · stills (finals timeline.json 그대로) → 새 visual.mp4의 영상 + 이전 최종본의 오디오를 스트림 복사(-map 0:v:0 -map 1:a:0 -c copy -movflags +faststart, 언어·제목 메타데이터 유지; 오디오 재인코딩 없음)",
+    "previous_sha256": "7931bda6f1bfdc9c0e3ab4e8977a9e99665c7c24ba7b0746f3e09750ccb654b5",
+    "sha256_before_2026_11_13": "847ef0341f6c6cd2a330509bc953ce5309d60fc9f91a140d7a6fa847a7379ae8",
+    "intermediate_sha256_same_day": "264e623047eb0d130f6c5c45558f23fc6fb29081eb7e0e190f1609559f45846a",
     "audio_stream_md5_unchanged": "9df7d33b9990a1429fbdd9414a6d08e3",
-    "revalidated": "pipeline/validate.py 19/19 PASS(새 mp4, finals srt·timeline, 새 스틸), 전편 디코딩 통과",
-    "not_rerun": "finish.py의 loudnorm 측정(audio_mastering_input, encoded_audio)은 다시 재지 않음 — 오디오 스트림이 바이트 단위로 같아 이전 값이 그대로 유효"
+    "rechecked": "전편 디코딩 오류 none; 1080×1920 30fps 영상 1 + 오디오 1; 길이 165.449 → 165.449 s; 오디오 md5 이전·새 파일 같음; 이전 파일과 프레임별 PSNR 비교(4963프레임): 다른 구간 0.0–7.93 s (min PSNR 17.8 dB); 161.17–165.43 s (min PSNR 17.8 dB); 중간 세 시각 49.6 s identical, 82.7 s identical, 115.8 s identical; pipeline/validate.py RESULT: PASS  (19/19 not failing)(새 mp4, finals srt·timeline, 새 스틸); 0초·마지막 프레임 직접 확인",
+    "not_rerun": "finish.py의 loudnorm 측정(audio_mastering_input, encoded_audio)은 다시 재지 않음 — 오디오 스트림이 바이트 단위로 같아 이전 값이 그대로 유효",
+    "diff_note": "오늘 아침 판(previous_sha256)과 비교해도 다른 구간은 0–7.93 s, 160.9–165.43 s 뿐(첫 렌더 뒤 물음·주제어 크기를 다시 맞춰 한 번 더 렌더했고, 그 중간 판 intermediate_sha256_same_day 는 전달되지 않음). 1.7–7.93 s 는 훅 머리글이 흰 물음 두 줄(\"쪼개도 합쳐도\" / \"에너지가 나는 이유는?\")로 바뀐 의도된 차이. 크기: 흰 물음 78 px, 주제어 약 140 px(약 1.8배)."
   }
 }

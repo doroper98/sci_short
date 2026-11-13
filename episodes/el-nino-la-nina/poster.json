@@ -1,11 +1,13 @@
 {
-  "_about": "첫 프레임 썸네일 포스터(2026-11-07 소급 적용, pipeline/render/posterintro.mjs). q = 흰 질문, a = 큰 강조색 답, key = 그림 시각·크롭(pipeline/render/thumbnail.mjs 옵션)",
-  "q": "엘니뇨와 라니냐, 무엇이 다를까?",
-  "a": "적도 바람의 세기",
+  "_about": "첫 프레임 썸네일 포스터(2026-11-07 소급 적용, pipeline/render/posterintro.mjs). q = 흰 질문, a = 큰 강조색 글, key = 그림 시각·크롭(pipeline/render/thumbnail.mjs 옵션) 2026-11-13 사용자 결정: '위에 흰 물음, 아래에 가장 큰 주제어'(답은 쓰지 않음) — a 는 주제어. a_width = 큰 글을 맞출 너비(긴 주제어라 940; 그리기는 episodes/el-nino-la-nina/scenes.mjs 의 로컬 overlays). q_max = 흰 물음 크기(주제어 글자 높이가 물음의 약 1.8배가 되게 76).",
+  "q": "무엇이 다를까?",
+  "a": "엘니뇨와 라니냐",
   "accent": "#FF8A3D",
   "key": {
     "t": 75,
     "crop": "50,270,980,790",
     "cy": 600
-  }
+  },
+  "a_width": 940,
+  "q_max": 76
 }

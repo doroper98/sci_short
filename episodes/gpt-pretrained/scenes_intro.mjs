@@ -268,7 +268,7 @@ export const scenes = {hook: hookScene, origin: originScene, essence: essenceSce
 // HEADERS
 // =====================================================================================================
 export const titles = {
-  hook: P => [[-Infinity, '오늘의 주제', 'GPT는 어떻게 배웠을까?']],
+  hook: P => [[-Infinity, '오늘의 주제 · GPT #2', '글 쓰는 법을 어떻게 배웠을까?']],
   origin: P => { const at = s => P.tl.at(s) - 0.5; return [[-Infinity, '이름 · GPT의 P', 'P = Pre-trained'], [at('s05'), '순서', '먼저 글로 공부, 그다음 대화']]; },
   essence: P => { const at = s => P.tl.at(s) - 0.5; return [[-Infinity, '본질', '가리고, 다음 조각 맞히기'], [at('s07'), '본질', '정답은 가린 자리에 있다'], [at('s08'), `본질 · 빨라짐`, '채점할 사람이 필요 없다']]; },
 };

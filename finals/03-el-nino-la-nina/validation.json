@@ -1,7 +1,7 @@
 {
   "file": "el-nino-la-nina.mp4",
-  "bytes": 17344898,
-  "sha256": "eeb1cd6781a72d31392ff691bdc00755a4af1fad3968e9c2e521d172b60c73f8",
+  "bytes": 17281231,
+  "sha256": "d1257a72241f5c20bd13719a4dd77f693bae9f39b4698dcb52ae44091765e078",
   "created": "2026-11-07T01:21:25+00:00",
   "title": "엘니뇨와 라니냐 — 바람이 물을 밀고, 물이 바람을 만든다",
   "timeline_duration": 178.047,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2734592,
         "duration": "178.033333",
-        "bit_rate": "590144",
+        "bit_rate": "587281",
         "bits_per_raw_sample": "8",
         "nb_frames": "5341",
         "extradata_size": 50,
@@ -69,8 +69,7 @@
         "tags": {
           "language": "und",
           "handler_name": "VideoHandler",
-          "vendor_id": "[0][0][0][0]",
-          "encoder": "Lavc60.31.102 libx264"
+          "vendor_id": "[0][0][0][0]"
         }
       },
       {
@@ -126,15 +125,15 @@
       }
     ],
     "format": {
-      "filename": "/home/user/sci_short/outputs/el-nino-la-nina/final/el-nino-la-nina.mp4",
+      "filename": "finals/03-el-nino-la-nina/el-nino-la-nina.mp4",
       "nb_streams": 2,
       "nb_programs": 0,
       "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "178.047000",
-      "size": "17344898",
-      "bit_rate": "779340",
+      "size": "17281231",
+      "bit_rate": "776479",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -183,5 +182,15 @@
     "direct_listening": "not performed",
     "physical_phone_playback": "not performed",
     "visual_review_of_stills": "not recorded by finish.py"
+  },
+  "picture_rerender": {
+    "date": "2026-11-13",
+    "reason": "첫 프레임(과 끝에 돌아오는 포스터)의 글을 \"위에 흰 물음, 아래에 가장 큰 주제어\"로 바꿈(사용자 결정 2026-11-13): \"무엇이 다를까?\" + \"엘니뇨와 라니냐\", 답은 쓰지 않음",
+    "method": "episodes/el-nino-la-nina/run.sh render · stills (finals timeline.json 그대로) → 새 visual.mp4의 영상 + 이전 최종본의 오디오를 스트림 복사(-map 0:v:0 -map 1:a:0 -c copy -movflags +faststart, 언어·제목 메타데이터 유지; 오디오 재인코딩 없음)",
+    "previous_sha256": "eeb1cd6781a72d31392ff691bdc00755a4af1fad3968e9c2e521d172b60c73f8",
+    "audio_stream_md5_unchanged": "6821c61e0ce7bfd72036362189a31a7b",
+    "rechecked": "전편 디코딩 오류 none; 1080×1920 30fps 영상 1 + 오디오 1; 길이 178.047 → 178.047 s; 오디오 md5 이전·새 파일 같음; 이전 파일과 프레임별 PSNR 비교(5341프레임): 다른 구간 0.0–8.33 s (min PSNR 20.3 dB); 167.87–167.9 s (min PSNR 70.9 dB); 168.0–178.03 s (min PSNR 20.3 dB); 중간 세 시각 53.4 s identical, 89.0 s identical, 124.6 s identical; pipeline/validate.py RESULT: PASS  (19/19 not failing)(새 mp4, finals srt·timeline, 새 스틸); 0초·마지막 프레임 직접 확인",
+    "not_rerun": "finish.py의 loudnorm 측정(audio_mastering_input, encoded_audio)은 다시 재지 않음 — 오디오 스트림이 바이트 단위로 같아 이전 값이 그대로 유효",
+    "diff_note": "1.7–8.33 s 와 167.87–168.0 s 는 포스터 앞뒤 GOP 안 인코더 차이(PSNR ≥ 52 dB). 포스터는 0–1.7 s, 168.0 s부터 끝. 크기: 흰 물음 76 px, 주제어 약 135 px(약 1.8배, 너비 940 px)."
   }
 }

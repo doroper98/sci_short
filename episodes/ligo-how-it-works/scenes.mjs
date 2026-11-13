@@ -977,6 +977,52 @@ if (isMain && process.argv.includes('--emit-sound')) {
 }
 
 // First frame = thumbnail (2026-11-07 retrofit, user request): poster 0–0.9 s, morph away 0.9–1.7 s, back at the last
-// sentence. Config and key picture: episodes/ligo-how-it-works/poster.json, poster-key.jpg (pipeline/render/posterintro.mjs).
-import {posterIntro} from '../../pipeline/render/posterintro.mjs';
-export const overlays = await posterIntro(baseOverlays, {slug: 'ligo-how-it-works'});
+// sentence. Config and key picture: episodes/ligo-how-it-works/poster.json, poster-key.jpg (made by pipeline/render/posterintro.mjs).
+// 2026-11-13 (owner: "주제어가 딱 보여야 해"): white question on top (poster.json q, or q_lines for two lines) and the topic
+// keyword (poster.json a) as the biggest text in the accent colour; no answer. pipeline/render/posterintro.mjs draws one
+// question line and fits the big text to 800 px, so this episode keeps a local copy of that overlay (same picture, timing
+// and morph as posterintro.mjs; here: the question is two lines, poster.json q_lines; the short keyword may grow to poster.json a_max).
+import {createRequire} from 'node:module';
+const P_HERE = path.dirname(fileURLToPath(import.meta.url)), P_ROOT = path.resolve(P_HERE, '../..');
+const {loadImage: pLoadImage} = createRequire(path.join(P_ROOT, 'pipeline/render/index.mjs'))('@napi-rs/canvas');
+const PCFG = JSON.parse(fs.readFileSync(path.join(P_HERE, 'poster.json'), 'utf8'));
+const PMORPH = [0.9, 1.7], RETURN_LEAD = 0.25, RETURN_FADE = 0.6, END_ZOOM = 0.035;
+const PLINES = PCFG.q_lines || [PCFG.q], PQ_Y = PLINES.length > 1 ? [1046, 1150] : [1030], PA_Y = PLINES.length > 1 ? 1328 : 1222;
+const pease = x => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
+function drawPosterTitleLocal(stage, cfg, k = 1, rise = 0, scale = 1) {
+  if (k <= 0) return;
+  const c = stage.ctx, T = stage.theme, two = PLINES.length > 1;
+  c.save(); c.globalAlpha *= k;
+  const y0 = PQ_Y[0] - 150 - rise, y1 = PA_Y + (two ? 130 : 120) + Math.max(0, (cfg.a_max || 196) - 196) * 0.7 - rise;
+  const band = c.createLinearGradient(0, y0, 0, y1);
+  band.addColorStop(0, 'rgba(0,6,12,0)'); band.addColorStop(two ? 0.2 : 0.22, 'rgba(0,6,12,0.74)');
+  band.addColorStop(two ? 0.84 : 0.82, 'rgba(0,6,12,0.74)'); band.addColorStop(1, 'rgba(0,6,12,0)');
+  c.fillStyle = band; c.fillRect(0, y0, 1080, y1 - y0);
+  const fit = (s, w, max) => Math.min(max, max * w / stage.measure(s, {role: 'display', weight: 700, size: max}));
+  const qs = Math.min(...PLINES.map(l => fit(l, 860, cfg.q_max || (two ? 90 : 86)))) * scale, as = fit(cfg.a, cfg.a_width || 800, cfg.a_max || 196) * scale;
+  PLINES.forEach((l, i) => stage.text(l, 540, PQ_Y[i] - rise - (1 - scale) * 40 * i, {role: 'display', weight: 700, size: qs, color: T.ink, align: 'center', shadow: 'rgba(0,0,0,0.9)', shadowBlur: 18}));
+  const drop = Math.max(0, as / scale - 196) * 0.45;   // a keyword drawn bigger than posterintro's 196 px sits a little lower
+  stage.text(cfg.a, 540, PA_Y + drop - rise - (1 - scale) * (two ? 160 : 120), {role: 'display', weight: 700, size: as, color: cfg.accent || T.accent, align: 'center', shadow: 'rgba(0,0,0,0.9)', shadowBlur: 26});
+  c.restore();
+}
+const keyImg = await pLoadImage(fs.readFileSync(path.join(P_HERE, 'poster-key.jpg')));
+export function overlays(stage, t, ctx) {
+  baseOverlays(stage, t, ctx);
+  const tl = ctx.tl, dur = tl.duration;
+  const last = tl.sentences?.length ? tl.sentences[tl.sentences.length - 1] : null;
+  const tBack = (last ? last.start : dur - 6) - RETURN_LEAD;
+  const intro = t < PMORPH[0] ? 1 : 1 - pease((t - PMORPH[0]) / (PMORPH[1] - PMORPH[0]));
+  const outro = t >= tBack ? pease((t - tBack) / RETURN_FADE) : 0;
+  const vis = Math.max(intro, outro);
+  if (vis <= 0) return;
+  const c = stage.ctx;
+  c.save(); c.globalAlpha = vis;
+  const z = outro > 0 ? 1 + END_ZOOM * Math.min(1, (t - tBack) / Math.max(1, dur - tBack)) : 1;
+  c.drawImage(keyImg, 540 - 540 * z, 960 - 960 * z, 1080 * z, 1920 * z);
+  c.restore();
+  if (outro > 0) drawPosterTitleLocal(stage, PCFG, outro);
+  else {
+    const m = pease((t - PMORPH[0]) / (PMORPH[1] - PMORPH[0]));
+    drawPosterTitleLocal(stage, PCFG, 1 - m, 520 * m, 1 - 0.45 * m);
+  }
+}

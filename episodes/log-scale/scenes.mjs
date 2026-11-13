@@ -1039,8 +1039,8 @@ if (isMain && process.argv.includes('--emit-sound')) {
 
 // First frame = thumbnail (2026-11-07 retrofit, user request): poster 0–0.9 s, morph away 0.9–1.7 s, back at the last
 // sentence. Config and key picture: episodes/log-scale/poster.json, poster-key.jpg (pipeline/render/posterintro.mjs).
-// 2026-11-13 (owner: the topic keyword must be clearly visible on the thumbnail): the white question is two lines,
-// "지진 규모 6은" / "규모 3의 2배?" (poster.json q_lines). pipeline/render/posterintro.mjs draws one line only, so this
+// 2026-11-13 (owner: "주제어가 딱 보여야 해"): white question on top, two lines "지진 규모 3과 6의" / "차이는?" (poster.json
+// q_lines), and the topic keyword "로그 스케일" (poster.json a) as the biggest text; no answer. posterintro.mjs draws one line only, so this
 // episode keeps a local copy of its overlay with a two-line title block; picture, timing and morph are unchanged.
 import {createRequire} from 'node:module';
 const ROOT = path.resolve(HERE, '../..');

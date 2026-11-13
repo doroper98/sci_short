@@ -302,22 +302,24 @@ export const titles = {
   myth: ['오해 바로잡기', '폭발이 위로만 터진 모양?'],
   close: ['', ''],
 };
-const POSTER = {q: '버섯구름은 왜 버섯 모양?', a: '떠오르는 뜨거운 공기', y: 1150, y2: 1286};
+// 2026-11-13 (owner: "주제어가 딱 보여야 해"): white question on top, the topic keyword (k) below as the biggest text, no answer.
+// The question shrinks toward the header title (and fades, as before); the keyword shrinks a little in place and fades.
+const POSTER = {q: '왜 버섯 모양일까?', k: '버섯구름', y: 1110, y2: 1282};
 const MORPH = [0.9, 1.7];
-let QS = 0, AS = 0;
+let QS = 0, KS = 0;
 function posterTitle(stage, q, a = 1) {
   const c = stage.ctx, T = stage.theme;
   const fit = (s, w, max) => Math.min(max, max * w / stage.measure(s, {role: 'display', weight: 700, size: max}));
-  QS ||= fit(POSTER.q, 800, 88); AS ||= fit(POSTER.a, 860, 140);
-  const y1 = lerp(POSTER.y, 228, q), s1 = lerp(QS, 54, q), y2 = lerp(POSTER.y2, 292, q), s2 = lerp(AS, 34, q);
+  QS ||= fit(POSTER.q, 800, 88); KS ||= fit(POSTER.k, 820, 200);
+  const y1 = lerp(POSTER.y, 228, q), s1 = lerp(QS, 54, q), s2 = KS * lerp(1, 0.7, q), ak = 1 - smooth(q / 0.6);
   if (q < 1) withAlpha(c, (1 - q) * a, () => {
-    const g = c.createLinearGradient(0, 1040, 0, 1400); g.addColorStop(0, 'rgba(4,4,12,0)'); g.addColorStop(0.3, 'rgba(4,4,12,0.6)'); g.addColorStop(0.75, 'rgba(4,4,12,0.6)'); g.addColorStop(1, 'rgba(4,4,12,0)');
-    c.fillStyle = g; c.fillRect(0, 1040, 1080, 360);
+    const g = c.createLinearGradient(0, 1010, 0, 1410); g.addColorStop(0, 'rgba(4,4,12,0)'); g.addColorStop(0.28, 'rgba(4,4,12,0.6)'); g.addColorStop(0.78, 'rgba(4,4,12,0.6)'); g.addColorStop(1, 'rgba(4,4,12,0)');
+    c.fillStyle = g; c.fillRect(0, 1010, 1080, 400);
   });
   withAlpha(c, a, () => {
     const sh = q < 0.5 ? 'rgba(0,0,0,0.9)' : 'rgba(0,0,0,0.7)';
     stage.text(POSTER.q, 540, y1, {role: 'display', weight: 700, size: s1, color: T.ink, align: 'center', shadow: sh, shadowBlur: 22});
-    stage.text(POSTER.a, 540, y2, {role: 'display', weight: 700, size: s2, color: '#FFB070', align: 'center', shadow: sh, shadowBlur: 26});
+    if (ak > 0) stage.text(POSTER.k, 540, POSTER.y2, {role: 'display', weight: 700, size: s2, color: '#FFB070', align: 'center', alpha: ak, shadow: 'rgba(0,0,0,0.9)', shadowBlur: 26});
   });
 }
 function head(stage, kicker, title, aK, aT) {

@@ -404,7 +404,7 @@ function bigLadder(stage, t, L, o = {}) {
 // Header titles, poster
 // =====================================================================================================
 export const titles = {
-  hook: ['오늘의 주제', '제임스웹은 얼마나 높이?'],
+  hook: ['제임스웹', '얼마나 높이 떠 있을까?'],
   scale: ['눈금 · 한 칸에 열 배', '산에서 우주까지 한 화면에'],
   essence: ['기원 · 이름', '위성 = 곁을 지키는 호위병'],
   leo: ['메커니즘 · 저궤도 LEO', '2,000 km 아래의 궤도'],
@@ -428,7 +428,7 @@ export function overlays(stage, t, ctx) {
   if (id === 'hook') {
     if (t < MORPH[1]) { posterTitle(stage, t); return; }
     const ho = fadeOut(t, ctx.scene.end - 0.3, 0.28);
-    head(stage, '오늘의 주제', POSTER_Q.q + '?', fadeIn(t, MORPH[1] - 0.05, 0.4) * ho, ho, POSTER_Q.ans, ho, 'rgba(0,0,0,0.95)');
+    head(stage, POSTER_Q.k, POSTER_Q.q + '?', fadeIn(t, MORPH[1] - 0.05, 0.4) * ho, ho, '', ho, 'rgba(0,0,0,0.95)');
     withAlpha(stage.ctx, fadeIn(t, MORPH[1], 0.4), () => progressBar(stage, t, ctx.tl.duration)); return;
   }
   if (id === 'close') { progressBar(stage, t, ctx.tl.duration); return; }
@@ -439,23 +439,25 @@ export function overlays(stage, t, ctx) {
   head(stage, cur[1], cur[2], k > 0 && prev[1] !== cur[1] ? a * inn : a, a * inn);
   progressBar(stage, t, ctx.tl.duration);
 }
-const POSTER_Q = {y: 860, y2: 1030, q: '제임스웹은 얼마나 높이', ans: '150만 km'};
-let QSIZE = 0, ASIZE = 0;
+// 2026-11-13 (owner: "주제어가 딱 보여야 해"): white question on top, the topic keyword (k) below as the biggest text, no answer.
+// The question shrinks into the header title; the keyword shrinks a little in place and fades, and the header kicker shows it.
+const POSTER_Q = {y: 830, y2: 1010, q: '얼마나 높이 떠 있을까', k: '제임스웹'};
+let QSIZE = 0, KSIZE = 0;
 function posterTitle(stage, t, q = easeInOut((t - MORPH[0]) / (MORPH[1] - MORPH[0])), a = 1) {
   const c = stage.ctx, T = stage.theme;
   const TR = -0.03, fit = (s, w, max) => Math.min(max, max * w / stage.measure(s, {role: 'display', weight: 700, size: max, tracking: TR * max}));
-  QSIZE ||= fit(POSTER_Q.q + '?', 800, 96); ASIZE ||= fit(POSTER_Q.ans, 800, 210);
+  QSIZE ||= fit(POSTER_Q.q + '?', 800, 96); KSIZE ||= fit(POSTER_Q.k, 820, 210);
   const HS = titleSize(stage, POSTER_Q.q + '?');
-  const y1 = lerp(POSTER_Q.y, 228, q), s1_ = lerp(QSIZE, HS, q), y2 = lerp(POSTER_Q.y2, 290, q), s2 = lerp(ASIZE, 32, q), tr = lerp(TR, -0.011, q);
+  const y1 = lerp(POSTER_Q.y, 228, q), s1_ = lerp(QSIZE, HS, q), s2 = KSIZE * lerp(1, 0.7, q), tr = lerp(TR, -0.011, q), ak = 1 - smooth(q / 0.6);
   if (q < 1) withAlpha(c, (1 - q) * a, () => {
-    const g2 = c.createLinearGradient(0, 740, 0, 1170); g2.addColorStop(0, 'rgba(3,7,20,0)'); g2.addColorStop(0.24, 'rgba(3,7,20,0.8)'); g2.addColorStop(0.78, 'rgba(3,7,20,0.8)'); g2.addColorStop(1, 'rgba(3,7,20,0)');
-    c.fillStyle = g2; c.fillRect(0, 740, 1080, 430);
+    const g2 = c.createLinearGradient(0, 720, 0, 1150); g2.addColorStop(0, 'rgba(3,7,20,0)'); g2.addColorStop(0.24, 'rgba(3,7,20,0.8)'); g2.addColorStop(0.78, 'rgba(3,7,20,0.8)'); g2.addColorStop(1, 'rgba(3,7,20,0)');
+    c.fillStyle = g2; c.fillRect(0, 720, 1080, 430);
   });
   withAlpha(c, a, () => {
     const sh = q < 0.5 ? 'rgba(0,0,0,0.9)' : null, s = POSTER_Q.q + '?';
     const w_ = stage.measure(s, {role: 'display', weight: 700, size: s1_, tracking: tr * s1_}), s1 = Math.min(s1_, s1_ * 800 / w_);
     stage.text(s, 540, y1, {role: 'display', weight: 700, size: s1, color: T.ink, align: 'center', shadow: sh, shadowBlur: 20, tracking: tr * s1});
-    stage.text(POSTER_Q.ans, 540, y2, {role: 'display', weight: 700, size: s2, color: T.accent, align: 'center', tracking: tr * s2, shadow: q < 0.5 ? 'rgba(0,0,0,0.9)' : null, shadowBlur: 26});
+    if (ak > 0) stage.text(POSTER_Q.k, 540, POSTER_Q.y2, {role: 'display', weight: 700, size: s2, color: T.accent, align: 'center', alpha: ak, tracking: TR * s2, shadow: 'rgba(0,0,0,0.9)', shadowBlur: 26});
   });
 }
 export const POSTER_L = {x: 540, y0: 1450, y1: 330, lo: FULL[0], hi: FULL[1]};

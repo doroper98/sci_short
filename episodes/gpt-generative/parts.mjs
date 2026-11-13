@@ -16,7 +16,7 @@ export const MACH = {x: 360, y: 640, w: 360, h: 260};
 export const INLET = [540, 640], OUTLET = [540, 900];
 export const STRIP_Y = 1120, STRIP_H = 64, SX0 = 94, SX1 = 986, BARS_Y0 = 1000, BAR_P = 62, BAR_H = 46;
 export const PANEL = {x: 70, y: 1036, w: 940, h: 236};
-export const POSTER = {q: ['GPT는 대답을', '어떻게 쓸까?'], a: '한 조각씩 뽑아서', y: 610, y2: 860};
+export const POSTER = {q: ['대답을 어떻게', '써 내려갈까?'], a: 'GPT', n: '#1', y: 570, y2: 880, AS: 210};   // 2026-11-13: 흰 물음 + 큰 주제어
 export const BIG = {x: 70, y: 805, size: 100, align: 'left'};                 // big number: left of the machine, above the instrument
 export const WIN = {x0: 0, x1: 1080, y0: 276, y1: 1360};                       // world window (below the header title, above captions)
 export const WAIT = [225, 1022];

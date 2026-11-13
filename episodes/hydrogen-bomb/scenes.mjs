@@ -519,7 +519,7 @@ function skyPicture(stage, t, S, tr, o = {}) {
 // Header titles (sequential swaps) and the poster title
 // =====================================================================================================
 export const titles = {
-  hook: ['오늘의 주제', '가장 큰 수소폭탄의 위력은'],
+  hook: ['수소폭탄', '가장 큰 것의 위력은'],   // kicker = the poster keyword (2026-11-13)
   origin: ['기원 · 이름', '수소 · 水素'],
   essence: ['본질 · 태양 속', '원자핵이 합쳐지는 핵융합'],
   barrier: ['메커니즘 · 밀어냄', '양전기끼리 밀어내는 언덕'],
@@ -553,25 +553,27 @@ export function overlays(stage, t, ctx) {
   let k = 0; while (k + 1 < L.length && t >= L[k + 1][0]) k++;
   const out = k > 0 ? smooth((t - L[k][0]) / 0.3) : 1, inn = k > 0 ? smooth((t - L[k][0] - 0.3) / 0.35) : 1, prev = L[Math.max(0, k - 1)], cur = L[k];
   const sh = id === 'hook' ? 'rgba(0,0,0,0.95)' : null;
-  if (id === 'hook' && k === 0) {                                          // the poster question/answer become the header
-    const aK = fadeIn(t, MORPH[1] - 0.05, 0.4) * a; head(stage, cur[1], cur[2], aK, a, '히로시마의 3천 배', a, sh);
+  if (id === 'hook' && k === 0) {                                          // the poster question becomes the header title, the keyword its kicker
+    const aK = fadeIn(t, MORPH[1] - 0.05, 0.4) * a; head(stage, cur[1], cur[2], aK, a, '', a, sh);
   } else {
-    if (k > 0 && out < 1) head(stage, prev[1] === cur[1] ? '' : prev[1], prev[2], a * (1 - out), a * (1 - out), id === 'hook' && k === 1 ? '히로시마의 3천 배' : '', a * (1 - out), sh);
+    if (k > 0 && out < 1) head(stage, prev[1] === cur[1] ? '' : prev[1], prev[2], a * (1 - out), a * (1 - out), '', a * (1 - out), sh);
     head(stage, cur[1], cur[2], k > 0 && prev[1] !== cur[1] ? a * inn : a, a * inn, '', 0, sh);
   }
   withAlpha(stage.ctx, id === 'hook' ? fadeIn(t, MORPH[1], 0.4) : 1, () => progressBar(stage, t, ctx.tl.duration));
 }
-const POSTER_Q = {y: 930, y2: 1064, q: '가장 큰 수소폭탄의 위력은', ans: '히로시마의 3천 배'};
-let QSIZE = 0, ASIZE = 0;
-/** t = 0 poster text (white question + huge answer in the central square) shrinking into the hook header; also the close bookend */
+// 2026-11-13 (owner: "주제어가 딱 보여야 해"): white question on top, the topic keyword (k) below as the biggest text, no answer.
+// The question shrinks into the header title; the keyword shrinks a little in place and fades, and the header kicker shows it.
+const POSTER_Q = {y: 918, y2: 1072, q: '가장 큰 것의 위력은', k: '수소폭탄'};
+let QSIZE = 0, KSIZE = 0;
+/** t = 0 poster text (white question + huge topic keyword in the central square) shrinking into the hook header; also the close bookend */
 function posterTitle(stage, t, q = easeInOut((t - MORPH[0]) / (MORPH[1] - MORPH[0])), a = 1) {
   const c = stage.ctx, T = stage.theme;
   const TR = -0.03, fit = (s, w, max) => Math.min(max, max * w / stage.measure(s, {role: 'display', weight: 700, size: max, tracking: TR * max}));
-  QSIZE ||= fit(POSTER_Q.q + '?', 780, 96); ASIZE ||= fit(POSTER_Q.ans, 800, 220);
-  const y1 = lerp(POSTER_Q.y, 228, q), s1 = lerp(QSIZE, 54, q), y2 = lerp(POSTER_Q.y2, 290, q), s2 = lerp(ASIZE, 32, q), tr = lerp(TR, -0.011, q);
+  QSIZE ||= fit(POSTER_Q.q + '?', 780, 96); KSIZE ||= fit(POSTER_Q.k, 800, 190);
+  const y1 = lerp(POSTER_Q.y, 228, q), s1 = lerp(QSIZE, 54, q), s2 = KSIZE * lerp(1, 0.7, q), tr = lerp(TR, -0.011, q), ak = 1 - smooth(q / 0.6);
   if (q < 1) withAlpha(c, (1 - q) * a, () => {
-    const g2 = c.createLinearGradient(0, 830, 0, 1170); g2.addColorStop(0, 'rgba(2,5,14,0)'); g2.addColorStop(0.25, 'rgba(2,5,14,0.66)'); g2.addColorStop(0.78, 'rgba(2,5,14,0.66)'); g2.addColorStop(1, 'rgba(2,5,14,0)');
-    c.fillStyle = g2; c.fillRect(0, 830, 1080, 340);
+    const g2 = c.createLinearGradient(0, 820, 0, 1180); g2.addColorStop(0, 'rgba(2,5,14,0)'); g2.addColorStop(0.25, 'rgba(2,5,14,0.66)'); g2.addColorStop(0.8, 'rgba(2,5,14,0.66)'); g2.addColorStop(1, 'rgba(2,5,14,0)');
+    c.fillStyle = g2; c.fillRect(0, 820, 1080, 360);
   });
   withAlpha(c, a, () => {
     const sh = q < 0.5 ? 'rgba(0,0,0,0.9)' : null;
@@ -579,7 +581,7 @@ function posterTitle(stage, t, q = easeInOut((t - MORPH[0]) / (MORPH[1] - MORPH[
     const x0 = 540 - (wb + wq * kq) / 2;
     stage.text(POSTER_Q.q, x0, y1, {role: 'display', weight: 700, size: s1, color: T.ink, shadow: sh, shadowBlur: 20, tracking: tr * s1});
     if (kq > 0) stage.text('?', x0 + wb, y1, {role: 'display', weight: 700, size: s1, color: T.ink, alpha: kq, shadow: sh, shadowBlur: 20, tracking: tr * s1});
-    stage.text(POSTER_Q.ans, 540, y2, {role: 'display', weight: 700, size: s2, color: PAL.answer, align: 'center', tracking: tr * s2, shadow: q < 0.5 ? 'rgba(0,0,0,0.9)' : null, shadowBlur: 26});
+    if (ak > 0) stage.text(POSTER_Q.k, 540, POSTER_Q.y2, {role: 'display', weight: 700, size: s2, color: PAL.answer, align: 'center', alpha: ak, tracking: TR * s2, shadow: 'rgba(0,0,0,0.9)', shadowBlur: 26});
   });
 }
 

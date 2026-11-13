@@ -1,7 +1,7 @@
 {
   "file": "cold-vaccine.mp4",
-  "bytes": 25479691,
-  "sha256": "de6602468a880dc1ce46748ab6d2d13054c3b019949fb36685bf531814bc414c",
+  "bytes": 25325711,
+  "sha256": "a6829cb952f8ac82feb9aecc25a30d6c92360ab3bf880b567785cfb7c3130f24",
   "created": "2026-11-05T13:46:46+00:00",
   "title": "감기 주사는 왜 없을까 — 범인이 200가지",
   "timeline_duration": 172.058,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2642944,
         "duration": "172.066667",
-        "bit_rate": "1008130",
+        "bit_rate": "1000970",
         "bits_per_raw_sample": "8",
         "nb_frames": "5162",
         "extradata_size": 50,
@@ -126,15 +126,15 @@
       }
     ],
     "format": {
-      "filename": "/home/user/sci_short/outputs/cold-vaccine/final/cold-vaccine.mp4",
+      "filename": "finals/14-cold-vaccine/cold-vaccine.mp4",
       "nb_streams": 2,
       "nb_programs": 0,
       "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "172.066667",
-      "size": "25479691",
-      "bit_rate": "1184642",
+      "size": "25325711",
+      "bit_rate": "1177483",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -183,5 +183,14 @@
     "direct_listening": "not performed",
     "physical_phone_playback": "not performed",
     "visual_review_of_stills": "not recorded by finish.py"
+  },
+  "picture_rerender": {
+    "date": "2026-11-13",
+    "reason": "첫 프레임(과 끝에 돌아오는 포스터)의 글을 '흰 질문 위 + 큰 주제어 아래, 답 없음'으로 바꿈(2026-11-13 사용자 지시)",
+    "method": "episodes/cold-vaccine/run.sh render (finals timeline.json 그대로) → 새 visual.mp4의 영상 + 이전 최종본의 오디오를 스트림 복사(오디오 재인코딩 없음)",
+    "previous_sha256": "de6602468a880dc1ce46748ab6d2d13054c3b019949fb36685bf531814bc414c",
+    "audio_stream_md5_unchanged": "1590b3991181cb16ac4eb4130e2094b5",
+    "revalidated": "pipeline/validate.py(새 mp4, finals srt·timeline, 새 스틸): RESULT: PASS  (19/19 not failing); 전편 디코딩 통과; 이전 판과 프레임별 PSNR 비교로 첫 장면(머리글 포함)과 끝 포스터 구간만 달라짐을 확인",
+    "not_rerun": "finish.py의 loudnorm 측정(audio_mastering_input, encoded_audio)은 다시 재지 않음 — 오디오 스트림이 바이트 단위로 같아 이전 값이 그대로 유효"
   }
 }

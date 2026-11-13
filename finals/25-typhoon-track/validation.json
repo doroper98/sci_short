@@ -1,7 +1,7 @@
 {
   "file": "typhoon-track.mp4",
-  "bytes": 19565226,
-  "sha256": "679285153f008a801c5aee5b37ecfcc63f13eb175b441c1bfc999b29001b813d",
+  "bytes": 19666827,
+  "sha256": "af61c9dc76986d815942ae80c25ba2d535bc8ea9d8ae76a3b4386c2dbf8afae2",
   "created": "2026-11-11T12:05:02+00:00",
   "title": "태풍은 왜 우리나라 앞에서 꺾일까",
   "timeline_duration": 170.272,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2615296,
         "duration": "170.266667",
-        "bit_rate": "735774",
+        "bit_rate": "740548",
         "bits_per_raw_sample": "8",
         "nb_frames": "5108",
         "extradata_size": 50,
@@ -126,15 +126,15 @@
       }
     ],
     "format": {
-      "filename": "/home/user/sci_short/outputs/typhoon-track/final/typhoon-track.mp4",
+      "filename": "finals/25-typhoon-track/typhoon-track.mp4",
       "nb_streams": 2,
       "nb_programs": 0,
       "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "170.272000",
-      "size": "19565226",
-      "bit_rate": "919245",
+      "size": "19666827",
+      "bit_rate": "924019",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -183,5 +183,14 @@
     "direct_listening": "not performed",
     "physical_phone_playback": "not performed",
     "visual_review_of_stills": "not recorded by finish.py"
+  },
+  "picture_rerender": {
+    "date": "2026-11-13",
+    "reason": "첫 프레임(과 끝에 돌아오는 포스터)의 글을 '위에 흰 물음, 아래에 주제어를 가장 크게'로 바꿈(사용자 지시: \"주제어가 딱 보여야 해\"), 큰 글이던 답은 뺌. 첫 머리글 줄도 새 물음으로 맞춤",
+    "method": "episodes/typhoon-track/run.sh render · stills (finals timeline.json 그대로) → 새 visual.mp4의 영상 + 이전 최종본의 오디오를 스트림 복사(오디오 재인코딩 없음, 언어·제목 메타데이터 옮김)",
+    "previous_sha256": "679285153f008a801c5aee5b37ecfcc63f13eb175b441c1bfc999b29001b813d",
+    "audio_stream_md5_unchanged": "9d6f3954f5ecd9a43519b6672b14de9e",
+    "revalidated": "pipeline/validate.py(새 mp4, finals srt·timeline, 새 스틸): RESULT: PASS  (19/19 not failing); 전편 디코딩 통과; 영상 길이·프레임 수·해상도·30fps 이전과 같음; 중간 세 시각(30·50·70%) 프레임 PSNR inf(같음); 프레임별 비교(PSNR, 전 5108프레임)로 달라진 곳은 프레임 0–567(0.00–18.93초), 프레임 5010–5107(167.00–170.27초)뿐 — 시작 포스터·모핑과 바뀐 첫 머리글(hook 장면 0–18.85초 안), 끝에 돌아오는 포스터. 눈에 보이는 차이(PSNR 50 dB 미만)는 0.00–18.80초, 168.10–170.27초뿐이고, 그 경계 뒤 몇 프레임은 부호화 잔차(50 dB 이상)입니다. 본문은 프레임 단위로 같음",
+    "not_rerun": "finish.py의 loudnorm 측정(audio_mastering_input, encoded_audio)은 다시 재지 않음 — 오디오 스트림이 바이트 단위로 같아 이전 값이 그대로 유효"
   }
 }

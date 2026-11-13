@@ -383,7 +383,7 @@ function vortexWind(x, y, cx, cy, v) {
 const fmt = (x, d = 1) => (+x.toFixed(d)).toString();
 function titleList(id, P) {
   const at = s => P.tl.at(s) - 0.5;
-  if (id === 'hook') return [[-Infinity, `오늘의 주제 · 하루를 ${fmt(P.hookSecPerDay)}초로`, '태풍은 왜 꺾일까?']];
+  if (id === 'hook') return [[-Infinity, `태풍의 길 · 하루를 ${fmt(P.hookSecPerDay)}초로`, '왜 우리나라 앞에서 꺾일까?']];
   if (id === 'origin') return [[-Infinity, '기원 · 1821년 미국', '쓰러진 나무가 가리킨 것'], [at('s05'), '기원 · 1821년 미국', '도는 소용돌이가 옮겨 간다']];
   if (id === 'essence') return [[-Infinity, '본질', '두 가지 움직임'], [at('s07'), '본질', '도는 것은 스스로, 길은 바람이']];
   if (id === 'spin') return [[-Infinity, '메커니즘 ① · 확대', '따뜻한 바다에서 시작'], [at('s09'), '메커니즘 ① · 확대', '오른쪽으로 휘는 공기'], [at('s11'), '메커니즘 ① · 확대', '시계 반대 방향 소용돌이'], [at('s12'), '메커니즘 ① · 위도만 바꿈', '적도 곁에서는']];
@@ -397,17 +397,25 @@ function head(stage, kicker, title, aK, aT) {
   if (kicker) withAlpha(c, aK, () => { stage.text(kicker, 540, 146, {role: 'display', weight: 500, size: 30, color: PAL.warm, align: 'center', tracking: 1.5, maxWidth: 880, ...so}); line(c, [[505, 174], [575, 174]], PAL.warm, 3, {cap: 'butt'}); });
   if (title) withAlpha(c, aT, () => stage.text(title, 540, 228, {role: 'display', weight: 700, size: 56, color: PAL.ink, align: 'center', maxWidth: 900, ...so}));
 }
-const POSTER = {q: '태풍은 왜 꺾일까?', a: '바람에 실려서', y: 930, y2: 1080};
+// 2026-11-13 첫 프레임 = 흰 물음(두 줄) 위, 주제어 크게(사용자 지시). The question lines slide onto one header line at 228;
+// the keyword shrinks toward 292 and fades (it stays below the question and never crosses it).
+const POSTER = {q: ['왜 우리나라 앞에서', '꺾일까?'], a: '태풍의 길', y: 930, y2: 1215, AS: 200};
 let QS = 0, AS = 0;
 function posterTitle(stage, q, a = 1) {
-  const c = stage.ctx, fit = (s, w, max) => Math.min(max, max * w / stage.measure(s, {role: 'display', weight: 700, size: max, tracking: -0.03 * max}));
-  QS ||= fit(POSTER.q, 860, 104); AS ||= fit(POSTER.a, 860, 150);
-  const y1 = lerp(POSTER.y, 228, q), s1 = lerp(QS, 56, q), tr = lerp(-0.03, -0.011, q);
-  if (q < 1) withAlpha(c, (1 - q) * a, () => { const g = c.createLinearGradient(0, 810, 0, 1190); g.addColorStop(0, 'rgba(0,10,16,0)'); g.addColorStop(0.3, 'rgba(0,10,16,0.66)'); g.addColorStop(0.75, 'rgba(0,10,16,0.66)'); g.addColorStop(1, 'rgba(0,10,16,0)'); c.fillStyle = g; c.fillRect(0, 810, W, 380); });
+  const c = stage.ctx, Q = POSTER.q, fit = (s, w, max) => Math.min(max, max * w / stage.measure(s, {role: 'display', weight: 700, size: max, tracking: -0.03 * max}));
+  QS ||= Math.min(...Q.map(s => fit(s, 860, 104))); AS ||= fit(POSTER.a, 880, POSTER.AS);
+  const LH = QS * 1.14, s1 = lerp(QS, 56, q), tr = lerp(-0.03, -0.011, q);
+  const wf = Q.map(s => stage.measure(s, {role: 'display', weight: 700, size: 56, tracking: -0.011 * 56})), sp = 56 * 0.28;
+  let xh = 540 - (wf.reduce((x, y) => x + y, 0) + sp * (Q.length - 1)) / 2;
+  const hx = wf.map(w => { const x = xh + w / 2; xh += w + sp; return x; });
+  const yTop = POSTER.y - QS * 0.75 - 60, yBot = POSTER.y2 + AS * 0.55 + 60;
+  if (q < 1) withAlpha(c, (1 - q) * a, () => { const g = c.createLinearGradient(0, yTop, 0, yBot); g.addColorStop(0, 'rgba(0,10,16,0)'); g.addColorStop(0.25, 'rgba(0,10,16,0.66)'); g.addColorStop(0.8, 'rgba(0,10,16,0.66)'); g.addColorStop(1, 'rgba(0,10,16,0)'); c.fillStyle = g; c.fillRect(0, yTop, W, yBot - yTop); });
   withAlpha(c, a, () => {
     const sh = 'rgba(0,0,0,0.9)';
-    stage.text(POSTER.q, 540, y1, {role: 'display', weight: 700, size: s1, color: '#FFFFFF', align: 'center', shadow: sh, shadowBlur: 22, tracking: tr * s1});
-    withAlpha(c, 1 - q, () => stage.text(POSTER.a, 540, lerp(POSTER.y2, 292, q), {role: 'display', weight: 700, size: lerp(AS, 34, q), color: PAL.warm, align: 'center', tracking: tr * AS, shadow: sh, shadowBlur: 28}));
+    const qx = smooth(q / 0.45), qy = smooth((q - 0.4) / 0.6), yc = lerp(POSTER.y + (Q.length - 1) * LH / 2, 228, q), k = s1 / 56;
+    Q.forEach((s, i) => stage.text(s, 540 + (hx[i] - 540) * k * qx, yc + (i - (Q.length - 1) / 2) * LH * (s1 / QS) * (1 - qy), {role: 'display', weight: 700, size: s1, color: '#FFFFFF', align: 'center', shadow: sh, shadowBlur: 22, tracking: tr * s1}));
+    const sa = lerp(AS, 34, q);
+    withAlpha(c, 1 - smooth(q / 0.6), () => stage.text(POSTER.a, 540, lerp(POSTER.y2, 292, q), {role: 'display', weight: 700, size: sa, color: PAL.warm, align: 'center', tracking: tr * sa, shadow: sh, shadowBlur: 28}));
   });
 }
 function captionBand(c) { const g = c.createLinearGradient(0, 1340, 0, 1920); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(0.3, 'rgba(0,8,12,0.42)'); g.addColorStop(1, 'rgba(0,8,12,0.62)'); c.fillStyle = g; c.fillRect(0, 1340, W, 580); }

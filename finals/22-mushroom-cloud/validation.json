@@ -1,7 +1,7 @@
 {
   "file": "mushroom-cloud.mp4",
-  "bytes": 42582962,
-  "sha256": "b1912ad4f1e42ac87269339097e0d47c6211cc0e725c369605e1c7b03b02010b",
+  "bytes": 42525276,
+  "sha256": "96afd366a5ef44c94462f0423d49b089a08454f5d995bc9d6afa0821f8718207",
   "created": "2026-11-07T13:52:40+00:00",
   "title": "버섯구름은 왜 버섯 모양일까",
   "timeline_duration": 149.733,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2299904,
         "duration": "149.733333",
-        "bit_rate": "2097320",
+        "bit_rate": "2094241",
         "bits_per_raw_sample": "8",
         "nb_frames": "4492",
         "extradata_size": 50,
@@ -126,15 +126,15 @@
       }
     ],
     "format": {
-      "filename": "/home/user/sci_short/outputs/mushroom-cloud/final/mushroom-cloud.mp4",
+      "filename": "finals/22-mushroom-cloud/mushroom-cloud.mp4",
       "nb_streams": 2,
       "nb_programs": 0,
       "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "149.733333",
-      "size": "42582962",
-      "bit_rate": "2275135",
+      "size": "42525276",
+      "bit_rate": "2272053",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -183,5 +183,14 @@
     "direct_listening": "not performed",
     "physical_phone_playback": "not performed",
     "visual_review_of_stills": "not recorded by finish.py"
+  },
+  "picture_rerender": {
+    "date": "2026-11-13",
+    "reason": "사용자 결정(2026-11-13 \"주제어가 딱 보여야 해\"): 첫 프레임과 끝 포스터의 글을 \"위에 흰 물음, 아래에 가장 큰 주제어\"로 바꿈(답은 쓰지 않음)",
+    "method": "episodes/mushroom-cloud/run.sh render (finals timeline.json 그대로)로 그림을 다시 만든 뒤, 영상 스트림을 키프레임 경계에서 스트림 복사로 이어 붙임: 새 렌더 [0, 8.333333) 초 + 이전 최종본 [8.333333, 142.533333) 초 + 새 렌더 [142.533333, 끝). 오디오는 이전 최종본을 스트림 복사(재인코딩 없음). 새 구간은 올라간 판과 같은 설정(libx264 preset slow, 2패스 2.1 Mbps, maxrate 3.6 Mbps)으로 인코딩함. 이어 붙인 까닭: 올라간 판이 CRF 18 원본을 2패스로 줄인 것이라, 본문을 다시 인코딩하지 않고 그대로 둠.",
+    "previous_sha256": "b1912ad4f1e42ac87269339097e0d47c6211cc0e725c369605e1c7b03b02010b",
+    "audio_stream_md5_unchanged": "273ce42dd8e4e77d8a90bdea0d523690",
+    "revalidated": "pipeline/validate.py(새 mp4, finals srt·timeline, 새 스틸): RESULT: PASS  (19/19 not failing); 전편 디코딩 통과; 프레임별 해시 비교로 [8.333333, 142.533333) 초의 모든 프레임이 이전 최종본과 같고 나머지는 새 렌더와 같음을 확인(불일치 0), 프레임 간격 일정",
+    "not_rerun": "finish.py의 loudnorm 측정(audio_mastering_input, encoded_audio)은 다시 재지 않음 — 오디오 스트림이 바이트 단위로 같아 이전 값이 그대로 유효"
   }
 }
