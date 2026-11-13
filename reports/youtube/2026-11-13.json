@@ -7,7 +7,7 @@
   "video_count": 33,
   "total_views": 12897
  },
- "analytics": false,
+ "analytics": true,
  "videos": [
   {
    "video_id": "UpX7WyL4zaU",
@@ -66,8 +66,26 @@
    "episode": "28-tides",
    "number": 28,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 815,
+    "engagedViews": 396,
+    "estimatedMinutesWatched": 1201,
+    "averageViewDuration": 181,
+    "averageViewPercentage": 104.07,
+    "likes": 12,
+    "shares": 5,
+    "subscribersGained": 2
+   },
+   "a_week": {
+    "views": 815,
+    "engagedViews": 396,
+    "estimatedMinutesWatched": 1201,
+    "averageViewDuration": 181,
+    "averageViewPercentage": 104.07,
+    "likes": 12,
+    "shares": 5,
+    "subscribersGained": 2
+   }
   },
   {
    "video_id": "wiov4yp-Tao",
@@ -81,8 +99,26 @@
    "episode": "36-accretion-disk",
    "number": 36,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 159,
+    "engagedViews": 88,
+    "estimatedMinutesWatched": 152,
+    "averageViewDuration": 103,
+    "averageViewPercentage": 58.9,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 159,
+    "engagedViews": 88,
+    "estimatedMinutesWatched": 152,
+    "averageViewDuration": 103,
+    "averageViewPercentage": 58.9,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "zUVJKXOX8ks",
@@ -96,8 +132,26 @@
    "episode": "32-radar",
    "number": 32,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 982,
+    "engagedViews": 440,
+    "estimatedMinutesWatched": 1035,
+    "averageViewDuration": 139,
+    "averageViewPercentage": 84.52,
+    "likes": 7,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 982,
+    "engagedViews": 440,
+    "estimatedMinutesWatched": 1035,
+    "averageViewDuration": 139,
+    "averageViewPercentage": 84.52,
+    "likes": 7,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "9bkoBWHQA28",
@@ -111,8 +165,26 @@
    "episode": "27-towed-array-sonar",
    "number": 27,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 1032,
+    "engagedViews": 627,
+    "estimatedMinutesWatched": 1013,
+    "averageViewDuration": 96,
+    "averageViewPercentage": 64.14,
+    "likes": 5,
+    "shares": 0,
+    "subscribersGained": 2
+   },
+   "a_week": {
+    "views": 1032,
+    "engagedViews": 627,
+    "estimatedMinutesWatched": 1013,
+    "averageViewDuration": 96,
+    "averageViewPercentage": 64.14,
+    "likes": 5,
+    "shares": 0,
+    "subscribersGained": 2
+   }
   },
   {
    "video_id": "UNmEDyYbvNM",
@@ -126,8 +198,26 @@
    "episode": "22-mushroom-cloud",
    "number": 22,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 16,
+    "engagedViews": 10,
+    "estimatedMinutesWatched": 13,
+    "averageViewDuration": 79,
+    "averageViewPercentage": 52.77,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 16,
+    "engagedViews": 10,
+    "estimatedMinutesWatched": 13,
+    "averageViewDuration": 79,
+    "averageViewPercentage": 52.77,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "H61JTJBgi2U",
@@ -141,8 +231,26 @@
    "episode": "29-fission-fusion",
    "number": 29,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 45,
+    "engagedViews": 15,
+    "estimatedMinutesWatched": 43,
+    "averageViewDuration": 172,
+    "averageViewPercentage": 104.10999999999999,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 45,
+    "engagedViews": 15,
+    "estimatedMinutesWatched": 43,
+    "averageViewDuration": 172,
+    "averageViewPercentage": 104.10999999999999,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "EvFpfurSiwE",
@@ -156,8 +264,26 @@
    "episode": "34-telescope-types",
    "number": 34,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 17,
+    "engagedViews": 8,
+    "estimatedMinutesWatched": 8,
+    "averageViewDuration": 62,
+    "averageViewPercentage": 39.47,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 17,
+    "engagedViews": 8,
+    "estimatedMinutesWatched": 8,
+    "averageViewDuration": 62,
+    "averageViewPercentage": 39.47,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "981IDPtVfWM",
@@ -171,8 +297,26 @@
    "episode": "31-reusable-rocket",
    "number": 31,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 9,
+    "engagedViews": 4,
+    "estimatedMinutesWatched": 9,
+    "averageViewDuration": 141,
+    "averageViewPercentage": 89.99,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 9,
+    "engagedViews": 4,
+    "estimatedMinutesWatched": 9,
+    "averageViewDuration": 141,
+    "averageViewPercentage": 89.99,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "CHwURvIIRmA",
@@ -186,8 +330,26 @@
    "episode": "24-lagrange-points",
    "number": 24,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 6,
+    "engagedViews": 3,
+    "estimatedMinutesWatched": 4,
+    "averageViewDuration": 90,
+    "averageViewPercentage": 56.91,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 6,
+    "engagedViews": 3,
+    "estimatedMinutesWatched": 4,
+    "averageViewDuration": 90,
+    "averageViewPercentage": 56.91,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "ORlV-iqUq7M",
@@ -201,8 +363,26 @@
    "episode": "23-orbit-altitudes",
    "number": 23,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 9,
+    "engagedViews": 6,
+    "estimatedMinutesWatched": 11,
+    "averageViewDuration": 111,
+    "averageViewPercentage": 68.28,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 9,
+    "engagedViews": 6,
+    "estimatedMinutesWatched": 11,
+    "averageViewDuration": 111,
+    "averageViewPercentage": 68.28,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "-fec9yosxdA",
@@ -216,8 +396,26 @@
    "episode": "02-ligo-how-it-works",
    "number": 2,
    "opener": "question",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 1,
+    "engagedViews": 1,
+    "estimatedMinutesWatched": 0,
+    "averageViewDuration": 41,
+    "averageViewPercentage": 23.8,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 1,
+    "engagedViews": 1,
+    "estimatedMinutesWatched": 0,
+    "averageViewDuration": 41,
+    "averageViewPercentage": 23.8,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "qVwxaxwkSBI",
@@ -231,8 +429,26 @@
    "episode": "03-el-nino-la-nina",
    "number": 3,
    "opener": "question",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 52,
+    "engagedViews": 16,
+    "estimatedMinutesWatched": 17,
+    "averageViewDuration": 63,
+    "averageViewPercentage": 35.58,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 52,
+    "engagedViews": 16,
+    "estimatedMinutesWatched": 17,
+    "averageViewDuration": 63,
+    "averageViewPercentage": 35.58,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "MLm34NyFBYk",
@@ -246,8 +462,26 @@
    "episode": "05-global-winds",
    "number": 5,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 34,
+    "engagedViews": 18,
+    "estimatedMinutesWatched": 40,
+    "averageViewDuration": 135,
+    "averageViewPercentage": 75.3,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 34,
+    "engagedViews": 18,
+    "estimatedMinutesWatched": 40,
+    "averageViewDuration": 135,
+    "averageViewPercentage": 75.3,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "xSC_L470sNs",
@@ -261,8 +495,26 @@
    "episode": "06-seasons",
    "number": 6,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 3,
+    "engagedViews": 1,
+    "estimatedMinutesWatched": 1,
+    "averageViewDuration": 72,
+    "averageViewPercentage": 44.91,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 3,
+    "engagedViews": 1,
+    "estimatedMinutesWatched": 1,
+    "averageViewDuration": 72,
+    "averageViewPercentage": 44.91,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "YehxwqV7rAs",
@@ -276,8 +528,26 @@
    "episode": "07-precession",
    "number": 7,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 14,
+    "engagedViews": 7,
+    "estimatedMinutesWatched": 11,
+    "averageViewDuration": 101,
+    "averageViewPercentage": 58.21000000000001,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 14,
+    "engagedViews": 7,
+    "estimatedMinutesWatched": 11,
+    "averageViewDuration": 101,
+    "averageViewPercentage": 58.21000000000001,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "JvUyU13QIz4",
@@ -291,8 +561,26 @@
    "episode": "08-log-scale",
    "number": 8,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 2,
+    "engagedViews": 0,
+    "estimatedMinutesWatched": 0,
+    "averageViewDuration": 0,
+    "averageViewPercentage": 0,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 2,
+    "engagedViews": 0,
+    "estimatedMinutesWatched": 0,
+    "averageViewDuration": 0,
+    "averageViewPercentage": 0,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "3n4MJZM6trk",
@@ -306,8 +594,26 @@
    "episode": "01-gravitational-waves",
    "number": 1,
    "opener": "question",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 3,
+    "engagedViews": 2,
+    "estimatedMinutesWatched": 1,
+    "averageViewDuration": 33,
+    "averageViewPercentage": 19.01,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 3,
+    "engagedViews": 2,
+    "estimatedMinutesWatched": 1,
+    "averageViewDuration": 33,
+    "averageViewPercentage": 19.01,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "dbnYxnEgtpo",
@@ -321,8 +627,26 @@
    "episode": "04-wavelength",
    "number": 4,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 16,
+    "engagedViews": 8,
+    "estimatedMinutesWatched": 17,
+    "averageViewDuration": 124,
+    "averageViewPercentage": 70.59,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 16,
+    "engagedViews": 8,
+    "estimatedMinutesWatched": 17,
+    "averageViewDuration": 124,
+    "averageViewPercentage": 70.59,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "1WnSLOOM5ys",
@@ -336,8 +660,26 @@
    "episode": "21-hydrogen-bomb",
    "number": 21,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 24,
+    "engagedViews": 13,
+    "estimatedMinutesWatched": 17,
+    "averageViewDuration": 79,
+    "averageViewPercentage": 48.26,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 24,
+    "engagedViews": 13,
+    "estimatedMinutesWatched": 17,
+    "averageViewDuration": 79,
+    "averageViewPercentage": 48.26,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "R3LOd0XLZy0",
@@ -351,8 +693,26 @@
    "episode": "20-atomic-bomb",
    "number": 20,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 11,
+    "engagedViews": 5,
+    "estimatedMinutesWatched": 12,
+    "averageViewDuration": 148,
+    "averageViewPercentage": 86.97,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 11,
+    "engagedViews": 5,
+    "estimatedMinutesWatched": 12,
+    "averageViewDuration": 148,
+    "averageViewPercentage": 86.97,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "4dK8tp_z9UU",
@@ -366,8 +726,26 @@
    "episode": "19-gravity-time",
    "number": 19,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 1075,
+    "engagedViews": 418,
+    "estimatedMinutesWatched": 407,
+    "averageViewDuration": 56,
+    "averageViewPercentage": 35.63,
+    "likes": 3,
+    "shares": 0,
+    "subscribersGained": 1
+   },
+   "a_week": {
+    "views": 1075,
+    "engagedViews": 418,
+    "estimatedMinutesWatched": 407,
+    "averageViewDuration": 56,
+    "averageViewPercentage": 35.63,
+    "likes": 3,
+    "shares": 0,
+    "subscribersGained": 1
+   }
   },
   {
    "video_id": "-T2Fe_DS6rU",
@@ -381,8 +759,26 @@
    "episode": "17-superfluid-helium",
    "number": 17,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 1254,
+    "engagedViews": 561,
+    "estimatedMinutesWatched": 903,
+    "averageViewDuration": 94,
+    "averageViewPercentage": 56.879999999999995,
+    "likes": 3,
+    "shares": 1,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 1254,
+    "engagedViews": 561,
+    "estimatedMinutesWatched": 903,
+    "averageViewDuration": 94,
+    "averageViewPercentage": 56.879999999999995,
+    "likes": 3,
+    "shares": 1,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "q2wQUeYmqjA",
@@ -396,8 +792,26 @@
    "episode": "16-absolute-zero",
    "number": 16,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 1273,
+    "engagedViews": 550,
+    "estimatedMinutesWatched": 1160,
+    "averageViewDuration": 125,
+    "averageViewPercentage": 75.81,
+    "likes": 7,
+    "shares": 1,
+    "subscribersGained": 1
+   },
+   "a_week": {
+    "views": 1273,
+    "engagedViews": 550,
+    "estimatedMinutesWatched": 1160,
+    "averageViewDuration": 125,
+    "averageViewPercentage": 75.81,
+    "likes": 7,
+    "shares": 1,
+    "subscribersGained": 1
+   }
   },
   {
    "video_id": "3KLu5lRaLPQ",
@@ -411,8 +825,26 @@
    "episode": "15-traffic-jam",
    "number": 15,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 1301,
+    "engagedViews": 514,
+    "estimatedMinutesWatched": 861,
+    "averageViewDuration": 98,
+    "averageViewPercentage": 55.97,
+    "likes": 6,
+    "shares": 1,
+    "subscribersGained": 1
+   },
+   "a_week": {
+    "views": 1299,
+    "engagedViews": 513,
+    "estimatedMinutesWatched": 861,
+    "averageViewDuration": 98,
+    "averageViewPercentage": 56.06,
+    "likes": 6,
+    "shares": 1,
+    "subscribersGained": 1
+   }
   },
   {
    "video_id": "vex6YCVxVFE",
@@ -426,8 +858,26 @@
    "episode": "14-cold-vaccine",
    "number": 14,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 15,
+    "engagedViews": 7,
+    "estimatedMinutesWatched": 8,
+    "averageViewDuration": 73,
+    "averageViewPercentage": 42.41,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 7,
+    "engagedViews": 2,
+    "estimatedMinutesWatched": 3,
+    "averageViewDuration": 102,
+    "averageViewPercentage": 59.25,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "QuJldGMtJFM",
@@ -441,8 +891,26 @@
    "episode": "13-gamma-ray-burst",
    "number": 13,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 20,
+    "engagedViews": 9,
+    "estimatedMinutesWatched": 32,
+    "averageViewDuration": 215,
+    "averageViewPercentage": 122.36,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 11,
+    "engagedViews": 6,
+    "estimatedMinutesWatched": 14,
+    "averageViewDuration": 148,
+    "averageViewPercentage": 84.17,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "J1LfK2E3qlE",
@@ -456,8 +924,26 @@
    "episode": "10-aurora",
    "number": 10,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 11,
+    "engagedViews": 7,
+    "estimatedMinutesWatched": 4,
+    "averageViewDuration": 35,
+    "averageViewPercentage": 21.72,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 6,
+    "engagedViews": 3,
+    "estimatedMinutesWatched": 0,
+    "averageViewDuration": 4,
+    "averageViewPercentage": 2.61,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "k2TZcQiCmC0",
@@ -471,8 +957,26 @@
    "episode": "09-twinkle",
    "number": 9,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 1162,
+    "engagedViews": 540,
+    "estimatedMinutesWatched": 928,
+    "averageViewDuration": 101,
+    "averageViewPercentage": 57.68,
+    "likes": 18,
+    "shares": 5,
+    "subscribersGained": 2
+   },
+   "a_week": {
+    "views": 99,
+    "engagedViews": 46,
+    "estimatedMinutesWatched": 151,
+    "averageViewDuration": 196,
+    "averageViewPercentage": 111.52,
+    "likes": 2,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   },
   {
    "video_id": "WMkrHHwlom0",
@@ -486,8 +990,26 @@
    "episode": "12-quasar",
    "number": 12,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 1373,
+    "engagedViews": 730,
+    "estimatedMinutesWatched": 1478,
+    "averageViewDuration": 120,
+    "averageViewPercentage": 68.87,
+    "likes": 13,
+    "shares": 0,
+    "subscribersGained": 5
+   },
+   "a_week": {
+    "views": 124,
+    "engagedViews": 68,
+    "estimatedMinutesWatched": 227,
+    "averageViewDuration": 200,
+    "averageViewPercentage": 114.3,
+    "likes": 2,
+    "shares": 0,
+    "subscribersGained": 1
+   }
   },
   {
    "video_id": "AWgwtgXLaAM",
@@ -501,8 +1023,26 @@
    "episode": "11-eddington-limit",
    "number": 11,
    "opener": "today",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 1161,
+    "engagedViews": 581,
+    "estimatedMinutesWatched": 977,
+    "averageViewDuration": 99,
+    "averageViewPercentage": 57.84,
+    "likes": 7,
+    "shares": 0,
+    "subscribersGained": 3
+   },
+   "a_week": {
+    "views": 91,
+    "engagedViews": 55,
+    "estimatedMinutesWatched": 89,
+    "averageViewDuration": 97,
+    "averageViewPercentage": 56.48,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 1
+   }
   },
   {
    "video_id": "GMkRzXt78TI",
@@ -516,12 +1056,228 @@
    "episode": null,
    "number": null,
    "opener": "?",
-   "a_total": {},
-   "a_week": {}
+   "a_total": {
+    "views": 656,
+    "engagedViews": 403,
+    "estimatedMinutesWatched": 541,
+    "averageViewDuration": 80,
+    "averageViewPercentage": 44.72,
+    "likes": 11,
+    "shares": 0,
+    "subscribersGained": 1
+   },
+   "a_week": {
+    "views": 5,
+    "engagedViews": 1,
+    "estimatedMinutesWatched": 3,
+    "averageViewDuration": 180,
+    "averageViewPercentage": 100.56,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
   }
  ],
- "sources": [],
- "daily": [],
+ "sources": [
+  {
+   "insightTrafficSourceType": "SHORTS",
+   "views": 11547,
+   "estimatedMinutesWatched": 10008
+  },
+  {
+   "insightTrafficSourceType": "YT_SEARCH",
+   "views": 538,
+   "estimatedMinutesWatched": 401
+  },
+  {
+   "insightTrafficSourceType": "YT_OTHER_PAGE",
+   "views": 464,
+   "estimatedMinutesWatched": 510
+  },
+  {
+   "insightTrafficSourceType": "YT_CHANNEL",
+   "views": 160,
+   "estimatedMinutesWatched": 111
+  },
+  {
+   "insightTrafficSourceType": "SUBSCRIBER",
+   "views": 76,
+   "estimatedMinutesWatched": 38
+  },
+  {
+   "insightTrafficSourceType": "EXT_URL",
+   "views": 12,
+   "estimatedMinutesWatched": 8
+  },
+  {
+   "insightTrafficSourceType": "NOTIFICATION",
+   "views": 2,
+   "estimatedMinutesWatched": 0
+  },
+  {
+   "insightTrafficSourceType": "NO_LINK_OTHER",
+   "views": 1,
+   "estimatedMinutesWatched": 0
+  }
+ ],
+ "daily": [
+  {
+   "day": "2026-10-16",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-17",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-18",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-19",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-20",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-21",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-22",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-23",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-24",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-25",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-26",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-27",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-28",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-29",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-30",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-31",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-11-01",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-11-02",
+   "views": 265,
+   "engagedViews": 155,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-11-03",
+   "views": 551,
+   "engagedViews": 344,
+   "subscribersGained": 2
+  },
+  {
+   "day": "2026-11-04",
+   "views": 1505,
+   "engagedViews": 741,
+   "subscribersGained": 4
+  },
+  {
+   "day": "2026-11-05",
+   "views": 1958,
+   "engagedViews": 992,
+   "subscribersGained": 7
+  },
+  {
+   "day": "2026-11-06",
+   "views": 4795,
+   "engagedViews": 2017,
+   "subscribersGained": 7
+  },
+  {
+   "day": "2026-11-07",
+   "views": 939,
+   "engagedViews": 518,
+   "subscribersGained": 1
+  },
+  {
+   "day": "2026-11-08",
+   "views": 1284,
+   "engagedViews": 655,
+   "subscribersGained": 2
+  },
+  {
+   "day": "2026-11-09",
+   "views": 214,
+   "engagedViews": 99,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-11-10",
+   "views": 1289,
+   "engagedViews": 621,
+   "subscribersGained": 2
+  }
+ ],
  "benchmark": {
   "channels": [
    {
@@ -532,8 +1288,8 @@
     "n_judged": 27,
     "median_sec": 105,
     "share_le60": 0.037037037037037035,
-    "median_views": 150158,
-    "p90_views": 1320212,
+    "median_views": 150176,
+    "p90_views": 1320285,
     "lt50": 0.0,
     "per_week": 0.0,
     "median_gap_days": 6.0,
@@ -547,8 +1303,8 @@
     "n_judged": 43,
     "median_sec": 41,
     "share_le60": 0.7441860465116279,
-    "median_views": 222934,
-    "p90_views": 993850,
+    "median_views": 222939,
+    "p90_views": 993858,
     "lt50": 0.0,
     "per_week": 0.5,
     "median_gap_days": 7.0,
@@ -577,7 +1333,7 @@
     "n_judged": 46,
     "median_sec": 8,
     "share_le60": 0.9795918367346939,
-    "median_views": 25788.0,
+    "median_views": 25794.5,
     "p90_views": 47775,
     "lt50": 0.0,
     "per_week": 6.25,
@@ -728,7 +1484,7 @@
     "median_sec": 40.0,
     "share_le60": 1.0,
     "median_views": 71989,
-    "p90_views": 290793,
+    "p90_views": 290790,
     "lt50": 0.0,
     "per_week": 1.75,
     "median_gap_days": 2,
@@ -742,8 +1498,8 @@
     "n_judged": 40,
     "median_sec": 35.0,
     "share_le60": 0.96,
-    "median_views": 8455353.5,
-    "p90_views": 12239367,
+    "median_views": 8485748.0,
+    "p90_views": 12277596,
     "lt50": 0.0,
     "per_week": 12.5,
     "median_gap_days": 0,
@@ -770,13 +1526,13 @@
     "bucket": "60초 이하",
     "n": 91,
     "channels": 5,
-    "mean_pct": 0.47020571028879793
+    "mean_pct": 0.47007169795966364
    },
    {
     "bucket": "61~120초",
     "n": 81,
     "channels": 5,
-    "mean_pct": 0.5133976788598891
+    "mean_pct": 0.5135482359210152
    },
    {
     "bucket": "121~180초",
