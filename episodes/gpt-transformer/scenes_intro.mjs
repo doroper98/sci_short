@@ -313,7 +313,7 @@ export const scenes = {hook: hookScene, origin: originScene, essence: essenceSce
 // HEADERS
 // =====================================================================================================
 export const titles = {
-  hook: P => { const at = s => P.tl.at(s) - 0.5; return [[-Infinity, '오늘의 주제 · GPT #3', '문맥을 어떻게 읽을까?'], [at('s02'), '같은 글자, 다른 뜻', '어느 배일까?'], [at('s03'), '다음 말을 맞히려면', '문맥을 보고 가려내야']]; },
+  hook: P => { const at = s => P.tl.at(s) - 0.5; return [[-Infinity, '오늘의 주제 · GPT 3 of 4', '문맥을 어떻게 읽을까?'], [at('s02'), '같은 글자, 다른 뜻', '어느 배일까?'], [at('s03'), '다음 말을 맞히려면', '문맥을 보고 가려내야']]; },
   origin: P => [[-Infinity, '예전 방식 · 차례로 읽기', '읽을수록 앞말이 흐려졌다'], [P.tl.at('s05') - 0.5, '2017 · 트랜스포머', '모든 앞말을 곧바로 살핀다']],
   essence: P => { const at = s => P.tl.at(s) - 0.5;
     return [[-Infinity, '이름 · Transformer', '모양을 바꾸는 것'], [at('s07'), 'GPT-3 · 낱말 하나', '낱말은 숫자 묶음'], [at('s08'), '두 방향만 그린 지도', '숫자 둘 = 지도 위의 점 하나'], [at('s09'), '두 방향만 그린 지도', '뜻이 가까우면 가까이']]; },
