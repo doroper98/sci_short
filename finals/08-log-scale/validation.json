@@ -1,7 +1,7 @@
 {
   "file": "log-scale.mp4",
-  "bytes": 10203985,
-  "sha256": "108829505803812123b233cffb07ad5fb4000571e24a0059d5c99c79a1af49fc",
+  "bytes": 10212922,
+  "sha256": "e8b6be5ec3cf274e8cf63ab74bf63de73dd2158bee8232e54cbb0c75fb40c12d",
   "created": "2026-11-07T01:36:40+00:00",
   "title": "한 칸에 열 배 — 지진 규모·데시벨·pH와 로그",
   "timeline_duration": 165.801,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2546688,
         "duration": "165.800000",
-        "bit_rate": "321472",
+        "bit_rate": "321905",
         "bits_per_raw_sample": "8",
         "nb_frames": "4974",
         "extradata_size": 50,
@@ -126,15 +126,15 @@
       }
     ],
     "format": {
-      "filename": "/home/user/sci_short/outputs/log-scale/final/log-scale.mp4",
+      "filename": "finals/08-log-scale/log-scale.mp4",
       "nb_streams": 2,
       "nb_programs": 0,
       "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "165.801000",
-      "size": "10203985",
-      "bit_rate": "492348",
+      "size": "10212922",
+      "bit_rate": "492779",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -183,5 +183,14 @@
     "direct_listening": "not performed",
     "physical_phone_playback": "not performed",
     "visual_review_of_stills": "not recorded by finish.py"
+  },
+  "picture_rerender": {
+    "date": "2026-11-13",
+    "reason": "첫 프레임(과 끝에 돌아오는 포스터)의 글에 주제어 줄 추가(사용자 지적)",
+    "method": "episodes/log-scale/run.sh render (finals timeline.json 그대로) → 새 visual.mp4의 영상 + 이전 최종본의 오디오를 스트림 복사(오디오 재인코딩 없음)",
+    "previous_sha256": "108829505803812123b233cffb07ad5fb4000571e24a0059d5c99c79a1af49fc",
+    "audio_stream_md5_unchanged": "3f15e9a32ff380690d3960c458e64306",
+    "revalidated": "pipeline/validate.py 19/19 PASS(새 mp4, finals srt·timeline, 새 스틸), 전편 디코딩 통과",
+    "not_rerun": "finish.py의 loudnorm 측정(audio_mastering_input, encoded_audio)은 다시 재지 않음 — 오디오 스트림이 바이트 단위로 같아 이전 값이 그대로 유효"
   }
 }

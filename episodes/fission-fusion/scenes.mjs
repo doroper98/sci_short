@@ -397,7 +397,7 @@ export function plan(tl) {
 // Header titles and poster
 // =====================================================================================================
 function titleList(id, P) {
-  if (id === 'hook') return [[-Infinity, '오늘의 주제', '쪼개도 합쳐도 에너지?'], [P.nightIn, '2024 · 우리나라 전기', '원자핵을 쪼개는 원자력'], [P.toSun + 0.4, '태양', '원자핵을 합치는 별']];
+  if (id === 'hook') return [[-Infinity, '핵분열과 핵융합', '쪼개도 합쳐도 에너지?'], [P.nightIn, '2024 · 우리나라 전기', '원자핵을 쪼개는 원자력'], [P.toSun + 0.4, '태양', '원자핵을 합치는 별']];
   if (id === 'origin') return [[-Infinity, '1938 · 독일', '한 · 슈트라스만'], [at0(P, 's05'), '1939 · 이름 짓기', '분열 · fission'], [at0(P, 's06'), '1920 · 에딩턴', '태양은 수소를 합친다']];
   if (id === 'essence') return [[-Infinity, '본질 · 결합', '단단히 묶일수록 가볍다'], [P.split8 - 0.6, '본질 · 원자핵의 골짜기', '철을 향해 내려간다']];
   if (id === 'fission') return [[-Infinity, '핵분열 · 우라늄 235', '출렁이다 둘로'], [P.core[0] + 0.3, '원자로 · 제어봉', '한 번에 하나씩'], [P.turbine - 0.3, '원자로 · 물', '터빈과 푸른 빛']];
@@ -413,16 +413,19 @@ function head(stage, kicker, title, aK, aT, sub = '', aS = aT) {
   if (title) withAlpha(c, aT, () => stage.text(title, 540, 228, {role: 'display', weight: 700, size: 56, color: T.ink, align: 'center', maxWidth: 820, ...so}));
   if (sub) withAlpha(c, aS, () => stage.text(sub, 540, 292, {role: 'display', weight: 700, size: 34, color: PAL.answer, align: 'center', ...so}));
 }
-const POSTER_Q = {y: 1060, y2: 1196, q: '쪼개도 합쳐도 에너지', ans: '철을 향하기 때문'};
-let QSIZE = 0, ASIZE = 0;
+// 2026-11-13 (owner: "핵분열과 핵융합이라는 키워드가 썸네일에 명확히 보여야지"): the poster carries the topic keyword as
+// its own white line (k) above the question (q); k shrinks into the header kicker, q into the header title.
+const POSTER_Q = {yk: 1084, y: 1204, y2: 1346, k: '핵분열과 핵융합', q: '쪼개도 합쳐도 에너지', ans: '철을 향하기 때문'};
+let KSIZE = 0, QSIZE = 0, ASIZE = 0;
 function posterTitle(stage, t, q = easeInOut((t - MORPH[0]) / (MORPH[1] - MORPH[0])), a = 1) {
   const c = stage.ctx, T = stage.theme, TR = -0.03, fit = (s, w, max) => Math.min(max, max * w / stage.measure(s, {role: 'display', weight: 700, size: max, tracking: TR * max}));
-  QSIZE ||= fit(POSTER_Q.q + '?', 820, 100); ASIZE ||= fit(POSTER_Q.ans, 860, 150);
-  const y1 = lerp(POSTER_Q.y, 228, q), s1 = lerp(QSIZE, 56, q), y2 = lerp(POSTER_Q.y2, 292, q), s2 = lerp(ASIZE, 34, q), tr = lerp(TR, -0.011, q);
-  if (q < 1) withAlpha(c, (1 - q) * a, () => { const g2 = c.createLinearGradient(0, 960, 0, 1300); g2.addColorStop(0, 'rgba(6,6,7,0)'); g2.addColorStop(0.3, 'rgba(6,6,7,0.6)'); g2.addColorStop(0.75, 'rgba(6,6,7,0.6)'); g2.addColorStop(1, 'rgba(6,6,7,0)'); c.fillStyle = g2; c.fillRect(0, 960, 1080, 340); });
+  KSIZE ||= fit(POSTER_Q.k, 820, 104); QSIZE ||= fit(POSTER_Q.q + '?', 820, 100); ASIZE ||= fit(POSTER_Q.ans, 860, 150);
+  const yk = lerp(POSTER_Q.yk, 146, q), sk = lerp(KSIZE, 30, q), y1 = lerp(POSTER_Q.y, 228, q), s1 = lerp(QSIZE, 56, q), y2 = lerp(POSTER_Q.y2, 292, q), s2 = lerp(ASIZE, 34, q), tr = lerp(TR, -0.011, q);
+  if (q < 1) withAlpha(c, (1 - q) * a, () => { const g2 = c.createLinearGradient(0, 940, 0, 1420); g2.addColorStop(0, 'rgba(6,6,7,0)'); g2.addColorStop(0.22, 'rgba(6,6,7,0.6)'); g2.addColorStop(0.8, 'rgba(6,6,7,0.6)'); g2.addColorStop(1, 'rgba(6,6,7,0)'); c.fillStyle = g2; c.fillRect(0, 940, 1080, 480); });
   withAlpha(c, a, () => {
     const sh = 'rgba(0,0,0,0.9)', wb = stage.measure(POSTER_Q.q, {role: 'display', weight: 700, size: s1, tracking: tr * s1}), wq = stage.measure('?', {role: 'display', weight: 700, size: s1, tracking: tr * s1}), kq = 1 - smooth(q / 0.7);
-    const x0 = 540 - (wb + wq * kq) / 2;
+    const x0 = 540 - (wb + wq * kq) / 2, ak = 1 - smooth((q - 0.6) / 0.4);   // the keyword hands over to the header kicker (same words)
+    if (ak > 0) stage.text(POSTER_Q.k, 540, yk, {role: 'display', weight: 700, size: sk, color: T.ink, align: 'center', alpha: ak, shadow: sh, shadowBlur: 22, tracking: tr * sk});
     stage.text(POSTER_Q.q, x0, y1, {role: 'display', weight: 700, size: s1, color: T.ink, shadow: sh, shadowBlur: 22, tracking: tr * s1});
     if (kq > 0) stage.text('?', x0 + wb, y1, {role: 'display', weight: 700, size: s1, color: T.ink, alpha: kq, shadow: sh, shadowBlur: 22, tracking: tr * s1});
     stage.text(POSTER_Q.ans, 540, y2, {role: 'display', weight: 700, size: s2, color: PAL.answer, align: 'center', tracking: tr * s2, shadow: sh, shadowBlur: 28});

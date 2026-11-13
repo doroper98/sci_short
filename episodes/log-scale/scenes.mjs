@@ -1039,5 +1039,49 @@ if (isMain && process.argv.includes('--emit-sound')) {
 
 // First frame = thumbnail (2026-11-07 retrofit, user request): poster 0–0.9 s, morph away 0.9–1.7 s, back at the last
 // sentence. Config and key picture: episodes/log-scale/poster.json, poster-key.jpg (pipeline/render/posterintro.mjs).
-import {posterIntro} from '../../pipeline/render/posterintro.mjs';
-export const overlays = await posterIntro(baseOverlays, {slug: 'log-scale'});
+// 2026-11-13 (owner: the topic keyword must be clearly visible on the thumbnail): the white question is two lines,
+// "지진 규모 6은" / "규모 3의 2배?" (poster.json q_lines). pipeline/render/posterintro.mjs draws one line only, so this
+// episode keeps a local copy of its overlay with a two-line title block; picture, timing and morph are unchanged.
+import {createRequire} from 'node:module';
+const ROOT = path.resolve(HERE, '../..');
+const {loadImage} = createRequire(path.join(ROOT, 'pipeline/render/index.mjs'))('@napi-rs/canvas');
+const PCFG = JSON.parse(fs.readFileSync(path.join(HERE, 'poster.json'), 'utf8'));
+const PMORPH = [0.9, 1.7], RETURN_LEAD = 0.25, RETURN_FADE = 0.6, END_ZOOM = 0.035;
+const Q1_Y = 1046, Q2_Y = 1150, PA_Y = 1328;
+const pease = x => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
+function drawPosterTitle2(stage, cfg, k = 1, rise = 0, scale = 1) {
+  if (k <= 0) return;
+  const c = stage.ctx, T = stage.theme, lines = cfg.q_lines || [cfg.q];
+  c.save(); c.globalAlpha *= k;
+  const y0 = Q1_Y - 150 - rise, y1 = PA_Y + 130 - rise;
+  const band = c.createLinearGradient(0, y0, 0, y1);
+  band.addColorStop(0, 'rgba(0,6,12,0)'); band.addColorStop(0.2, 'rgba(0,6,12,0.74)');
+  band.addColorStop(0.84, 'rgba(0,6,12,0.74)'); band.addColorStop(1, 'rgba(0,6,12,0)');
+  c.fillStyle = band; c.fillRect(0, y0, 1080, y1 - y0);
+  const fit = (s, w, max) => Math.min(max, max * w / stage.measure(s, {role: 'display', weight: 700, size: max}));
+  const qs = Math.min(...lines.map(l => fit(l, 860, 90))) * scale, as = fit(cfg.a, 800, 196) * scale;
+  lines.forEach((l, i) => stage.text(l, 540, (i ? Q2_Y : Q1_Y) - rise - (1 - scale) * 40 * i, {role: 'display', weight: 700, size: qs, color: T.ink, align: 'center', shadow: 'rgba(0,0,0,0.9)', shadowBlur: 18}));
+  stage.text(cfg.a, 540, PA_Y - rise - (1 - scale) * 160, {role: 'display', weight: 700, size: as, color: cfg.accent || T.accent, align: 'center', shadow: 'rgba(0,0,0,0.9)', shadowBlur: 26});
+  c.restore();
+}
+const keyImg = await loadImage(fs.readFileSync(path.join(HERE, 'poster-key.jpg')));
+export function overlays(stage, t, ctx) {
+  baseOverlays(stage, t, ctx);
+  const tl = ctx.tl, dur = tl.duration;
+  const last = tl.sentences?.length ? tl.sentences[tl.sentences.length - 1] : null;
+  const tBack = (last ? last.start : dur - 6) - RETURN_LEAD;
+  const intro = t < PMORPH[0] ? 1 : 1 - pease((t - PMORPH[0]) / (PMORPH[1] - PMORPH[0]));
+  const outro = t >= tBack ? pease((t - tBack) / RETURN_FADE) : 0;
+  const vis = Math.max(intro, outro);
+  if (vis <= 0) return;
+  const c = stage.ctx;
+  c.save(); c.globalAlpha = vis;
+  const z = outro > 0 ? 1 + END_ZOOM * Math.min(1, (t - tBack) / Math.max(1, dur - tBack)) : 1;
+  c.drawImage(keyImg, 540 - 540 * z, 960 - 960 * z, 1080 * z, 1920 * z);
+  c.restore();
+  if (outro > 0) drawPosterTitle2(stage, PCFG, outro);
+  else {
+    const m = pease((t - PMORPH[0]) / (PMORPH[1] - PMORPH[0]));
+    drawPosterTitle2(stage, PCFG, 1 - m, 520 * m, 1 - 0.45 * m);
+  }
+}

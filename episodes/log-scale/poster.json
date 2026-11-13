@@ -1,6 +1,10 @@
 {
-  "_about": "첫 프레임 썸네일 포스터(2026-11-07 소급 적용, pipeline/render/posterintro.mjs). q = 흰 질문, a = 큰 강조색 답, key = 그림 시각·크롭(pipeline/render/thumbnail.mjs 옵션)",
-  "q": "규모 6은 규모 3의 2배?",
+  "_about": "첫 프레임 썸네일 포스터(2026-11-07 소급 적용, pipeline/render/posterintro.mjs). q = 흰 질문, a = 큰 강조색 답, key = 그림 시각·크롭(pipeline/render/thumbnail.mjs 옵션) 2026-11-13: 흰 질문을 두 줄(q_lines)로 바꿈 — 주제어 '지진 규모'가 첫 프레임에 보이게(사용자 지적). 두 줄 그리기는 episodes/log-scale/scenes.mjs 의 로컬 overlays.",
+  "q": "지진 규모 6은 규모 3의 2배?",
+  "q_lines": [
+    "지진 규모 6은",
+    "규모 3의 2배?"
+  ],
   "a": "아니, 1000배",
   "accent": "#FFB547",
   "key_cmd": [

@@ -118,10 +118,10 @@ class FakeApi:
         self.update_fail: int | None = None        # videos.update 가 돌려줄 오류 상태(403 = 범위 부족)
         self.updates: list[dict] = []              # videos.update 요청 본문
 
-    def video(self, vid: str, privacy: str, views: int, *, channel: str = "UC1") -> None:
-        """조회수 확인(status_map)과 비공개 전환(videos) 양쪽에 같은 영상을 둔다."""
+    def video(self, vid: str, privacy: str, views: int, *, channel: str = "UC1", published: str = "2026-11-01T00:00:00Z") -> None:
+        """조회수 확인(status_map)과 비공개 전환·48시간 점검(videos) 양쪽에 같은 영상을 둔다."""
         self.status_map[vid] = (privacy, views)
-        self.videos[vid] = {"id": vid, "snippet": {"channelId": channel, "title": "옛 판"},
+        self.videos[vid] = {"id": vid, "snippet": {"channelId": channel, "title": "옛 판", "publishedAt": published},
                             "status": {"privacyStatus": privacy, "embeddable": False, "license": "creativeCommon",
                                        "publicStatsViewable": False, "madeForKids": False, "selfDeclaredMadeForKids": False,
                                        "uploadStatus": "processed"},
@@ -747,6 +747,92 @@ class UploadFlowTest(unittest.TestCase):
             res = yu.process_episode(ep, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None, allow_reupload=True)
             self.assertEqual(res["status"], "uploaded")
 
+    def _changed_after_upload(self, root: Path, api: FakeApi, **kw) -> tuple[Path, bytes]:
+        ep = _episode(root, **kw)
+        yu.process_episode(ep, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+        next(ep.glob("*.mp4")).write_bytes(b"\2" * 2000)                       # 첫 화면을 고쳐 다시 렌더한 편
+        return ep, (ep / yu.RECORD_NAME).read_bytes()
+
+    def test_changed_video_pending_republish_is_skipped_not_error(self) -> None:
+        """대기열(config/republish.json queue)의 편은 파일이 바뀌어도 거절하지 않고 아침 다시 올리기에 맡긴다(2026-11-13)."""
+        api = FakeApi()
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep, rec_before = self._changed_after_upload(root, api)
+            q = _republish_cfg(root, ep)
+            n = len(api.calls)
+            for dry in (True, False):
+                for auto in (False, True):
+                    res = yu.process_episode(ep, _cfg(auto_from_number=1), dry_run=dry, send=api, env=ENV,
+                                             sleep=lambda s: None, auto=auto, morning=set(), republish_path=q)
+                    self.assertEqual(res["status"], "skipped", res)
+                    self.assertEqual(res["video_id"], "VID123")
+                    self.assertTrue(any("다시 올리기" in w and "md5" in w for w in res["warnings"]), res["warnings"])
+            self.assertEqual(len(api.calls), n)                                 # 네트워크 호출 없음
+            self.assertEqual((ep / yu.RECORD_NAME).read_bytes(), rec_before)    # 기록 그대로
+
+    def test_changed_video_not_pending_is_still_refused(self) -> None:
+        api = FakeApi()
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep, _ = self._changed_after_upload(root, api)
+            other = _episode(root, name="02-other", slug="other")
+            for q in (_republish_cfg(root, other), root / "missing.json"):  # 대기열에 없음 · 설정 없음
+                res = yu.process_episode(ep, _cfg(), dry_run=True, env={}, republish_path=q)
+                self.assertEqual(res["status"], "error")
+                self.assertIn("allow-reupload", res["error"])
+            (root / "broken.json").write_text("{", encoding="utf-8")            # 읽지 못하는 설정도 대기 아님
+            res = yu.process_episode(ep, _cfg(), dry_run=True, env={}, republish_path=root / "broken.json")
+            self.assertIn("allow-reupload", res["error"])
+
+    def test_changed_video_already_republished_is_refused(self) -> None:
+        """대기열에 있어도 이미 다시 올린 편(대기열에서 끝남)은 대기 중이 아니다."""
+        api = FakeApi()
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep, _ = self._changed_after_upload(root, api)
+            rec = yu.read_record(ep)
+            rec.previous = [{"video_id": "OLD0", "reason": "republish"}]
+            yu.write_record(ep, rec)
+            res = yu.process_episode(ep, _cfg(), dry_run=True, env={}, republish_path=_republish_cfg(root, ep))
+            self.assertIn("allow-reupload", res["error"])
+
+    def test_changed_video_flagged_by_sweep_is_skipped(self) -> None:
+        api = FakeApi()
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep, _ = self._changed_after_upload(root, api)
+            rec = yu.read_record(ep)
+            rec.sweep = {"action": "flagged", "checked_at": "2026-11-13T00:00:00+00:00"}
+            yu.write_record(ep, rec)
+            rec_before = (ep / yu.RECORD_NAME).read_bytes()
+            q = _republish_cfg(root)                                            # 대기열은 비어 있음
+            n = len(api.calls)
+            for dry in (True, False):
+                res = yu.process_episode(ep, _cfg(), dry_run=dry, send=api, env=ENV, sleep=lambda s: None, republish_path=q)
+                self.assertEqual(res["status"], "skipped", res)
+                self.assertTrue(any("다시 올리기 대기" in w for w in res["warnings"]))
+            self.assertEqual(len(api.calls), n)
+            self.assertEqual((ep / yu.RECORD_NAME).read_bytes(), rec_before)
+
+    def test_changed_video_pending_republish_true_uploads_new_video(self) -> None:
+        api = FakeApi()
+        cfg = _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep, _ = self._changed_after_upload(root, api)
+            api.video("VID123", "public", 3)
+            q = _republish_cfg(root, ep)
+            res = yu.process_episode(ep, cfg, dry_run=True, env={}, republish=True, republish_path=q)
+            self.assertEqual(res["status"], "dry-run")
+            uploads = api.uploads
+            res = yu.process_episode(ep, cfg, dry_run=False, send=api, env=ENV, sleep=lambda s: None, republish=True,
+                                     republish_path=q)
+            self.assertEqual(res["status"], "uploaded", res)
+            self.assertTrue(res["republish"])
+            self.assertEqual(api.uploads, uploads + 1)
+            self.assertEqual(yu.read_record(ep).previous[0]["video_id"], "VID123")
+
     def test_channel_mismatch_blocks_before_upload(self) -> None:
         api = FakeApi(channel_id="UC_OTHER")
         with tempfile.TemporaryDirectory() as d:
@@ -1131,7 +1217,7 @@ class AlternateTest(unittest.TestCase):
 
     def test_repo_republish_config(self) -> None:
         rc = json.loads((yu.REPO / "config" / "republish.json").read_text(encoding="utf-8"))
-        self.assertEqual(rc["min_views"], 100)                                  # 사용자 "조회수 100회 미만인 애들"
+        self.assertEqual(rc["min_views"], 50)                                   # 2026-11-13 사용자 "조회수 50회 미만인 애들"(전에는 100)
         self.assertIs(rc["alternate_with_new"], True)                           # 사용자 "하루씩 번갈아"
         for ep, vid in rc["previous_ids"].items():
             self.assertIn(ep, rc["queue"])
@@ -1144,6 +1230,343 @@ class AlternateTest(unittest.TestCase):
         targets = yu.privatize_targets(rc, yu.DEFAULT_FINALS)
         self.assertNotIn("GMkRzXt78TI", [t["video_id"] for t in targets])
         self.assertEqual(yu.load_config().privacy_status, "private")
+
+
+NOW = dt.datetime(2026, 11, 13, 0, 0, tzinfo=dt.timezone.utc)
+SWEEP = {"enabled": True, "min_age_hours": 48, "max_republish": 2}
+
+
+def _iso(t: dt.datetime) -> str:
+    return t.isoformat(timespec="seconds").replace("+00:00", "Z")
+
+
+def _ago(hours: float) -> dt.datetime:
+    return NOW - dt.timedelta(hours=hours)
+
+
+def _record(ep: Path, vid: str, *, uploaded: dt.datetime, previous: list | None = None, sweep: dict | None = None) -> yu.Record:
+    rec = yu.Record(video_id=vid, url=yu.WATCH_URL_PREFIX + vid, studio_url=yu.STUDIO_URL.format(video_id=vid),
+                    uploaded_at=uploaded.isoformat(timespec="seconds"), privacy_status="private", channel_id="UC1",
+                    channel_title="과학 채널", video_file="v.mp4", video_bytes=1000, video_md5="x", title="t",
+                    description_bytes=1, contains_synthetic_media=True, made_for_kids=False,
+                    previous=list(previous or []), sweep=sweep)
+    yu.write_record(ep, rec)
+    return rec
+
+
+def _rel_repo(p: Path) -> str:
+    return p.relative_to(yu.REPO).as_posix()
+
+
+@mock.patch.object(yu, "probe_video", lambda p: dict(PROBE_OK))
+class SweepTest(unittest.TestCase):
+    """2026-11-13 사용자: "업로드 48시간 지났는데 조회수 50회 미만인 애들은 비공개로 바꾸고 업로드 일정에 다시 넣어서 재업로드"."""
+
+    def _public(self, api: FakeApi, ep: Path, vid: str, views: int, hours: float, **kw) -> None:
+        """hours 시간 전에 공개된 영상(기록의 업로드 시각은 그보다 1시간 앞 — publishedAt 이 공개 시각으로 읽힌다)."""
+        _record(ep, vid, uploaded=_ago(hours + 1), **{k: kw.pop(k) for k in ("previous", "sweep") if k in kw})
+        api.video(vid, kw.pop("privacy", "public"), views, published=_iso(_ago(hours)), **kw)
+
+    def test_sweep_decisions(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep = {n: _episode(root, name=n, slug=n[3:]) for n in
+                  ("02-young", "03-priv", "04-other", "05-ok", "06-low", "07-keep", "08-gone", "09-only", "10-hand")}
+            self._public(api, ep["02-young"], "YOUNG", 3, 30)                    # 48시간 전
+            self._public(api, ep["03-priv"], "PRIV", 0, 100, privacy="private")  # 아직 공개 전
+            self._public(api, ep["04-other"], "OTHER", 2, 100, channel="UC_OTHER")
+            self._public(api, ep["05-ok"], "OK", 50, 100)                       # 기준과 같으면 통과
+            self._public(api, ep["06-low"], "LOW", 49, 100)
+            self._public(api, ep["07-keep"], "KEEP", 3, 100)
+            _record(ep["08-gone"], "GONE", uploaded=_ago(200))
+            self._public(api, ep["09-only"], "ONLY", 3, 100)
+            api.video("HAND1", "public", 4, published=_iso(_ago(300)))          # 기록 없는 편의 previous_ids
+            q = _republish_cfg(root, ep["10-hand"], min_views=50, auto_sweep=SWEEP, never_privatize=["KEEP"],
+                               privatize_only=[{"video_id": "ONLY", "episode": _rel_repo(ep["09-only"])}],
+                               previous_ids={_rel_repo(ep["10-hand"]): "HAND1"})
+            out = yu.sweep_low_views(cfg, q, root, dry_run=False, send=api, env=ENV, now=NOW)
+            self.assertEqual({it["video_id"]: it["result"] for it in out["items"]},
+                             {"YOUNG": "young", "PRIV": "not-public", "OTHER": "other-channel", "OK": "ok", "LOW": "flagged",
+                              "GONE": "not-found", "HAND1": "flagged"})                # KEEP·ONLY 는 읽지도 않는다
+            self.assertEqual(sorted(u["id"] for u in api.updates), ["HAND1", "LOW"])
+            self.assertTrue(all(u["status"]["privacyStatus"] == "private" for u in api.updates))
+            self.assertEqual((api.status_map["OTHER"][0], api.status_map["KEEP"][0], api.status_map["YOUNG"][0]),
+                             ("public", "public", "public"))
+            low = yu.read_record(ep["06-low"])
+            self.assertEqual((low.sweep["action"], low.sweep["views"], low.sweep["age_hours"]), ("flagged", 49, 100.0))
+            self.assertTrue(low.sweep["privatized_at"])
+            self.assertEqual(low.privatized_at, low.sweep["privatized_at"])
+            ok = yu.read_record(ep["05-ok"]).sweep
+            self.assertEqual((ok["action"], ok["views"]), ("ok", 50))
+            for n in ("02-young", "03-priv", "04-other", "08-gone", "07-keep"):
+                self.assertIsNone(yu.read_record(ep[n]).sweep, n)
+            self.assertIsNone(yu.read_record(ep["10-hand"]))                    # 기록 없는 편은 비공개만(기록을 만들지 않음)
+            self.assertEqual(out["counts"]["flagged"], 2)
+            self.assertIn(ep["06-low"], yu.republish_todo(json.loads(q.read_text(encoding="utf-8")), root))
+
+            api.video("OK", "public", 10, published=_iso(_ago(100)))            # ok 는 한 번만 적고 다시 보지 않는다
+            again = yu.sweep_low_views(cfg, q, root, dry_run=False, send=api, env=ENV, now=NOW + dt.timedelta(hours=24))
+            res2 = {it["video_id"]: it["result"] for it in again["items"]}
+            self.assertNotIn("OK", res2)
+            self.assertNotIn("LOW", res2)
+            self.assertEqual((res2["YOUNG"], res2["HAND1"]), ("flagged", "not-public"))
+            self.assertEqual(yu.read_record(ep["05-ok"]).sweep, ok)
+
+    def test_ambiguous_published_at_counts_from_first_seen_public(self) -> None:
+        """publishedAt 이 업로드 시각과 같으면(주인 토큰으로 읽을 때의 특례) 공개 시각을 모른다 — 처음 본 때부터 잰다."""
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep = _episode(root, name="28-tides", slug="tides")
+            _record(ep, "T1", uploaded=_ago(100))
+            api.video("T1", "public", 3, published=_iso(_ago(100)))
+            q = _republish_cfg(root, min_views=50, auto_sweep=SWEEP)
+            dry = yu.sweep_low_views(cfg, q, root, dry_run=True, send=api, env=ENV, now=NOW)
+            self.assertEqual(dry["items"][0]["result"], "young")
+            self.assertIsNone(yu.read_record(ep).sweep)                         # dry-run 은 쓰지 않는다
+            first = yu.sweep_low_views(cfg, q, root, dry_run=False, send=api, env=ENV, now=NOW)
+            self.assertEqual((first["items"][0]["result"], first["items"][0]["age_from"]), ("young", "public_seen_at"))
+            self.assertEqual(yu.read_record(ep).sweep, {"action": "watching", "public_seen_at": NOW.isoformat(timespec="seconds"),
+                                                        "published_at": _iso(_ago(100))})
+            mid = yu.sweep_low_views(cfg, q, root, dry_run=False, send=api, env=ENV, now=NOW + dt.timedelta(hours=47))
+            self.assertEqual(mid["items"][0]["result"], "young")
+            self.assertEqual(api.updates, [])
+            late = yu.sweep_low_views(cfg, q, root, dry_run=False, send=api, env=ENV, now=NOW + dt.timedelta(hours=49))
+            self.assertEqual(late["items"][0]["result"], "flagged")
+            sw = yu.read_record(ep).sweep
+            self.assertEqual((sw["action"], sw["age_hours"], sw["public_seen_at"]), ("flagged", 49.0, NOW.isoformat(timespec="seconds")))
+
+    def test_403_flags_and_pending_pass_retries(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            a = _episode(root, name="06-a", slug="a")
+            b = _episode(root, name="07-b", slug="b")
+            self._public(api, a, "LA", 3, 60)
+            self._public(api, b, "LB", 8, 60)
+            q = _republish_cfg(root, min_views=50, auto_sweep=SWEEP)
+            api.update_fail = 403
+            out = yu.sweep_low_views(cfg, q, root, dry_run=False, send=api, env=ENV, now=NOW)
+            self.assertEqual([it["result"] for it in out["items"]], ["flagged", "flagged"])
+            self.assertEqual(len(api.updates), 1)                               # 첫 403 뒤로는 시도하지 않는다
+            self.assertTrue(any("youtube.force-ssl" in w for w in out["warnings"]), out["warnings"])
+            for ep in (a, b):
+                rec = yu.read_record(ep)
+                self.assertEqual(rec.sweep["action"], "flagged")
+                self.assertIn("insufficientPermissions", rec.sweep["privatize_error"])
+                self.assertNotIn("privatized_at", rec.sweep)
+                self.assertIsNone(rec.privatized_at)
+            rc = json.loads(q.read_text(encoding="utf-8"))
+            self.assertEqual([(t["video_id"], t["kind"]) for t in yu.privatize_targets(rc, root)], [("LA", "sweep"), ("LB", "sweep")])
+            self.assertEqual(yu.republish_todo(rc, root), [a, b])               # 비공개 전환이 밀려도 다시 올리기 대상
+            api.update_fail = None
+            pend = yu.privatize_pending(cfg, q, root, dry_run=False, send=api, env=ENV)
+            self.assertEqual([(it["video_id"], it["result"]) for it in pend["items"]], [("LA", "privatized"), ("LB", "privatized")])
+            for ep in (a, b):
+                rec = yu.read_record(ep)
+                self.assertTrue(rec.sweep["privatized_at"])
+                self.assertNotIn("privatize_error", rec.sweep)
+                self.assertEqual(rec.privatized_at, rec.sweep["privatized_at"])
+            self.assertEqual(yu.privatize_targets(rc, root), [])
+
+    def test_exhausted_at_cap_stays_public(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            twice = _episode(root, name="06-a", slug="a")
+            once = _episode(root, name="07-b", slug="b")
+            rep = {"reason": "republish", "privatized_at": "2026-11-01T00:00:00+00:00"}
+            self._public(api, twice, "T2", 5, 60, previous=[{**rep, "video_id": "P2"}, {**rep, "video_id": "P1"}])
+            self._public(api, once, "O1", 5, 60, previous=[{**rep, "video_id": "P0"}])
+            q = _republish_cfg(root, min_views=50, auto_sweep=SWEEP)
+            out = yu.sweep_low_views(cfg, q, root, dry_run=False, send=api, env=ENV, now=NOW)
+            self.assertEqual({it["video_id"]: it["result"] for it in out["items"]}, {"T2": "exhausted", "O1": "flagged"})
+            self.assertEqual([u["id"] for u in api.updates], ["O1"])
+            self.assertEqual(api.status_map["T2"][0], "public")                 # 상한에 이른 편은 공개 그대로
+            self.assertEqual(yu.read_record(twice).sweep["action"], "exhausted")
+            self.assertEqual(yu.republish_todo(json.loads(q.read_text(encoding="utf-8")), root), [once])
+            again = yu.sweep_low_views(cfg, q, root, dry_run=False, send=api, env=ENV, now=NOW + dt.timedelta(hours=24))
+            self.assertEqual(again["items"], [])                                # 판정은 한 번만
+
+    def test_eligibility_manual_queue_first_then_flagged_by_check_time(self) -> None:
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            m1 = _episode(root, name="10-m1", slug="m1")                        # 기록 없는 대기열 편
+            m2 = _episode(root, name="11-m2", slug="m2")
+            _record(m2, "M2", uploaded=_ago(500), sweep={"action": "flagged", "checked_at": "2026-11-13T00:00:00+00:00"})
+            m3 = _episode(root, name="12-m3", slug="m3")                        # 이미 다시 올림(대기열에서 끝)
+            _record(m3, "M3", uploaded=_ago(10), previous=[{"video_id": "X", "reason": "republish"}])
+            late = _episode(root, name="20-late", slug="late")
+            _record(late, "L", uploaded=_ago(500), sweep={"action": "flagged", "checked_at": "2026-11-13T02:00:00+00:00"})
+            early = _episode(root, name="21-early", slug="early")
+            _record(early, "E", uploaded=_ago(500), previous=[{"video_id": "E0", "reason": "republish"}],
+                    sweep={"action": "flagged", "checked_at": "2026-11-13T01:00:00+00:00"})   # 한 번 다시 올린 편도 다시
+            capped = _episode(root, name="22-cap", slug="cap")
+            _record(capped, "C", uploaded=_ago(500), previous=[{"video_id": "C1", "reason": "republish"}, {"video_id": "C0", "reason": "republish"}],
+                    sweep={"action": "flagged", "checked_at": "2026-11-12T00:00:00+00:00"})
+            refused = _episode(root, name="23-ref", slug="ref")
+            _record(refused, "R", uploaded=_ago(500), sweep={"action": "flagged", "checked_at": "2026-11-12T00:00:00+00:00",
+                                                              "privatize_refused": "조회수 60회 ≥ 50"})
+            ok = _episode(root, name="24-ok", slug="ok")
+            _record(ok, "K", uploaded=_ago(500), sweep={"action": "ok", "checked_at": "2026-11-12T00:00:00+00:00"})
+            rc = {"start": "2026-11-11", "min_views": 50, "auto_sweep": SWEEP, "queue": [_rel_repo(p) for p in (m1, m2, m3)]}
+            self.assertEqual(yu.republish_todo(rc, root), [m1, m2, early, late])
+            self.assertEqual(yu.republish_available(rc, dt.date(2026, 11, 13), root), (True, ""))
+
+    def test_second_republish_keeps_sweep_snapshot_and_stops_at_cap(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep = _episode(root, name="06-seasons", slug="seasons")
+            self._public(api, ep, "V1", 4, 60, previous=[{"video_id": "V0", "reason": "republish", "views_at_republish": 4,
+                                                          "privatized_at": "2026-11-12T21:00:00+00:00"}])
+            q = _republish_cfg(root, min_views=50, auto_sweep=SWEEP)
+            yu.sweep_low_views(cfg, q, root, dry_run=False, send=api, env=ENV, now=NOW)
+            snap = yu.read_record(ep).sweep
+            self.assertEqual(snap["action"], "flagged")
+            out = yu.republish_next(cfg, q, root, today=dt.date(2026, 11, 13), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+            self.assertEqual(out["results"][0]["status"], "uploaded", out)
+            rec = yu.read_record(ep)
+            self.assertEqual(rec.video_id, "VID123")
+            self.assertIsNone(rec.sweep)                                         # 새 판은 점검 기록 없이 시작
+            self.assertIsNone(rec.privatized_at)
+            prev = rec.previous[0]
+            self.assertEqual((prev["video_id"], prev["views_at_republish"], prev["reason"]), ("V1", 4, "republish"))
+            self.assertEqual(prev["sweep"], snap)                               # 옛 판의 점검 기록이 남는다(전후 비교)
+            self.assertEqual(prev["privatize_result"], "already-private")
+            self.assertEqual(rec.previous[1]["video_id"], "V0")
+            self.assertEqual(yu.republish_count(rec), 2)
+            self.assertEqual(yu.republish_todo(json.loads(q.read_text(encoding="utf-8")), root), [])
+            _set_uploaded_at(ep, NOW.isoformat(timespec="seconds"))
+            api.video("VID123", "public", 6, published=_iso(NOW + dt.timedelta(hours=1)))
+            n = len(api.updates)
+            third = yu.sweep_low_views(cfg, q, root, dry_run=False, send=api, env=ENV, now=NOW + dt.timedelta(hours=60))
+            self.assertEqual(third["items"][0]["result"], "exhausted")          # 두 번 다시 올렸으면 더 숨기지 않는다
+            self.assertEqual(len(api.updates), n)
+            self.assertEqual(api.status_map["VID123"][0], "public")
+
+    @mock.patch.object(yu, "RECENT_HOURS", 0)
+    def test_daily_sweeps_first_and_republishes_flagged_same_morning(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            old = _episode(root, name="07-precession", slug="precession")
+            _record(old, "OLD7", uploaded=dt.datetime(2026, 11, 1, tzinfo=dt.timezone.utc))
+            api.video("OLD7", "public", 9, published="2026-11-01T02:00:00Z")
+            new = _episode(root, name="32-radar", slug="radar")
+            _record(new, "NEW32", uploaded=dt.datetime(2026, 11, 2, tzinfo=dt.timezone.utc))   # 마지막 업로드 = 새 편
+            api.video("NEW32", "public", 5000, published="2026-11-02T02:00:00Z")
+            nxt = _episode(root, name="33-sar", slug="sar")
+            daily = root / "daily.json"
+            daily.write_text(json.dumps({"hold_if_private_within_days": 0, "order": [{"number": 33, "topic": "SAR"}]}), encoding="utf-8")
+            q = _republish_cfg(root, min_views=50, auto_sweep=SWEEP)
+            out = yu.daily_next(cfg, daily, q, root, today=dt.date(2026, 11, 13), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+            self.assertEqual((out["kind"], out["results"][0]["dir"], out["results"][0]["status"]), ("republish", yu._rel(old), "uploaded"))
+            self.assertLess(api.calls.index("full"), api.calls.index("start"))  # 점검이 업로드보다 먼저
+            self.assertEqual({it["video_id"]: it["result"] for it in out["sweep"]["items"]}, {"OLD7": "flagged", "NEW32": "ok"})
+            self.assertEqual(yu.read_record(old).previous[0]["sweep"]["action"], "flagged")
+            self.assertIsNone(yu.read_record(nxt))                               # 하루 한 편
+
+    @mock.patch.object(yu, "RECENT_HOURS", 0)
+    def test_sweep_failure_never_blocks_upload(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            new = _episode(root, name="32-radar", slug="radar")
+            daily = root / "daily.json"
+            daily.write_text(json.dumps({"hold_if_private_within_days": 0, "order": [{"number": 32, "topic": "레이더"}]}), encoding="utf-8")
+            q = _republish_cfg(root, min_views=50, auto_sweep=SWEEP)
+            with mock.patch.object(yu, "sweep_low_views", side_effect=RuntimeError("점검 고장")):
+                out = yu.daily_next(cfg, daily, q, root, today=dt.date(2026, 11, 13), dry_run=False, send=api, env=ENV,
+                                    sleep=lambda s: None)
+            self.assertTrue(out["ok"])
+            self.assertEqual((out["kind"], out["results"][0]["dir"], out["results"][0]["status"]), ("new", yu._rel(new), "uploaded"))
+            self.assertTrue(any(w.startswith(yu.SWEEP_WARN) and "점검 고장" in w for w in out["warnings"]), out["warnings"])
+
+            def broken(method: str, url: str, headers: dict, data: bytes | None) -> yu.Response:   # 점검 읽기만 500
+                if url.startswith(yu.VIDEOS_URL) and method == "GET" and "part=snippet" in url:
+                    return yu.Response(500, {}, b"{}")
+                return api(method, url, headers, data)
+            other = _episode(root, name="33-sar", slug="sar")
+            daily.write_text(json.dumps({"hold_if_private_within_days": 0, "order": [{"number": 33, "topic": "SAR"}]}), encoding="utf-8")
+            _set_uploaded_at(new, "2026-11-01T00:00:00+00:00")
+            out2 = yu.daily_next(cfg, daily, q, root, today=dt.date(2026, 11, 14), dry_run=False, send=broken, env=ENV,
+                                 sleep=lambda s: None)
+            self.assertEqual((out2["results"][0]["dir"], out2["results"][0]["status"]), (yu._rel(other), "uploaded"))
+            self.assertTrue(any(w.startswith(yu.SWEEP_WARN) for w in out2["warnings"]))
+
+    def test_dry_run_writes_nothing(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            low = _episode(root, name="06-a", slug="a")
+            self._public(api, low, "LA", 3, 60)
+            amb = _episode(root, name="07-b", slug="b")
+            _record(amb, "LB", uploaded=_ago(60))
+            api.video("LB", "public", 3, published=_iso(_ago(60)))
+            new = _episode(root, name="32-radar", slug="radar")
+            daily = root / "daily.json"
+            daily.write_text(json.dumps({"hold_if_private_within_days": 0, "order": [{"number": 32, "topic": "레이더"}]}), encoding="utf-8")
+            q = _republish_cfg(root, min_views=50, auto_sweep=SWEEP)
+            before = {p: p.read_bytes() for p in root.glob("*/youtube_upload.json")}
+            out = yu.daily_next(cfg, daily, q, root, today=dt.date(2026, 11, 13), dry_run=True, send=api, env=ENV)
+            self.assertEqual({it["video_id"]: (it["result"], it.get("privatize")) for it in out["sweep"]["items"]},
+                             {"LA": ("flagged", "dry-run"), "LB": ("young", None)})
+            self.assertIn("dry-run", out["sweep"]["note"])
+            self.assertEqual(api.updates, [])
+            self.assertNotIn("update", api.calls)
+            self.assertEqual({p: p.read_bytes() for p in root.glob("*/youtube_upload.json")}, before)
+            self.assertIsNone(yu.read_record(new))
+            n = len(api.calls)
+            nos = yu.sweep_low_views(cfg, q, root, dry_run=True, send=api, env={})
+            self.assertIn("비밀값이 없어", nos["note"])
+            self.assertEqual(len(api.calls), n)                                  # 비밀값이 없으면 네트워크도 없다
+
+    @mock.patch.object(yu, "RECENT_HOURS", 0)
+    def test_no_auto_sweep_means_no_sweep(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            low = _episode(root, name="06-a", slug="a")
+            self._public(api, low, "LA", 3, 60)
+            _episode(root, name="32-radar", slug="radar")
+            daily = root / "daily.json"
+            daily.write_text(json.dumps({"hold_if_private_within_days": 0, "order": [{"number": 32, "topic": "레이더"}]}), encoding="utf-8")
+            for extra in ({}, {"auto_sweep": {**SWEEP, "enabled": False}}):
+                q = _republish_cfg(root, min_views=50, **extra)
+                out = yu.daily_next(cfg, daily, q, root, today=dt.date(2026, 11, 13), dry_run=True, send=api, env=ENV)
+                self.assertNotIn("full", api.calls)
+                self.assertEqual(out.get("sweep", {}).get("items", []), [])
+                off = yu.sweep_low_views(cfg, q, root, dry_run=False, send=api, env=ENV, now=NOW)
+                self.assertIn("꺼짐", off["note"])
+            self.assertIsNone(yu.read_record(low).sweep)
+            self.assertEqual(api.updates, [])
+
+    def test_batches_of_fifty(self) -> None:
+        api = FakeApi()
+        ids = [f"V{i:03d}" for i in range(120)]
+        for v in ids:
+            api.video(v, "public", 1)
+        got = yu.video_details(api, "AT", ids)
+        self.assertEqual(len(got), 120)
+        self.assertEqual(api.calls, ["full", "full", "full"])
+        self.assertEqual(got["V007"], {"channel_id": "UC1", "published_at": "2026-11-01T00:00:00Z", "privacy": "public", "views": 1})
+
+    def test_repo_sweep_config_and_validation(self) -> None:
+        rc = json.loads((yu.REPO / "config" / "republish.json").read_text(encoding="utf-8"))
+        self.assertEqual(yu.sweep_settings(rc), {"min_age_hours": 48.0, "max_republish": 2, "min_views": 50})
+        self.assertIn("50회 미만", rc["_rules"])
+        self.assertIn("사용자 결정이 아니다", rc["_rules"])                    # max_republish 는 제작 세션 제안
+        self.assertIsNone(yu.sweep_settings({}))
+        self.assertIsNone(yu.sweep_settings({"auto_sweep": {"enabled": False}}))
+        for bad in ({"auto_sweep": []}, {"auto_sweep": {"enabled": "yes"}}, {"auto_sweep": {"enabled": True, "max_republish": -1}},
+                    {"auto_sweep": {"enabled": True, "min_age_hours": 0}}, {"auto_sweep": {"enabled": True, "bogus": 1}},
+                    {"auto_sweep": {"enabled": True}, "min_views": 0}, {"auto_sweep": {"enabled": True, "max_republish": True}}):
+            with self.assertRaises(yu.UploadError, msg=str(bad)):
+                yu.sweep_settings(bad)
+        # 저장소 기록 중 privatize_only·never_privatize 영상은 점검 대상이 아니다(01 중력파는 사용자 결정 전까지 다시 올리지 않음)
+        self.assertNotIn(yu.DEFAULT_FINALS / "01-gravitational-waves", yu.republish_todo(rc))
 
 
 @mock.patch.object(yu, "probe_video", lambda p: dict(PROBE_OK))
@@ -1191,6 +1614,16 @@ class CliTest(unittest.TestCase):
                 rc, res = self._main([str(ep), "--config", str(self._cfg_file(t))])
             self.assertEqual(rc, 1)
             self.assertIn("환경 변수 없음", res["results"][0]["error"])
+
+    def test_sweep_cli_dry_run_without_secrets(self) -> None:
+        """저장소 설정·기록 그대로 --sweep --dry-run: 비밀값이 없으면 읽지도 쓰지도 않고 그렇다고 말한다."""
+        before = {p: p.read_bytes() for p in yu.DEFAULT_FINALS.glob("*/youtube_upload.json")}
+        with mock.patch.dict("os.environ", {}, clear=True):
+            rc, res = self._main(["--sweep", "--dry-run"])
+        self.assertEqual(rc, 0, res)
+        self.assertEqual(res["kind"], "sweep")
+        self.assertIn("비밀값이 없어", res["note"])
+        self.assertEqual({p: p.read_bytes() for p in yu.DEFAULT_FINALS.glob("*/youtube_upload.json")}, before)
 
     def test_all_with_empty_finals_is_ok_but_no_args_is_error(self) -> None:
         with tempfile.TemporaryDirectory() as d:
