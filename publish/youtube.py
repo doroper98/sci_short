@@ -2,7 +2,7 @@
 
 videos.insert 의 privacyStatus 는 언제나 "private" 다. 이 도구는 어떤 설정으로도 public·unlisted 를 보내지 않는다.
 예약 공개(2026-11-13 사용자: "오 좋다 예약 공개. …", "아침에도 예약공개로 하자"): 아침·저녁 업로드(daily_next,
-youtube-daily)만 비공개로 올리면서 status.publishAt(예약 공개 시각, config/daily.json scheduled_publish — 아침 07:00 ·
+youtube-daily)만 비공개로 올리면서 status.publishAt(예약 공개 시각, config/daily.json scheduled_publish — 아침 06:00 ·
 저녁 17:00 KST, 실행이 늦으면 지금부터 min_lead_min 분 뒤)을 함께 보내고, 그 시각에 유튜브가 공개한다.
 publishAt 은 새 영상의 insert 본문에만 넣고 videos.update 에는 보내지 않는다. 병합 push(--auto)·폴더 지정·--all·
 --republish 업로드는 예약 없이 비공개로만 올리고, 공개는 사용자가 YouTube Studio 에서 직접 한다.
@@ -417,7 +417,8 @@ def validate_metadata(meta: Metadata) -> list[str]:
 
 # ───────────────────────────── 예약 공개 ─────────────────────────────
 # 2026-11-13 사용자: "오 좋다 예약 공개. …", "아침에도 예약공개로 하자". 저녁 17:00 은 사용자 결정("저녁편 등록 시점을 17시로"),
-# 아침 07:00·최소 여유 15분·daily_next 밖 업로드는 예약하지 않는 것은 제작 세션의 제안(config/daily.json _scheduled_publish).
+# 아침 06:00 도 사용자 결정("그럼 아침 공개는 06시에 공개로 바뀌게 해줘."). 최소 여유 15분·daily_next 밖 업로드는 예약하지 않는 것은
+# 제작 세션의 제안(config/daily.json _scheduled_publish).
 
 PUBLISH_AT_RE = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z")
 PUBLISH_AT_MIN_AHEAD_MIN = 5       # 업로드 직전 검사: 지금부터 이 분 수보다 가까우면 거절(지난 시각 = 즉시 공개가 되는 것을 막는다)

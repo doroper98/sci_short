@@ -1772,9 +1772,9 @@ class ScheduledPublishAtTest(unittest.TestCase):
 
     def test_repo_config_scheduled(self) -> None:
         sp = yu.load_daily()["scheduled_publish"]
-        # 2026-11-13 사용자: "아침에도 예약공개로 하자", "저녁편 등록 시점을 17시로 바꿀 수 있어?" — 아침 07:00 은 제작 세션의 제안
+        # 2026-11-13 사용자: "아침에도 예약공개로 하자", "저녁편 등록 시점을 17시로 바꿀 수 있어?" — 아침 06:00 은 "그럼 아침 공개는 06시에 공개로 바뀌게 해줘."
         self.assertIs(sp["enabled"], True)
-        self.assertEqual((sp["morning_kst"], sp["evening_kst"]), ("07:00", "17:00"))
+        self.assertEqual((sp["morning_kst"], sp["evening_kst"]), ("06:00", "17:00"))
         self.assertIn("아침에도 예약공개로 하자", yu.load_daily()["_scheduled_publish"])
         self.assertIn("제작 세션의 제안", yu.load_daily()["_scheduled_publish"])
 
