@@ -35,9 +35,12 @@
    "privacy_at_republish": "public",
    "republished_at": "2026-11-12T20:56:55+00:00",
    "reason": "republish",
-   "privatize_error": "옛 판 비공개 전환 실패 HTTP 403 insufficientPermissions Request had insufficient authentication scopes. — 토큰 범위 부족. docs/YOUTUBE_AUTO_UPLOAD.md '권한'대로 다시 받으십시오"
+   "privatized_at": "2026-11-13T09:44:02+00:00",
+   "privatize_result": "already-private"
   }
  ],
  "privatized_at": null,
+ "sweep": null,
+ "publish_at": null,
  "schema_version": 1
 }
