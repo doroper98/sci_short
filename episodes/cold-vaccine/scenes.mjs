@@ -556,7 +556,7 @@ function shieldIcon(c, x, y, s, col, a = 1) {
 // Header titles (sequential swaps) and the poster title
 // =====================================================================================================
 export const titles = {
-  hook: ['오늘의 주제', '감기 주사는 왜 없을까'],
+  hook: ['감기 주사', '왜 아직 없을까'],   // kicker = the poster keyword (2026-11-13)
   origin: ['기원 · 이름', '감기와 고뿔'],
   essence: ['본질 · 백신', '겉모양을 미리 보여 주기'],
   types: ['메커니즘 · 범인의 수', '200가지가 넘는 바이러스'],
@@ -581,7 +581,7 @@ export function overlays(stage, t, ctx) {
   if (id === 'hook') {
     if (t < MORPH[1]) { posterTitle(stage, t); return; }                // frame 0 = thumbnail: no progress bar yet
     const ho = fadeOut(t, ctx.scene.end - 0.3, 0.28);
-    head(stage, '오늘의 주제', '감기 주사는 왜 없을까', fadeIn(t, MORPH[1] - 0.05, 0.4) * ho, ho, '범인이 200가지', ho, 'rgba(0,0,0,0.95)');
+    head(stage, POSTER_Q.k, POSTER_Q.q, fadeIn(t, MORPH[1] - 0.05, 0.4) * ho, ho, '', ho, 'rgba(0,0,0,0.95)');
     withAlpha(stage.ctx, fadeIn(t, MORPH[1], 0.4), () => progressBar(stage, t, ctx.tl.duration)); return;
   }
   if (id === 'close') {
@@ -596,14 +596,16 @@ export function overlays(stage, t, ctx) {
   head(stage, cur[1], cur[2], k > 0 && prev[1] !== cur[1] ? a * inn : a, a * inn);
   progressBar(stage, t, ctx.tl.duration);
 }
-const POSTER_Q = {y: 1010, y2: 1186, q: '감기 주사는 왜 없을까', ans: '범인이 200가지'};
-let QSIZE = 0, ASIZE = 0;
-/** t = 0 poster text (question + huge answer in the central square) shrinking into the hook header; also the close bookend */
+// 2026-11-13 (owner: "주제어가 딱 보여야 해"): white question on top, the topic keyword (k) below as the biggest text, no answer.
+// The question shrinks into the header title; the keyword shrinks a little in place and fades, and the header kicker shows it.
+const POSTER_Q = {y: 1010, y2: 1180, q: '왜 아직 없을까', k: '감기 주사'};
+let QSIZE = 0, KSIZE = 0;
+/** t = 0 poster text (question + huge topic keyword in the central square) shrinking into the hook header; also the close bookend */
 function posterTitle(stage, t, q = easeInOut((t - MORPH[0]) / (MORPH[1] - MORPH[0])), a = 1) {
   const c = stage.ctx, T = stage.theme;
   const TR = -0.03, fit = (s, w, max) => Math.min(max, max * w / stage.measure(s, {role: 'display', weight: 700, size: max, tracking: TR * max}));
-  QSIZE ||= fit(POSTER_Q.q + '?', 770, 96); ASIZE ||= fit(POSTER_Q.ans, 796, 200);
-  const y1 = lerp(POSTER_Q.y, 228, q), s1 = lerp(QSIZE, 54, q), y2 = lerp(POSTER_Q.y2, 290, q), s2 = lerp(ASIZE, 32, q), tr = lerp(TR, -0.011, q);
+  QSIZE ||= fit(POSTER_Q.q + '?', 770, 96); KSIZE ||= fit(POSTER_Q.k, 796, 210);
+  const y1 = lerp(POSTER_Q.y, 228, q), s1 = lerp(QSIZE, 54, q), s2 = KSIZE * lerp(1, 0.7, q), tr = lerp(TR, -0.011, q), ak = 1 - smooth(q / 0.6);
   if (q < 1) withAlpha(c, (1 - q) * a, () => {
     const g2 = c.createLinearGradient(0, 880, 0, 1340); g2.addColorStop(0, 'rgba(0,8,13,0)'); g2.addColorStop(0.22, 'rgba(0,8,13,0.74)'); g2.addColorStop(0.82, 'rgba(0,8,13,0.74)'); g2.addColorStop(1, 'rgba(0,8,13,0)');
     c.fillStyle = g2; c.fillRect(0, 880, 1080, 460);
@@ -614,7 +616,7 @@ function posterTitle(stage, t, q = easeInOut((t - MORPH[0]) / (MORPH[1] - MORPH[
     const x0 = 540 - (wb + wq * kq) / 2;
     stage.text(POSTER_Q.q, x0, y1, {role: 'display', weight: 700, size: s1, color: T.ink, shadow: sh, shadowBlur: 20, tracking: tr * s1});
     if (kq > 0) stage.text('?', x0 + wb, y1, {role: 'display', weight: 700, size: s1, color: T.ink, alpha: kq, shadow: sh, shadowBlur: 20, tracking: tr * s1});
-    stage.text(POSTER_Q.ans, 540, y2, {role: 'display', weight: 700, size: s2, color: PAL.answer, align: 'center', tracking: tr * s2, shadow: q < 0.5 ? 'rgba(0,0,0,0.9)' : null, shadowBlur: 26});
+    if (ak > 0) stage.text(POSTER_Q.k, 540, POSTER_Q.y2, {role: 'display', weight: 700, size: s2, color: PAL.answer, align: 'center', alpha: ak, tracking: TR * s2, shadow: 'rgba(0,0,0,0.9)', shadowBlur: 26});
   });
 }
 /** the poster picture: the crowd of cold viruses and the one syringe (drift is slow; t = 0 is the thumbnail) */

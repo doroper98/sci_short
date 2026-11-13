@@ -278,21 +278,23 @@ function posterPicture(stage, t, a = 1) {
     focusStar(c, F[0], F[1], 26, 1);
   });
 }
-const POSTER_Q = {y: 560, y2: 700, q: '망원경의 핵심은 확대?', ans: '아니, 빛 모으기'};
-let QSIZE = 0, ASIZE = 0;
+// 2026-11-13 (owner: "주제어가 딱 보여야 해"): white question on top, the topic keyword (k) below as the biggest text, no answer.
+// The question shrinks into the header title; the keyword shrinks a little in place and fades, and the header kicker shows it.
+const POSTER_Q = {y: 492, y2: 664, q: '핵심은 확대일까?', k: '망원경'};
+let QSIZE = 0, KSIZE = 0;
 function posterTitle(stage, t, q = easeInOut((t - MORPH[0]) / (MORPH[1] - MORPH[0])), a = 1) {
   const c = stage.ctx, T = stage.theme;
   const TR = -0.03, fit = (s, w, max) => Math.min(max, max * w / stage.measure(s, {role: 'display', weight: 700, size: max, tracking: TR * max}));
-  QSIZE ||= fit(POSTER_Q.q, 800, 92); ASIZE ||= fit(POSTER_Q.ans, 800, 170);
-  const y1 = lerp(POSTER_Q.y, 228, q), s1 = lerp(QSIZE, 54, q), y2 = lerp(POSTER_Q.y2, 290, q), s2 = lerp(ASIZE, 32, q), tr = lerp(TR, -0.011, q);
+  QSIZE ||= fit(POSTER_Q.q, 800, 92); KSIZE ||= fit(POSTER_Q.k, 800, 200);
+  const y1 = lerp(POSTER_Q.y, 228, q), s1 = lerp(QSIZE, 54, q), s2 = KSIZE * lerp(1, 0.7, q), tr = lerp(TR, -0.011, q), ak = 1 - smooth(q / 0.6);
   if (q < 1) withAlpha(c, (1 - q) * a, () => {
-    const g2 = c.createLinearGradient(0, 440, 0, 820); g2.addColorStop(0, 'rgba(3,9,12,0)'); g2.addColorStop(0.22, 'rgba(3,9,12,0.72)'); g2.addColorStop(0.8, 'rgba(3,9,12,0.72)'); g2.addColorStop(1, 'rgba(3,9,12,0)');
-    c.fillStyle = g2; c.fillRect(0, 440, 1080, 380);
+    const g2 = c.createLinearGradient(0, 380, 0, 800); g2.addColorStop(0, 'rgba(3,9,12,0)'); g2.addColorStop(0.22, 'rgba(3,9,12,0.72)'); g2.addColorStop(0.8, 'rgba(3,9,12,0.72)'); g2.addColorStop(1, 'rgba(3,9,12,0)');
+    c.fillStyle = g2; c.fillRect(0, 380, 1080, 420);
   });
   withAlpha(c, a, () => {
     const sh = q < 0.5 ? 'rgba(0,0,0,0.9)' : null;
     stage.text(POSTER_Q.q, 540, y1, {role: 'display', weight: 700, size: s1, color: T.ink, align: 'center', shadow: sh, shadowBlur: 20, tracking: tr * s1});
-    stage.text(POSTER_Q.ans, 540, y2, {role: 'display', weight: 700, size: s2, color: PAL.answer, align: 'center', tracking: tr * s2, shadow: sh, shadowBlur: 26});
+    if (ak > 0) stage.text(POSTER_Q.k, 540, POSTER_Q.y2, {role: 'display', weight: 700, size: s2, color: PAL.answer, align: 'center', alpha: ak, tracking: TR * s2, shadow: 'rgba(0,0,0,0.9)', shadowBlur: 26});
   });
 }
 /** three small cross-sections: lens (refraction), mirror (reflection), dish (radio). k = [aLens, aMirror, aDish] */
@@ -403,7 +405,7 @@ function starImage(stage, key, cx, cy, R, {D = 1, m = 1, kpx = 50, sep = STAR_SE
 // Titles and overlays
 // =====================================================================================================
 export const titles = {
-  hook: ['오늘의 주제', POSTER_Q.q],
+  hook: [POSTER_Q.k, POSTER_Q.q],   // kicker = the poster keyword (2026-11-13)
   origin: ['기원 · 이름', '멀리 바라보는 거울'],
   essence: ['본질 · 빛을 모으는 깔때기', '넓은 입구로 모아 한 점에'],
   refractor: ['굴절망원경 · 렌즈', '빛을 꺾어 모은다'],
@@ -432,9 +434,9 @@ export function overlays(stage, t, ctx) {
   let k = 0; while (k + 1 < L.length && t >= L[k + 1][0]) k++;
   const out = k > 0 ? smooth((t - L[k][0]) / 0.3) : 1, inn = k > 0 ? smooth((t - L[k][0] - 0.3) / 0.35) : 1, prev = L[Math.max(0, k - 1)], cur = L[k];
   if (id === 'hook' && k === 0) {
-    const aK = fadeIn(t, MORPH[1] - 0.05, 0.4) * a; head(stage, cur[1], cur[2], aK, a, POSTER_Q.ans, a);
+    const aK = fadeIn(t, MORPH[1] - 0.05, 0.4) * a; head(stage, cur[1], cur[2], aK, a);
   } else {
-    if (k > 0 && out < 1) head(stage, prev[1] === cur[1] ? '' : prev[1], prev[2], a * (1 - out), a * (1 - out), id === 'hook' && k === 1 ? POSTER_Q.ans : '', a * (1 - out));
+    if (k > 0 && out < 1) head(stage, prev[1] === cur[1] ? '' : prev[1], prev[2], a * (1 - out), a * (1 - out));
     head(stage, cur[1], cur[2], k > 0 && prev[1] !== cur[1] ? a * inn : a, a * inn);
   }
   withAlpha(stage.ctx, id === 'hook' ? fadeIn(t, MORPH[1], 0.4) : 1, () => progressBar(stage, t, ctx.tl.duration));

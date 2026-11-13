@@ -1,7 +1,7 @@
 {
   "file": "hydrogen-bomb.mp4",
-  "bytes": 15122460,
-  "sha256": "08f6a92fde09cd67942e2b0b47f73e1d0839aa0a99a7989410d8551dea7c4766",
+  "bytes": 15040745,
+  "sha256": "065796114ad51d0093ba11ed069b37a553ff3fca7441998cdaf06284c4ed0543",
   "created": "2026-11-07T00:59:11+00:00",
   "title": "수소폭탄은 왜 더 강할까 — 핵융합",
   "timeline_duration": 163.6,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2512896,
         "duration": "163.600000",
-        "bit_rate": "562049",
+        "bit_rate": "558054",
         "bits_per_raw_sample": "8",
         "nb_frames": "4908",
         "extradata_size": 50,
@@ -126,15 +126,15 @@
       }
     ],
     "format": {
-      "filename": "/home/user/sci_short/outputs/hydrogen-bomb/final/hydrogen-bomb.mp4",
+      "filename": "finals/21-hydrogen-bomb/hydrogen-bomb.mp4",
       "nb_streams": 2,
       "nb_programs": 0,
       "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "163.600000",
-      "size": "15122460",
-      "bit_rate": "739484",
+      "size": "15040745",
+      "bit_rate": "735488",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -183,5 +183,14 @@
     "direct_listening": "not performed",
     "physical_phone_playback": "not performed",
     "visual_review_of_stills": "not recorded by finish.py"
+  },
+  "picture_rerender": {
+    "date": "2026-11-13",
+    "reason": "첫 프레임(과 끝에 돌아오는 포스터)의 글을 '흰 질문 위 + 큰 주제어 아래, 답 없음'으로 바꿈(2026-11-13 사용자 지시)",
+    "method": "episodes/hydrogen-bomb/run.sh render (finals timeline.json 그대로) → 새 visual.mp4의 영상 + 이전 최종본의 오디오를 스트림 복사(오디오 재인코딩 없음)",
+    "previous_sha256": "08f6a92fde09cd67942e2b0b47f73e1d0839aa0a99a7989410d8551dea7c4766",
+    "audio_stream_md5_unchanged": "cd4d94f9c1c8c6350af31c87fcdbae82",
+    "revalidated": "pipeline/validate.py(새 mp4, finals srt·timeline, 새 스틸): RESULT: PASS  (19/19 not failing); 전편 디코딩 통과; 이전 판과 프레임별 PSNR 비교로 첫 장면(머리글 포함)과 끝 포스터 구간만 달라짐을 확인",
+    "not_rerun": "finish.py의 loudnorm 측정(audio_mastering_input, encoded_audio)은 다시 재지 않음 — 오디오 스트림이 바이트 단위로 같아 이전 값이 그대로 유효"
   }
 }

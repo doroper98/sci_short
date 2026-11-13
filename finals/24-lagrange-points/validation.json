@@ -1,7 +1,7 @@
 {
   "file": "lagrange-points.mp4",
-  "bytes": 19128175,
-  "sha256": "8f25c080840469fccf11f7dc90bf204508664f3492cc8ec4ed6527cfc1645c29",
+  "bytes": 19010043,
+  "sha256": "11c6c038eab24586a3d0266ef106d354a89465f3ad701bdc189b2896210b11cb",
   "created": "2026-11-07T09:40:05+00:00",
   "title": "라그랑주 점 — 우주의 주차 자리",
   "timeline_duration": 158.455,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2434048,
         "duration": "158.466667",
-        "bit_rate": "792001",
+        "bit_rate": "786035",
         "bits_per_raw_sample": "8",
         "nb_frames": "4754",
         "extradata_size": 50,
@@ -126,15 +126,15 @@
       }
     ],
     "format": {
-      "filename": "/home/user/sci_short/outputs/lagrange-points/final/lagrange-points.mp4",
+      "filename": "finals/24-lagrange-points/lagrange-points.mp4",
       "nb_streams": 2,
       "nb_programs": 0,
       "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "158.466667",
-      "size": "19128175",
-      "bit_rate": "965663",
+      "size": "19010043",
+      "bit_rate": "959699",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -183,5 +183,14 @@
     "direct_listening": "not performed",
     "physical_phone_playback": "not performed",
     "visual_review_of_stills": "not recorded by finish.py"
+  },
+  "picture_rerender": {
+    "date": "2026-11-13",
+    "reason": "첫 프레임(과 끝에 돌아오는 포스터)의 글을 '흰 질문 위 + 큰 주제어 아래, 답 없음'으로 바꿈(2026-11-13 사용자 지시)",
+    "method": "episodes/lagrange-points/run.sh render (finals timeline.json 그대로) → 새 visual.mp4의 영상 + 이전 최종본의 오디오를 스트림 복사(오디오 재인코딩 없음)",
+    "previous_sha256": "8f25c080840469fccf11f7dc90bf204508664f3492cc8ec4ed6527cfc1645c29",
+    "audio_stream_md5_unchanged": "88ca56704e08539ec583f3d9efeb8988",
+    "revalidated": "pipeline/validate.py(새 mp4, finals srt·timeline, 새 스틸): RESULT: PASS  (19/19 not failing); 전편 디코딩 통과; 이전 판과 프레임별 PSNR 비교로 첫 장면(머리글 포함)과 끝 포스터 구간만 달라짐을 확인",
+    "not_rerun": "finish.py의 loudnorm 측정(audio_mastering_input, encoded_audio)은 다시 재지 않음 — 오디오 스트림이 바이트 단위로 같아 이전 값이 그대로 유효"
   }
 }

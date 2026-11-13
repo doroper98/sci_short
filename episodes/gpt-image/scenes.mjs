@@ -56,13 +56,46 @@ const wrap = fn => (stage, t, p, ctx) => { checkSoundTable(ctx); const P = plan(
 export const scenes = {};
 for (const [, m] of MODS) for (const [id, fn] of Object.entries(m.scenes || {})) scenes[id] = wrap(fn);
 
+// -----------------------------------------------------------------------------------------------------
+// poster title, local variant of kit.posterTitle (2026-11-13 첫 프레임 = 흰 물음 위, 주제어 크게): the warm line is the
+// topic keyword, drawn up to POSTER.AS px (a short keyword like "GPT" may be far bigger than the kit's 150 px cap).
+// q = 0 poster, q = 1 header title (the question lines slide onto one line at 228, 56 px; the keyword shrinks toward
+// 292 and fades, so it always stays below the question and never crosses it).
+// -----------------------------------------------------------------------------------------------------
+const PSIZE = new WeakMap();
+function posterTitle(stage, POSTER, q, a = 1) {
+  const c = stage.ctx, Q = [].concat(POSTER.q), fnt = s => ({role: 'display', weight: 700, size: s, tracking: -0.03 * s});
+  const fit = (s, w, max) => Math.min(max, max * w / stage.measure(s, fnt(max)));
+  let S = PSIZE.get(POSTER);
+  if (!S) { S = {QS: Math.min(...Q.map(s => fit(s, POSTER.qw ?? 880, 104))), AS: fit(POSTER.a, 860, POSTER.AS ?? 150)}; PSIZE.set(POSTER, S); }
+  const {QS, AS} = S, LH = QS * 1.14, tr = K.lerp(-0.03, -0.011, q), s1 = K.lerp(QS, 56, q);
+  const wf = Q.map(s => stage.measure(s, {role: 'display', weight: 700, size: 56, tracking: -0.011 * 56})), sp = 56 * 0.28;
+  let xh = 540 - (wf.reduce((x, y) => x + y, 0) + sp * (Q.length - 1)) / 2;
+  const hx = wf.map(w => { const x = xh + w / 2; xh += w + sp; return x; });
+  const yTop = POSTER.y - QS * 0.75, yBot = POSTER.y2 + AS * 0.55;
+  if (q < 1) K.withAlpha(c, (1 - q) * a, () => { const g = c.createLinearGradient(0, yTop - 60, 0, yBot + 60); g.addColorStop(0, 'rgba(0,10,16,0)'); g.addColorStop(0.25, 'rgba(0,10,16,0.55)'); g.addColorStop(0.75, 'rgba(0,10,16,0.55)'); g.addColorStop(1, 'rgba(0,10,16,0)'); c.fillStyle = g; c.fillRect(0, yTop - 60, K.W, yBot - yTop + 120); });
+  K.withAlpha(c, a, () => {
+    const sh = 'rgba(0,0,0,0.9)';
+    const qx = K.smooth(q / 0.45), qy = K.smooth((q - 0.4) / 0.6), yc = K.lerp(POSTER.y + (Q.length - 1) * LH / 2, 228, q), k = s1 / 56;
+    Q.forEach((s, i) => stage.text(s, 540 + (hx[i] - 540) * k * qx, yc + (i - (Q.length - 1) / 2) * LH * (s1 / QS) * (1 - qy), {role: 'display', weight: 700, size: s1, color: '#FFFFFF', align: 'center', shadow: sh, shadowBlur: 22, tracking: tr * s1}));
+    // keyword + series number ("GPT #1"): the number at 0.6× the keyword's size, same baseline, a clear gap
+    const sa = K.lerp(AS, 34, q), sn = sa * 0.6, gap = sa * 0.2, yb = K.lerp(POSTER.y2, 292, q) + 0.36 * sa;
+    const ka = {role: 'display', weight: 700, size: sa, tracking: tr * sa}, na = {role: 'display', weight: 700, size: sn, tracking: tr * sn};
+    const wa = stage.measure(POSTER.a, ka), wn = POSTER.n ? stage.measure(POSTER.n, na) : 0, x0 = 540 - (wa + (POSTER.n ? gap + wn : 0)) / 2;
+    K.withAlpha(c, 1 - K.smooth(q / 0.6), () => {
+      stage.text(POSTER.a, x0, yb, {...ka, color: K.PAL.warm, align: 'left', baseline: 'alphabetic', shadow: sh, shadowBlur: 28});
+      if (POSTER.n) stage.text(POSTER.n, x0 + wa + gap, yb, {...na, color: K.PAL.warm, align: 'left', baseline: 'alphabetic', shadow: sh, shadowBlur: 22});
+    });
+  });
+}
+
 // =====================================================================================================
 // OVERLAYS — header, poster (0 s and the last 1.4 s), caption band, progress bar
 // =====================================================================================================
 export function overlays(stage, t, ctx) {
   const id = ctx.scene.id, P = plan(ctx.tl), sc = ctx.scene;
-  if (id === 'hook' && t < P.MORPH[1]) { K.posterTitle(stage, POSTER, K.easeInOut((t - P.MORPH[0]) / (P.MORPH[1] - P.MORPH[0]))); return; }
-  if (t >= P.poster) { K.posterTitle(stage, POSTER, 1 - K.easeInOut((t - P.poster) / 0.8)); return; }
+  if (id === 'hook' && t < P.MORPH[1]) { posterTitle(stage, POSTER, K.easeInOut((t - P.MORPH[0]) / (P.MORPH[1] - P.MORPH[0]))); return; }
+  if (t >= P.poster) { posterTitle(stage, POSTER, 1 - K.easeInOut((t - P.poster) / 0.8)); return; }
   K.captionBand(stage.ctx);
   const first = sc.start <= 1e-6, a = (first ? 1 : K.smooth((t - sc.start) / 0.3)) * K.fadeOut(t, P.poster - 0.3, 0.3);
   const L = titleList(id, P);

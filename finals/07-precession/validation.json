@@ -1,7 +1,7 @@
 {
   "file": "precession.mp4",
-  "bytes": 30247409,
-  "sha256": "37cd0ade8ab3ba0e973946fc9e14df1036377064e8310b10a264f5d43b214300",
+  "bytes": 30255109,
+  "sha256": "d035c6ecdaa1c7d402a7f99b799c6d53863077f7da46dcd6cc06610dea2bb85e",
   "created": "2026-11-07T01:34:34+00:00",
   "title": "지구 자전축의 느린 원 — 세차운동과 장동",
   "timeline_duration": 173.926,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2671616,
         "duration": "173.933333",
-        "bit_rate": "1210550",
+        "bit_rate": "1210903",
         "bits_per_raw_sample": "8",
         "nb_frames": "5218",
         "extradata_size": 50,
@@ -69,8 +69,7 @@
         "tags": {
           "language": "und",
           "handler_name": "VideoHandler",
-          "vendor_id": "[0][0][0][0]",
-          "encoder": "Lavc60.31.102 libx264"
+          "vendor_id": "[0][0][0][0]"
         }
       },
       {
@@ -126,15 +125,15 @@
       }
     ],
     "format": {
-      "filename": "/home/user/sci_short/outputs/precession/final/precession.mp4",
+      "filename": "finals/07-precession/precession.mp4",
       "nb_streams": 2,
       "nb_programs": 0,
       "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "173.933333",
-      "size": "30247409",
-      "bit_rate": "1391218",
+      "size": "30255109",
+      "bit_rate": "1391572",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -183,5 +182,15 @@
     "direct_listening": "not performed",
     "physical_phone_playback": "not performed",
     "visual_review_of_stills": "not recorded by finish.py"
+  },
+  "picture_rerender": {
+    "date": "2026-11-13",
+    "reason": "첫 프레임(과 끝에 돌아오는 포스터)의 글을 \"위에 흰 물음, 아래에 가장 큰 주제어\"로 바꿈(사용자 결정 2026-11-13): \"북극성은 영원할까?\" + \"세차운동\", 답은 쓰지 않음",
+    "method": "episodes/precession/run.sh render · stills (finals timeline.json 그대로) → 새 visual.mp4의 영상 + 이전 최종본의 오디오를 스트림 복사(-map 0:v:0 -map 1:a:0 -c copy -movflags +faststart, 언어·제목 메타데이터 유지; 오디오 재인코딩 없음)",
+    "previous_sha256": "37cd0ade8ab3ba0e973946fc9e14df1036377064e8310b10a264f5d43b214300",
+    "audio_stream_md5_unchanged": "2a191a34136d5f9c8405b15ef4a61dac",
+    "rechecked": "전편 디코딩 오류 none; 1080×1920 30fps 영상 1 + 오디오 1; 길이 173.933 → 173.933 s; 오디오 md5 이전·새 파일 같음; 이전 파일과 프레임별 PSNR 비교(5218프레임): 다른 구간 0.0–8.33 s (min PSNR 21.4 dB); 162.77–173.93 s (min PSNR 21.4 dB); 중간 세 시각 52.2 s identical, 87.0 s identical, 121.8 s identical; pipeline/validate.py RESULT: PASS  (19/19 not failing)(새 mp4, finals srt·timeline, 새 스틸); 0초·마지막 프레임 직접 확인",
+    "not_rerun": "finish.py의 loudnorm 측정(audio_mastering_input, encoded_audio)은 다시 재지 않음 — 오디오 스트림이 바이트 단위로 같아 이전 값이 그대로 유효",
+    "diff_note": "1.7–8.33 s 는 포스터와 같은 첫 GOP(250프레임) 안 인코더 차이(PSNR ≥ 50 dB). 포스터는 0–1.7 s, 162.7 s부터 끝. 크기: 흰 물음 86 px, 주제어 196 px."
   }
 }

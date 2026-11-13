@@ -331,7 +331,7 @@ function forceRows(stage, x0, y0, vals, a, o = {}) {
 // Header titles and the poster title
 // =====================================================================================================
 export const titles = {
-  hook: ['오늘의 주제', '우주의 주차 자리는?'],
+  hook: ['라그랑주 점', '우주의 주차 자리는?'],   // kicker = the poster keyword (2026-11-13)
   origin: ['기원 · 1767년과 1772년', '오일러와 라그랑주'],
   essence: ['본질 · 1년을 6초로', '가까우면 빨리, 멀면 느리게'],
   l1l2: ['메커니즘 · L1 · 지구 질량 과장', '지구가 반대쪽으로 당긴다'],
@@ -365,23 +365,25 @@ export function overlays(stage, t, ctx) {
   let k = 0; while (k + 1 < L.length && t >= L[k + 1][0]) k++;
   const out = k > 0 ? smooth((t - L[k][0]) / 0.3) : 1, inn = k > 0 ? smooth((t - L[k][0] - 0.3) / 0.35) : 1, prev = L[Math.max(0, k - 1)], cur = L[k];
   if (id === 'hook' && k === 0) {
-    const aK = fadeIn(t, MORPH[1] - 0.05, 0.4) * a; head(stage, cur[1], cur[2], aK, a, '라그랑주 점 5곳', a);
+    const aK = fadeIn(t, MORPH[1] - 0.05, 0.4) * a; head(stage, cur[1], cur[2], aK, a);
   } else {
-    if (k > 0 && out < 1) head(stage, prev[1] === cur[1] ? '' : prev[1], prev[2], a * (1 - out), a * (1 - out), id === 'hook' && k === 1 ? '라그랑주 점 5곳' : '', a * (1 - out));
+    if (k > 0 && out < 1) head(stage, prev[1] === cur[1] ? '' : prev[1], prev[2], a * (1 - out), a * (1 - out));
     head(stage, cur[1], cur[2], k > 0 && prev[1] !== cur[1] ? a * inn : a, a * inn);
   }
   withAlpha(stage.ctx, id === 'hook' ? fadeIn(t, MORPH[1], 0.4) : 1, () => progressBar(stage, t, ctx.tl.duration));
 }
-const POSTER_Q = {y: 1170, y2: 1308, q: '우주의 주차 자리는', ans: '라그랑주 점 5곳'};
-let QSIZE = 0, ASIZE = 0;
+// 2026-11-13 (owner: "주제어가 딱 보여야 해"): white question on top, the topic keyword (k) below as the biggest text, no answer.
+// The question shrinks into the header title; the keyword shrinks a little in place and fades, and the header kicker shows it.
+const POSTER_Q = {y: 1166, y2: 1326, q: '우주의 주차 자리는', k: '라그랑주 점'};
+let QSIZE = 0, KSIZE = 0;
 function posterTitle(stage, t, q = easeInOut((t - MORPH[0]) / (MORPH[1] - MORPH[0])), a = 1) {
   const c = stage.ctx, T = stage.theme;
   const TR = -0.03, fit = (s, w, max) => Math.min(max, max * w / stage.measure(s, {role: 'display', weight: 700, size: max, tracking: TR * max}));
-  QSIZE ||= fit(POSTER_Q.q + '?', 760, 92); ASIZE ||= fit(POSTER_Q.ans, 820, 170);
-  const y1 = lerp(POSTER_Q.y, 228, q), s1 = lerp(QSIZE, 54, q), y2 = lerp(POSTER_Q.y2, 290, q), s2 = lerp(ASIZE, 34, q), tr = lerp(TR, -0.011, q);
+  QSIZE ||= fit(POSTER_Q.q + '?', 760, 78); KSIZE ||= fit(POSTER_Q.k, 820, 200);
+  const y1 = lerp(POSTER_Q.y, 228, q), s1 = lerp(QSIZE, 54, q), s2 = KSIZE * lerp(1, 0.7, q), tr = lerp(TR, -0.011, q), ak = 1 - smooth(q / 0.6);
   if (q < 1) withAlpha(c, (1 - q) * a, () => {
-    const g2 = c.createLinearGradient(0, 1080, 0, 1420); g2.addColorStop(0, 'rgba(0,10,16,0)'); g2.addColorStop(0.28, 'rgba(0,10,16,0.62)'); g2.addColorStop(0.78, 'rgba(0,10,16,0.62)'); g2.addColorStop(1, 'rgba(0,10,16,0)');
-    c.fillStyle = g2; c.fillRect(0, 1080, 1080, 340);
+    const g2 = c.createLinearGradient(0, 1080, 0, 1450); g2.addColorStop(0, 'rgba(0,10,16,0)'); g2.addColorStop(0.26, 'rgba(0,10,16,0.62)'); g2.addColorStop(0.8, 'rgba(0,10,16,0.62)'); g2.addColorStop(1, 'rgba(0,10,16,0)');
+    c.fillStyle = g2; c.fillRect(0, 1080, 1080, 370);
   });
   withAlpha(c, a, () => {
     const sh = q < 0.5 ? 'rgba(0,0,0,0.9)' : null;
@@ -389,7 +391,7 @@ function posterTitle(stage, t, q = easeInOut((t - MORPH[0]) / (MORPH[1] - MORPH[
     const x0 = 540 - (wb + wq) / 2;
     stage.text(POSTER_Q.q, x0, y1, {role: 'display', weight: 700, size: s1, color: T.ink, shadow: sh, shadowBlur: 20, tracking: tr * s1});
     stage.text('?', x0 + wb, y1, {role: 'display', weight: 700, size: s1, color: T.ink, shadow: sh, shadowBlur: 20, tracking: tr * s1});
-    stage.text(POSTER_Q.ans, 540, y2, {role: 'display', weight: 700, size: s2, color: T.accent, align: 'center', tracking: tr * s2, shadow: q < 0.5 ? 'rgba(0,0,0,0.9)' : null, shadowBlur: 26});
+    if (ak > 0) stage.text(POSTER_Q.k, 540, POSTER_Q.y2, {role: 'display', weight: 700, size: s2, color: T.accent, align: 'center', alpha: ak, tracking: TR * s2, shadow: 'rgba(0,0,0,0.9)', shadowBlur: 26});
   });
 }
 

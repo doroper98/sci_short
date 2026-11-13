@@ -252,7 +252,7 @@ export const scenes = {hook: hookScene, origin: originScene, essence: essenceSce
 // =====================================================================================================
 export const titles = {
   hook: P => { const at = s => P.tl.at(s) - 0.5;
-    return [[-Infinity, '실제보다 느리게', 'GPT는 대답을 어떻게 쓸까?'], [at('s02'), '화면에서 보이는 것', '대답은 앞에서부터 나타난다'], [at('s03'), '실제보다 느리게', '한 조각씩 만들고 있다']]; },
+    return [[-Infinity, 'GPT #1 · 실제보다 느리게', '대답을 어떻게 써 내려갈까?'], [at('s02'), '화면에서 보이는 것', '대답은 앞에서부터 나타난다'], [at('s03'), '실제보다 느리게', '한 조각씩 만들고 있다']]; },
   origin: P => [[-Infinity, '2018', 'GPT의 첫 글자'], [P.origin.back, 'G = Generative', '꺼내지 않고 새로 만든다']],
   essence: P => [[-Infinity, '본질', '읽고, 다음 조각 하나를 고른다']],
 };

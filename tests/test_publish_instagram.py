@@ -376,6 +376,67 @@ class PostFlowTest(unittest.TestCase):
             res = ig.process_episode(ep, _cfg(), dry_run=False, send=FakeGraph(), env=ENV, sleep=lambda s: None, allow_repost=True)
             self.assertEqual(res["status"], "posted")
 
+    def _posted_then_changed(self, root: Path) -> tuple[Path, bytes]:
+        ep = _episode(root)
+        ig.process_episode(ep, _cfg(), dry_run=False, send=FakeGraph(), env=ENV, sleep=lambda s: None)
+        (ep / "test-episode.mp4").write_bytes(b"\1" * 2048)
+        return ep, (ep / ig.RECORD_NAME).read_bytes()
+
+    def _republish_cfg(self, root: Path, *queue: Path) -> Path:
+        q = root / "republish.json"
+        q.write_text(json.dumps({"start": "2026-11-11", "min_views": 50,
+                                 "queue": [p.relative_to(yu.REPO).as_posix() for p in queue]}), encoding="utf-8")
+        return q
+
+    def _youtube_record(self, ep: Path, md5: str, previous: list) -> None:
+        yu.write_record(ep, yu.Record(video_id="NEW1", url="u", studio_url="s", uploaded_at="2026-11-13T00:00:00+00:00",
+                                      privacy_status="private", channel_id="UC1", channel_title="c", video_file="test-episode.mp4",
+                                      video_bytes=2048, video_md5=md5, title="t", description_bytes=1,
+                                      contains_synthetic_media=True, made_for_kids=False, previous=previous))
+
+    def test_changed_video_pending_youtube_reupload_is_skipped(self) -> None:
+        """유튜브 다시 올리기 차례를 기다리는 편은 영상이 바뀌어도 오류가 아니라 건너뜀 — 인스타에는 다시 올리지 않는다."""
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep, rec_before = self._posted_then_changed(root)
+            q = self._republish_cfg(root, ep)
+            for dry in (True, False):
+                api = FakeGraph()
+                res = ig.process_episode(ep, _cfg(), dry_run=dry, send=api, env=ENV, sleep=lambda s: None, republish_path=q)
+                self.assertEqual(res["status"], "skipped", res)
+                self.assertTrue(any("다시 올리기" in w and "allow-repost" in w for w in res["warnings"]), res["warnings"])
+                self.assertEqual(api.calls, [])                                    # 네트워크 호출 없음
+            self.assertEqual((ep / ig.RECORD_NAME).read_bytes(), rec_before)       # 기록 그대로
+            res = ig.process_episode(ep, _cfg(), dry_run=False, send=FakeGraph(), env=ENV, sleep=lambda s: None,
+                                     allow_repost=True, republish_path=q)
+            self.assertEqual(res["status"], "posted")                              # 사람이 정하면 새 게시물로
+
+    def test_changed_video_after_youtube_reupload_is_skipped(self) -> None:
+        """유튜브 기록이 이 파일을 다시 올린 판으로 적고 있으면(대기열에서 끝난 뒤에도) 건너뜀."""
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep, _ = self._posted_then_changed(root)
+            md5 = yu.md5_file(ep / "test-episode.mp4")
+            self._youtube_record(ep, md5, [{"video_id": "OLD0", "reason": "republish"}])
+            res = ig.process_episode(ep, _cfg(), dry_run=True, env={}, republish_path=self._republish_cfg(root, ep))
+            self.assertEqual(res["status"], "skipped", res)
+
+    def test_changed_video_not_explained_by_reupload_is_still_refused(self) -> None:
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep, _ = self._posted_then_changed(root)
+            other = _episode(root, name="23-other", slug="other")
+            empty = self._republish_cfg(root, other)                               # 대기열에 없음
+            for q in (empty, root / "missing.json"):
+                res = ig.process_episode(ep, _cfg(), dry_run=True, env={}, republish_path=q)
+                self.assertEqual(res["status"], "error")
+                self.assertIn("allow-repost", res["error"])
+            md5 = yu.md5_file(ep / "test-episode.mp4")
+            self._youtube_record(ep, "other-md5", [{"video_id": "OLD0", "reason": "republish"}])   # 다시 올린 판이 이 파일이 아님
+            self.assertIn("allow-repost", ig.process_episode(ep, _cfg(), dry_run=True, env={}, republish_path=empty)["error"])
+            self._youtube_record(ep, md5, [])                                      # 다시 올린 적 없는 기록
+            self.assertIn("allow-repost", ig.process_episode(ep, _cfg(), dry_run=True, env={}, republish_path=empty)["error"])
+
     def test_token_error_message(self) -> None:
         api = FakeGraph(token_error=True)
         with tempfile.TemporaryDirectory() as d:

@@ -50,9 +50,10 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Callable
 
-from publish.youtube import (DEFAULT_FINALS, MB, REPO, RETRY_STATUS, UPLOAD_MD_NAME, Response, Transport, TransportError,
-                             UploadError, _rel, episode_dirs, load_env_file, load_episode, load_meta, md5_file,
-                             morning_numbers, parse_dir_name, parse_upload_md, urllib_transport)
+from publish.youtube import (DEFAULT_FINALS, DEFAULT_REPUBLISH, MB, REPO, RETRY_STATUS, UPLOAD_MD_NAME, Response, Transport,
+                             TransportError, UploadError, _rel, episode_dirs, load_env_file, load_episode, load_meta, md5_file,
+                             morning_numbers, parse_dir_name, parse_upload_md, republish_pending, republished, urllib_transport)
+from publish.youtube import read_record as youtube_record
 
 DEFAULT_CONFIG = REPO / "config" / "instagram.json"
 RECORD_NAME = "instagram_post.json"
@@ -523,9 +524,25 @@ def _now() -> str:
     return dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
 
 
+def changed_for_youtube_reupload(dir_: Path, md5: str, republish_path: Path | None = None) -> bool:
+    """인스타에 올린 뒤 영상이 바뀐 까닭이 유튜브 다시 올리기인가(2026-11-13, 첫 프레임을 고쳐 그림만 다시 렌더한 편).
+
+    다시 올리기 차례를 기다리는 편이거나(config/republish.json 대기열·48시간 점검), 유튜브 기록이 이미 이 파일을
+    다시 올린 판으로 적고 있으면(previous 에 republish 가 있고 md5 가 같음) True. 이때 인스타 게시물은 그대로 두고
+    다시 올리지 않는다 — 오류가 아니라 건너뜀. 그 밖의 바뀐 영상은 전처럼 거절한다."""
+    if republish_pending(dir_, DEFAULT_REPUBLISH if republish_path is None else republish_path):
+        return True
+    try:
+        rec = youtube_record(dir_)
+    except (UploadError, OSError):
+        return False
+    return republished(rec) and rec.video_md5 == md5
+
+
 def process_episode(dir_: Path, cfg: IgConfig, *, dry_run: bool, auto: bool = False, send: Transport | None = None,
                     env: dict[str, str] | None = None, allow_repost: bool = False,
-                    sleep: Callable[[float], None] = time.sleep, morning: set[int] | None = None) -> dict[str, Any]:
+                    sleep: Callable[[float], None] = time.sleep, morning: set[int] | None = None,
+                    republish_path: Path | None = None) -> dict[str, Any]:
     """에피소드 하나. status: posted · skipped · dry-run · error.
 
     아침 업로드 대기열(config/daily.json)의 편은 push 에서 게시하지 않는다(2026-11-08). 인스타는 게시 즉시 공개라,
@@ -572,6 +589,12 @@ def process_episode(dir_: Path, cfg: IgConfig, *, dry_run: bool, auto: bool = Fa
                                        " · 다시 게시하지 않음")
                 return res
             if not allow_repost:
+                if changed_for_youtube_reupload(dir_, md5, republish_path):
+                    res.update(status="skipped", media_id=prev.media_id, permalink=prev.permalink)
+                    res["warnings"].append(f"이미 게시한 편 — 유튜브 다시 올리기용으로 영상이 바뀌었습니다(md5 {prev.video_md5[:8]}→{md5[:8]}). "
+                                           "인스타 게시물은 그대로 두고 다시 올리지 않습니다(새 게시물로 올리려면 --allow-repost)")
+                    _log(f"{_rel(dir_)}: {res['warnings'][-1]}")
+                    return res
                 raise UploadError(f"기록({RECORD_NAME})이 있는데 영상이 바뀌었습니다(md5 {prev.video_md5[:8]}→{md5[:8]}). "
                                   "인스타는 게시 즉시 공개라 자동으로 다시 올리지 않습니다. 새 게시물로 올리려면 --allow-repost")
             res["warnings"].append(f"기록을 덮어씁니다 — 이전 게시물 {prev.permalink or prev.media_id} 은 그대로 남습니다")

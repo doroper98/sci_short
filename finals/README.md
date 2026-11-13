@@ -30,45 +30,45 @@
 | 번호 | 제목 | 길이 | 폴더 | 업로드 정보 | 영상 확정일 |
 |---|---|---|---|---|---|
 | 01 | 두 블랙홀의 마지막 춤, 중력파 | 177.3초 | [01-gravitational-waves/](01-gravitational-waves/) | [upload.md](01-gravitational-waves/upload.md) | 2026-11-07 |
-| 02 | LIGO는 어떻게 잴까 — 어둠 속의 작은 밝아짐 | 175.5초 | [02-ligo-how-it-works/](02-ligo-how-it-works/) | [upload.md](02-ligo-how-it-works/upload.md) | 2026-11-07 |
-| 03 | 엘니뇨와 라니냐 — 바람이 물을 밀고, 물이 바람을 만든다 | 178.0초 | [03-el-nino-la-nina/](03-el-nino-la-nina/) | [upload.md](03-el-nino-la-nina/upload.md) | 2026-11-07 |
-| 04 | 파장 — 전파에서 감마선까지, 다른 것은 길이 하나 | 176.6초 | [04-wavelength/](04-wavelength/) | [upload.md](04-wavelength/upload.md) | 2026-11-07 |
-| 05 | 지구를 두른 바람의 띠 — 무역풍·무풍대·편서풍 | 179.0초 | [05-global-winds/](05-global-winds/) | [upload.md](05-global-winds/upload.md) | 2026-11-07 |
+| 02 | LIGO는 어떻게 잴까 — 어둠 속의 작은 밝아짐 | 175.5초 | [02-ligo-how-it-works/](02-ligo-how-it-works/) | [upload.md](02-ligo-how-it-works/upload.md) | uncommitted |
+| 03 | 엘니뇨와 라니냐 — 바람이 물을 밀고, 물이 바람을 만든다 | 178.0초 | [03-el-nino-la-nina/](03-el-nino-la-nina/) | [upload.md](03-el-nino-la-nina/upload.md) | uncommitted |
+| 04 | 파장 — 전파에서 감마선까지, 다른 것은 길이 하나 | 176.6초 | [04-wavelength/](04-wavelength/) | [upload.md](04-wavelength/upload.md) | uncommitted |
+| 05 | 지구를 두른 바람의 띠 — 무역풍·무풍대·편서풍 | 179.0초 | [05-global-winds/](05-global-winds/) | [upload.md](05-global-winds/upload.md) | uncommitted |
 | 06 | 계절은 왜 생길까 — 거리가 아니라 기울기 | 160.0초 | [06-seasons/](06-seasons/) | [upload.md](06-seasons/upload.md) | 2026-11-07 |
-| 07 | 지구 자전축의 느린 원 — 세차운동과 장동 | 173.9초 | [07-precession/](07-precession/) | [upload.md](07-precession/upload.md) | 2026-11-07 |
-| 08 | 한 칸에 열 배 — 지진 규모·데시벨·pH와 로그 | 165.8초 | [08-log-scale/](08-log-scale/) | [upload.md](08-log-scale/upload.md) | 2026-11-13 |
+| 07 | 지구 자전축의 느린 원 — 세차운동과 장동 | 173.9초 | [07-precession/](07-precession/) | [upload.md](07-precession/upload.md) | uncommitted |
+| 08 | 한 칸에 열 배 — 지진 규모·데시벨·pH와 로그 | 165.8초 | [08-log-scale/](08-log-scale/) | [upload.md](08-log-scale/upload.md) | uncommitted |
 | 09 | 별은 왜 반짝일까 — 반짝임은 공기가 만든다 | 175.7초 | [09-twinkle/](09-twinkle/) | [upload.md](09-twinkle/upload.md) | 2026-11-07 |
 | 10 | 오로라는 왜 극지방에서만 보일까 | 161.3초 | [10-aurora/](10-aurora/) | [upload.md](10-aurora/upload.md) | 2026-11-07 |
 | 11 | 에딩턴 한계 — 빛이 별을 밀어낸다 | 171.5초 | [11-eddington-limit/](11-eddington-limit/) | [upload.md](11-eddington-limit/upload.md) | 2026-11-07 |
 | 12 | 퀘이사 — 별처럼 보인 블랙홀 | 174.3초 | [12-quasar/](12-quasar/) | [upload.md](12-quasar/upload.md) | 2026-11-07 |
 | 13 | 감마선 폭발 — 우주에서 가장 밝은 섬광 | 175.5초 | [13-gamma-ray-burst/](13-gamma-ray-burst/) | [upload.md](13-gamma-ray-burst/upload.md) | 2026-11-07 |
-| 14 | 감기 주사는 왜 없을까 — 범인이 200가지 | 172.1초 | [14-cold-vaccine/](14-cold-vaccine/) | [upload.md](14-cold-vaccine/upload.md) | 2026-11-07 |
+| 14 | 감기 주사는 왜 없을까 — 범인이 200가지 | 172.1초 | [14-cold-vaccine/](14-cold-vaccine/) | [upload.md](14-cold-vaccine/upload.md) | uncommitted |
 | 15 | 사고도 없는데 왜 막힐까 — 유령 체증 | 175.9초 | [15-traffic-jam/](15-traffic-jam/) | [upload.md](15-traffic-jam/upload.md) | 2026-11-07 |
 | 16 | 얼마나 차가워질 수 있을까 — 절대영도 | 164.9초 | [16-absolute-zero/](16-absolute-zero/) | [upload.md](16-absolute-zero/upload.md) | 2026-11-07 |
 | 17 | 벽을 타고 넘는 액체 — 초유체 헬륨 | 166.2초 | [17-superfluid-helium/](17-superfluid-helium/) | [upload.md](17-superfluid-helium/upload.md) | 2026-11-07 |
 | 18 | 섭씨, 화씨, 켈빈 — 온도를 재는 세 눈금 | 157.6초 | [18-temperature-scales/](18-temperature-scales/) | [upload.md](18-temperature-scales/upload.md) | 2026-11-07 |
 | 19 | 머리가 발보다 빨리 늙는다 — 중력과 시간 | 157.2초 | [19-gravity-time/](19-gravity-time/) | [upload.md](19-gravity-time/upload.md) | 2026-11-07 |
-| 20 | 원자폭탄은 어떻게 터질까 — 핵분열 연쇄반응 | 170.3초 | [20-atomic-bomb/](20-atomic-bomb/) | [upload.md](20-atomic-bomb/upload.md) | 2026-11-07 |
-| 21 | 수소폭탄은 왜 더 강할까 — 핵융합 | 163.6초 | [21-hydrogen-bomb/](21-hydrogen-bomb/) | [upload.md](21-hydrogen-bomb/upload.md) | 2026-11-07 |
-| 22 | 버섯구름은 왜 버섯 모양일까 | 149.7초 | [22-mushroom-cloud/](22-mushroom-cloud/) | [upload.md](22-mushroom-cloud/upload.md) | 2026-11-07 |
-| 23 | 제임스웹은 얼마나 높이 있을까 — 산에서 우주까지 | 163.6초 | [23-orbit-altitudes/](23-orbit-altitudes/) | [upload.md](23-orbit-altitudes/upload.md) | 2026-11-07 |
-| 24 | 라그랑주 점 — 우주의 주차 자리 | 158.5초 | [24-lagrange-points/](24-lagrange-points/) | [upload.md](24-lagrange-points/upload.md) | 2026-11-07 |
-| 25 | 태풍은 왜 우리나라 앞에서 꺾일까 — 스스로 돌지만, 길은 둘레의 바람이 정한다 | 170.3초 | [25-typhoon-track/](25-typhoon-track/) | [upload.md](25-typhoon-track/upload.md) | 2026-11-11 |
+| 20 | 원자폭탄은 어떻게 터질까 — 핵분열 연쇄반응 | 170.3초 | [20-atomic-bomb/](20-atomic-bomb/) | [upload.md](20-atomic-bomb/upload.md) | uncommitted |
+| 21 | 수소폭탄은 왜 더 강할까 — 핵융합 | 163.6초 | [21-hydrogen-bomb/](21-hydrogen-bomb/) | [upload.md](21-hydrogen-bomb/upload.md) | uncommitted |
+| 22 | 버섯구름은 왜 버섯 모양일까 | 149.7초 | [22-mushroom-cloud/](22-mushroom-cloud/) | [upload.md](22-mushroom-cloud/upload.md) | uncommitted |
+| 23 | 제임스웹은 얼마나 높이 있을까 — 산에서 우주까지 | 163.6초 | [23-orbit-altitudes/](23-orbit-altitudes/) | [upload.md](23-orbit-altitudes/upload.md) | uncommitted |
+| 24 | 라그랑주 점 — 우주의 주차 자리 | 158.5초 | [24-lagrange-points/](24-lagrange-points/) | [upload.md](24-lagrange-points/upload.md) | uncommitted |
+| 25 | 태풍은 왜 우리나라 앞에서 꺾일까 — 스스로 돌지만, 길은 둘레의 바람이 정한다 | 170.3초 | [25-typhoon-track/](25-typhoon-track/) | [upload.md](25-typhoon-track/upload.md) | uncommitted |
 | 27 | 예인 소나 — 긴 줄로 바닷속 소리를 듣는 법 | 149.2초 | [27-towed-array-sonar/](27-towed-array-sonar/) | [upload.md](27-towed-array-sonar/upload.md) | 2026-11-08 |
 | 28 | 밀물과 썰물 — 달은 가까운 쪽을 더 세게, 먼 쪽을 더 약하게 당긴다 | 173.8초 | [28-tides/](28-tides/) | [upload.md](28-tides/upload.md) | 2026-11-11 |
-| 29 | 핵분열과 핵융합 — 쪼개도 합쳐도 에너지가 나오는 까닭 | 165.4초 | [29-fission-fusion/](29-fission-fusion/) | [upload.md](29-fission-fusion/upload.md) | 2026-11-13 |
-| 31 | 로켓은 어떻게 돌아올까 — 저궤도와 재사용 로켓 | 156.5초 | [31-reusable-rocket/](31-reusable-rocket/) | [upload.md](31-reusable-rocket/upload.md) | 2026-11-07 |
+| 29 | 핵분열과 핵융합 — 쪼개도 합쳐도 에너지가 나오는 까닭 | 165.4초 | [29-fission-fusion/](29-fission-fusion/) | [upload.md](29-fission-fusion/upload.md) | uncommitted |
+| 31 | 로켓은 어떻게 돌아올까 — 저궤도와 재사용 로켓 | 156.5초 | [31-reusable-rocket/](31-reusable-rocket/) | [upload.md](31-reusable-rocket/upload.md) | uncommitted |
 | 32 | 레이더 — 전파의 메아리로 보고, 메아리를 줄여 숨는다 | 164.3초 | [32-radar/](32-radar/) | [upload.md](32-radar/upload.md) | 2026-11-08 |
 | 33 | 합성개구레이더(SAR) — 움직이며 받은 메아리를 이어 붙여, 거대한 안테나를 만든다 | 169.9초 | [33-sar/](33-sar/) | [upload.md](33-sar/upload.md) | 2026-11-10 |
-| 34 | 망원경의 종류 — 빛을 모으는 방법 | 158.6초 | [34-telescope-types/](34-telescope-types/) | [upload.md](34-telescope-types/upload.md) | 2026-11-07 |
+| 34 | 망원경의 종류 — 빛을 모으는 방법 | 158.6초 | [34-telescope-types/](34-telescope-types/) | [upload.md](34-telescope-types/upload.md) | uncommitted |
 | 36 | 강착원반 — 별이 블랙홀 둘레에서 원반이 되는 이유 | 174.4초 | [36-accretion-disk/](36-accretion-disk/) | [upload.md](36-accretion-disk/upload.md) | 2026-11-10 |
 | 38 | 잠수함은 어떻게 찾을까 — 바다는 모습을 가려도, 소리와 자기장의 흔적까지 다 가리지는 못한다 | 170.6초 | [38-submarine-detection/](38-submarine-detection/) | [upload.md](38-submarine-detection/upload.md) | 2026-11-12 |
-| 43 | GPT는 대답을 어떻게 쓸까 — 다음 조각 하나를 뽑는 일을 되풀이해서, 한 조각씩 써 내려간다 | 159.4초 | [43-gpt-generative/](43-gpt-generative/) | [upload.md](43-gpt-generative/upload.md) | 2026-11-12 |
-| 44 | GPT는 어떻게 배웠을까 — 다음 조각 맞히기를 되풀이하며, 틀린 만큼 속의 숫자를 고쳤다 | 162.3초 | [44-gpt-pretrained/](44-gpt-pretrained/) | [upload.md](44-gpt-pretrained/upload.md) | 2026-11-12 |
-| 45 | GPT는 문맥을 어떻게 읽을까 — 낱말마다 앞의 낱말들을 살펴, 같은 글자도 문맥에 맞는 뜻으로 바뀐다 | 164.3초 | [45-gpt-transformer/](45-gpt-transformer/) | [upload.md](45-gpt-transformer/upload.md) | 2026-11-12 |
-| 46 | GPT는 그림을 어떻게 그릴까 — 그림을 조각으로 바꾸면, 글을 쓸 때처럼 그림도 한 조각씩 이어 그릴 수 있다 | 165.3초 | [46-gpt-image/](46-gpt-image/) | [upload.md](46-gpt-image/upload.md) | 2026-11-13 |
+| 43 | GPT는 대답을 어떻게 쓸까 — 다음 조각 하나를 뽑는 일을 되풀이해서, 한 조각씩 써 내려간다 | 159.4초 | [43-gpt-generative/](43-gpt-generative/) | [upload.md](43-gpt-generative/upload.md) | uncommitted |
+| 44 | GPT는 어떻게 배웠을까 — 다음 조각 맞히기를 되풀이하며, 틀린 만큼 속의 숫자를 고쳤다 | 162.3초 | [44-gpt-pretrained/](44-gpt-pretrained/) | [upload.md](44-gpt-pretrained/upload.md) | uncommitted |
+| 45 | GPT는 문맥을 어떻게 읽을까 — 낱말마다 앞의 낱말들을 살펴, 같은 글자도 문맥에 맞는 뜻으로 바뀐다 | 164.3초 | [45-gpt-transformer/](45-gpt-transformer/) | [upload.md](45-gpt-transformer/upload.md) | uncommitted |
+| 46 | GPT는 그림을 어떻게 그릴까 — 그림을 조각으로 바꾸면, 글을 쓸 때처럼 그림도 한 조각씩 이어 그릴 수 있다 | 165.3초 | [46-gpt-image/](46-gpt-image/) | [upload.md](46-gpt-image/upload.md) | uncommitted |
 
-합계 38편, 105.8분, 837 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
+합계 38편, 105.8분, 836 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
 <!-- catalog:end -->
 
 ## 이전 작품 (`legacy/`)

@@ -397,7 +397,7 @@ export function plan(tl) {
 // Header titles and poster
 // =====================================================================================================
 function titleList(id, P) {
-  if (id === 'hook') return [[-Infinity, '핵분열과 핵융합', '쪼개도 합쳐도 에너지?'], [P.nightIn, '2024 · 우리나라 전기', '원자핵을 쪼개는 원자력'], [P.toSun + 0.4, '태양', '원자핵을 합치는 별']];
+  if (id === 'hook') return [[-Infinity, '핵분열과 핵융합', POSTER_Q.q1], [P.nightIn, '2024 · 우리나라 전기', '원자핵을 쪼개는 원자력'], [P.toSun + 0.4, '태양', '원자핵을 합치는 별']];
   if (id === 'origin') return [[-Infinity, '1938 · 독일', '한 · 슈트라스만'], [at0(P, 's05'), '1939 · 이름 짓기', '분열 · fission'], [at0(P, 's06'), '1920 · 에딩턴', '태양은 수소를 합친다']];
   if (id === 'essence') return [[-Infinity, '본질 · 결합', '단단히 묶일수록 가볍다'], [P.split8 - 0.6, '본질 · 원자핵의 골짜기', '철을 향해 내려간다']];
   if (id === 'fission') return [[-Infinity, '핵분열 · 우라늄 235', '출렁이다 둘로'], [P.core[0] + 0.3, '원자로 · 제어봉', '한 번에 하나씩'], [P.turbine - 0.3, '원자로 · 물', '터빈과 푸른 빛']];
@@ -407,28 +407,31 @@ function titleList(id, P) {
   return [[-Infinity, '', '']];
 }
 const at0 = (P, sid) => P._tl.at(sid) - 0.6;
-function head(stage, kicker, title, aK, aT, sub = '', aS = aT) {
+function head(stage, kicker, title, aK, aT, sub = '', aS = aT, subQ = false) {   // subQ: the hook's second question line (white)
   const c = stage.ctx, T = stage.theme, so = {shadow: 'rgba(0,0,0,0.9)', shadowBlur: 18};
   if (kicker) withAlpha(c, aK, () => { stage.text(kicker, 540, 146, {role: 'display', weight: 500, size: 28, color: T.accent, align: 'center', tracking: 2, ...so}); line(c, [[510, 174], [570, 174]], T.accent, 3, {cap: 'butt'}); });
   if (title) withAlpha(c, aT, () => stage.text(title, 540, 228, {role: 'display', weight: 700, size: 56, color: T.ink, align: 'center', maxWidth: 820, ...so}));
-  if (sub) withAlpha(c, aS, () => stage.text(sub, 540, 292, {role: 'display', weight: 700, size: 34, color: PAL.answer, align: 'center', ...so}));
+  if (sub) withAlpha(c, aS, () => subQ ? stage.text(sub, 540, HEAD_Q.y2, {role: 'display', weight: 700, size: HEAD_Q.s2, color: T.ink, align: 'center', ...so})
+    : stage.text(sub, 540, 292, {role: 'display', weight: 700, size: 34, color: PAL.answer, align: 'center', ...so}));
 }
-// 2026-11-13 (owner: "핵분열과 핵융합이라는 키워드가 썸네일에 명확히 보여야지"): the poster carries the topic keyword as
-// its own white line (k) above the question (q); k shrinks into the header kicker, q into the header title.
-const POSTER_Q = {yk: 1084, y: 1204, y2: 1346, k: '핵분열과 핵융합', q: '쪼개도 합쳐도 에너지', ans: '철을 향하기 때문'};
-let KSIZE = 0, QSIZE = 0, ASIZE = 0;
+// 2026-11-13 (owner: "퀘이사, 감마선폭발, 에딩턴 한계 처럼 주제어가 딱 보여야 해"): the poster is a white question on top
+// ("쪼개도 합쳐도" / "에너지가 나는 이유는?") and the topic keyword "핵분열과 핵융합" as the biggest text, in the accent colour,
+// with no answer. The two white lines shrink into the hook header's two title lines; the keyword shrinks under them and
+// fades, and the header kicker (same words) fades in at the end of the morph.
+const POSTER_Q = {y1: 1080, y2: 1176, yk: 1340, q1: '쪼개도 합쳐도', q2: '에너지가 나는 이유는?', k: '핵분열과 핵융합'};   // keyword ≈ 1.8 × question height; wider gap above the keyword
+const HEAD_Q = {y1: 228, y2: 292, s1: 56, s2: 44};
+let KSIZE = 0, QSIZE = 0;
 function posterTitle(stage, t, q = easeInOut((t - MORPH[0]) / (MORPH[1] - MORPH[0])), a = 1) {
-  const c = stage.ctx, T = stage.theme, TR = -0.03, fit = (s, w, max) => Math.min(max, max * w / stage.measure(s, {role: 'display', weight: 700, size: max, tracking: TR * max}));
-  KSIZE ||= fit(POSTER_Q.k, 820, 104); QSIZE ||= fit(POSTER_Q.q + '?', 820, 100); ASIZE ||= fit(POSTER_Q.ans, 860, 150);
-  const yk = lerp(POSTER_Q.yk, 146, q), sk = lerp(KSIZE, 30, q), y1 = lerp(POSTER_Q.y, 228, q), s1 = lerp(QSIZE, 56, q), y2 = lerp(POSTER_Q.y2, 292, q), s2 = lerp(ASIZE, 34, q), tr = lerp(TR, -0.011, q);
-  if (q < 1) withAlpha(c, (1 - q) * a, () => { const g2 = c.createLinearGradient(0, 940, 0, 1420); g2.addColorStop(0, 'rgba(6,6,7,0)'); g2.addColorStop(0.22, 'rgba(6,6,7,0.6)'); g2.addColorStop(0.8, 'rgba(6,6,7,0.6)'); g2.addColorStop(1, 'rgba(6,6,7,0)'); c.fillStyle = g2; c.fillRect(0, 940, 1080, 480); });
+  const c = stage.ctx, TR = -0.03, fit = (s, w, max) => Math.min(max, max * w / stage.measure(s, {role: 'display', weight: 700, size: max, tracking: TR * max}));
+  QSIZE ||= Math.min(fit(POSTER_Q.q1, 860, 78), fit(POSTER_Q.q2, 860, 78)); KSIZE ||= fit(POSTER_Q.k, 940, 190);
+  const tr = lerp(TR, -0.011, q), y1 = lerp(POSTER_Q.y1, HEAD_Q.y1, q), s1 = lerp(QSIZE, HEAD_Q.s1, q), y2 = lerp(POSTER_Q.y2, HEAD_Q.y2, q), s2 = lerp(QSIZE, HEAD_Q.s2, q);
+  const sk = lerp(KSIZE, KSIZE * 0.5, q), yk = y2 + (POSTER_Q.yk - POSTER_Q.y2) * s2 / QSIZE;   // stays under the question while shrinking
+  if (q < 1) withAlpha(c, (1 - q) * a, () => { const g2 = c.createLinearGradient(0, 930, 0, 1460); g2.addColorStop(0, 'rgba(6,6,7,0)'); g2.addColorStop(0.2, 'rgba(6,6,7,0.6)'); g2.addColorStop(0.82, 'rgba(6,6,7,0.6)'); g2.addColorStop(1, 'rgba(6,6,7,0)'); c.fillStyle = g2; c.fillRect(0, 930, 1080, 530); });
   withAlpha(c, a, () => {
-    const sh = 'rgba(0,0,0,0.9)', wb = stage.measure(POSTER_Q.q, {role: 'display', weight: 700, size: s1, tracking: tr * s1}), wq = stage.measure('?', {role: 'display', weight: 700, size: s1, tracking: tr * s1}), kq = 1 - smooth(q / 0.7);
-    const x0 = 540 - (wb + wq * kq) / 2, ak = 1 - smooth((q - 0.6) / 0.4);   // the keyword hands over to the header kicker (same words)
-    if (ak > 0) stage.text(POSTER_Q.k, 540, yk, {role: 'display', weight: 700, size: sk, color: T.ink, align: 'center', alpha: ak, shadow: sh, shadowBlur: 22, tracking: tr * sk});
-    stage.text(POSTER_Q.q, x0, y1, {role: 'display', weight: 700, size: s1, color: T.ink, shadow: sh, shadowBlur: 22, tracking: tr * s1});
-    if (kq > 0) stage.text('?', x0 + wb, y1, {role: 'display', weight: 700, size: s1, color: T.ink, alpha: kq, shadow: sh, shadowBlur: 22, tracking: tr * s1});
-    stage.text(POSTER_Q.ans, 540, y2, {role: 'display', weight: 700, size: s2, color: PAL.answer, align: 'center', tracking: tr * s2, shadow: sh, shadowBlur: 28});
+    const sh = 'rgba(0,0,0,0.9)', ak = 1 - smooth(q / 0.45);   // the keyword fades early; the header kicker (same words) fades in at the end
+    if (ak > 0) stage.text(POSTER_Q.k, 540, yk, {role: 'display', weight: 700, size: sk, color: PAL.answer, align: 'center', alpha: ak, shadow: sh, shadowBlur: 28, tracking: tr * sk});
+    stage.text(POSTER_Q.q1, 540, y1, {role: 'display', weight: 700, size: s1, color: stage.theme.ink, align: 'center', shadow: sh, shadowBlur: 22, tracking: tr * s1});
+    stage.text(POSTER_Q.q2, 540, y2, {role: 'display', weight: 700, size: s2, color: stage.theme.ink, align: 'center', shadow: sh, shadowBlur: 22, tracking: tr * s2});
   });
 }
 function captionBand(c) { const g = c.createLinearGradient(0, 1290, 0, 1920); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(0.35, 'rgba(0,0,0,0.3)'); g.addColorStop(1, 'rgba(0,0,0,0.5)'); c.fillStyle = g; c.fillRect(0, 1290, W, 630); }
@@ -444,9 +447,9 @@ export function overlays(stage, t, ctx) {
   const L = titleList(id, P), a = (id === 'hook' ? 1 : smooth(ctx.scene.p / 0.04)) * fadeOut(t, ctx.scene.end - 0.3, 0.28);
   let k = 0; while (k + 1 < L.length && t >= L[k + 1][0]) k++;
   const out = k > 0 ? smooth((t - L[k][0]) / 0.3) : 1, inn = k > 0 ? smooth((t - L[k][0] - 0.3) / 0.35) : 1, prev = L[Math.max(0, k - 1)], cur = L[k];
-  if (id === 'hook' && k === 0) head(stage, cur[1], cur[2], fadeIn(t, MORPH[1] - 0.05, 0.4) * a, a, POSTER_Q.ans, a);
+  if (id === 'hook' && k === 0) head(stage, cur[1], cur[2], fadeIn(t, MORPH[1] - 0.05, 0.4) * a, a, POSTER_Q.q2, a, true);
   else {
-    if (k > 0 && out < 1) head(stage, prev[1] === cur[1] ? '' : prev[1], prev[2], a * (1 - out), a * (1 - out), id === 'hook' && k === 1 ? POSTER_Q.ans : '', a * (1 - out));
+    if (k > 0 && out < 1) head(stage, prev[1] === cur[1] ? '' : prev[1], prev[2], a * (1 - out), a * (1 - out), id === 'hook' && k === 1 ? POSTER_Q.q2 : '', a * (1 - out), true);
     head(stage, cur[1], cur[2], k > 0 && prev[1] !== cur[1] ? a * inn : a, a * inn);
   }
   withAlpha(stage.ctx, id === 'hook' ? fadeIn(t, MORPH[1], 0.4) : 1, () => progressBar(stage, t, ctx.tl.duration));

@@ -1,7 +1,7 @@
 {
-  "_about": "첫 프레임 썸네일 포스터(2026-11-07 소급 적용, pipeline/render/posterintro.mjs). q = 흰 질문, a = 큰 강조색 답, key = 그림 시각·크롭(pipeline/render/thumbnail.mjs 옵션)",
-  "q": "적외선은 빨간빛일까?",
-  "a": "아니, 보이지 않는 빛",
+  "_about": "첫 프레임 썸네일 포스터(2026-11-07 소급 적용, pipeline/render/posterintro.mjs). q = 흰 질문, a = 큰 강조색 글, key = 그림 시각·크롭(pipeline/render/thumbnail.mjs 옵션) 2026-11-13 사용자 결정: '위에 흰 물음, 아래에 가장 큰 주제어'(답은 쓰지 않음) — a 는 주제어.",
+  "q": "정말 빨간빛일까?",
+  "a": "적외선",
   "accent": "#FF6B4A",
   "key": {
     "t": 18,

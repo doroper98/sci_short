@@ -1,7 +1,7 @@
 {
   "file": "ligo-how-it-works.mp4",
-  "bytes": 13259841,
-  "sha256": "f0976e98c1d701ffaa8b4cf3e3f0fddedee7872ffed1a72e373cfb6263327031",
+  "bytes": 13308720,
+  "sha256": "9cf3086b8d8722408f05fc34e60d6766330224095c1b1c1ee2253d2dbd838565",
   "created": "2026-11-07T01:18:20+00:00",
   "title": "LIGO는 어떻게 잴까 — 어둠 속의 작은 밝아짐",
   "timeline_duration": 175.533,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2696192,
         "duration": "175.533333",
-        "bit_rate": "422371",
+        "bit_rate": "424596",
         "bits_per_raw_sample": "8",
         "nb_frames": "5266",
         "extradata_size": 50,
@@ -69,8 +69,7 @@
         "tags": {
           "language": "und",
           "handler_name": "VideoHandler",
-          "vendor_id": "[0][0][0][0]",
-          "encoder": "Lavc60.31.102 libx264"
+          "vendor_id": "[0][0][0][0]"
         }
       },
       {
@@ -126,15 +125,15 @@
       }
     ],
     "format": {
-      "filename": "/home/user/sci_short/outputs/ligo-how-it-works/final/ligo-how-it-works.mp4",
+      "filename": "finals/02-ligo-how-it-works/ligo-how-it-works.mp4",
       "nb_streams": 2,
       "nb_programs": 0,
       "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "175.533333",
-      "size": "13259841",
-      "bit_rate": "604322",
+      "size": "13308720",
+      "bit_rate": "606550",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -183,5 +182,15 @@
     "direct_listening": "not performed",
     "physical_phone_playback": "not performed",
     "visual_review_of_stills": "not recorded by finish.py"
+  },
+  "picture_rerender": {
+    "date": "2026-11-13",
+    "reason": "첫 프레임(과 끝에 돌아오는 포스터)의 글을 \"위에 흰 물음, 아래에 가장 큰 주제어\"로 바꿈(사용자 결정 2026-11-13): 두 줄 \"양성자보다 작은 흔들림을\" / \"어떻게 잴까?\" + \"LIGO\", 답은 쓰지 않음",
+    "method": "episodes/ligo-how-it-works/run.sh render · stills (finals timeline.json 그대로) → 새 visual.mp4의 영상 + 이전 최종본의 오디오를 스트림 복사(-map 0:v:0 -map 1:a:0 -c copy -movflags +faststart, 언어·제목 메타데이터 유지; 오디오 재인코딩 없음)",
+    "previous_sha256": "f0976e98c1d701ffaa8b4cf3e3f0fddedee7872ffed1a72e373cfb6263327031",
+    "audio_stream_md5_unchanged": "b6f9c003aa1d39556e18345c79b3ddd9",
+    "rechecked": "전편 디코딩 오류 none; 1080×1920 30fps 영상 1 + 오디오 1; 길이 175.533 → 175.533 s; 오디오 md5 이전·새 파일 같음; 이전 파일과 프레임별 PSNR 비교(5266프레임): 다른 구간 0.0–8.33 s (min PSNR 16.6 dB); 164.6–165.13 s (min PSNR 61.1 dB); 165.23–175.53 s (min PSNR 16.6 dB); 중간 세 시각 52.7 s identical, 87.8 s identical, 122.9 s identical; pipeline/validate.py RESULT: PASS  (19/19 not failing)(새 mp4, finals srt·timeline, 새 스틸); 0초·마지막 프레임 직접 확인",
+    "not_rerun": "finish.py의 loudnorm 측정(audio_mastering_input, encoded_audio)은 다시 재지 않음 — 오디오 스트림이 바이트 단위로 같아 이전 값이 그대로 유효",
+    "diff_note": "1.7–8.33 s 와 164.6–165.2 s 는 포스터 앞뒤 GOP 안 인코더 차이(PSNR ≥ 54 dB). 포스터는 0–1.7 s, 165.3 s부터 끝. 크기: 흰 물음 약 78 px(두 줄), 주제어 240 px."
   }
 }

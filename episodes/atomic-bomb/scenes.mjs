@@ -612,7 +612,7 @@ function posterPicture(stage, t, o = {}) {
 // Header titles (sequential swaps) and the poster title
 // =====================================================================================================
 export const titles = {
-  hook: ['오늘의 주제', '히로시마 원폭, 에너지가 된 질량은'],
+  hook: ['히로시마 원폭', '에너지가 된 질량은'],   // kicker = the poster keyword (2026-11-13)
   origin: ['기원 · 이름', '쪼갤 수 없는 것'],
   essence: ['본질 · 질량', '조각이 더 가볍다'],
   chain: ['메커니즘 · 핵분열', '중성자 하나가 핵을 쪼갠다'],
@@ -637,7 +637,7 @@ export function overlays(stage, t, ctx) {
   if (id === 'hook') {
     if (t < MORPH[1]) { posterTitle(stage, t); return; }                 // frame 0 = thumbnail: no progress bar yet
     const ho = fadeOut(t, ctx.scene.end - 0.3, 0.28);
-    head(stage, '오늘의 주제', titles.hook[1], fadeIn(t, MORPH[1] - 0.05, 0.4) * ho, ho, '단 0.7그램', ho, 'rgba(0,0,0,0.95)');
+    head(stage, titles.hook[0], titles.hook[1], fadeIn(t, MORPH[1] - 0.05, 0.4) * ho, ho, '', ho, 'rgba(0,0,0,0.95)');
     withAlpha(stage.ctx, fadeIn(t, MORPH[1], 0.4), () => progressBar(stage, t, ctx.tl.duration)); return;
   }
   if (id === 'close') {
@@ -653,17 +653,19 @@ export function overlays(stage, t, ctx) {
   head(stage, cur[1], cur[2], k > 0 && prev[1] !== cur[1] ? a * inn : a, a * inn);
   progressBar(stage, t, ctx.tl.duration);
 }
-const POSTER_Q = {y: 1036, y2: 1206, q: '히로시마 원폭, 에너지가 된 질량은', ans: '단 0.7그램'};
-let QSIZE = 0, ASIZE = 0;
-/** t = 0 poster text (white question + huge answer in the central square) shrinking into the hook header; also the close bookend */
+// 2026-11-13 (owner: "주제어가 딱 보여야 해"): white question on top, the topic keyword (k) below as the biggest text, no answer.
+// The question shrinks into the header title; the keyword shrinks a little in place and fades, and the header kicker shows it.
+const POSTER_Q = {y: 1040, y2: 1196, q: titles.hook[1], k: titles.hook[0]};
+let QSIZE = 0, KSIZE = 0;
+/** t = 0 poster text (white question + huge topic keyword in the central square) shrinking into the hook header; also the close bookend */
 function posterTitle(stage, t, q = easeInOut((t - MORPH[0]) / (MORPH[1] - MORPH[0])), a = 1) {
   const c = stage.ctx, T = stage.theme;
   const TR = -0.03, fit = (s, w, max) => Math.min(max, max * w / stage.measure(s, {role: 'display', weight: 700, size: max, tracking: TR * max}));
-  QSIZE ||= fit(POSTER_Q.q + '?', 770, 80); ASIZE ||= fit(POSTER_Q.ans, 790, 230);
-  let s1 = lerp(QSIZE, 54, q); const y1 = lerp(POSTER_Q.y, 228, q), y2 = lerp(POSTER_Q.y2, 290, q), s2 = lerp(ASIZE, 32, q), tr = lerp(TR, -0.011, q);
+  QSIZE ||= fit(POSTER_Q.q + '?', 770, 70); KSIZE ||= fit(POSTER_Q.k, 860, 230);
+  let s1 = lerp(QSIZE, 54, q); const y1 = lerp(POSTER_Q.y, 228, q), s2 = KSIZE * lerp(1, 0.7, q), tr = lerp(TR, -0.011, q), ak = 1 - smooth(q / 0.6);
   if (q < 1) withAlpha(c, (1 - q) * a, () => {
-    const g2 = c.createLinearGradient(0, 900, 0, 1330); g2.addColorStop(0, 'rgba(4,4,5,0)'); g2.addColorStop(0.25, 'rgba(4,4,5,0.74)'); g2.addColorStop(0.8, 'rgba(4,4,5,0.74)'); g2.addColorStop(1, 'rgba(4,4,5,0)');
-    c.fillStyle = g2; c.fillRect(0, 900, 1080, 430);
+    const g2 = c.createLinearGradient(0, 920, 0, 1320); g2.addColorStop(0, 'rgba(4,4,5,0)'); g2.addColorStop(0.25, 'rgba(4,4,5,0.74)'); g2.addColorStop(0.8, 'rgba(4,4,5,0.74)'); g2.addColorStop(1, 'rgba(4,4,5,0)');
+    c.fillStyle = g2; c.fillRect(0, 920, 1080, 400);
   });
   withAlpha(c, a, () => {
     const sh = q < 0.5 ? 'rgba(0,0,0,0.9)' : null;
@@ -673,7 +675,7 @@ function posterTitle(stage, t, q = easeInOut((t - MORPH[0]) / (MORPH[1] - MORPH[
     const x0 = 540 - (wb + wq * Math.min(1, kq * 10)) / 2;
     stage.text(POSTER_Q.q, x0, y1, {role: 'display', weight: 700, size: s1, color: T.ink, shadow: sh, shadowBlur: 20, tracking: tr * s1});
     if (kq > 0) stage.text('?', x0 + wb, y1, {role: 'display', weight: 700, size: s1, color: T.ink, alpha: kq, shadow: sh, shadowBlur: 20, tracking: tr * s1});
-    stage.text(POSTER_Q.ans, 540, y2, {role: 'display', weight: 700, size: s2, color: PAL.answer, align: 'center', tracking: tr * s2, shadow: q < 0.5 ? 'rgba(0,0,0,0.9)' : null, shadowBlur: 26});
+    if (ak > 0) stage.text(POSTER_Q.k, 540, POSTER_Q.y2, {role: 'display', weight: 700, size: s2, color: PAL.answer, align: 'center', alpha: ak, tracking: TR * s2, shadow: 'rgba(0,0,0,0.9)', shadowBlur: 26});
   });
 }
 
