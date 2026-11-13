@@ -1480,6 +1480,10 @@ def daily_next(cfg: Config, daily_path: Path, republish_path: Path, finals: Path
     if not dry_run and recently_uploaded(finals, RECENT_HOURS, now):
         return done({"ok": True, "counts": empty, "results": [],
                      "note": f"최근 {RECENT_HOURS}시간 안에 올린 영상이 있어 쉽니다(예비 실행이 하루 두 편을 올리지 않게)"})
+    if key and not dry_run and target_done(finals, key, now):
+        # 손으로 고른 자리도 같은 공개 시각 몫을 두 번 올리지 않는다(자동 실행이 이미 올린 뒤 6시간이 지나 손으로 돌린 경우)
+        return done({"ok": True, "counts": empty, "results": [],
+                     "note": f"이 공개 시각 몫({key})은 이미 올렸습니다 — 쉼"})
     return done(_upload_slot(cfg, daily, rc, republish_path, finals, slot, today=today, dry_run=dry_run, send=send, env=env,
                              sleep=sleep, publish_at=publish_at, slot_key=key))
 

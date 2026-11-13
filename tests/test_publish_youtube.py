@@ -2088,6 +2088,21 @@ class AutoSlotTest(unittest.TestCase):
             self.assertEqual([(s["key"], s["status"]) for s in auto["slots"]], [("2026-11-13-evening", "done-before")])
             self.assertEqual(api.uploads, 1)
 
+    def test_explicit_slot_does_not_repeat_a_target_already_uploaded(self) -> None:
+        """자동 실행이 저녁 몫을 올린 뒤 6시간이 지나 손으로 slot=evening 을 돌려도 같은 몫을 다시 올리지 않는다.
+        (6시간 안전장치를 꺼서 slot_key 확인만으로 막히는지 본다 — 기록의 uploaded_at 은 실제 시계라 시험에서 흉내 낼 수 없다.)"""
+        api, cfg = InsertLogApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d, mock.patch.object(yu, "RECENT_HOURS", 0):
+            root = Path(d)
+            old, new, daily, q = self._setup(root, api)
+            auto = self._run(cfg, daily, q, root, _kst(2026, 11, 13, 10, 30), api)             # 저녁 몫을 미리 올림(17:00 예약)
+            self.assertEqual([(s["key"], s["status"]) for s in auto["slots"]], [("2026-11-13-evening", "uploaded")])
+            n = api.uploads
+            out = self._run(cfg, daily, q, root, _kst(2026, 11, 13, 16, 40), api, slot="evening")   # 6시간 10분 뒤 손으로
+            self.assertEqual((out["counts"]["uploaded"], api.uploads), (0, n))
+            self.assertIn("이미 올렸습니다", out["note"])
+            self._assert_never_public(api)
+
     def test_sweep_and_privatize_once_per_run(self) -> None:
         api, cfg = InsertLogApi(), _cfg(channel_id="UC1")
         with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
