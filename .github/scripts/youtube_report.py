@@ -192,8 +192,9 @@ def cmd_report(path: str, ig_path: str | None = None, tt_path: str | None = None
     pv_md = privatize_section(data)
     if data.get("kind") == "sweep":                            # 점검만 한 수동 실행(sweep_only) — 업로드 없음
         return tiktok_issues(tt, tt_done)
+    when = "저녁" if data.get("slot") == "evening" else "아침"   # 2026-11-13 저녁 다시 올리기 한 편
     if data.get("note") and not data.get("results"):
-        summary(f"## 유튜브 아침 업로드\n{data['note']}")       # 쉬는 날(비공개 대기·시작 전·대기열 끝)
+        summary(f"## 유튜브 {when} 업로드\n{data['note']}")       # 쉬는 날(비공개 대기·시작 전·대기열 끝·저녁 쉼)
         return tiktok_issues(tt, tt_done)
     if "results" not in data:
         summary(f"## 유튜브 업로드\n실패: {data.get('error', '?')}\n\n{RUN_URL}")
@@ -203,7 +204,7 @@ def cmd_report(path: str, ig_path: str | None = None, tt_path: str | None = None
     c = data.get("counts", {})
     lines = ["## 유튜브 업로드 (항상 비공개)", "",
              f"업로드 {c.get('uploaded', 0)} · 건너뜀 {c.get('skipped', 0)} · dry-run {c.get('dry-run', 0)} · 오류 {c.get('error', 0)}", "",
-             *([f"아침 업로드: {data['note']}", ""] if data.get("note") else []),
+             *([f"{when} 업로드: {data['note']}", ""] if data.get("note") else []),
              "| 폴더 | 상태 | 제목 | 링크 | 비고 |", "|---|---|---|---|---|"]
     for r in data["results"]:
         note = cell(r.get("error") or " / ".join(r.get("warnings", [])))
@@ -235,7 +236,8 @@ def cmd_report(path: str, ig_path: str | None = None, tt_path: str | None = None
                          "- **다시 올림**: 이전 판은 손으로 올린 것이라 ID 기록이 없습니다. 스튜디오에서 찾아 비공개로 돌리십시오\n"
                          if r.get("republish") else "")
             body = (f"비공개로 올라갔습니다. YouTube Studio 에서 내용·자막을 확인한 뒤 **공개**로 바꾸고 이 이슈를 닫으십시오.\n"
-                    f"공개는 하루 1편, 다른 영상과 같은 날 몰아 하지 않습니다(docs/CHANNEL_GROWTH.md H3).\n\n"
+                    f"공개는 한 편씩 따로 합니다. 아침 편은 아침에, 저녁 편은 저녁에 공개하고 여러 편을 한꺼번에 몰아 공개하지 않습니다"
+                    f"(docs/CHANNEL_GROWTH.md H3·H8).\n\n"
                     f"- 폴더: `{r['dir']}`\n- 채널: {r.get('channel', '')}\n- 보기: {r['url']}\n- Studio: {r['studio_url']}\n{ig_line}{prev_line}\n"
                     f"경고:\n{warns}\n\n확인할 것:\n- [ ] 영상·음성·자막이 맞는가\n- [ ] 제목·설명·태그가 맞는가\n"
                     f"- [ ] 아동용 선언·합성 콘텐츠 표시가 맞는가\n- [ ] 공개(또는 예약 공개)로 전환\n"

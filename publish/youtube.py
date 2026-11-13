@@ -1086,25 +1086,44 @@ def recently_uploaded(finals: Path, hours: float, now: dt.datetime | None = None
     return False
 
 
+def evening_enabled(daily: dict[str, Any]) -> bool:
+    """config/daily.json evening.enabled — 저녁 다시 올리기 한 편(2026-11-13 사용자 "저녁에도 한편 더 올리자.")."""
+    ev = daily.get("evening")
+    return isinstance(ev, dict) and bool(ev.get("enabled"))
+
+
 def daily_next(cfg: Config, daily_path: Path, republish_path: Path, finals: Path, *, today: dt.date, dry_run: bool,
                send: Transport | None = None, env: dict[str, str] | None = None,
-               sleep: Callable[[float], None] = time.sleep) -> dict[str, Any]:
-    """아침 업로드 한 번(youtube-daily 워크플로, 매일 아침 7시 전). 2026-11-08 사용자 결정.
+               sleep: Callable[[float], None] = time.sleep, slot: str = "morning") -> dict[str, Any]:
+    """하루 업로드 한 번(youtube-daily 워크플로). 아침(slot="morning")은 2026-11-08 사용자 결정, 저녁(slot="evening")은
+    2026-11-13 사용자 "저녁에도 한편 더 올리자."(어느 종류를 어느 자리에 두는지는 제작 세션의 제안).
 
+    아침:
     1) 최근 hold 일 안에 올린 영상이 아직 비공개면 쉰다 — hold 가 0 이면 쉬지 않는다
        (2026-11-11 사용자: "비공개가 있어도 예정된 스케줄의 영상들을 올리도록 해", 설정 0).
     2) 대기열(config/daily.json)에서 만들어 두고 아직 안 올린 첫 편을 비공개로 올린다.
-    3) 그런 편이 없으면 다시 올리기 대기열(config/republish.json)에서 한 편을 올린다. 하루 한 편만.
-    4) republish.json 의 alternate_with_new 가 true 면(2026-11-12 사용자 "하루씩 번갈아") 새 편과 다시 올리기를 번갈아
-       올린다. 마지막 업로드가 새 편이면 다시 올리기 차례, 다시 올리기(또는 기록 없음)면 새 편 차례. 다시 올리기 차례인데
-       올릴 편이 없으면(모두 min_views 이상으로 건너뜀·대기열 끝·시작 전) 같은 실행에서 새 편을 올린다. 한 실행에 한 편.
-    먼저(쉬는 날에도) 48시간 점검(sweep_low_views, 2026-11-13)을 하고, 비공개로 돌리지 못한 옛 판을 다시 시도한다
-    (privatize_pending). 둘 다 실패해도 업로드를 막지 않는다. 점검이 비공개로 돌린 편은 같은 실행의 다시 올리기 대상이 된다."""
+    3) 그런 편이 없으면 다시 올리기 대기열(config/republish.json)에서 한 편을 올린다. 한 실행에 한 편만.
+    4) 저녁이 꺼져 있고(evening.enabled 아님) republish.json 의 alternate_with_new 가 true 면(2026-11-12 사용자 "하루씩
+       번갈아") 새 편과 다시 올리기를 번갈아 올린다. 마지막 업로드가 새 편이면 다시 올리기 차례, 다시 올리기(또는 기록
+       없음)면 새 편 차례. 다시 올리기 차례인데 올릴 편이 없으면(모두 min_views 이상으로 건너뜀·대기열 끝·시작 전) 같은
+       실행에서 새 편을 올린다. 저녁이 켜져 있으면 번갈아 올리지 않는다(다시 올리기는 저녁 몫).
+    아침은 먼저(쉬는 날에도) 48시간 점검(sweep_low_views, 2026-11-13)을 한다. 점검이 비공개로 돌린 편은 같은 실행의
+    다시 올리기 대상이 된다.
+    저녁: evening.enabled 일 때만, 다시 올리기 한 편(republish_next). 올릴 편이 없으면 쉰다. 새 편은 올리지 않고
+    48시간 점검도 하지 않는다(아침 몫).
+    아침·저녁 모두 비공개로 돌리지 못한 옛 판을 다시 시도한다(privatize_pending). 점검·재시도가 실패해도 업로드를 막지 않는다."""
+    if slot not in ("morning", "evening"):
+        raise ValueError(f"slot 은 morning 또는 evening 입니다: {slot!r}")
     daily = load_daily(daily_path)
     hold_days = int(daily.get("hold_if_private_within_days", 3))
     empty = {"uploaded": 0, "skipped": 0, "dry-run": 0, "error": 0}
+    evening = evening_enabled(daily)
+    if slot == "evening" and not evening:
+        return {"ok": True, "counts": dict(empty), "results": [], "slot": "evening",
+                "note": "저녁 업로드 꺼짐(config/daily.json evening.enabled) — 쉼"}
     rc = load_republish(republish_path)
-    sweep = run_sweep(cfg, republish_path, finals, dry_run=dry_run, send=send, env=env) if rc.get("auto_sweep") else None
+    sweep = (run_sweep(cfg, republish_path, finals, dry_run=dry_run, send=send, env=env)
+             if slot == "morning" and rc.get("auto_sweep") else None)
     catch = privatize_pending(cfg, republish_path, finals, dry_run=dry_run, send=send, env=env) if rc else None
 
     def done(out: dict[str, Any]) -> dict[str, Any]:
@@ -1116,11 +1135,27 @@ def daily_next(cfg: Config, daily_path: Path, republish_path: Path, finals: Path
             out["privatize"] = catch.get("items", [])
             if catch.get("warnings"):
                 out["warnings"] = out.get("warnings", []) + catch["warnings"]
+        out["slot"] = slot
         return out
 
     if not dry_run and recently_uploaded(finals, RECENT_HOURS):
         return done({"ok": True, "counts": empty, "results": [],
                      "note": f"최근 {RECENT_HOURS}시간 안에 올린 영상이 있어 쉽니다(예비 실행이 하루 두 편을 올리지 않게)"})
+    if slot == "evening":                     # 저녁: 다시 올리기 한 편만. 새 편은 올리지 않는다
+        if not rc:
+            return done({"ok": True, "counts": empty, "results": [], "kind": "republish",
+                         "note": "저녁 다시 올리기 — 다시 올리기 설정(config/republish.json)이 없어 저녁은 쉽니다"})
+        out = republish_next(cfg, republish_path, finals, today=today, dry_run=dry_run, send=send, env=env, sleep=sleep,
+                             skip_hold=True)
+        out["kind"] = "republish"
+        c = out["counts"]
+        if c["uploaded"] or c["error"] or c["dry-run"]:
+            out["note"] = "저녁 다시 올리기 — " + out.get("note", f"다시 올리기 {out['results'][-1]['dir']}")
+        else:
+            why = out.get("note") or (f"남은 옛 판 {len(out['results'])}편이 모두 조회수 기준 이상이라 건너뜀"
+                                      if out["results"] else "올릴 편 없음")
+            out["note"] = f"저녁 다시 올리기 — 다시 올릴 편이 없어 저녁은 쉽니다({why})"
+        return done(out)
     if not dry_run and hold_days > 0:
         tx = send or urllib_transport(cfg.timeout_sec)
         waiting = private_waiting(tx, access_token(tx, read_secrets(env)), finals, today, hold_days)
@@ -1130,7 +1165,9 @@ def daily_next(cfg: Config, daily_path: Path, republish_path: Path, finals: Path
     ready = morning_dirs(daily, finals)
     turn = ""
     pre: list[dict[str, Any]] = []
-    if ready and rc and rc.get("alternate_with_new"):
+    if ready and evening:
+        turn = "아침 새 편(다시 올리기는 저녁)"
+    elif ready and rc and rc.get("alternate_with_new"):
         avail, why = republish_available(rc, today, finals)
         last, last_dir = last_upload(finals)
         last_txt = f"마지막 업로드({_rel(last_dir)})" if last_dir else ""
@@ -1681,6 +1718,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--sweep", action="store_true",
                     help="48시간 점검(공개 48시간 뒤 조회수 min_views 미만 → 비공개 + 다시 올리기 대상)과 밀린 비공개 전환만. 올리지 않는다")
     ap.add_argument("--daily-next", action="store_true", help="아침 업로드 한 번: 대기열(config/daily.json)의 새 편, 없으면 다시 올리기 한 편")
+    ap.add_argument("--slot", choices=("morning", "evening"), default="morning",
+                    help="--daily-next 와 함께: morning(새 편, 없으면 다시 올리기) · evening(다시 올리기 한 편, 없으면 쉼)")
     ap.add_argument("--daily-config", type=Path, default=DEFAULT_DAILY)
     ap.add_argument("--today", help="기준일 YYYY-MM-DD(시험용)")
     ap.add_argument("--env-file", type=Path, help="KEY=VALUE 파일(.env)에서 비밀값을 읽는다")
@@ -1721,7 +1760,8 @@ def main(argv: list[str] | None = None) -> int:
         elif a.republish_next or a.daily_next:
             today = dt.date.fromisoformat(a.today) if a.today else dt.datetime.now(KST).date()
             if a.daily_next:
-                out = daily_next(cfg, a.daily_config, a.republish_config, a.finals, today=today, dry_run=a.dry_run, env=env)
+                out = daily_next(cfg, a.daily_config, a.republish_config, a.finals, today=today, dry_run=a.dry_run, env=env,
+                                 slot=a.slot)
             else:
                 out = republish_next(cfg, a.republish_config, a.finals, today=today, dry_run=a.dry_run, env=env)
             if out.get("note"):
