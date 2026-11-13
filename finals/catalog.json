@@ -628,6 +628,23 @@
       "episode_code": "episodes/gpt-transformer",
       "upload_info": "finals/45-gpt-transformer/upload.md",
       "thumbnail": "0초 프레임(낱말 줄 \"항구를 떠난 배\"와 '배'에서 앞 낱말로 뻗은 주의의 선, 아래 뜻의 지도에서 탈것 쪽으로 가는 점, 흰 질문 \"GPT는 문맥을 어떻게 읽을까?\"와 큰 호박색 답 \"앞말을 살펴서\")"
+    },
+    {
+      "number": 46,
+      "slug": "gpt-image",
+      "title": "GPT는 그림을 어떻게 그릴까 — 그림을 조각으로 바꾸면, 글을 쓸 때처럼 그림도 한 조각씩 이어 그릴 수 있다",
+      "status": "final",
+      "folder": "finals/46-gpt-image",
+      "video": "finals/46-gpt-image/gpt-image.mp4",
+      "duration_sec": 165.3,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 26851487,
+      "sha256": "dd8240de9da18f872b67a4acfc1c37340f3dae31b30e86c8174c1620e256b642",
+      "video_date": "2026-11-13",
+      "episode_code": "episodes/gpt-image",
+      "upload_info": "finals/46-gpt-image/upload.md",
+      "thumbnail": "0초 프레임(주문 글 조각 \"불을 뿜는 아기 용\", 위에서부터 칸이 채워지는 바둑판 그림과 무늬 뽑기 띠, 흰 질문 \"GPT는 그림을 어떻게 그릴까?\"와 큰 호박색 답 \"그림도 한 조각씩\")"
     }
   ],
   "legacy": [
