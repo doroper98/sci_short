@@ -473,5 +473,21 @@
     "references/contact-sheets/11-magnetron.jpg",
     "references/contact-sheets/12-dlp-projector.jpg",
     "references/contact-sheets/13-ligo-interferometer.jpg"
+  ],
+  "images": [
+    {
+      "id": "ref-14",
+      "title_ko": "심장 박동 한 번: 왼심장 단면과 심전도·압력·부피 파형",
+      "recorded_date": "2026-11-14",
+      "path": "references/images/14-heartbeat-waveform.jpg",
+      "original_filename": "IMG_1919.jpeg",
+      "upload_name": "a018b09f-image.jpg",
+      "bytes": 408090,
+      "sha256": "45d9538fc1f257d403c4475b1fe3cc29e0599506a455b0cb82de55dc32dda890",
+      "width": 1184,
+      "height": 2576,
+      "format": "JPEG",
+      "note": "사용자가 2026-11-14 에 올린 휴대전화 화면 갈무리(인스타그램 릴스의 한 장면, 계정 redpenprep, 'AI 콘텐츠' 표시). 영상 원본은 없다. 62번(심장 박동) 주제의 참고용 — 구성 원리만 참고하고 화면·문구·상표는 베끼지 않는다."
+    }
   ]
 }
