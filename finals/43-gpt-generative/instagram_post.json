@@ -1,0 +1,28 @@
+{
+ "media_id": "18124170752068045",
+ "permalink": "https://www.instagram.com/reel/DfvWQ8GljBw/",
+ "posted_at": "2026-11-14T23:08:15+00:00",
+ "ig_user_id": "17841457693338876",
+ "username": "_scishorts",
+ "video_file": "gpt-generative.mp4",
+ "video_bytes": 16034762,
+ "video_md5": "303da6e684c316cee7e9cf861809e66e",
+ "caption_chars": 495,
+ "hashtags": [
+  "#GPT",
+  "#챗GPT",
+  "#언어모델",
+  "#토큰",
+  "#과학"
+ ],
+ "container_id": "17984407502923112",
+ "shortcode": "DfvWQ8GljBw",
+ "transfer": "url",
+ "ai_label": true,
+ "number": 43,
+ "slug": "gpt-generative",
+ "status": "posted",
+ "note": "",
+ "source": "api",
+ "schema_version": 1
+}

@@ -1,0 +1,12 @@
+{
+ "offered_at": "2026-11-14T23:08:25+00:00",
+ "video_file": "gpt-pretrained.mp4",
+ "video_md5": "8bb4c9ac343ca7b7ca85026d0e85e12d",
+ "video_url": "https://raw.githubusercontent.com/doroper98/sci_short/a919cb965ae1a48bdd7f6f424afc28d5d01b6cd7/finals/44-gpt-pretrained/gpt-pretrained.mp4",
+ "title": "GPT는 어떻게 배웠을까? | 다음 말 맞히기 3천억 번 #GPT #챗GPT #과학",
+ "caption": "<GPT는 어떻게 배웠을까?>\n\nGPT에게 문법이나 지식을 하나하나 넣어 준 사람은 없어요.\nGPT가 한 공부는 한 가지, 다음 말 맞히기였어요.\n\"GPT는 다음 조각 맞히기를 수없이 되풀이하며, 틀린 만큼 속의 숫자를 고쳐서 글 쓰는 법을 배웠어요\"\n\n글의 뒷부분을 가리고 다음 조각을 맞혀 봐요.\n정답은 가린 자리에 이미 적혀 있어요.\n그래서 사람이 채점할 필요가 없어요.\n\n정답에 준 확률이 낮을수록 크게 틀린 거예요.\n틀린 만큼 속의 숫자를 조금씩 고쳐요.\n이 일을 3천억 조각에 걸쳐 되풀이했어요.\n\n다음 조각을 잘 맞히려면 문법도 사실도 알아야 해요.\n그래서 아무도 넣어 주지 않은 지식이 숫자 속에 자리 잡아요.\n\nGPT가 나와 대화하면서 배우는 걸까요?\n아니에요. 대화하는 동안에는 숫자가 바뀌지 않아요.\n\n#GPT #챗GPT #언어모델 #사전학습 #과학",
+ "number": 44,
+ "slug": "gpt-pretrained",
+ "account": "shortform_science",
+ "note": "안내만 했다. 게시는 사람이 틱톡 앱에서 한다."
+}
