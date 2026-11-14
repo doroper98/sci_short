@@ -279,6 +279,7 @@ python -m publish.youtube finals/13-gamma-ray-burst --env-file .env   # 비공�
 - `privatize_only`: 다시 올리지 않고 비공개만 할 영상. 지금은 01 중력파 새 판 `3n4MJZM6trk`(11-09 보고서 3회) 하나 — 옛 판 `GMkRzXt78TI`(654회)가 공개되어 살아 있어서입니다. `GMkRzXt78TI` 는 `never_privatize` 에 넣어 어떤 경로로도 건드리지 않습니다. 성공하면 01 기록의 `privatized_at` 에 적습니다
 - 결과는 작업 요약의 '옛 판 비공개 전환' 절과 '공개 전환 대기' 이슈에 "옛 판 <주소> 비공개 전환됨" 또는 실패 이유로 나옵니다. 실패했을 때만 이슈에 "이전 판을 비공개로 전환" 체크가 붙습니다
 - 한 편만 손으로: `python -m publish.youtube finals/<ep> --republish`(같은 규칙, `previous_ids` 도 읽음)
+- **탈락한 편**(`dropped`, 2026-11-14 사용자 "로그스케일은 탈락. 공개로 전환 된고 까지 확인 했는데 내가 삭제 할게"): `config/republish.json` `dropped` 에 `{"episode": "finals/NN-slug", "why": …}` 로 적은 편은 다시 올리기 차례(`queue`·48시간 점검의 `flagged`)에서 빠지고, 48시간 점검이 지금 판을 읽지도 않습니다. 코드는 그 편을 다시 올리지 않고 영상을 비공개로 돌리지도 않습니다 — 영상은 사용자가 직접 다룹니다(삭제 등). `queue` 에서도 함께 뺍니다. 지금은 08 로그 스케일 하나입니다. 완성본 폴더와 인스타 게시 기록은 그대로 둡니다. 손으로 주는 `--republish`(폴더 지정)는 막지 않습니다. 탈락을 되돌리려면 `dropped` 에서 지웁니다.
 
 ## 안전장치
 

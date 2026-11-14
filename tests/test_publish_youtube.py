@@ -1230,6 +1230,14 @@ class AlternateTest(unittest.TestCase):
         targets = yu.privatize_targets(rc, yu.DEFAULT_FINALS)
         self.assertNotIn("GMkRzXt78TI", [t["video_id"] for t in targets])
         self.assertEqual(yu.load_config().privacy_status, "private")
+        # 탈락한 편(2026-11-14 사용자 "로그스케일은 탈락. … 내가 삭제 할게"): 꼴이 맞고, 대기열에 없고, 다시 올리기 차례에 없다
+        for item in rc["dropped"]:
+            self.assertRegex(item["episode"], r"^finals/\d\d-[a-z0-9-]+$")
+            self.assertTrue(item["why"].strip(), item)
+            self.assertNotIn(item["episode"], rc["queue"])
+        self.assertEqual(len(yu.dropped_dirs(rc)), len(rc["dropped"]))
+        self.assertIn((yu.REPO / "finals" / "08-log-scale").resolve(), yu.dropped_dirs(rc))
+        self.assertFalse(yu.dropped_dirs(rc) & {p.resolve() for p in yu.republish_todo(rc)})
 
 
 NOW = dt.datetime(2026, 11, 13, 0, 0, tzinfo=dt.timezone.utc)
@@ -1413,6 +1421,35 @@ class SweepTest(unittest.TestCase):
             rc = {"start": "2026-11-11", "min_views": 50, "auto_sweep": SWEEP, "queue": [_rel_repo(p) for p in (m1, m2, m3)]}
             self.assertEqual(yu.republish_todo(rc, root), [m1, m2, early, late])
             self.assertEqual(yu.republish_available(rc, dt.date(2026, 11, 13), root), (True, ""))
+
+    def test_dropped_episode_is_left_alone(self) -> None:
+        """2026-11-14 사용자: "로그스케일은 탈락. … 내가 삭제 할게" — 탈락한 편은 점검하지도, 비공개로 돌리지도, 다시 올리지도 않는다."""
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep = {n: _episode(root, name=n, slug=n[3:]) for n in ("02-drop", "03-low", "04-queued", "05-flag", "06-queued")}
+            self._public(api, ep["02-drop"], "DROP", 3, 100)                     # 낮은 조회수지만 탈락
+            self._public(api, ep["03-low"], "LOW", 3, 100)
+            _record(ep["04-queued"], "QUEUED", uploaded=_ago(300))               # 대기열에 있지만 탈락
+            self._public(api, ep["05-flag"], "FLAG", 3, 100,                     # 이미 flagged 로 적힌 뒤 탈락
+                         sweep={"action": "flagged", "checked_at": "2026-11-13T00:00:00+00:00", "views": 3})
+            _record(ep["06-queued"], "KEEPQ", uploaded=_ago(300))                # 대기열의 보통 편
+            q = _republish_cfg(root, ep["04-queued"], ep["06-queued"], min_views=50, auto_sweep=SWEEP,
+                               dropped=[{"episode": _rel_repo(ep["02-drop"]), "why": "탈락"}, _rel_repo(ep["04-queued"]),
+                                        {"episode": _rel_repo(ep["05-flag"])}, {"episode": ""}, 7, {"why": "경로 없음"}])
+            rc = yu.load_republish(q)
+            self.assertEqual(yu.dropped_dirs(rc), frozenset(ep[n].resolve() for n in ("02-drop", "04-queued", "05-flag")))
+            self.assertEqual(yu.dropped_dirs({}), frozenset())
+            self.assertEqual(yu.dropped_dirs({"dropped": "finals/01-x"}), frozenset())    # 목록이 아니면 없음으로 본다
+            out = yu.sweep_low_views(cfg, q, root, dry_run=False, send=api, env=ENV, now=NOW)
+            self.assertEqual({it["video_id"]: it["result"] for it in out["items"]}, {"LOW": "flagged", "KEEPQ": "not-found"})
+            self.assertEqual([u["id"] for u in api.updates], ["LOW"])            # 탈락한 편의 영상은 바꾸지 않는다
+            self.assertEqual(api.status_map["DROP"][0], "public")
+            self.assertIsNone(yu.read_record(ep["02-drop"]).sweep)
+            todo = yu.republish_todo(rc, root)
+            self.assertEqual(todo, [ep["06-queued"], ep["03-low"]])              # 대기열의 남은 편 → 점검이 고른 편. 탈락 셋은 없다
+            for n in ("02-drop", "04-queued", "05-flag"):
+                self.assertFalse(yu.republish_pending(ep[n], q), n)
 
     def test_second_republish_keeps_sweep_snapshot_and_stops_at_cap(self) -> None:
         api, cfg = FakeApi(), _cfg(channel_id="UC1")

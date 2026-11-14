@@ -19,10 +19,11 @@
   {"video_id": "3n4MJZM6trk", "episode": "finals/01-gravitational-waves", "why": "01 중력파 새 판(11-09 보고서 3회). 옛 판 GMkRzXt78TI(654회)가 공개되어 살아 있어 다시 올리지 않고 비공개만 한다."}
  ],
  "never_privatize": ["GMkRzXt78TI"],
+ "_dropped": "2026-11-14 사용자: \"로그스케일은 탈락. 공개로 전환 된고 까지 확인 했는데 내가 삭제 할게\". 탈락한 편은 다시 올리기 차례와 48시간 점검에서 뺀다 — 코드는 이 편을 다시 올리지 않고, 지금 판을 읽거나 비공개로 돌리지도 않는다(영상은 사용자가 직접 삭제). 대기열(queue)에서도 뺀다. 완성본 폴더와 인스타 게시 기록은 그대로 둔다.",
+ "dropped": [{"episode": "finals/08-log-scale", "why": "2026-11-14 사용자 \"로그스케일은 탈락\". 다시 올린 판 M9LqjT3xqjI(11-14 17:00 KST 예약 공개)를 사용자가 공개된 것까지 확인한 뒤 직접 삭제한다고 함. 옛 판 JvUyU13QIz4(3회)는 11-13 에 비공개로 돌렸다."}],
  "queue": [
   "finals/06-seasons",
   "finals/23-orbit-altitudes",
-  "finals/08-log-scale",
   "finals/31-reusable-rocket",
   "finals/07-precession",
   "finals/22-mushroom-cloud",

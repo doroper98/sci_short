@@ -1498,16 +1498,34 @@ def republish_count(rec: Record | None) -> int:
     return 0 if rec is None else sum(1 for p in rec.previous if p.get("reason") == "republish")
 
 
+def dropped_dirs(rc: dict[str, Any]) -> frozenset[Path]:
+    """탈락한 편(config/republish.json dropped, 2026-11-14 사용자: "로그스케일은 탈락. … 내가 삭제 할게").
+    다시 올리기 차례(republish_todo)와 48시간 점검에서 뺀다 — 코드는 이 편을 다시 올리지 않고, 지금 판을 읽거나
+    비공개로 돌리지도 않는다(영상은 사용자가 직접 다룬다). 항목은 {"episode": "finals/NN-slug", "why": …} 또는 경로 문자열.
+    꼴이 맞지 않는 항목은 무시한다(저장소 설정의 꼴은 시험이 확인한다)."""
+    out: set[Path] = set()
+    items = rc.get("dropped")
+    for item in items if isinstance(items, list) else []:
+        ep = item.get("episode") if isinstance(item, dict) else item
+        if isinstance(ep, str) and ep.strip():
+            out.add((REPO / ep.strip()).resolve())
+    return frozenset(out)
+
+
 def republish_todo(rc: dict[str, Any], finals: Path | None = None) -> list[Path]:
     """다시 올릴 편의 차례. ① 대기열(queue)에서 아직 다시 올리지 않은 편(경로는 저장소 기준), 그다음
     ② 48시간 점검이 지금 판을 flagged 로 적은 편(점검 시각 순, 2026-11-13). ②는 다시 올린 편도 지금 판이 flagged 면
     다시 대상이 되며, 다시 올린 횟수가 auto_sweep.max_republish 에 이르면 빠진다. 비공개 전환이 거절된(그사이 조회수가
-    기준을 넘은) 판은 빠진다."""
-    manual = [REPO / q for q in rc.get("queue", []) if not republished(read_record(REPO / q))]
+    기준을 넘은) 판은 빠진다. 탈락한 편(dropped)은 ①②에서 모두 빠진다."""
+    dropped = dropped_dirs(rc)
+    manual = [REPO / q for q in rc.get("queue", [])
+              if (REPO / q).resolve() not in dropped and not republished(read_record(REPO / q))]
     sw_cfg = rc.get("auto_sweep") if isinstance(rc.get("auto_sweep"), dict) else {}
     cap = int(sw_cfg.get("max_republish", 2))
     flagged: list[tuple[str, Path]] = []
     for d in episode_dirs(DEFAULT_FINALS if finals is None else finals):
+        if d.resolve() in dropped:
+            continue
         rec = read_record(d)
         sw = rec.sweep if rec is not None and isinstance(rec.sweep, dict) else {}
         if sw.get("action") == "flagged" and not sw.get("privatize_refused") and republish_count(rec) < cap:
@@ -1733,7 +1751,7 @@ def sweep_low_views(cfg: Config, republish_path: Path, finals: Path, *, dry_run:
     (set_private — 공개 → 비공개만, 같은 안전 조건) 그 편을 다시 올리기 대상으로 적는다(기록 sweep.action = flagged).
 
     대상: finals/ 의 모든 기록의 지금 판, 그리고 기록이 없는 편의 previous_ids. never_privatize·privatize_only 영상과
-    이미 판정(flagged·ok·exhausted)이 적힌 판·이미 비공개로 돌린 판은 뺀다. 영상마다 차례로
+    이미 판정(flagged·ok·exhausted)이 적힌 판·이미 비공개로 돌린 판, 탈락한 편(dropped)은 뺀다. 영상마다 차례로
     없음 → 적기만 · 다른 채널 → 건드리지 않음 · 공개가 아님 → 건너뜀(아직 공개 전) · min_age_hours 전 → 건너뜀 ·
     조회수 ≥ min_views → ok(한 번) · 다시 올린 횟수가 max_republish 에 이름 → exhausted(한 번, 공개 그대로) · 그 밖 → flagged.
     비공개 전환이 실패해도(403 등) flagged 로 적고 privatize_pending 이 다음 실행부터 다시 시도한다.
@@ -1750,7 +1768,10 @@ def sweep_low_views(cfg: Config, republish_path: Path, finals: Path, *, dry_run:
     previous_ids = {str(k): str(v) for k, v in rc.get("previous_ids", {}).items()}
     warnings: list[str] = []
     cands: list[tuple[Path, str, Record | None]] = []
+    dropped = dropped_dirs(rc)
     for d in episode_dirs(finals):
+        if d.resolve() in dropped:   # 탈락한 편은 읽지도 않는다(사용자가 직접 다룸)
+            continue
         try:
             rec = read_record(d)
         except UploadError as ex:
