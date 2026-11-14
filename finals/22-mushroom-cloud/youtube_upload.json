@@ -25,5 +25,18 @@
  "number": 22,
  "slug": "mushroom-cloud",
  "source": "api",
+ "previous": [],
+ "privatized_at": "2026-11-13T17:54:15+00:00",
+ "sweep": {
+  "action": "flagged",
+  "checked_at": "2026-11-13T17:53:58+00:00",
+  "views": 20,
+  "age_hours": 147.3,
+  "published_at": "2026-11-07T14:37:05Z",
+  "privatized_at": "2026-11-13T17:54:15+00:00",
+  "privatize_result": "privatized"
+ },
+ "publish_at": null,
+ "slot_key": null,
  "schema_version": 1
 }

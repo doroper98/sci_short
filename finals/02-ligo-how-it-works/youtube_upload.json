@@ -25,5 +25,18 @@
  "number": 2,
  "slug": "ligo-how-it-works",
  "source": "api",
+ "previous": [],
+ "privatized_at": "2026-11-13T17:53:59+00:00",
+ "sweep": {
+  "action": "flagged",
+  "checked_at": "2026-11-13T17:53:58+00:00",
+  "views": 2,
+  "age_hours": 152.2,
+  "published_at": "2026-11-07T09:39:33Z",
+  "privatized_at": "2026-11-13T17:53:59+00:00",
+  "privatize_result": "privatized"
+ },
+ "publish_at": null,
+ "slot_key": null,
  "schema_version": 1
 }

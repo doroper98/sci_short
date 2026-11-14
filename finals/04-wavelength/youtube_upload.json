@@ -25,5 +25,18 @@
  "number": 4,
  "slug": "wavelength",
  "source": "api",
+ "previous": [],
+ "privatized_at": "2026-11-13T17:54:01+00:00",
+ "sweep": {
+  "action": "flagged",
+  "checked_at": "2026-11-13T17:53:58+00:00",
+  "views": 16,
+  "age_hours": 154.6,
+  "published_at": "2026-11-07T07:16:48Z",
+  "privatized_at": "2026-11-13T17:54:01+00:00",
+  "privatize_result": "privatized"
+ },
+ "publish_at": null,
+ "slot_key": null,
  "schema_version": 1
 }
