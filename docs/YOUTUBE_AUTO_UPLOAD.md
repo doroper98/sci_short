@@ -185,7 +185,7 @@ python -m publish.youtube finals/13-gamma-ray-burst --env-file .env   # 비공�
 - **자동 대상 = 22번 이상 새 편**(2026-11-07). push 자동 실행은 `--auto` 로 돌며 `auto_from_number`(22) 미만 편은 건너뜁니다. 01~21 은 손으로 올린 편이 섞여 있어, 그 폴더를 고친 PR 이 병합돼도 다시 올라가지 않게 했습니다. 옛 편은 `meta.json` 의 `auto_publish: true` 또는 수동 실행(episode 지정)으로 올립니다. 같은 병합에서 인스타 릴스도 게시됩니다([인스타 릴스 자동 게시](INSTAGRAM_AUTO_POST.md)).
 - **승인 신호 = main 병합.** 새 편의 `finals/<NN>-<slug>/` 가 들어온 PR 을 병합하면 Actions 가 그 편만 올립니다. 같은 폴더를 덮어써 다시 만든 편은 md5 가 달라져 멈추며, 새 영상으로 올리려면 수동 실행 전에 `youtube_upload.json` 을 지우거나 `--allow-reupload` 를 씁니다(이전 영상은 유튜브에 남음).
 - **공개 전환 = 이슈 처리.** 업로드마다 `youtube-review` 라벨 이슈가 생깁니다. Studio 에서 확인·공개하고 `upload.md` 의 고정 댓글·관련 동영상을 넣은 뒤 닫습니다.
-- **수동 실행.** Actions → youtube-upload → Run workflow. `episode` 한 폴더, 또는 `all=true`. `dry_run` 으로 검증만.
+- **수동 실행.** Actions → youtube-upload → Run workflow. `episode` 한 폴더, 또는 `all=true`. `dry_run` 으로 검증만. 실행은 **사용자가 직접** 누릅니다 — 제작 세션(Claude)의 GitHub 연동에는 워크플로 실행 권한이 없어 403 으로 거절됩니다(2026-11-15 확인).
 - **멱등.** `youtube_upload.json` 이 있고 md5 가 같으면 건너뜁니다. 재실행이 안전합니다.
 - **자막·썸네일 실패**는 영상 기록을 남기고 경고로 보고합니다(영상은 올라간 상태).
 - **썸네일은 영상 처리가 끝난 뒤 지정합니다.** 공식 문서(thumbnails.set)에 따르면 쇼츠의 맞춤 썸네일은 `processingDetails.processingStatus` 가 `succeeded` 가 된 뒤 지정해야 적용됩니다. 업로더는 업로드 뒤 `videos.list(part=processingDetails)` 를 15초마다 보고(최대 `processing_wait_sec` 1200초, 1회 1단위) 썸네일을 지정합니다. 2026-11-07 첫 업로드(04편)는 처리 전에 지정해 유튜브가 중간 장면을 썸네일로 골랐습니다.
