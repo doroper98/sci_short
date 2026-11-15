@@ -40,8 +40,15 @@
   }
  ],
  "privatized_at": null,
- "sweep": null,
+ "sweep": {
+  "action": "ok",
+  "checked_at": "2026-11-15T11:15:01+00:00",
+  "views": 1021,
+  "age_hours": 49.3,
+  "published_at": "2026-11-13T10:00:16Z",
+  "publish_at": "2026-11-13T10:00:00Z"
+ },
  "publish_at": "2026-11-13T10:00:00Z",
- "schema_version": 1,
- "slot_key": "2026-11-13-evening"
+ "slot_key": "2026-11-13-evening",
+ "schema_version": 1
 }
