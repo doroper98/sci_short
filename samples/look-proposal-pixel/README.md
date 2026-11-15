@@ -68,3 +68,9 @@ node samples/look-proposal-pixel/run.mjs tsunami /tmp/poc --still=0.5,6.5,11.4  
 4. 자막이 놓일 자리(아래쪽)는 그림을 어둡고 단순하게 둡니다. 계기는 자막과 겹치지 않게 놓습니다.
 5. 수치는 묶음 10(`docs/TOPIC_BACKLOG.md`)대로 문헌에서 확인합니다.
 6. 화풍만 바꾼 시험이므로 길이·첫 문장·제목 형식·공개 시각은 다른 편과 같게 둡니다. 비교 방법은 `docs/CHANNEL_GROWTH.md` H9.
+
+## 2026-11-15 덧붙임: 하늘은 노을로 정해 두지 않는다, 3D 층
+
+- 사용자: "하늘을 꼭 노을로 정해놓지 마." 이 시안 세 편과 58번은 해질녘이지만, 픽셀 화풍의 하늘은 주제에 맞춰 고릅니다. 64번 기상 레이더는 비 오는 흐린 낮입니다.
+- 사용자: "three.js에 픽셀 애니메이션(쓰나미편 같은)을 같이 적용할 수 있어?" → 64번은 입체를 three.js 로 그리고 픽셀 도구가 색·점묘·윤곽선을 입혔습니다. 구조는 [episodes/weather-radar/README.md](../../episodes/weather-radar/README.md), 완성본은 [finals/64-weather-radar](../../finals/64-weather-radar/README.md).
+- 이 화풍을 다른 편에 넓히는 결정은 아직 없습니다.

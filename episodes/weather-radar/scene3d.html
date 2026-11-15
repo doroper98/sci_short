@@ -1,0 +1,84 @@
+<!doctype html><meta charset="utf-8"><canvas id="c" width="270" height="480"></canvas>
+<script type="module">
+// 64번 기상 레이더 — 3D 층(three.js). 색은 칠하지 않는다: 화소마다 (물체 번호, 밝기)만 쓰고, 색·점묘·윤곽선은 픽셀 도구가 입힌다.
+// 세계: 레이더가 원점, 북쪽 = −z, 동쪽 = +x, 위 = +y. 접시의 축은 head 를 돌리지 않았을 때 +z(남쪽)를 본다.
+import * as THREE from './three.module.js';
+const W = 270, H = 480, canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({canvas, antialias: false, alpha: true, preserveDrawingBuffer: true});
+renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0); renderer.autoClear = false;
+const scene = new THREE.Scene(), cam = new THREE.OrthographicCamera(-W / 2, W / 2, H / 2, -H / 2, 1, 4000);
+const L = new THREE.Vector3(-0.5, 0.78, 0.38).normalize();
+const mat = (id, o = {}) => new THREE.ShaderMaterial({side: o.double ? THREE.DoubleSide : THREE.FrontSide, uniforms: {uId: {value: id}, uL: {value: L}},
+  vertexShader: 'varying vec3 vN; void main(){ vN = normalize(mat3(modelMatrix) * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+  fragmentShader: 'uniform float uId; uniform vec3 uL; varying vec3 vN; void main(){ vec3 n = normalize(vN); if(!gl_FrontFacing) n = -n; float l = clamp(dot(n, uL) * 0.5 + 0.5, 0.0, 1.0); gl_FragColor = vec4(uId / 255.0, l, 0.0, 1.0); }'});
+const G = {};                                             // groups switched by frame(): station, land, clouds, rain, beam
+const grp = name => { const g = new THREE.Group(); scene.add(g); G[name] = g; return g; };
+const add = (geo, id, pos, parent, o = {}) => { const m = new THREE.Mesh(geo, mat(id, o)); m.position.set(...pos); parent.add(m); return m; };
+
+// ---- station (ids: 1 mound, 2 rock, 3 tower, 4 dark metal, 5 hut wall, 6 roof, 7 dish, 8 feed) ----
+const st = grp('station');
+add(new THREE.CylinderGeometry(50, 62, 12, 36), 1, [0, -6, 0], st);
+add(new THREE.CylinderGeometry(7, 10, 62, 16), 3, [0, 31, 0], st);
+add(new THREE.CylinderGeometry(15, 15, 4, 20), 4, [0, 64, 0], st);
+add(new THREE.CylinderGeometry(3, 3, 12, 10), 4, [0, 71, 0], st);
+add(new THREE.BoxGeometry(24, 15, 18), 5, [-30, 7.5, 12], st);
+const roof = add(new THREE.ConeGeometry(19, 10, 4), 6, [-30, 20, 12], st); roof.rotation.y = Math.PI / 4;
+for (const [x, z, s] of [[30, 22, 6], [38, -14, 4.5], [-14, -36, 5]]) add(new THREE.DodecahedronGeometry(s, 0), 2, [x, s * 0.5, z], st);
+const head = new THREE.Group(); head.position.set(0, 78, 0); st.add(head);
+const tilt = new THREE.Group(); tilt.position.z = 7; head.add(tilt);
+add(new THREE.BoxGeometry(13, 13, 9), 4, [0, 0, -5.5], tilt);
+const prof = []; for (let i = 0; i <= 12; i++) { const r = 30 * i / 12; prof.push(new THREE.Vector2(r, r * r / 62)); }
+add(new THREE.LatheGeometry(prof, 32), 7, [0, 0, 0], tilt, {double: true}).rotation.x = Math.PI / 2;
+const struts = [];
+for (const a of [0.5, 2.6, 4.7]) { const s = add(new THREE.CylinderGeometry(1.1, 1.1, 31, 5), 3, [14 * Math.cos(a), 14 * Math.sin(a), 14], tilt); s.lookAt(tilt.localToWorld(new THREE.Vector3(0, 0, 25))); s.rotateX(Math.PI / 2); struts.push(s); }
+add(new THREE.SphereGeometry(3.2, 10, 8), 8, [0, 0, 25], tilt);
+
+// ---- diorama: land, range rings, rain cells (ids: 10 land, 11 land edge, 12 ring, 13 cloud, 14 rain shaft, 15 beam) ----
+const land = grp('land'), clouds = grp('clouds'), rain = grp('rain'), beamG = grp('beam');
+let cells = [], S = 1;
+window.init = cfg => {
+  cells = cfg.cells; S = cfg.stationScale;
+  add(new THREE.CylinderGeometry(cfg.landR, cfg.landR + 6, 8, 64), 10, [0, -4, 0], land);
+  add(new THREE.CylinderGeometry(cfg.landR + 6, cfg.landR + 10, 10, 64), 11, [0, -13, 0], land);
+  for (const r of cfg.rings) { const t = add(new THREE.TorusGeometry(r, 0.7, 4, 96), 12, [0, 0.4, 0], land); t.rotation.x = Math.PI / 2; }
+  for (const c of cells) {
+    const x = c.r * Math.sin(c.az), z = -c.r * Math.cos(c.az);                        // az clockwise from north
+    for (const [dx, dy, dz, s] of [[0, 0, 0, 1], [-0.8, -0.15, 0.2, 0.72], [0.75, -0.1, -0.25, 0.78], [0.1, 0.35, 0.1, 0.7], [-0.3, 0.1, -0.7, 0.6], [0.4, 0.05, 0.65, 0.62]])
+      add(new THREE.SphereGeometry(c.size * s, 14, 10), 13, [x + dx * c.size, c.h + dy * c.size, z + dz * c.size], clouds).scale.y = 0.62;
+    add(new THREE.CylinderGeometry(c.size * 1.05, c.size * 0.9, c.h - c.size * 0.3, 20, 1, true), 14, [x, (c.h - c.size * 0.3) / 2, z], rain, {double: true});
+  }
+  window.ready = true;
+};
+// beam: a thin cone along the dish axis, rebuilt only when its length changes
+let beam = null, beamLen = 0;
+const setBeam = len => { if (beam && Math.abs(len - beamLen) < 0.5) return; if (beam) { tilt.remove(beam); beam.geometry.dispose(); }
+  beamLen = len; const geo = new THREE.CylinderGeometry(len * 0.028 + 1.2, 1.2, len, 10, 1, true); beam = new THREE.Mesh(geo, mat(15, {double: true})); beam.rotation.x = Math.PI / 2; beam.position.set(0, 0, 25 + len / 2); tilt.add(beam); };
+
+const gl = renderer.getContext(), buf = new Uint8Array(W * H * 4), v = new THREE.Vector3();
+const toScreen = p => { v.copy(p).project(cam); return [(v.x * 0.5 + 0.5) * W, (1 - (v.y * 0.5 + 0.5)) * H, v.z]; };
+const grab = () => { gl.readPixels(0, 0, W, H, gl.RGBA, gl.UNSIGNED_BYTE, buf); let s = ''; for (let i = 0; i < buf.length; i += 0x8000) s += String.fromCharCode.apply(null, buf.subarray(i, i + 0x8000)); return btoa(s); };
+const only = names => { for (const k in G) G[k].visible = names.includes(k); };
+/** p: {cam:{az, el, zoom, target:[x,y,z]}, head, tilt, stationScale, show:[…], beamLen, points:[[x,y,z],…]} */
+window.frame = p => {
+  const c = p.cam, d = 1500;
+  cam.left = -W / 2 / c.zoom; cam.right = W / 2 / c.zoom; cam.top = H / 2 / c.zoom; cam.bottom = -H / 2 / c.zoom; cam.updateProjectionMatrix();
+  cam.position.set(c.target[0] + d * Math.sin(c.az) * Math.cos(c.el), c.target[1] + d * Math.sin(c.el), c.target[2] + d * Math.cos(c.az) * Math.cos(c.el));
+  cam.lookAt(c.target[0], c.target[1], c.target[2]); cam.updateMatrixWorld();
+  st.scale.setScalar(p.stationScale ?? 1); head.rotation.y = p.head; tilt.rotation.x = -p.tilt;
+  const fine = (p.stationScale ?? 1) * c.zoom >= 0.45;               // 작게 그릴 때는 가는 버팀대를 뺀다(점으로 뭉개진다)
+  for (const m of struts) m.visible = fine;
+  if (p.beamLen) setBeam(p.beamLen / (p.stationScale ?? 1));
+  if (beam) beam.visible = false;
+  const show = p.show || ['station'], out = {};
+  renderer.clear(true, true, true); only(show.filter(n => n === 'station' || n === 'land' || n === 'clouds')); renderer.render(scene, cam); out.solid = grab();
+  if (show.includes('rain')) { renderer.clear(true, false, false); only(['rain']); renderer.render(scene, cam); out.rain = grab(); }      // depth kept: hidden behind solids
+  if (show.includes('beam') && beam) { renderer.clear(true, false, false); only(['station']); for (const m of st.children) m.visible = m === head; beam.visible = true;
+    tilt.children.forEach(m => { m.visible = m === beam; }); renderer.render(scene, cam); out.beam = grab(); tilt.children.forEach(m => { m.visible = m !== beam && (fine || !struts.includes(m)); }); beam.visible = false; for (const m of st.children) m.visible = true; }
+  st.updateMatrixWorld(true);
+  const feed = tilt.localToWorld(new THREE.Vector3(0, 0, 25)), far = tilt.localToWorld(new THREE.Vector3(0, 0, 25 + (p.beamLen || 200) / (p.stationScale ?? 1)));
+  const axis = far.clone().sub(feed).normalize();
+  out.feed = toScreen(feed); out.far = toScreen(far); out.away = axis.dot(cam.getWorldDirection(new THREE.Vector3())); out.axis = [axis.x, axis.y, axis.z];
+  out.points = (p.points || []).map(q => toScreen(new THREE.Vector3(...q)));
+  return out;
+};
+</script>

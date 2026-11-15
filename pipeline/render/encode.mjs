@@ -11,7 +11,8 @@ import {ensureGain, clearGain} from './hdr.mjs';
 const fmtT = t => `${Math.floor(t / 60)}:${(t % 60).toFixed(2).padStart(5, '0')}`;
 
 /**
- * Stream frames into ffmpeg. frame(t) must draw the full frame on stage.ctx (opaque background).
+ * Stream frames into ffmpeg. frame(t) must draw the full frame on stage.ctx (opaque background). frame may be async
+ * (it is awaited) — e.g. a scene that fetches a 3D layer from a headless browser.
  * getImageData() returns straight (un-premultiplied) RGBA in @napi-rs/canvas 1.0.11 — verified —
  * so ffmpeg reads -pix_fmt rgba. Full-range RGB is converted to BT.709 limited-range yuv420p.
  * gain: path of the HDR gain-map video (default: gain.mp4 next to `out`; false = do not write). Every frame gets a gain frame
@@ -51,7 +52,7 @@ export async function renderVideo({stage, duration, frame, out, fps = stage.FPS,
   for (let i = 0; i < total; i++) {
     if (err) throw new Error(`ffmpeg pipe failed: ${err.message}\n${stderr}`);
     if (G) clearGain(stage);
-    frame(start + i / fps);
+    await frame(start + i / fps);
     const px = ctx.getImageData(0, 0, W, H).data;
     if (!ff.stdin.write(Buffer.from(px.buffer, px.byteOffset, px.byteLength))) await Promise.race([once(ff.stdin, 'drain'), closed]);
     if (G) {
@@ -88,7 +89,7 @@ export async function renderStills({stage, times, frame, outDir, contactSheet = 
   const thumbs = [], lights = [];
   for (const it of items) {
     clearGain(stage);
-    frame(it.t);
+    await frame(it.t);
     const name = `${prefix}_${String(it.i).padStart(2, '0')}_${it.t.toFixed(2).replace('.', 's')}${it.label ? '_' + String(it.label).replace(/[^\w.-]+/g, '-') : ''}.jpg`;
     const file = path.join(outDir, name);
     fs.writeFileSync(file, await stage.canvas.encode('jpeg', quality));
