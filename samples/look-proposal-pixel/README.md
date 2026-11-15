@@ -58,6 +58,8 @@ node samples/look-proposal-pixel/run.mjs tsunami /tmp/poc --still=0.5,6.5,11.4  
 - 달 크레이터: "약 20배", "초속 약 20 km"는 **확인하지 않은 값**입니다.
 - 3D 프린터: 층 96개, 210 °C, 3시간 10분은 보기용 값입니다.
 
+> 2026-11-15: 58번 본편을 만들었습니다 — [finals/58-tsunami](../../finals/58-tsunami/README.md), 코드는 `episodes/tsunami/`. 아래는 만들기 전에 적은 제안입니다(무대 하나·카메라의 자리·표준 절차는 그대로 따랐고, 공개 시각은 사용자 지시로 달라졌습니다).
+
 ## 58번을 만들 때 (제안, 사용자 확정 아님)
 
 1. 대본·음성·자막·소리·검증은 표준 절차 그대로입니다(`skills/science-short/SKILL.md`). 바뀌는 것은 그림뿐입니다.

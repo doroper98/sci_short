@@ -645,6 +645,23 @@
       "episode_code": "episodes/gpt-image",
       "upload_info": "finals/46-gpt-image/upload.md",
       "thumbnail": "0초 프레임(주문 글 조각 \"불을 뿜는 아기 용\", 위에서부터 칸이 채워지는 바둑판 그림과 무늬 뽑기 띠, 흰 질문 한 줄 \"그림을 어떻게 그릴까?\"와 그 아래 가장 큰 호박색 주제어 \"GPT\", 그 아래 줄에 흰 글 \"4 of 4\"(시리즈 4번째, 가운데 정렬, 물음보다 조금 작게). 2026-11-13 사용자 지시로 큰 글을 답에서 주제어로 바꾸고, 같은 날 시리즈 표시를 \"GPT #4\"에서 아래 줄 \"4 of 4\"로 바꾸어 그림만 다시 렌더함)"
+    },
+    {
+      "number": 58,
+      "slug": "tsunami",
+      "title": "쓰나미는 어떻게 생기고, 어떻게 바다를 건널까 — 바닥까지 물 전체가 움직이는 파도라서, 깊은 바다에서는 낮고 빠르고 얕은 해안에서는 느려지고 높아진다",
+      "status": "final",
+      "folder": "finals/58-tsunami",
+      "video": "finals/58-tsunami/tsunami.mp4",
+      "duration_sec": 164.9,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 13520003,
+      "sha256": "af13038579c12a0823aa1accf43a3870ee08f4566ad415996bc5008eb5aa88b4",
+      "video_date": "2026-11-15",
+      "episode_code": "episodes/tsunami",
+      "upload_info": "finals/58-tsunami/upload.md",
+      "thumbnail": "0초 프레임(해질녘 바다의 단면 — 수면 위의 작은 배와 바닥까지 이어진 깊은 물, 픽셀 일러스트. 흰 물음 두 줄 \"어떻게 생기고, / 어떻게 바다를 건널까?\"와 그 아래 가장 큰 호박색 주제어 \"쓰나미\". 답은 쓰지 않음)"
     }
   ],
   "legacy": [
