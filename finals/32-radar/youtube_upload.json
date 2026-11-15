@@ -28,9 +28,12 @@
  "previous": [],
  "privatized_at": null,
  "sweep": {
-  "action": "watching",
-  "public_seen_at": "2026-11-13T17:53:58+00:00",
-  "published_at": "2026-11-08T23:06:29Z"
+  "action": "ok",
+  "checked_at": "2026-11-15T17:51:35+00:00",
+  "views": 1002,
+  "age_hours": 48.0,
+  "published_at": "2026-11-08T23:06:29Z",
+  "public_seen_at": "2026-11-13T17:53:58+00:00"
  },
  "publish_at": null,
  "slot_key": null,
