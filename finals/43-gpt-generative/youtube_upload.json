@@ -27,7 +27,14 @@
  "source": "api",
  "previous": [],
  "privatized_at": null,
- "sweep": null,
+ "sweep": {
+  "action": "ok",
+  "checked_at": "2026-11-15T22:59:31+00:00",
+  "views": 105,
+  "age_hours": 50.0,
+  "published_at": "2026-11-13T21:00:04Z",
+  "publish_at": "2026-11-13T21:00:00Z"
+ },
  "publish_at": "2026-11-13T21:00:00Z",
  "slot_key": "2026-11-14-morning",
  "schema_version": 1

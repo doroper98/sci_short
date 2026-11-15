@@ -1,0 +1,12 @@
+{
+ "offered_at": "2026-11-15T23:02:22+00:00",
+ "video_file": "gpt-transformer.mp4",
+ "video_md5": "93ab3a23d84bc6a7e4b0f580c2d6fb28",
+ "video_url": "https://raw.githubusercontent.com/doroper98/sci_short/557a32a85a129af34ffc0771e74cd90f52a93ff6/finals/45-gpt-transformer/gpt-transformer.mp4",
+ "title": "GPT는 문맥을 어떻게 읽을까? | 트랜스포머와 어텐션 #GPT #트랜스포머 #과학",
+ "caption": "<GPT는 문맥을 어떻게 읽을까?>\n\n'항구를 떠난 배'와 '달게 익은 배'.\n글자는 같은데 뜻이 달라요.\n\"트랜스포머는 낱말마다 앞의 낱말들을 살피게 해서, 같은 글자도 문맥에 맞는 뜻으로 바꿔요\"\n\nGPT 안에서 낱말 하나는 숫자 묶음이에요.\n'뜻의 지도' 위에 찍힌 점 하나와 같아요.\n'배'는 처음에 탈것과 과일 사이에 찍혀요.\n\n'배'는 앞의 낱말들을 한꺼번에 살펴요.\n관련이 깊은 낱말에 주의를 더 많이 기울여요.\n이 주의를 영어로 어텐션이라고 해요.\n\n'항구'와 '떠난'에 주의가 쏠리면 점이 탈것 쪽으로 끌려가요.\n앞의 말이 '달게 익은'이면 과일 쪽으로 가요.\nGPT-3는 이 일을 96층에 걸쳐 되풀이했어요.\n\n어디에 주의를 기울일지는 누가 정했을까요?\n사람이 아니에요. GPT가 수많은 글을 읽으며 익혔어요.\n\n#GPT #트랜스포머 #어텐션 #언어모델 #과학",
+ "number": 45,
+ "slug": "gpt-transformer",
+ "account": "shortform_science",
+ "note": "안내만 했다. 게시는 사람이 틱톡 앱에서 한다."
+}

@@ -1,0 +1,28 @@
+{
+ "media_id": "18135040765706560",
+ "permalink": "https://www.instagram.com/reel/Dfx6VgFFZO2/",
+ "posted_at": "2026-11-15T23:02:12+00:00",
+ "ig_user_id": "17841457693338876",
+ "username": "_scishorts",
+ "video_file": "gpt-pretrained.mp4",
+ "video_bytes": 20229928,
+ "video_md5": "8bb4c9ac343ca7b7ca85026d0e85e12d",
+ "caption_chars": 484,
+ "hashtags": [
+  "#GPT",
+  "#챗GPT",
+  "#언어모델",
+  "#사전학습",
+  "#과학"
+ ],
+ "container_id": "17984691221923112",
+ "shortcode": "Dfx6VgFFZO2",
+ "transfer": "url",
+ "ai_label": true,
+ "number": 44,
+ "slug": "gpt-pretrained",
+ "status": "posted",
+ "note": "",
+ "source": "api",
+ "schema_version": 1
+}
