@@ -90,6 +90,11 @@ python pipeline/narration/narrate.py --script episodes/<slug>/script.json --out 
 
 - 비트 3(메커니즘)부터 만든다. 전체 단면 → 번호 붙인 확대 → 측정값 그래프의 3단 계기판과 추적 표식을 먼저 정한다. **핵심 장면 약 10초를 먼저 렌더해** 정지화면으로 확인한 뒤 나머지를 만든다. 화풍이 바뀌는 편은 그 10초를 사용자에게 보인다.
 - **문법 여덟 가지**(2026-11-10 사용자 결정, `docs/ANIMATION_QUALITY.md`): ① 움직이는 것은 모두 인과 사슬의 한 고리 ② 세계·계기·숫자·소리는 같은 시계(사건의 프레임에 계기가 반응) ③ 조건 하나를 바꿔 잔상으로 비교 ④ 빛나는 것은 에너지·신호뿐, 물체는 면과 명암이 있는 무광 덩어리(윤곽선만으로 주인공을 그리지 않는다) ⑤ 난색 하나·한색 하나 ⑥ 무대 하나, 세계의 자와 계기의 자는 같은 자, 비교 중 시점 고정 ⑦ 시간 배율에 정직 ⑧ 글자는 머리글·큰 숫자 하나·계기 눈금.
+- **HDR — 빛나는 것은 `lit()` 안에서 그린다**(2026-11-15 사용자 결정 "다음 편부터 hdr 적용해", [docs/HDR.md](../../docs/HDR.md)). `brief.md` 의 "빛나는 것과 그 뜻"에 적은 것(에너지·신호·섬광·빛줄기·달궈진 것)을 `lit(stage, c => { … })` 안에서 `c` 로 그린다. 화면에는 지금처럼 그려지고, HDR 판에서는 그곳만 흰색보다 밝아진다(최대 4배).
+  - 넣지 않는 것: 자막, 계기 숫자, 이름표, 머리글, 바탕, 빛을 내지 않는 물체.
+  - 함수는 두 번 불린다. 안에서 `Math.random()`·횟수를 세는 변수·바깥 값을 바꾸는 코드를 쓰지 않는다. `stage.text()` 는 빛 지도에 찍히지 않는다.
+  - 빛 위에 밝은 글자·흰 이름표를 겹치지 않는다(함께 밝아진다). 잘라 그리기(clip) 안에서 쓸 때는 `lit()` 안에서 다시 자른다.
+  - 확인: 정지화면을 뽑으면 `outputs/<slug>/stills/contact-sheet-hdr.jpg`(빛 지도)가 함께 나온다. **빛나야 할 것만 밝은지 직접 열어 본다.** `lit()` 를 한 번도 쓰지 않으면 `hdr` 단계가 멈춘다.
 - 각 장면에서 실제로 움직이는 대상을 하나 이상 둔다. 숫자 교체·정지 그림·장식 입자만으로 채우지 않는다. 2초 넘게 아무 고리도 움직이지 않는 구간을 두지 않는다(내레이션이 길면 사슬을 반복하거나 계기를 읽게 한다).
 - 전체 → 확대 → 전체의 연결 표시를 넣는다. 확대 장면은 어디를 보고 있는지 알 수 있어야 한다.
 - 라벨은 대상 이름, 자막은 문장. 자막이 현상을 가리면 그 장면에서 자막 위치를 올린다.
@@ -131,7 +136,7 @@ node episodes/<slug>/render.mjs --stills     # 장면 시작·중간·사건 시
 배경음악은 기본 꺼짐이다. 쓰려면 `sound.json`의 `music` 블록에서 `enabled: true`(`assets/music/registry.json`의 id, CC BY 4.0 표기 필수). 각주·출처 줄은 화면에 넣지 않고 `brief.md`와 전달 README에 적는다. 화면 표기는 LIGO 같은 고유명사의 원어 표기를 쓴다.
 
 ```bash
-node episodes/<slug>/render.mjs --video
+node episodes/<slug>/render.mjs --video        # visual.mp4 와 함께 빛 지도 gain.mp4·gain.json 을 쓴다(HDR 판의 재료)
 python pipeline/audio/sfx.py  --sound episodes/<slug>/sound.json --timeline outputs/<slug>/narration/timeline.json --out outputs/<slug>/sfx.wav
 python pipeline/audio/mix.py  --narration outputs/<slug>/narration/narration.wav --sfx outputs/<slug>/sfx.wav --timeline outputs/<slug>/narration/timeline.json --out outputs/<slug>/mix.wav
 ```
@@ -141,18 +146,33 @@ python pipeline/audio/mix.py  --narration outputs/<slug>/narration/narration.wav
 ```bash
 python pipeline/audio/finish.py --visual outputs/<slug>/visual.mp4 --mix outputs/<slug>/mix.wav \
   --timeline outputs/<slug>/narration/timeline.json --captions-srt outputs/<slug>/narration/captions.srt \
-  --out outputs/<slug>/<slug>.mp4 --title "제목"
-python pipeline/validate.py outputs/<slug>
+  --out outputs/<slug>/final/<slug>.mp4 --title "제목"
+python pipeline/hdr.py --visual outputs/<slug>/visual.mp4 --gain outputs/<slug>/gain.mp4 \
+  --final outputs/<slug>/final/<slug>.mp4 --out outputs/<slug>/final/hdr/<slug>.hdr.mp4      # HDR 판(유튜브용)
+python pipeline/validate.py outputs/<slug> --hdr require
 ```
 
-`episodes/<slug>/run.sh`가 3~6단계를 순서대로 실행한다. 중간 단계가 바뀌면 그 뒤를 모두 다시 돌린다.
+`episodes/<slug>/run.sh`가 3~6단계를 순서대로 실행한다(narrate → stills → render → sfx → mix → finish → hdr → validate). 중간 단계가 바뀌면 그 뒤를 모두 다시 돌린다.
+
+- **HDR 판**(2026-11-15 사용자 결정, [docs/HDR.md](../../docs/HDR.md)): `hdr` 단계가 SDR 그림과 빛 지도를 합쳐 `final/hdr/<slug>.hdr.mp4`(HEVC 10비트, BT.2020, PQ)를 만든다. `validate` 는 SDR 19행에 HDR 6행을 더해 본다. `hdr` 가 "빛 지도가 비어 있습니다"로 멈추면 `scenes.mjs` 에서 빛나는 것을 `lit()` 안에 넣고 `render` 부터 다시 돌린다. 빛나는 것이 정말 없는 편만 `SKIP_HDR=1` 로 건너뛰고 까닭을 `brief.md` 에 적는다. HDR 화면으로 본 모습은 제작 세션이 확인할 수 없으니 README 에 "HDR 화면에서 보지 못함"이라고 적는다.
 
 ### 7. 전달
 
 - **전달본이 곧 최종본**이다(2026-11-03 사용자 결정). 사용자가 다시 만들라고 하지 않으면 바꾸지 않는다.
-- `docs/TOPIC_BACKLOG.md`에 예약된 번호로 `finals/<번호>-<slug>/`를 만들고 넣는다(목록 번호 = 완성본 번호, 2026-11-07 사용자 결정). 목록에 없는 주제는 먼저 목록 끝에 다음 번호로 적는다. 만든 뒤 목록의 상태를 폴더 이름으로 바꾼다. 들어갈 것은 mp4, srt, poster.jpg(0초 프레임), scenes.jpg, timeline.json, validation.json, README.md, upload.md다. 다시 만들 때는 같은 폴더를 덮어쓴다.
+- `docs/TOPIC_BACKLOG.md`에 예약된 번호로 `finals/<번호>-<slug>/`를 만들고 넣는다(목록 번호 = 완성본 번호, 2026-11-07 사용자 결정). 목록에 없는 주제는 먼저 목록 끝에 다음 번호로 적는다. 만든 뒤 목록의 상태를 폴더 이름으로 바꾼다. 들어갈 것은 mp4, srt, poster.jpg(0초 프레임), scenes.jpg, timeline.json, validation.json, README.md, upload.md, 그리고 **`hdr/<slug>.hdr.mp4`·`hdr/hdr.json`**(HDR 판, 2026-11-15)이다. 다시 만들 때는 같은 폴더를 덮어쓴다. 폴더 맨 위의 `.mp4` 는 SDR 판 하나뿐이어야 한다(HDR 판은 꼭 `hdr/` 안에).
+
+  ```bash
+  S=<slug>; F=finals/<번호>-$S; O=outputs/$S; mkdir -p $F/hdr
+  cp $O/final/$S.mp4 $O/final/$S.srt $O/final/validation.json $F/
+  cp $O/narration/timeline.json $F/timeline.json
+  cp $O/stills/contact-sheet.jpg $F/scenes.jpg
+  ffmpeg -loglevel error -y -i $F/$S.mp4 -frames:v 1 -q:v 2 $F/poster.jpg      # 0초 프레임(SDR 판에서)
+  cp $O/final/hdr/$S.hdr.mp4 $O/final/hdr/hdr.json $F/hdr/                    # HDR 판 — 유튜브에는 이것이 올라간다
+  python -m publish.youtube $F --dry-run     # 요약 줄 끝에 'HDR(HEVC 10비트 PQ)' 가 보여야 한다
+  python -m publish.instagram $F --dry-run   # 인스타는 SDR 판
+  ```
 - `python3 pipeline/catalog.py`로 `finals/README.md` 목록과 `finals/catalog.json`(길이·해상도·SHA-256)을 갱신한다.
-- README에는 길이, 음성 상태(`degraded` 여부), 검증 방법, 직접 청취·휴대전화 재생 여부를 사실대로 적는다.
+- README에는 길이, 음성 상태(`degraded` 여부), 검증 방법, 직접 청취·휴대전화 재생 여부를 사실대로 적는다. HDR 판은 `hdr/hdr.json` 의 최대 밝기(코드·어림 nit)와 lit 프레임 수를 적고, **"HDR 화면에서 보지 못함"**을 적는다.
 - `HANDOFF.md`에 날짜·주제·결과·남은 한계를 추가한다.
 - **업로드 정보 세 가지**(2026-11-03 사용자 결정)를 `finals/<번호>-<slug>/upload.md`에 적고 사용자에게 평문으로 준다(복사 버튼이 아니라 길게 눌러 복사하므로 코드 블록 없이).
   - 제목: 해시태그 2~3개 포함, 100자 이내. `|` 앞부분에는 주제어가 든 질문(첫 프레임의 흰 글과 같은 질문)을 둔다(2026-11-12).

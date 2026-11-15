@@ -57,6 +57,20 @@
 
 기록일: 2026-10-16, Asia/Seoul. 대상 저장소: https://github.com/doroper98/sci_short
 
+## 2026-11-15: HDR — 이 결정 뒤에 만드는 새 편부터 SDR 판과 HDR 판을 함께 만든다
+
+사용자: "그리고 모든 영상을 hdr이 지원되느느포맷으로 만들 수 있어?" → (가능성과 걸림돌을 보고한 뒤) **"병합하고 다음 편부터 hdr 적용해"**. 한 편으로 먼저 시험하자는 제작 세션의 권고 대신 바로 적용하기로 한 사용자 결정입니다.
+
+- **원리**: SDR 화면은 지금 그대로 그리고, 빛나는 것(에너지·신호)만 `lit(stage, c => …)` 안에서 그려 '빛 지도'에 표시합니다. HDR 판 = SDR × (1 + 3 × 빛 지도 × 문). 빛 지도가 0 인 곳(자막·계기·바탕)은 203 nit 를 넘지 않고, 표시한 곳만 최대 4배(약 812 nit)입니다. '문'은 화면이 밝은 곳만 통과시켜, 빛 위를 지나가는 어두운 물체가 밝아지지 않게 합니다.
+- **새 편을 만드는 세션이 할 일**: `docs/HDR.md` 를 읽고, `brief.md` 의 "빛나는 것"을 `lit()` 안에서 그린 뒤 `stills/contact-sheet-hdr.jpg`(빛 지도)를 열어 봅니다. `run.sh` 는 `hdr` 단계까지 돌고 `validate` 는 `--hdr require` 입니다. 완성본에는 `hdr/<slug>.hdr.mp4`·`hdr/hdr.json` 을 함께 넣습니다(`skills/science-short/SKILL.md` 7단계의 명령 묶음).
+- **코드**: `pipeline/render/hdr.mjs`(`lit`), `pipeline/render/encode.mjs`(`gain.mp4`·`gain.json`·빛 지도 묶음), `pipeline/hdr.py`(합성·인코딩·확인), `config/hdr.json`, `pipeline/validate.py --hdr`, `publish/youtube.py`(`upload_file`·`check_hdr`·`prefer_hdr`), `pipeline/catalog.py`(`hdr`·`hdr_bytes`), 템플릿 `run.sh`·`scenes.mjs`. 업로드·검증 배선은 Opus 작업자가 제작 세션의 명세대로 구현했고 제작 세션이 변경분을 읽어 확인했습니다.
+- **확인한 것**: ① 시험 무늬로 합성 수식의 코드 값(흰색 573 = 203 nit, 표시한 흰색 702 ≈ 812 nit, 어두운 곳·문 아래는 그대로) ② 템플릿 예시(22.8초)를 음성부터 끝까지 돌려 `validate` 25/25(SDR 19 + HDR 6), lit 프레임 24/683, 가장 밝은 화소 코드 691 ≈ 718 nit, 빛나지 않는 프레임의 최대 코드 570(SDR 흰색 이하) ③ 빛나는 프레임에서 SDR·빛 지도·HDR(SDR 로 되돌린 미리보기)을 나란히 열어 봄 — 빛 지도에는 수소 결합의 번쩍임만 찍힘 ④ 단위 시험 197개, 노드 시험 14개 ⑤ HDR 판이 없는 옛 편은 업로더·검증·카탈로그 출력이 그대로.
+- **확인하지 못한 것**: HDR 화면으로 본 모습(제작 세션은 볼 수 없음), 유튜브가 쇼츠를 HDR 로 재생하는지, SDR 기기용 자동 변환본의 모습, 유튜브의 HDR 처리 시간. 실제 HDR 편은 아직 한 편도 없습니다.
+- **비용**: HDR 인코딩은 영상 길이의 약 1.6배 시간(165초 편이면 4~5분), 파일은 SDR 판과 비슷한 크기가 편마다 하나 더 생깁니다.
+- **옛 편**: 58번까지와 다시 올리기 대기열의 옛 편은 SDR 그대로입니다. 이미 올린 편의 폴더에 `hdr/` 를 넣으면 업로더가 멈춥니다.
+- **되돌리기**: `config/youtube.json` `prefer_hdr` false(유튜브도 SDR 판), `config/hdr.json` `enabled` false(HDR 판을 만들지 않음 — 이때 `run.sh` 는 `SKIP_HDR=1` 로 돌립니다).
+- 다음: 첫 HDR 편이 올라가면 사용자가 휴대전화에서 세 가지를 봅니다 — HDR 로 재생되는가, 빛이 과하지 않은가, SDR 기기에서 색이 틀어지지 않는가. 결과를 `docs/HDR.md` 와 `docs/CHANNEL_GROWTH.md` H10 에 적고 `peak_boost` 를 조정합니다.
+
 ## 2026-11-15: 대기열 끝에 64 기상 레이더 추가, 58번 머리글 글꼴을 픽셀 글꼴(E)로
 
 - 사용자(한 메시지, 두 줄): "그리고 폰트는 e가 좋은데?" / "대기열에 기상 레이더가 비구름을 관측 하는 방법 추가해. 그리고 병합해"

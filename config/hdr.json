@@ -1,0 +1,15 @@
+{
+  "_purpose": "HDR 판 설정(pipeline/hdr.py). 2026-11-15 사용자: \"다음 편부터 hdr 적용해\". SDR 판은 그대로 만들고(인스타·틱톡·카탈로그), 유튜브에는 HDR 판(finals/<NN>-<slug>/hdr/<slug>.hdr.mp4)을 올린다. 값은 제작 세션의 제안이며 사용자 확정이 아니다 — 첫 HDR 편을 휴대전화에서 본 뒤 조정한다. 설명은 docs/HDR.md.",
+  "enabled": true,
+  "_sdr_white_nits": "SDR 흰색을 HDR 에서 몇 nit 에 둘지. 203 = ITU-R BT.2408 의 HDR 기준 흰색. 빛 지도가 0 인 곳(자막·계기·바탕)은 이 밝기를 넘지 않는다.",
+  "sdr_white_nits": 203,
+  "_peak_boost": "lit() 로 표시한 가장 밝은 곳을 SDR 의 몇 배까지 밝게 할지. 4 = 흰색 기준 약 812 nit. '빛은 조금만'을 지키려고 1000 nit 아래로 잡았다.",
+  "peak_boost": 4,
+  "_gate": "화면이 밝은 곳만 통과시키는 문. SDR 화소의 max(R,G,B) 가 첫 값 아래면 밝아지지 않고 둘째 값 위면 다 밝아진다(0~1). 빛 위를 지나가는 어두운 물체를 지킨다.",
+  "gate": [0.40, 0.70],
+  "crf": 18,
+  "preset": "medium",
+  "_max_cll": "HDR 메타데이터의 최대 밝기(nit). null 이면 sdr_white_nits × peak_boost 를 올림한 값.",
+  "max_cll": null,
+  "max_fall": 300
+}

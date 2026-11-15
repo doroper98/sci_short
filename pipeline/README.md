@@ -13,7 +13,8 @@ pipeline/
   render/           Node 캔버스 툴킷: stage·draw·timeline·captions·chrome·encode, fetch_fonts.py   (README: render/README.md)
     tests/          node --test, fixtures/timeline.sample.json, make_fixture.py
   audio/            sfx.py(설명용 소리), mix.py(덕킹 믹스), finish.py(마스터링·mux·validation.json), tests/
-  validate.py       완성 폴더 자동 검사 → validate.json
+  hdr.py            SDR 그림(visual.mp4) + 빛 지도(gain.mp4) → HDR 판 final/hdr/<slug>.hdr.mp4 (docs/HDR.md)
+  validate.py       완성 폴더 자동 검사 → validate.json (--hdr auto|require|skip)
   new_episode.py    episodes/_template → episodes/<slug>
 episodes/
   _template/        brief.md script.json scenes.mjs sound.json render.mjs run.sh README.md

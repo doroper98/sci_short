@@ -3,6 +3,11 @@
 // of one causal chain; world, instrument, number and sound share one clock; change one condition and keep an afterimage;
 // only energy/signals glow, objects are matte filled bodies; one warm + one cool colour; one stage with the instrument on
 // the same ruler; honest time scale; three pieces of text. Reference implementation: samples/look-proposal-radar/scenes.mjs.
+// HDR (user decision 2026-11-15 "다음 편부터 hdr 적용해", docs/HDR.md): draw everything that EMITS light — energy, signals, flashes,
+// beams, glowing gas — inside lit(stage, c => { … }) using the passed context c. It is drawn on screen as usual and also stamped on
+// the light map; pipeline/hdr.py makes those bright pixels up to 4× brighter than SDR white in the HDR version. Never put captions,
+// labels, readouts or the background inside lit(). The function runs twice, so no Math.random() or counters inside.
+// Check stills/contact-sheet-hdr.jpg: only what should glow may be bright there.
 // Replace the content, keep the shape: export {theme, scenes, overlays?, titles?, captionLayout?, events?}.
 // Each scene: (stage, t, p, ctx) where p = 0..1 progress inside the scene,
 // ctx = {tl (Timeline), events (resolved, shared with sound.json), theme, scene (sceneAt result), local (s since scene start)}.
@@ -14,7 +19,7 @@
 import {
   header, progressBar, sourceLine, endCard, drawLabel, leader, scaleBar,
   project, lambert, DrawQueue, rgba, mix, clamp, lerp, smooth, easeOut, rand, poly, line, circle, ring, sphere, glow,
-  withAlpha, clipRect, rect, TAU,
+  withAlpha, clipRect, rect, TAU, lit,
 } from '../../pipeline/render/index.mjs';
 
 export const theme = 'noturno';   // 'noturno' (default) | 'slate' | 'graphite' | 'navy' | {base:'noturno', accent:'#…'}
@@ -169,13 +174,13 @@ export const scenes = {
         const A = O[h.a];
         q.push((H[2] + A[2]) / 2 - 0.01, () => {                                                          // hydrogen bond H···O
           line(c, [H, A], rgba(stage.theme.accent2, 0.85 * hb), 3, {dash: [7, 7]});
-          if (flash > 0) line(c, [H, A], rgba('#ffffff', 0.7 * flash), 5);
+          if (flash > 0) lit(stage, g => line(g, [H, A], rgba('#ffffff', 0.7 * flash), 5));   // the bond flash is a signal: it glows in HDR
         });
       }
     }
     O.forEach((v, i) => q.push(v[2], () => sphere(c, v[0], v[1], 17 * v[3], O_COL, {shade: '#4a1a10'})));
     q.flush();
-    if (flash > 0) glow(c, 500, 860, 420, stage.theme.accent2, 0.25 * flash);
+    if (flash > 0) lit(stage, g => glow(g, 500, 860, 420, stage.theme.accent2, 0.25 * flash), {gain: 0.6});
     // the empty hexagon centre
     const hole = project([Math.sqrt(3) / 2, 0.25, 0], cam), show = smooth((p - 0.55) / 0.12);
     withAlpha(c, show, () => { ring(c, hole[0], hole[1], 52, stage.theme.accent, 3); });

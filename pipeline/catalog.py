@@ -4,6 +4,7 @@
 Layout (2026-11-03 user decision: a delivered video is final unless the user asks for a remake):
   finals/<NN>-<slug>/   <slug>.mp4, <slug>.srt, poster.jpg, scenes.jpg, timeline.json, validation.json,
                         README.md (what it is, how it was checked), upload.md (title / description / tags)
+                        hdr/<slug>.hdr.mp4 (optional HDR version for YouTube, 2026-11-15 user: "다음 편부터 hdr 적용해")
   finals/legacy/<slug>/ earlier prototypes made before the standard pipeline
 
 Run after adding or replacing a final:  python3 pipeline/catalog.py
@@ -55,12 +56,13 @@ def entry(folder, number=None):
     slug = re.sub(r"^\d+-", "", folder.name)
     dur, w, h = probe(mp4)
     rel = lambda p: p.relative_to(ROOT).as_posix()
+    hdr = folder / "hdr" / f"{mp4.stem}.hdr.mp4"   # not caught by the glob above (subfolder); listed only when present
     # date this exact video content first entered the repository (blob lookup; moves do not count,
     # and --follow is avoided because it can pair similar-sized videos by mistake)
     blob = sh("git", "hash-object", str(mp4))
     dates = sh("git", "log", "--all", "--reverse", "--format=%cs", f"--find-object={blob}").splitlines()
     committed = dates[0] if dates else ""
-    return {
+    e = {
         "number": number, "slug": slug, "title": title, "status": "final" if number else "legacy",
         "folder": rel(folder), "video": rel(mp4), "duration_sec": dur, "width": w, "height": h,
         "bytes": mp4.stat().st_size, "sha256": sha256(mp4),
@@ -68,6 +70,9 @@ def entry(folder, number=None):
         "episode_code": rel(ROOT / "episodes" / slug) if (ROOT / "episodes" / slug).is_dir() else None,
         "upload_info": rel(upload) if upload.exists() else None, "thumbnail": thumb,
     }
+    if hdr.is_file():
+        e.update(hdr=rel(hdr), hdr_bytes=hdr.stat().st_size)
+    return e
 
 
 def main():

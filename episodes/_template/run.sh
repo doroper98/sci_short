@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 # Whole production order for one episode:
-#   narrate → stills → render → sfx → mix → finish → validate
+#   narrate → stills → render → sfx → mix → finish → hdr → validate
 # Usage:  episodes/<slug>/run.sh                 # everything
 #         episodes/<slug>/run.sh stills          # one or more named steps, in the order given
 #         SKIP_NARRATE=1 episodes/<slug>/run.sh  # reuse outputs/<slug>/narration
-# Steps: narrate stills render sfx mix finish validate
+#         SKIP_HDR=1 episodes/<slug>/run.sh     # HDR 판을 만들지 않는다(빛나는 것이 정말 없는 편 — 까닭을 brief.md 에)
+# Steps: narrate stills render sfx mix finish hdr validate
+# HDR(2026-11-15 사용자 "다음 편부터 hdr 적용해"): render 가 visual.mp4 와 함께 빛 지도 gain.mp4 를 쓰고(scenes.mjs 의 lit()),
+#   hdr 단계가 둘을 합쳐 final/hdr/<slug>.hdr.mp4 를 만든다. 유튜브에는 HDR 판, 인스타·틱톡에는 SDR 판이 올라간다. docs/HDR.md
 set -euo pipefail
 
 # ---- environment (edit here) ----
@@ -46,9 +49,12 @@ step_mix()      { local amb=() mus=(); [[ -f "$OUT/ambient.wav" && -z "${NO_MUSI
 step_finish()   { local deg=(); [[ "$ALLOW_DEGRADED" == 1 ]] && deg=(--allow-degraded)
                   "$PY" pipeline/audio/finish.py --visual "$OUT/visual.mp4" --mix "$OUT/mix.wav" --timeline "$NAR/timeline.json" \
                     --captions-srt "$NAR/captions.srt" --out "$OUT/final/$SLUG.mp4" --title "$TITLE" --max-sec "$MAX_SEC" "${deg[@]}"; }
-step_validate() { "$PY" pipeline/validate.py "$OUT" --max-sec "$MAX_SEC"; }
+step_hdr()      { [[ "${SKIP_HDR:-0}" == 1 ]] && { echo "hdr: skipped (SKIP_HDR=1) — 유튜브에도 SDR 판이 올라갑니다. 까닭을 brief.md 에 적으세요"; return; }
+                  "$PY" pipeline/hdr.py --visual "$OUT/visual.mp4" --gain "$OUT/gain.mp4" --final "$OUT/final/$SLUG.mp4" --out "$OUT/final/hdr/$SLUG.hdr.mp4"; }
+step_validate() { local h=(--hdr require); [[ "${SKIP_HDR:-0}" == 1 ]] && h=(--hdr skip)
+                  "$PY" pipeline/validate.py "$OUT" --max-sec "$MAX_SEC" "${h[@]}"; }
 
-STEPS=("$@"); [[ ${#STEPS[@]} -eq 0 ]] && STEPS=(narrate stills render sfx mix finish validate)
+STEPS=("$@"); [[ ${#STEPS[@]} -eq 0 ]] && STEPS=(narrate stills render sfx mix finish hdr validate)
 for s in "${STEPS[@]}"; do
   echo "== $s ($SLUG) =="
   start=$(date +%s); "step_$s"; echo "   $s: $(( $(date +%s) - start )) s"

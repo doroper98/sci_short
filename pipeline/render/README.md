@@ -18,7 +18,8 @@ npm test                                   # node --test tests/test_*.mjs
 | `timeline.mjs` | `loadTimeline(file)` → `Timeline`: `sceneAt(t)`, `sentenceAt(t)`, `at(ref, offset)`, `wordStart(id, word)`, `progress(t, from, to)`, `captionAt(t)`, `events(spec)`, `isDegraded()` |
 | `captions.mjs` | `drawCaptions(stage, tl, t, opts)`(문장 역할), `drawLabel(stage, text, x, y, opts)`(이름 역할), `layoutCaption`, `parseMarked` |
 | `chrome.mjs` | `THEMES`(noturno 기본·slate·graphite·navy), `resolveTheme`, `background`, `header`, `progressBar`, `sourceLine`, `endCard`. 모두 선택 사항 |
-| `encode.mjs` | `renderVideo({stage, duration, frame, out})` → visual.mp4(무음), `renderStills({stage, times, frame, outDir})` → JPG + `contact-sheet.jpg` |
+| `encode.mjs` | `renderVideo({stage, duration, frame, out})` → visual.mp4(무음) + 빛 지도 `gain.mp4`·`gain.json`, `renderStills({stage, times, frame, outDir})` → JPG + `contact-sheet.jpg`(+ 빛 지도 `contact-sheet-hdr.jpg`) |
+| `hdr.mjs` | `lit(stage, c => …, {gain})` — 빛나는 것을 화면에 그리면서 빛 지도에 흰색으로 찍는다(HDR 판에서 그곳만 흰색보다 밝아진다). `ensureGain`, `clearGain`, `whiteContext`, `cssAlpha`. 규칙은 [docs/HDR.md](../../docs/HDR.md) |
 | `fetch_fonts.py` | 글꼴 내려받기·변환, `assets/fonts/fonts-manifest.json`에 sha256 기록 |
 
 `index.mjs`가 전부 다시 내보냅니다: `import {createStage, …} from '../../pipeline/render/index.mjs'`.

@@ -195,6 +195,18 @@ python -m publish.youtube finals/13-gamma-ray-burst --env-file .env   # 비공�
 - **할당량(2026-11-03 공식 문서 확인).** videos.insert 는 별도 버킷 하루 100회. captions.insert 400단위, thumbnails.set 50단위, channels.list 1단위(기본 하루 10,000단위). 옛 판 비공개 전환은 videos.list 1단위 + videos.update 50단위(2026-11-12 문서 확인). 초과 시 `quotaExceeded` 로 멈추고 태평양 시간 자정(KST 오후 4~5시) 뒤 다시 됩니다.
 - **로컬·클라우드 세션에서 직접** 올릴 수도 있습니다: `python -m publish.youtube finals/<ep> --env-file .env`.
 
+## HDR 판 (2026-11-15)
+
+사용자: "다음 편부터 hdr 적용해". 만드는 법은 [HDR 판 만들기](HDR.md).
+
+- 편 폴더에 `hdr/<slug>.hdr.mp4`(HEVC 10비트, BT.2020, PQ)가 있으면 업로더는 **그 파일**을 올리고 기록합니다(`publish/youtube.py` `upload_file`, `config/youtube.json` `prefer_hdr` true). 없으면 지금처럼 맨 위의 SDR `.mp4` 를 올립니다.
+- 올리기 전에 규격을 봅니다(`check_hdr`): hevc, `yuv420p10le`, `smpte2084`, `bt2020`, SDR 판과의 길이 차이 0.5초 이내. 어긋나면 올리지 않고 오류로 남깁니다. 요약 줄 끝에 `HDR(HEVC 10비트 PQ)` 가 붙습니다.
+- 기록(`youtube_upload.json`)의 `video_file`·`video_md5`·`video_bytes` 는 올린 파일(HDR 판)의 것입니다.
+- **이미 올린 편의 폴더에 `hdr/` 를 넣지 않습니다.** 올릴 파일의 md5 가 기록과 달라져 "영상 파일이 바뀌었습니다"로 멈춥니다(다시 올리기 대기 편이면 새 판으로 HDR 판이 올라갑니다).
+- 인스타·틱톡은 늘 SDR 판입니다. 비공개 규칙·예약 공개·삭제 금지는 그대로입니다.
+- 끄기: `prefer_hdr` 를 false 로 하면 HDR 판이 있어도 SDR 판을 올립니다.
+- **미확인**: 유튜브가 쇼츠를 HDR 로 재생하는지, SDR 기기용 자동 변환본이 어떻게 보이는지, HDR 처리 시간. 첫 HDR 편에서 확인합니다.
+
 ## 아침 업로드 (2026-11-08)
 
 사용자 결정: "내가 말하지 않아도 제작해서 비공개로 하나씩 올려. 올리는 시간은 아침 7시로 해. 내가 출근하면서 공개로 바꾸게."
