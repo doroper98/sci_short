@@ -456,6 +456,43 @@
       "issues": [],
       "analysis": "docs/REFERENCE_ANALYSIS.md#장치-해부도-계열-chiong-lab-9-13번",
       "style_family": "device-cutaway (Chiong Lab)"
+    },
+    {
+      "id": "ref-15",
+      "title_ko": "픽셀 일러스트 화풍의 제작사 소개 영상: 띠 하늘·점묘 음영·영화식 카메라",
+      "recorded_date": "2026-11-15",
+      "path": "references/videos/15-pixel-illustration-reel.mp4",
+      "original_filename": "ClipDown.app_AQOAb3QgBjQxEKm1zk2iBGdznVm1TmT2IYdcxI1BM1jgdLlz5v7M3OcRNzZcTW3UD5DItsBsIUit5OuaaH7O2OTcVvuz6fJoJGUWbI4",
+      "upload_name": "645cdea0-ClipDown.app_AQOAb3QgBjQxEKm1zk2iBGdznVm1TmT2IYdcxI1BM1jgdLlz5v7M3OcRNzZcTW3UD5DItsBsIUit5OuaaH7O2OTcVvuz6fJoJGUWbI4",
+      "bytes": 5590609,
+      "sha256": "cdfc6ff20856b3fec17c1352eb202e7ea2e4dc2e1352bebc05e16f99114f0a14",
+      "duration_seconds": 29.652042,
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 720,
+          "height": 1280,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null,
+          "duration": "29.533333"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "48000",
+          "channels": 2,
+          "duration": "29.652042"
+        }
+      ],
+      "source": "user attachment (2026-11-15)",
+      "issues": [],
+      "analysis": "samples/look-proposal-pixel/README.md",
+      "style_family": "pixel illustration + cinematic camera (studio reel)"
     }
   ],
   "contact_sheets": [
@@ -472,7 +509,8 @@
     "references/contact-sheets/10-laser-printer.jpg",
     "references/contact-sheets/11-magnetron.jpg",
     "references/contact-sheets/12-dlp-projector.jpg",
-    "references/contact-sheets/13-ligo-interferometer.jpg"
+    "references/contact-sheets/13-ligo-interferometer.jpg",
+    "references/contact-sheets/15-pixel-illustration-reel.jpg"
   ],
   "images": [
     {
