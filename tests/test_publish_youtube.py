@@ -2357,5 +2357,131 @@ class OAuthHelperTest(unittest.TestCase):
             self.assertEqual(lines, ["OTHER=1", "YT_CLIENT_ID=new", "YT_CLIENT_SECRET=s", "YT_REFRESH_TOKEN=r"])
 
 
+# ───────────── HDR 판(2026-11-15 사용자 "다음 편부터 hdr 적용해") — 유튜브에만 HDR 판, 없으면 동작 그대로 ─────────────
+PROBE_HDR = dict(PROBE_OK, video_codec="hevc", pix_fmt="yuv420p10le", color_transfer="smpte2084",
+                 color_primaries="bt2020", color_space="bt2020nc")
+PROBE_SDR = dict(PROBE_OK, pix_fmt="yuv420p", color_transfer="bt709", color_primaries="bt709", color_space="bt709")
+
+
+def _hdr_episode(tmp: Path, hdr: bytes = b"\2" * 1500, **kw) -> Path:
+    d = _episode(tmp, **kw)
+    slug = kw.get("slug", "gravitational-waves")
+    (d / "hdr").mkdir()
+    (d / "hdr" / f"{slug}.hdr.mp4").write_bytes(hdr)
+    return d
+
+
+def _probe_by_name(hdr: dict | None = None, sdr: dict | None = None):
+    return lambda p: dict((hdr or PROBE_HDR) if p.name.endswith(".hdr.mp4") else (sdr or PROBE_SDR))
+
+
+class HdrTest(unittest.TestCase):
+    def test_load_episode_finds_hdr_in_subfolder(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            ep = yu.load_episode(_hdr_episode(Path(d)))
+            self.assertEqual(ep.video.name, "gravitational-waves.mp4")          # 맨 위 .mp4 하나 규칙 그대로
+            self.assertEqual(ep.video_hdr, ep.dir / "hdr" / "gravitational-waves.hdr.mp4")
+            self.assertIsNone(yu.load_episode(_episode(Path(d), name="02-x", slug="x")).video_hdr)
+
+    def test_hdr_name_must_follow_sdr_stem_and_meta_override(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            e = _episode(Path(d))
+            (e / "hdr").mkdir()
+            (e / "hdr" / "other.hdr.mp4").write_bytes(b"x")
+            self.assertIsNone(yu.load_episode(e).video_hdr)                     # 이름이 SDR 판과 맞지 않으면 무시
+            (e / "meta.json").write_text('{"video_hdr": "hdr/other.hdr.mp4"}', encoding="utf-8")
+            self.assertEqual(yu.load_episode(e).video_hdr.name, "other.hdr.mp4")
+            (e / "meta.json").write_text('{"video_hdr": "hdr/missing.hdr.mp4"}', encoding="utf-8")
+            with self.assertRaises(yu.UploadError):
+                yu.load_episode(e)
+
+    def test_upload_file_choice(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            ep = yu.load_episode(_hdr_episode(Path(d)))
+            self.assertEqual(yu.upload_file(ep, _cfg()), ep.video_hdr)
+            self.assertEqual(yu.upload_file(ep, _cfg(prefer_hdr=False)), ep.video)
+            sdr = yu.load_episode(_episode(Path(d), name="02-x", slug="x"))
+            self.assertEqual(yu.upload_file(sdr, _cfg()), sdr.video)
+
+    def test_hdr_is_uploaded_and_recorded(self) -> None:
+        api = FakeApi()
+        err = io.StringIO()
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(yu, "probe_video", _probe_by_name()), redirect_stderr(err):
+            ep = _hdr_episode(Path(d))
+            hdr = ep / "hdr" / "gravitational-waves.hdr.mp4"
+            res = yu.process_episode(ep, _cfg(channel_id="UC1"), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+            self.assertEqual(res["status"], "uploaded", res)
+            self.assertEqual(api.total, hdr.stat().st_size)                     # 올라간 것은 HDR 판
+            rec = yu.read_record(ep)
+            self.assertEqual((rec.video_file, rec.video_bytes, rec.video_md5),
+                             ("gravitational-waves.hdr.mp4", hdr.stat().st_size, yu.md5_file(hdr)))
+            self.assertEqual(json.loads(api.bodies["start"])["status"]["privacyStatus"], "private")
+            self.assertIn(" · HDR(HEVC 10비트 PQ)", err.getvalue())
+            # 같은 HDR 판은 다시 올리지 않는다
+            api2 = FakeApi()
+            again = yu.process_episode(ep, _cfg(channel_id="UC1"), dry_run=False, send=api2, env=ENV, sleep=lambda s: None)
+            self.assertEqual((again["status"], api2.calls), ("skipped", []))
+
+    def test_prefer_hdr_false_uploads_sdr(self) -> None:
+        api = FakeApi()
+        err = io.StringIO()
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(yu, "probe_video", _probe_by_name()), redirect_stderr(err):
+            ep = _hdr_episode(Path(d))
+            res = yu.process_episode(ep, _cfg(channel_id="UC1", prefer_hdr=False), dry_run=False, send=api, env=ENV,
+                                     sleep=lambda s: None)
+            self.assertEqual(res["status"], "uploaded", res)
+            sdr = ep / "gravitational-waves.mp4"
+            rec = yu.read_record(ep)
+            self.assertEqual((rec.video_file, rec.video_md5, api.total), (sdr.name, yu.md5_file(sdr), sdr.stat().st_size))
+            self.assertNotIn("HDR", err.getvalue())
+
+    def test_sdr_only_log_line_unchanged(self) -> None:
+        err = io.StringIO()
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(yu, "probe_video", lambda p: dict(PROBE_OK)), redirect_stderr(err):
+            res = yu.process_episode(_episode(Path(d)), _cfg(), dry_run=True, env={})
+            self.assertEqual(res["status"], "dry-run")
+            line = next(ln for ln in err.getvalue().splitlines() if "제목 「" in ln)
+            self.assertTrue(line.endswith("합성표시=True · 아동용=False"), line)
+
+    def test_bad_hdr_spec_is_refused(self) -> None:
+        for bad in (dict(PROBE_HDR, video_codec="h264"), dict(PROBE_HDR, pix_fmt="yuv420p"),
+                    dict(PROBE_HDR, color_transfer="bt709"), dict(PROBE_HDR, color_primaries="bt709")):
+            api = FakeApi()
+            with tempfile.TemporaryDirectory() as d, mock.patch.object(yu, "probe_video", _probe_by_name(hdr=bad)), \
+                    redirect_stderr(io.StringIO()):
+                ep = _hdr_episode(Path(d))
+                res = yu.process_episode(ep, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+                self.assertEqual(res["status"], "error", res)
+                self.assertIn("HDR 판", res["error"])
+                self.assertEqual(api.calls, [])                                 # 네트워크 전에 멈춘다
+                self.assertIsNone(yu.read_record(ep))
+        self.assertEqual(yu.check_hdr(PROBE_HDR, PROBE_SDR), ([], []))
+        self.assertEqual(len(yu.check_hdr(None, PROBE_SDR)[1]), 1)              # ffprobe 없음 → 경고만
+
+    def test_duration_mismatch_is_refused(self) -> None:
+        with tempfile.TemporaryDirectory() as d, \
+                mock.patch.object(yu, "probe_video", _probe_by_name(hdr=dict(PROBE_HDR, duration_sec=175.6))), \
+                redirect_stderr(io.StringIO()):
+            res = yu.process_episode(_hdr_episode(Path(d)), _cfg(), dry_run=True, env={})
+            self.assertEqual(res["status"], "error", res)
+            self.assertIn("SDR 판", res["error"])
+        self.assertEqual(yu.check_hdr(dict(PROBE_HDR, duration_sec=175.5), PROBE_SDR)[0], [])   # 0.5초까지는 허용
+
+    def test_mark_uploaded_records_hdr(self) -> None:
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(yu, "probe_video", _probe_by_name()):
+            ep = _hdr_episode(Path(d))
+            rec = yu.mark_uploaded(ep, "dQw4w9WgXcQ")
+            self.assertEqual(rec.video_file, "gravitational-waves.hdr.mp4")
+
+    def test_config_prefer_hdr(self) -> None:
+        self.assertTrue(yu.load_config().prefer_hdr, "2026-11-15 사용자 결정: 다음 편부터 HDR")
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "c.json"
+            p.write_text(json.dumps({"prefer_hdr": False, "_prefer_hdr": "설명"}), encoding="utf-8")
+            self.assertFalse(yu.load_config(p).prefer_hdr)
+            p.write_text("{}", encoding="utf-8")
+            self.assertTrue(yu.load_config(p).prefer_hdr)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -536,7 +536,16 @@ def changed_for_youtube_reupload(dir_: Path, md5: str, republish_path: Path | No
         rec = youtube_record(dir_)
     except (UploadError, OSError):
         return False
-    return republished(rec) and rec.video_md5 == md5
+    if not republished(rec):
+        return False
+    if rec.video_md5 == md5:
+        return True
+    # HDR 판이 있는 편(2026-11-15~)은 유튜브 기록이 HDR 판의 md5 를 적는다 — 그 HDR 판이 지금 파일이면 같은 다시 만들기다
+    try:
+        hdr = load_episode(dir_, caption=False, thumbnail=False).video_hdr
+    except (UploadError, OSError):
+        return False
+    return hdr is not None and rec.video_file == hdr.name and md5_file(hdr) == rec.video_md5
 
 
 def process_episode(dir_: Path, cfg: IgConfig, *, dry_run: bool, auto: bool = False, send: Transport | None = None,

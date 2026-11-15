@@ -6,3 +6,4 @@ export * from './timeline.mjs';
 export * from './captions.mjs';
 export * from './chrome.mjs';
 export * from './encode.mjs';
+export * from './hdr.mjs';

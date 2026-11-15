@@ -11,10 +11,12 @@
 `brief.md`는 기획·단순화·검증 메모, `render.mjs`와 `run.sh`는 보통 고치지 않습니다.
 
 ```bash
-episodes/{{slug}}/run.sh                       # narrate → stills → render → sfx → mix → finish → validate
-episodes/{{slug}}/run.sh stills                # 스틸만 다시 (outputs/{{slug}}/stills/contact-sheet.jpg)
+episodes/{{slug}}/run.sh                       # narrate → stills → render → sfx → mix → finish → hdr → validate
+episodes/{{slug}}/run.sh stills                # 스틸만 다시 (outputs/{{slug}}/stills/contact-sheet.jpg, 빛 지도 contact-sheet-hdr.jpg)
 SCISHORT_ROOT=$PWD node episodes/{{slug}}/render.mjs --stills --safe   # 플랫폼 UI 영역 겹쳐 보기
 ```
+
+HDR 판(2026-11-15): 빛나는 것(에너지·신호)은 `scenes.mjs` 에서 `lit(stage, c => …)` 안에서 그립니다. `hdr` 단계가 `outputs/{{slug}}/final/hdr/{{slug}}.hdr.mp4` 를 만듭니다. 규칙은 [docs/HDR.md](../../docs/HDR.md).
 
 `scenes.mjs`의 장면 id는 `script.json`의 `scene` 값과 같아야 합니다. 예시는 "얼음은 왜 물에 뜰까"이며 내용은 바꿉니다.
 자세한 순서와 API는 [pipeline/README.md](../../pipeline/README.md).

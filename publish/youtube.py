@@ -23,10 +23,12 @@ publishAt 은 새 영상의 insert 본문에만 넣고 videos.update 에는 보�
 
 입력은 최종본 보관함 규약(finals/README.md)을 그대로 쓴다.
     <slug>.mp4           폴더 안의 유일한 .mp4 (pipeline/catalog.py 와 같은 규칙)
+    hdr/<slug>.hdr.mp4   (선택) HDR 판(HEVC Main 10 · BT.2020 · PQ). 있으면 유튜브에는 이것을 올리고 기록한다
+                         (config/youtube.json prefer_hdr, 2026-11-15 사용자 "다음 편부터 hdr 적용해"). 인스타·틱톡은 늘 <slug>.mp4
     upload.md            제목 / 설명 / 태그 (skills/science-short/SKILL.md 7단계, 2026-11-03 사용자 결정 형식)
     thumbnail.jpg        있으면 썸네일로 올림. 없으면 poster.jpg(0초 프레임). 채널이 맞춤 썸네일을 못 쓰면 경고로 남김
     <slug>.srt           기본 올리지 않음(화면에 자막이 새겨져 있음, docs/YOUTUBE_UPLOAD.md). --caption 으로 올릴 수 있음
-    meta.json            (선택) 편별 덧씌움: tags, made_for_kids, contains_synthetic_media, category_id, caption, thumbnail, video
+    meta.json            (선택) 편별 덧씌움: tags, made_for_kids, contains_synthetic_media, category_id, caption, thumbnail, video, video_hdr
     youtube_upload.json  업로드 기록(도구가 씀). 같은 영상(md5)은 다시 올리지 않는다.
 
 비밀값은 환경 변수 YT_CLIENT_ID · YT_CLIENT_SECRET · YT_REFRESH_TOKEN 만 읽는다(--env-file 로 .env 를 읽을 수 있다).
@@ -84,7 +86,11 @@ CHUNK_UNIT = 256 * 1024        # 재개 가능 업로드 조각은 256 KiB 배�
 MB = 1024 * 1024
 RETRY_STATUS: frozenset[int] = frozenset({500, 502, 503, 504})
 META_KEYS: frozenset[str] = frozenset({"tags", "made_for_kids", "contains_synthetic_media", "category_id", "caption", "thumbnail", "video",
-                                       "auto_publish", "instagram", "tiktok"})   # auto_publish·instagram·tiktok: 자동 대상 지정(publish/instagram.py·tiktok.py 와 공용)
+                                       "video_hdr", "auto_publish", "instagram", "tiktok"})   # auto_publish·instagram·tiktok: 자동 대상 지정(publish/instagram.py·tiktok.py 와 공용)
+HDR_DIR_NAME = "hdr"           # HDR 판: finals/<NN>-<slug>/hdr/<slug>.hdr.mp4 (2026-11-15 사용자 "다음 편부터 hdr 적용해") — 유튜브에만 올린다
+HDR_SUFFIX = ".hdr.mp4"
+HDR_MAX_DURATION_DIFF_SEC = 0.5
+HDR_LABEL = "HDR(HEVC 10비트 PQ)"
 TOKEN_EXPIRED_HINT = ("리프레시 토큰이 만료되거나 철회되었습니다(invalid_grant). OAuth 앱이 '테스트 중'이면 7일마다 만료됩니다. "
                       "앱을 프로덕션으로 게시한 뒤 `python -m publish.oauth` 로 새 토큰을 받아 YT_REFRESH_TOKEN 을 바꾸십시오(docs/YOUTUBE_AUTO_UPLOAD.md).")
 
@@ -170,6 +176,7 @@ class Config:
     auto_from_number: int = 22         # push 자동 실행(--auto)은 이 번호 이상 새 편만. 01~21 은 손으로 올린 편이 섞여 있음
     processing_wait_sec: float = 1200  # 쇼츠 맞춤 썸네일은 처리 완료 뒤에만 적용된다 — 처리 완료를 이만큼 기다린다
     processing_poll_sec: float = 15
+    prefer_hdr: bool = True            # HDR 판(hdr/<slug>.hdr.mp4)이 있으면 유튜브에는 그것을 올린다(2026-11-15). 인스타·틱톡은 늘 SDR 판
     schema_version: int = 1
 
 
@@ -207,6 +214,12 @@ class Episode:
     srt: Path | None
     thumbnail: Path | None
     meta: dict[str, Any]
+    video_hdr: Path | None = None      # HDR 판(유튜브 전용). 없으면 None — 지금까지의 모든 편
+
+
+def upload_file(ep: Episode, cfg: Config) -> Path:
+    """유튜브에 올릴(기록할) 파일 — 이것 하나로 고른다. prefer_hdr 이고 HDR 판이 있으면 HDR 판, 아니면 SDR 판."""
+    return ep.video_hdr if cfg.prefer_hdr and ep.video_hdr is not None else ep.video
 
 
 def parse_dir_name(dir_: Path) -> tuple[int | None, str]:
@@ -256,6 +269,13 @@ def load_episode(dir_: Path, *, caption: bool = False, thumbnail: bool = True) -
         video = mp4s[0]
     if not video.is_file():
         raise UploadError(f"영상 파일 없음: {video}")
+    video_hdr: Path | None = None
+    if "video_hdr" in meta:
+        video_hdr = dir_ / str(meta["video_hdr"])
+        if not video_hdr.is_file():
+            raise UploadError(f"HDR 판 파일 없음: {video_hdr} (meta.json 의 video_hdr)")
+    elif (dir_ / HDR_DIR_NAME / f"{video.stem}{HDR_SUFFIX}").is_file():
+        video_hdr = dir_ / HDR_DIR_NAME / f"{video.stem}{HDR_SUFFIX}"
     upload_md = dir_ / UPLOAD_MD_NAME
     if not upload_md.is_file():
         raise UploadError(f"{UPLOAD_MD_NAME} 없음: {upload_md} (제목 / 설명 / 태그 — skills/science-short/SKILL.md 7단계)")
@@ -270,7 +290,8 @@ def load_episode(dir_: Path, *, caption: bool = False, thumbnail: bool = True) -
             if (dir_ / name).is_file():
                 thumb = dir_ / name
                 break
-    return Episode(dir=dir_, number=number, slug=slug, video=video, upload_md=upload_md, srt=srt, thumbnail=thumb, meta=meta)
+    return Episode(dir=dir_, number=number, slug=slug, video=video, upload_md=upload_md, srt=srt, thumbnail=thumb, meta=meta,
+                   video_hdr=video_hdr)
 
 
 def parse_upload_md(text: str) -> dict[str, Any]:
@@ -546,7 +567,7 @@ def kst_label(publish_at: str, *, date: bool = True) -> str:
 # ───────────────────────────── 영상 규격 ─────────────────────────────
 
 def probe_video(path: Path) -> dict[str, Any] | None:
-    """ffprobe 로 해상도·길이·오디오 유무를 읽는다. ffprobe 가 없으면 None(검사 생략)."""
+    """ffprobe 로 해상도·길이·오디오 유무·코덱·색 정보를 읽는다. ffprobe 가 없으면 None(검사 생략)."""
     exe = shutil.which("ffprobe")
     if not exe:
         return None
@@ -561,7 +582,26 @@ def probe_video(path: Path) -> dict[str, Any] | None:
         raise UploadError(f"{path.name}: 영상 스트림이 없습니다")
     dur = float(info.get("format", {}).get("duration") or v.get("duration") or 0.0)
     return {"width": int(v.get("width", 0)), "height": int(v.get("height", 0)), "duration_sec": round(dur, 2),
-            "has_audio": any(s.get("codec_type") == "audio" for s in streams), "video_codec": v.get("codec_name")}
+            "has_audio": any(s.get("codec_type") == "audio" for s in streams), "video_codec": v.get("codec_name"),
+            "pix_fmt": v.get("pix_fmt"), "color_transfer": v.get("color_transfer"),
+            "color_primaries": v.get("color_primaries"), "color_space": v.get("color_space")}
+
+
+def check_hdr(probe_hdr: dict[str, Any] | None, probe_sdr: dict[str, Any] | None) -> tuple[list[str], list[str]]:
+    """(오류, 경고). HDR 판 규격(HEVC Main 10 · yuv420p10le · BT.2020 · PQ)과 SDR 판과의 길이 차이를 본다.
+    규격이 틀린 HDR 판은 올리지 않는다. ffprobe 가 없으면(probe None) 경고만."""
+    errs: list[str] = []
+    if probe_hdr is None or probe_sdr is None:
+        return errs, ["ffprobe 없음 — HDR 판 규격·길이 검사를 생략했습니다"]
+    want = {"video_codec": "hevc", "pix_fmt": "yuv420p10le", "color_transfer": "smpte2084", "color_primaries": "bt2020"}
+    for key, val in want.items():
+        if probe_hdr.get(key) != val:
+            errs.append(f"HDR 판 {key}={probe_hdr.get(key)!r} — {val!r} 이어야 합니다")
+    diff = abs(float(probe_hdr["duration_sec"]) - float(probe_sdr["duration_sec"]))
+    if diff > HDR_MAX_DURATION_DIFF_SEC:
+        errs.append(f"HDR 판 길이 {probe_hdr['duration_sec']:.2f}s 가 SDR 판 {probe_sdr['duration_sec']:.2f}s 와 "
+                    f"{diff:.2f}초 다릅니다(한도 {HDR_MAX_DURATION_DIFF_SEC:g}초)")
+    return errs, []
 
 
 def check_video(probe: dict[str, Any] | None, cfg: Config, *, not_shorts: bool = False) -> tuple[list[str], list[str]]:
@@ -1047,21 +1087,28 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
         if slot_key is not None:
             res["slot_key"] = slot_key
         errs = validate_metadata(meta)
-        probe = probe_video(ep.video)
+        video = upload_file(ep, cfg)
+        hdr = video is not ep.video
+        probe = probe_video(video)
         verrs, vwarns = check_video(probe, cfg, not_shorts=not_shorts)
         errs += verrs
         res["warnings"] += vwarns
+        if hdr:
+            herrs, hwarns = check_hdr(probe, probe_video(ep.video))
+            errs += herrs
+            res["warnings"] += hwarns
         if ep.thumbnail is not None and ep.thumbnail.stat().st_size > cfg.thumbnail_max_bytes:
             res["warnings"].append(f"썸네일 {ep.thumbnail.name} 이 {cfg.thumbnail_max_bytes // MB}MB 를 넘어 올리지 않습니다")
             ep.thumbnail = None
         if errs:
             raise UploadError("검증 실패: " + " · ".join(errs))
-        size, md5 = ep.video.stat().st_size, md5_file(ep.video)
+        size, md5 = video.stat().st_size, md5_file(video)
         _log(f"{_rel(dir_)}: 제목 「{meta.title}」 · 설명 {_nbytes(meta.description)}B · 태그 {len(meta.tags)}개 · 영상 {size / MB:.1f}MB"
              + (f" · {probe['width']}×{probe['height']} {probe['duration_sec']:.1f}s" if probe else "")
              + f" · 자막 {'올림' if ep.srt else '안 올림'} · 썸네일 {ep.thumbnail.name if ep.thumbnail else '없음'}"
              + " · 비공개" + (f" · 예약 공개 {kst_label(publish_at)}" if publish_at else "")
-             + f" · 합성표시={meta.contains_synthetic_media} · 아동용={meta.made_for_kids}")
+             + f" · 합성표시={meta.contains_synthetic_media} · 아동용={meta.made_for_kids}"
+             + (f" · {HDR_LABEL}" if hdr else ""))
         prev = read_record(dir_)
         if prev is not None and not republish:
             if prev.video_md5 == md5:
@@ -1139,10 +1186,10 @@ def process_episode(dir_: Path, cfg: Config, *, dry_run: bool, send: Transport |
             if perrs:   # 예약 없는 업로드·즉시 공개로 바꾸지 않는다 — 올리지 않고 오류로 남긴다
                 raise UploadError("예약 공개 검사 실패: " + " · ".join(perrs))
             _log(f"예약 공개 {kst_label(publish_at)}")
-        vid = upload_video(tx, cfg, token, ep.video, meta, sleep=sleep, log=_log)
+        vid = upload_video(tx, cfg, token, video, meta, sleep=sleep, log=_log)
         rec = Record(video_id=vid, url=WATCH_URL_PREFIX + vid, studio_url=STUDIO_URL.format(video_id=vid),
                      uploaded_at=_now(), privacy_status="private",
-                     channel_id=ch["id"], channel_title=ch["title"], video_file=ep.video.name, video_bytes=size, video_md5=md5,
+                     channel_id=ch["id"], channel_title=ch["title"], video_file=video.name, video_bytes=size, video_md5=md5,
                      title=meta.title, description_bytes=_nbytes(meta.description),
                      contains_synthetic_media=meta.contains_synthetic_media, made_for_kids=meta.made_for_kids,
                      duration_sec=probe["duration_sec"] if probe else None, width=probe["width"] if probe else None,
@@ -1947,20 +1994,22 @@ def republish_next(cfg: Config, queue_path: Path, finals: Path, *, today: dt.dat
     return {"ok": counts["error"] == 0, "counts": counts, "results": results}
 
 
-def mark_uploaded(dir_: Path, video_id: str, *, note: str = "") -> Record:
-    """이미 손으로 올린 편을 기록해 자동 업로드가 건너뛰게 한다. 영상 md5 를 지금 파일로 계산한다."""
+def mark_uploaded(dir_: Path, video_id: str, *, note: str = "", cfg: Config | None = None) -> Record:
+    """이미 손으로 올린 편을 기록해 자동 업로드가 건너뛰게 한다. 영상 md5 를 지금 파일로 계산한다.
+    파일은 업로드와 같은 규칙(upload_file)으로 고른다 — HDR 판이 있으면 HDR 판(다음 실행의 md5 비교와 맞도록)."""
     ep = load_episode(dir_, caption=False, thumbnail=False)
+    video = upload_file(ep, Config() if cfg is None else cfg)
     if read_record(dir_) is not None:
         raise UploadError(f"{_rel(dir_)}: 이미 {RECORD_NAME} 이 있습니다 — 바꾸려면 파일을 지우고 다시")
     vid = video_id.strip()
     if not re.fullmatch(r"[A-Za-z0-9_-]{6,}", vid):
         raise UploadError(f"video id 형식이 아닙니다: {vid!r} (예: dQw4w9WgXcQ)")
     info = parse_upload_md(ep.upload_md.read_text(encoding="utf-8"))
-    probe = probe_video(ep.video)
+    probe = probe_video(video)
     rec = Record(video_id=vid, url=WATCH_URL_PREFIX + vid, studio_url=STUDIO_URL.format(video_id=vid),
                  uploaded_at=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), privacy_status="unknown",
-                 channel_id="", channel_title=note, video_file=ep.video.name, video_bytes=ep.video.stat().st_size,
-                 video_md5=md5_file(ep.video), title=info["title"], description_bytes=_nbytes(info["description"]),
+                 channel_id="", channel_title=note, video_file=video.name, video_bytes=video.stat().st_size,
+                 video_md5=md5_file(video), title=info["title"], description_bytes=_nbytes(info["description"]),
                  contains_synthetic_media=False, made_for_kids=False,
                  duration_sec=probe["duration_sec"] if probe else None, width=probe["width"] if probe else None,
                  height=probe["height"] if probe else None, number=ep.number, slug=ep.slug, source="manual")
@@ -2090,7 +2139,7 @@ def main(argv: list[str] | None = None) -> int:
         elif a.mark_uploaded:
             if len(a.episodes) != 1:
                 raise UploadError("--mark-uploaded 는 에피소드 폴더 하나와 함께 씁니다")
-            rec = mark_uploaded(a.episodes[0].resolve(), a.mark_uploaded)
+            rec = mark_uploaded(a.episodes[0].resolve(), a.mark_uploaded, cfg=cfg)
             _log(f"{_rel(a.episodes[0])}: 수동 업로드 기록 작성 {rec.url}")
             out = {"ok": True, "record": asdict(rec)}
         else:

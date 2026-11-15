@@ -662,6 +662,25 @@
       "episode_code": "episodes/tsunami",
       "upload_info": "finals/58-tsunami/upload.md",
       "thumbnail": "0초 프레임(해질녘 바다의 단면 — 수면 위의 작은 배와 바닥까지 이어진 깊은 물, 픽셀 일러스트. 흰 물음 두 줄 \"어떻게 생기고, / 어떻게 바다를 건널까?\"와 그 아래 가장 큰 호박색 주제어 \"쓰나미\". 답은 쓰지 않음)"
+    },
+    {
+      "number": 64,
+      "slug": "weather-radar",
+      "title": "기상 레이더는 비구름을 어떻게 볼까 — 구름을 찍지 않는다. 전파를 쏘고, 빗방울이 돌려보낸 메아리의 시간과 세기를 잰다",
+      "status": "final",
+      "folder": "finals/64-weather-radar",
+      "video": "finals/64-weather-radar/weather-radar.mp4",
+      "duration_sec": 164.8,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 13665214,
+      "sha256": "b0977e27d3c50fa17d2f9d9bfe2d792595f206377de943cc5fa217d66f5fabf1",
+      "video_date": "2026-11-15",
+      "episode_code": "episodes/weather-radar",
+      "upload_info": "finals/64-weather-radar/upload.md",
+      "thumbnail": "0초 프레임(비 오는 낮의 들판 — 접시가 도는 레이더 관측소와 그 너머의 비구름, 빗줄기를 지나는 전파 빔. 픽셀 일러스트 + 3D. 흰 물음 두 줄 \"비구름을 / 어떻게 볼까?\"와 그 아래 가장 큰 호박색 주제어 \"기상 레이더\". 답은 쓰지 않음)",
+      "hdr": "finals/64-weather-radar/hdr/weather-radar.hdr.mp4",
+      "hdr_bytes": 17060104
     }
   ],
   "legacy": [

@@ -1,0 +1,1197 @@
+{
+ "version": 1,
+ "notes": "설명용 합성음입니다(녹음 아님). 배경음악 없음. 모든 사건의 시각은 `node episodes/weather-radar/emit_sound.mjs` 가 scenes.mjs 의 plan() 과 world.mjs 의 모형에서 써 넣습니다. 내레이션 타임라인이 바뀌면 다시 실행하세요. 소리의 자: 쏘는 전파 = 짧은 틱(440 Hz), 메아리 = 한 옥타브 낮고 여린 틱(세기 = 크기), 진동수 = 음높이. 모든 기본음과 잡음 대역은 700 Hz 아래. 패닝 없음(모노 안전).",
+ "ambient": {
+  "enabled": false
+ },
+ "music": {
+  "id": "zabriskie_patriarch",
+  "enabled": false,
+  "note": "음악 없음(2026-10-31 사용자 결정)."
+ },
+ "events": [
+  {
+   "id": "rain",
+   "at": 0,
+   "kind": "env_noise",
+   "params": {
+    "low": 220,
+    "high": 660,
+    "gain_db": -33,
+    "fade": 0.04,
+    "points": [
+     [
+      0,
+      0.6
+     ],
+     [
+      11.984,
+      0.6
+     ],
+     [
+      18.67,
+      0.3
+     ],
+     [
+      30.892,
+      0.5
+     ],
+     [
+      67.55,
+      0.5
+     ],
+     [
+      68.35,
+      0.25
+     ],
+     [
+      93.171,
+      0.25
+     ],
+     [
+      93.971,
+      0.45
+     ],
+     [
+      123.553,
+      0.45
+     ],
+     [
+      124.353,
+      0.25
+     ],
+     [
+      134.732,
+      0.25
+     ],
+     [
+      135.532,
+      0.45
+     ],
+     [
+      156.518,
+      0.6
+     ],
+     [
+      163.554,
+      0.6
+     ],
+     [
+      164.704,
+      0
+     ]
+    ]
+   },
+   "means": "빗소리(설명용 합성 잡음) — 비가 보이는 장면에서 조금 커짐"
+  },
+  {
+   "id": "h_out1",
+   "at": 0.05,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.06,
+    "click": 0.08,
+    "gain_db": -20,
+    "repeat": 3,
+    "interval": 0.3
+   },
+   "means": "빔이 비를 지나는 동안 쏘는 전파 — 짧은 틱"
+  },
+  {
+   "id": "h_back1",
+   "at": 0.2,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -23,
+    "repeat": 3,
+    "interval": 0.3
+   },
+   "means": "빗방울에서 돌아온 메아리 — 낮고 여린 틱"
+  },
+  {
+   "id": "h_out2",
+   "at": 4.81,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.06,
+    "click": 0.08,
+    "gain_db": -20,
+    "repeat": 3,
+    "interval": 0.3
+   },
+   "means": "빔이 비를 지나는 동안 쏘는 전파 — 짧은 틱"
+  },
+  {
+   "id": "h_back2",
+   "at": 4.96,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -23,
+    "repeat": 3,
+    "interval": 0.3
+   },
+   "means": "빗방울에서 돌아온 메아리 — 낮고 여린 틱"
+  },
+  {
+   "id": "h_out3",
+   "at": 9.49,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.06,
+    "click": 0.08,
+    "gain_db": -20,
+    "repeat": 3,
+    "interval": 0.3
+   },
+   "means": "빔이 비를 지나는 동안 쏘는 전파 — 짧은 틱"
+  },
+  {
+   "id": "h_back3",
+   "at": 9.64,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -23,
+    "repeat": 3,
+    "interval": 0.3
+   },
+   "means": "빗방울에서 돌아온 메아리 — 낮고 여린 틱"
+  },
+  {
+   "id": "o_word1",
+   "at": 13.492,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.09,
+    "click": 0.05,
+    "gain_db": -25
+   },
+   "means": "이름의 낱말이 나타남(RAdio)"
+  },
+  {
+   "id": "o_word2",
+   "at": 13.893,
+   "kind": "tick",
+   "params": {
+    "freq": 370,
+    "decay": 0.09,
+    "click": 0.05,
+    "gain_db": -25
+   },
+   "means": "이름의 낱말이 나타남(Detection)"
+  },
+  {
+   "id": "o_word3",
+   "at": 14.325,
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.09,
+    "click": 0.05,
+    "gain_db": -25
+   },
+   "means": "이름의 낱말이 나타남(And)"
+  },
+  {
+   "id": "o_word4",
+   "at": 14.575,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.09,
+    "click": 0.05,
+    "gain_db": -25
+   },
+   "means": "이름의 낱말이 나타남(Ranging)"
+  },
+  {
+   "id": "o_scope",
+   "at": 18.17,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.35,
+    "harmonics": [
+     1,
+     0.3
+    ],
+    "gain_db": -24
+   },
+   "means": "옛 레이더 화면이 켜짐"
+  },
+  {
+   "id": "o_blip",
+   "at": 19.07,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -24,
+    "repeat": 2,
+    "interval": 0.6
+   },
+   "means": "화면의 점: 비행기와 배의 메아리"
+  },
+  {
+   "id": "o_clutter",
+   "at": 22.208,
+   "kind": "env_noise",
+   "params": {
+    "low": 300,
+    "high": 680,
+    "gain_db": -20,
+    "points": [
+     [
+      0,
+      0
+     ],
+     [
+      0.25,
+      0.9
+     ],
+     [
+      1.4,
+      0.6
+     ],
+     [
+      5.649,
+      0.5
+     ],
+     [
+      6.149,
+      0
+     ]
+    ]
+   },
+   "means": "화면에 끼어든 잡음(비와 눈) — 잡음 소리"
+  },
+  {
+   "id": "o_signal",
+   "at": 27.857,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     196,
+     294
+    ],
+    "dur": 1.6,
+    "gain_db": -25
+   },
+   "means": "잡음이 날씨를 읽는 신호가 됨"
+  },
+  {
+   "id": "p_out1",
+   "at": 36.53,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.06,
+    "click": 0.08,
+    "gain_db": -17
+   },
+   "means": "전파 묶음을 쏨 — 짧은 틱"
+  },
+  {
+   "id": "p_hit1",
+   "at": 38.48,
+   "kind": "noise",
+   "params": {
+    "dur": 0.5,
+    "low": 260,
+    "high": 680,
+    "release": 0.35,
+    "gain_db": -23
+   },
+   "means": "전파가 빗방울에 닿아 사방으로 흩어짐"
+  },
+  {
+   "id": "p_hour",
+   "at": 40.396,
+   "kind": "tick",
+   "params": {
+    "freq": 587,
+    "decay": 0.03,
+    "click": 0.05,
+    "gain_db": -24
+   },
+   "means": "1시간 막대 가운데 쏘는 시간의 가는 금"
+  },
+  {
+   "id": "p_back1",
+   "at": 40.53,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -19
+   },
+   "means": "메아리가 안테나로 돌아옴 — 쏜 틱과의 간격이 걸린 시간"
+  },
+  {
+   "id": "p_out2",
+   "at": 41.347,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.06,
+    "click": 0.08,
+    "gain_db": -17
+   },
+   "means": "전파 묶음을 쏨 — 짧은 틱"
+  },
+  {
+   "id": "p_hit2",
+   "at": 43.297,
+   "kind": "noise",
+   "params": {
+    "dur": 0.5,
+    "low": 260,
+    "high": 680,
+    "release": 0.35,
+    "gain_db": -23
+   },
+   "means": "전파가 빗방울에 닿아 사방으로 흩어짐"
+  },
+  {
+   "id": "p_back2",
+   "at": 45.347,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -19
+   },
+   "means": "메아리가 안테나로 돌아옴 — 쏜 틱과의 간격이 걸린 시간"
+  },
+  {
+   "id": "p_out3",
+   "at": 46.163,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.06,
+    "click": 0.08,
+    "gain_db": -17
+   },
+   "means": "전파 묶음을 쏨 — 짧은 틱"
+  },
+  {
+   "id": "p_hit3",
+   "at": 48.113,
+   "kind": "noise",
+   "params": {
+    "dur": 0.5,
+    "low": 260,
+    "high": 680,
+    "release": 0.35,
+    "gain_db": -23
+   },
+   "means": "전파가 빗방울에 닿아 사방으로 흩어짐"
+  },
+  {
+   "id": "p_back3",
+   "at": 50.163,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -19
+   },
+   "means": "메아리가 안테나로 돌아옴 — 쏜 틱과의 간격이 걸린 시간"
+  },
+  {
+   "id": "p_out4",
+   "at": 51.665,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.06,
+    "click": 0.08,
+    "gain_db": -17
+   },
+   "means": "전파 묶음을 쏨 — 짧은 틱"
+  },
+  {
+   "id": "p_hit4",
+   "at": 53.615,
+   "kind": "noise",
+   "params": {
+    "dur": 0.5,
+    "low": 260,
+    "high": 680,
+    "release": 0.35,
+    "gain_db": -23
+   },
+   "means": "전파가 빗방울에 닿아 사방으로 흩어짐"
+  },
+  {
+   "id": "p_back4",
+   "at": 55.665,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -19
+   },
+   "means": "메아리가 안테나로 돌아옴 — 쏜 틱과의 간격이 걸린 시간"
+  },
+  {
+   "id": "p_out5",
+   "at": 57.167,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.06,
+    "click": 0.08,
+    "gain_db": -17
+   },
+   "means": "전파 묶음을 쏨 — 짧은 틱"
+  },
+  {
+   "id": "p_hit5",
+   "at": 59.117,
+   "kind": "noise",
+   "params": {
+    "dur": 0.5,
+    "low": 260,
+    "high": 680,
+    "release": 0.35,
+    "gain_db": -23
+   },
+   "means": "전파가 빗방울에 닿아 사방으로 흩어짐"
+  },
+  {
+   "id": "p_axis",
+   "at": 59.555,
+   "kind": "tone",
+   "params": {
+    "freq": 392,
+    "glide_to": 523,
+    "dur": 0.4,
+    "harmonics": [
+     1,
+     0.3
+    ],
+    "gain_db": -24
+   },
+   "means": "계기의 가로가 시간에서 거리로 바뀜"
+  },
+  {
+   "id": "p_back5",
+   "at": 61.167,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -19
+   },
+   "means": "메아리가 안테나로 돌아옴 — 쏜 틱과의 간격이 걸린 시간"
+  },
+  {
+   "id": "p_dist",
+   "at": 61.287,
+   "kind": "tone",
+   "params": {
+    "freq": 523,
+    "dur": 0.5,
+    "harmonics": [
+     1,
+     0.3
+    ],
+    "gain_db": -22
+   },
+   "means": "150 km 가 정해짐"
+  },
+  {
+   "id": "e_one",
+   "at": 69.25,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -22
+   },
+   "means": "1 mm 방울 하나의 메아리 = 1칸"
+  },
+  {
+   "id": "e_three",
+   "at": 71.137,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -22,
+    "repeat": 3,
+    "interval": 0.14
+   },
+   "means": "세 방울의 메아리 = 3칸(방울 수만큼)"
+  },
+  {
+   "id": "e_grow",
+   "at": 77.909,
+   "kind": "chirp",
+   "params": {
+    "gain_db": -19,
+    "harmonics": [
+     1,
+     0.35
+    ],
+    "fade": 0.02,
+    "points": [
+     [
+      0,
+      196,
+      0.08
+     ],
+     [
+      0.972,
+      277,
+      0.35
+     ],
+     [
+      1.944,
+      392,
+      1
+     ],
+     [
+      2.194,
+      392,
+      0
+     ]
+    ]
+   },
+   "means": "지름 2배 방울의 메아리가 64칸까지 차오름 — 칸 수 = 크기"
+  },
+  {
+   "id": "e_64",
+   "at": 79.903,
+   "kind": "tick",
+   "params": {
+    "freq": 523,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -17
+   },
+   "means": "64칸에 닿음"
+  },
+  {
+   "id": "e_cloud",
+   "at": 83.413,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -38
+   },
+   "means": "구름 방울의 메아리 — 거의 들리지 않게(거의 0)"
+  },
+  {
+   "id": "e_see",
+   "at": 88.138,
+   "kind": "tone",
+   "params": {
+    "freq": 392,
+    "dur": 0.4,
+    "harmonics": [
+     1,
+     0.3
+    ],
+    "gain_db": -24
+   },
+   "means": "레이더가 보는 것(빗방울)에 테두리가 켜짐"
+  },
+  {
+   "id": "s_echo1_1",
+   "at": 93.474,
+   "kind": "tick",
+   "params": {
+    "freq": 523,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -19
+   },
+   "means": "빔이 비구름 1을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_echo2_1",
+   "at": 94.238,
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -23
+   },
+   "means": "빔이 비구름 2을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_echo3_1",
+   "at": 94.926,
+   "kind": "tick",
+   "params": {
+    "freq": 294,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -27
+   },
+   "means": "빔이 비구름 3을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_tilt1",
+   "at": 95.721,
+   "kind": "tone",
+   "params": {
+    "freq": 218,
+    "dur": 0.28,
+    "harmonics": [
+     1,
+     0.3
+    ],
+    "gain_db": -26
+   },
+   "means": "한 바퀴를 돌고 고개를 한 단 듦"
+  },
+  {
+   "id": "s_echo1_2",
+   "at": 95.874,
+   "kind": "tick",
+   "params": {
+    "freq": 523,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -19
+   },
+   "means": "빔이 비구름 1을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_echo2_2",
+   "at": 96.638,
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -23
+   },
+   "means": "빔이 비구름 2을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_echo3_2",
+   "at": 97.326,
+   "kind": "tick",
+   "params": {
+    "freq": 294,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -27
+   },
+   "means": "빔이 비구름 3을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_tilt2",
+   "at": 98.121,
+   "kind": "tone",
+   "params": {
+    "freq": 240,
+    "dur": 0.28,
+    "harmonics": [
+     1,
+     0.3
+    ],
+    "gain_db": -26
+   },
+   "means": "한 바퀴를 돌고 고개를 한 단 듦"
+  },
+  {
+   "id": "s_echo1_3",
+   "at": 98.274,
+   "kind": "tick",
+   "params": {
+    "freq": 523,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -19
+   },
+   "means": "빔이 비구름 1을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_echo2_3",
+   "at": 99.038,
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -23
+   },
+   "means": "빔이 비구름 2을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_echo3_3",
+   "at": 99.726,
+   "kind": "tick",
+   "params": {
+    "freq": 294,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -27
+   },
+   "means": "빔이 비구름 3을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_tilt3",
+   "at": 100.521,
+   "kind": "tone",
+   "params": {
+    "freq": 262,
+    "dur": 0.28,
+    "harmonics": [
+     1,
+     0.3
+    ],
+    "gain_db": -26
+   },
+   "means": "한 바퀴를 돌고 고개를 한 단 듦"
+  },
+  {
+   "id": "s_echo1_4",
+   "at": 100.674,
+   "kind": "tick",
+   "params": {
+    "freq": 523,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -19
+   },
+   "means": "빔이 비구름 1을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_echo2_4",
+   "at": 101.438,
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -23
+   },
+   "means": "빔이 비구름 2을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_echo3_4",
+   "at": 102.126,
+   "kind": "tick",
+   "params": {
+    "freq": 294,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -27
+   },
+   "means": "빔이 비구름 3을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_tilt4",
+   "at": 102.921,
+   "kind": "tone",
+   "params": {
+    "freq": 284,
+    "dur": 0.28,
+    "harmonics": [
+     1,
+     0.3
+    ],
+    "gain_db": -26
+   },
+   "means": "한 바퀴를 돌고 고개를 한 단 듦"
+  },
+  {
+   "id": "s_echo1_5",
+   "at": 103.074,
+   "kind": "tick",
+   "params": {
+    "freq": 523,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -19
+   },
+   "means": "빔이 비구름 1을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_echo2_5",
+   "at": 103.838,
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -23
+   },
+   "means": "빔이 비구름 2을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_echo3_5",
+   "at": 104.526,
+   "kind": "tick",
+   "params": {
+    "freq": 294,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -27
+   },
+   "means": "빔이 비구름 3을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_echo1_6",
+   "at": 105.474,
+   "kind": "tick",
+   "params": {
+    "freq": 523,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -19
+   },
+   "means": "빔이 비구름 1을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_echo2_6",
+   "at": 106.238,
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -23
+   },
+   "means": "빔이 비구름 2을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_echo3_6",
+   "at": 106.926,
+   "kind": "tick",
+   "params": {
+    "freq": 294,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -27
+   },
+   "means": "빔이 비구름 3을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_echo1_7",
+   "at": 107.874,
+   "kind": "tick",
+   "params": {
+    "freq": 523,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -19
+   },
+   "means": "빔이 비구름 1을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "s_echo2_7",
+   "at": 108.638,
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.14,
+    "click": 0.03,
+    "gain_db": -23
+   },
+   "means": "빔이 비구름 2을 지남 — 메아리의 세기 = 음높이와 크기(화면의 색)"
+  },
+  {
+   "id": "d_tow_out",
+   "at": 110.937,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.3,
+    "harmonics": [
+     1,
+     0.25
+    ],
+    "gain_db": -23
+   },
+   "means": "나가는 전파의 진동수(기준 음)"
+  },
+  {
+   "id": "d_tow_back",
+   "at": 111.357,
+   "kind": "tone",
+   "params": {
+    "freq": 370,
+    "dur": 0.45,
+    "harmonics": [
+     1,
+     0.25
+    ],
+    "gain_db": -21
+   },
+   "means": "다가옴 → 돌아온 음이 높다"
+  },
+  {
+   "id": "d_away_out",
+   "at": 115.06,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.3,
+    "harmonics": [
+     1,
+     0.25
+    ],
+    "gain_db": -23
+   },
+   "means": "나가는 전파의 진동수(기준 음)"
+  },
+  {
+   "id": "d_away_back",
+   "at": 115.48,
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.45,
+    "harmonics": [
+     1,
+     0.25
+    ],
+    "gain_db": -21
+   },
+   "means": "멀어짐 → 돌아온 음이 낮다"
+  },
+  {
+   "id": "d_side_out",
+   "at": 120.343,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.3,
+    "harmonics": [
+     1,
+     0.25
+    ],
+    "gain_db": -23
+   },
+   "means": "나가는 전파의 진동수(기준 음)"
+  },
+  {
+   "id": "d_side_back",
+   "at": 120.763,
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.45,
+    "harmonics": [
+     1,
+     0.25
+    ],
+    "gain_db": -21
+   },
+   "means": "옆으로 지나감 → 돌아온 음이 같다"
+  },
+  {
+   "id": "x_rain_h",
+   "at": 129.538,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -19
+   },
+   "means": "빗방울: 가로 메아리(크게)"
+  },
+  {
+   "id": "x_rain_v",
+   "at": 129.838,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -25
+   },
+   "means": "빗방울: 세로 메아리(작게)"
+  },
+  {
+   "id": "x_hail_h",
+   "at": 132.219,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -21
+   },
+   "means": "우박: 가로 메아리"
+  },
+  {
+   "id": "x_hail_v",
+   "at": 132.519,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -21
+   },
+   "means": "우박: 세로 메아리(가로와 같은 크기)"
+  },
+  {
+   "id": "l_beam",
+   "at": 135.132,
+   "kind": "whoosh",
+   "params": {
+    "dur": 2.2,
+    "f_start": 260,
+    "f_end": 620,
+    "q": 3,
+    "gain_db": -25
+   },
+   "means": "빔이 200 km 밖까지 뻗음"
+  },
+  {
+   "id": "l_bend",
+   "at": 136.357,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     98,
+     147
+    ],
+    "dur": 1.6,
+    "gain_db": -24
+   },
+   "means": "땅이 둥글게 내려앉음(빔은 곧게 간다)"
+  },
+  {
+   "id": "l_100",
+   "at": 139.849,
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.1,
+    "click": 0.05,
+    "gain_db": -25
+   },
+   "means": "100 km 자리의 높이 표시"
+  },
+  {
+   "id": "l_200",
+   "at": 143.072,
+   "kind": "tick",
+   "params": {
+    "freq": 523,
+    "decay": 0.1,
+    "click": 0.05,
+    "gain_db": -24
+   },
+   "means": "200 km 자리의 높이 표시"
+  },
+  {
+   "id": "l_miss",
+   "at": 147.618,
+   "kind": "tone",
+   "params": {
+    "freq": 147,
+    "dur": 0.6,
+    "harmonics": [
+     1,
+     0.4
+    ],
+    "gain_db": -21
+   },
+   "means": "빔 아래의 비 — 메아리가 없다(낮고 둔한 음)"
+  },
+  {
+   "id": "l_out2",
+   "at": 151.062,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.06,
+    "click": 0.08,
+    "gain_db": -20
+   },
+   "means": "다른 레이더가 쏨"
+  },
+  {
+   "id": "l_back2",
+   "at": 152.162,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -20,
+    "repeat": 2,
+    "interval": 0.3
+   },
+   "means": "다른 레이더가 놓친 비의 메아리를 받음"
+  },
+  {
+   "id": "c_out1",
+   "at": 159.428,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.06,
+    "click": 0.08,
+    "gain_db": -20,
+    "repeat": 3,
+    "interval": 0.3
+   },
+   "means": "빔이 비를 지나는 동안 쏘는 전파 — 짧은 틱"
+  },
+  {
+   "id": "c_back1",
+   "at": 159.578,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.16,
+    "click": 0.03,
+    "gain_db": -23,
+    "repeat": 3,
+    "interval": 0.3
+   },
+   "means": "빗방울에서 돌아온 메아리 — 낮고 여린 틱"
+  },
+  {
+   "id": "c_end",
+   "at": 162.854,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     196,
+     294
+    ],
+    "dur": 1.6,
+    "gain_db": -25
+   },
+   "means": "마무리"
+  }
+ ]
+}

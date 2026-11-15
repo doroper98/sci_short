@@ -437,6 +437,37 @@ class PostFlowTest(unittest.TestCase):
             self._youtube_record(ep, md5, [])                                      # 다시 올린 적 없는 기록
             self.assertIn("allow-repost", ig.process_episode(ep, _cfg(), dry_run=True, env={}, republish_path=empty)["error"])
 
+    def test_hdr_folder_still_posts_sdr(self) -> None:
+        """2026-11-15: HDR 판(hdr/<slug>.hdr.mp4)은 유튜브 전용 — 인스타는 맨 위 SDR .mp4 를 올린다."""
+        api = FakeGraph()
+        with tempfile.TemporaryDirectory() as d:
+            ep = _episode(Path(d))
+            (ep / "hdr").mkdir()
+            (ep / "hdr" / "test-episode.hdr.mp4").write_bytes(b"\2" * 4096)
+            res = ig.process_episode(ep, _cfg(), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+            self.assertEqual(res["status"], "posted", res)
+            self.assertEqual(int(api.headers["rupload"]["file_size"]), 2048)       # SDR 판 크기
+            rec = ig.read_record(ep)
+            self.assertEqual((rec.video_file, rec.video_md5), ("test-episode.mp4", yu.md5_file(ep / "test-episode.mp4")))
+
+    def test_changed_video_after_youtube_hdr_reupload_is_skipped(self) -> None:
+        """유튜브 기록이 HDR 판의 md5 를 적는 편: 그 HDR 판이 지금 파일이면 다시 만들기로 보고 건너뜀."""
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep, _ = self._posted_then_changed(root)
+            (ep / "hdr").mkdir()
+            hdr = ep / "hdr" / "test-episode.hdr.mp4"
+            hdr.write_bytes(b"\2" * 4096)
+            empty = self._republish_cfg(root, _episode(root, name="23-other", slug="other"))
+            self._youtube_record(ep, yu.md5_file(hdr), [{"video_id": "OLD0", "reason": "republish"}])
+            rec = yu.read_record(ep)
+            rec.video_file = hdr.name
+            yu.write_record(ep, rec)
+            res = ig.process_episode(ep, _cfg(), dry_run=True, env={}, republish_path=empty)
+            self.assertEqual(res["status"], "skipped", res)
+            hdr.write_bytes(b"\3" * 4096)                                          # 유튜브에 올린 HDR 판이 아님
+            self.assertIn("allow-repost", ig.process_episode(ep, _cfg(), dry_run=True, env={}, republish_path=empty)["error"])
+
     def test_token_error_message(self) -> None:
         api = FakeGraph(token_error=True)
         with tempfile.TemporaryDirectory() as d:

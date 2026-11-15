@@ -1,10 +1,14 @@
 """Automatic checks on a finished episode output directory (standard library + ffprobe only).
 
-  python pipeline/validate.py outputs/<slug> [--mp4 F] [--srt F] [--timeline F] [--max-sec 180]
+  python pipeline/validate.py outputs/<slug> [--mp4 F] [--srt F] [--timeline F] [--max-sec 180] [--hdr auto|require|skip]
 
 Expected layout (what run.sh produces):
   outputs/<slug>/narration/timeline.json      outputs/<slug>/stills/contact-sheet.jpg
   outputs/<slug>/final/<slug>.mp4 (+ .srt, validation.json)
+  outputs/<slug>/final/hdr/<slug>.hdr.mp4      HDR version for YouTube (2026-11-15 user: "다음 편부터 hdr 적용해")
+
+--hdr auto (default) checks the HDR version only when the file exists (no file = no HDR rows, so older episodes
+validate as before). require also FAILs when it is missing (new episodes' run.sh passes this); skip adds one WARN row.
 
 Prints a PASS/WARN/FAIL table and writes <dir>/validate.json. Exit 1 if any FAIL.
 These are functional checks. They do not replace watching the video and listening on a phone.
@@ -68,6 +72,34 @@ def parse_srt(path: Path) -> list[dict]:
     return cues
 
 
+def hdr_rows(pr: dict | None, sdr_duration: float | None, hdr_path: str, slug: str) -> list[tuple[str, str, str]]:
+    """HDR version checks from ffprobe JSON (-show_format -show_streams). pr None = file missing. Pure function."""
+    rows: list[tuple[str, str, str]] = []
+    add = lambda name, ok, detail: rows.append((name, "PASS" if ok else "FAIL", detail))
+    if pr is None:
+        add("HDR 판 exists", False, f"{hdr_path} missing — make it with episodes/{slug}/run.sh hdr")
+        return rows
+    add("HDR 판 exists", True, hdr_path)
+    streams = pr.get("streams") or []
+    v = next((s for s in streams if s.get("codec_type") == "video"), None)
+    au = [s for s in streams if s.get("codec_type") == "audio"]
+    g = lambda k: v.get(k) if v else None
+    add("HDR HEVC yuv420p10le", g("codec_name") == "hevc" and g("pix_fmt") == "yuv420p10le", f"{g('codec_name')} {g('pix_fmt')}")
+    add("HDR bt2020 / smpte2084 / bt2020nc",
+        (g("color_primaries"), g("color_transfer"), g("color_space")) == ("bt2020", "smpte2084", "bt2020nc"),
+        f"primaries={g('color_primaries')} transfer={g('color_transfer')} space={g('color_space')}")
+    add("HDR 1080×1920 30 fps", bool(v) and (g("width"), g("height")) == (1080, 1920) and g("r_frame_rate") == "30/1"
+        and g("avg_frame_rate") == "30/1", f"{g('width')}×{g('height')} r={g('r_frame_rate')} avg={g('avg_frame_rate')}")
+    try:
+        dur = float((pr.get("format") or {}).get("duration"))
+    except (TypeError, ValueError):
+        dur = None
+    add("HDR duration = SDR ±0.1s", dur is not None and sdr_duration is not None and abs(dur - sdr_duration) <= 0.1,
+        f"hdr {dur if dur is None else f'{dur:.3f}s'} sdr {sdr_duration if sdr_duration is None else f'{sdr_duration:.3f}s'}")
+    add("HDR audio stream (aac)", any(s.get("codec_name") == "aac" for s in au), f"{[s.get('codec_name') for s in au]}")
+    return rows
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("dir", type=Path)
@@ -75,6 +107,8 @@ def main() -> int:
     ap.add_argument("--srt", type=Path)
     ap.add_argument("--timeline", type=Path)
     ap.add_argument("--max-sec", type=float, default=180.0)
+    ap.add_argument("--hdr", choices=("auto", "require", "skip"), default="auto",
+                    help="HDR version check: auto = only if final/hdr/<slug>.hdr.mp4 exists · require = missing is FAIL · skip = one WARN row")
     a = ap.parse_args()
     d = a.dir
     rows: list[tuple[str, str, str]] = []
@@ -148,6 +182,14 @@ def main() -> int:
         add("timeline not degraded", not deg, f"degraded={deg} voice={tl.get('voice')!r}", warn=True)
     vj = mp4.with_name("validation.json") if mp4 else None
     add("finish validation.json", bool(vj and vj.exists()), str(vj) if vj else "-", warn=True)
+    slug = mp4.stem if mp4 else d.name
+    hp = (mp4.parent if mp4 else d / "final") / "hdr" / f"{slug}.hdr.mp4"
+    if a.hdr == "skip":
+        add("HDR 판", False, "건너뜀 — --hdr skip", warn=True)
+    elif a.hdr == "require" or hp.exists():   # auto: only when the HDR file exists (older episodes: no rows)
+        hpr = (json.loads(subprocess.check_output(["ffprobe", "-v", "error", "-show_format", "-show_streams", "-of", "json", str(hp)]))
+               if hp.exists() else None)
+        rows += hdr_rows(hpr, duration, str(hp), slug)
 
     w = max(len(r[0]) for r in rows)
     print(f"validate {d}")
