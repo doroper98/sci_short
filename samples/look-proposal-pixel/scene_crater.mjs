@@ -89,7 +89,7 @@ export function overlay(T, t) {
     T.big('달의 구덩이는', 60, 250, {size: 62, alpha: a0}); T.big('왜 모두 둥글까?', 60, 330, {size: 62, alpha: a0});
     T.big('크레이터', 56, 500, {size: 160, color: '#F2A742', alpha: a0});
   }
-  const line = (txt, t0, t1) => { const a = ease(t, t0, t0 + 0.4) * (1 - ease(t, t1 - 0.4, t1)); if (a > 0) T.serif(txt, 60, 270, {size: 54, alpha: a}); };
+  const line = (txt, t0, t1) => { const a = ease(t, t0, t0 + 0.4) * (1 - ease(t, t1 - 0.4, t1)); if (a > 0) T.accent(txt, 60, 270, {size: 54, alpha: a}); };
   line('비스듬히 들어와도', 2.2, 4.1);
   line('충격은 한 점에서 둥글게 퍼지고', 4.5, 8.0);
   line('사방으로 똑같이 파냅니다', 8.3, 11.0);

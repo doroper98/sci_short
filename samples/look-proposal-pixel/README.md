@@ -32,12 +32,11 @@
 ## 만든 방식
 
 - `px.mjs`: 270×480 버퍼에 납작한 색, 가로 색 띠, 4×4 바이어 점묘(빛 번짐·띠의 이음매·반투명)를 그리고 4배로 키웁니다(한 픽셀 = 4 px). 색은 한 벌(`C`)만 씁니다.
-- `run.mjs`: 키운 그림을 `pipeline/render`의 무대에 올리고, 글자는 그 위에 또렷하게 얹습니다. 제목은 GmarketSans, 계기는 Noto Sans KR, 곁들이는 한 줄은 Noto Serif KR(살짝 기울임).
+- `run.mjs`: 키운 그림을 `pipeline/render`의 무대에 올리고, 글자는 그 위에 또렷하게 얹습니다. 제목은 GmarketSans 굵게, 곁들이는 한 줄은 같은 글꼴의 중간 굵기, 계기는 Noto Sans KR — **표준 글꼴만 씁니다.** 처음 시안은 레퍼런스처럼 기울인 명조(Noto Serif KR)를 곁들였으나 사용자가 "명조체 좀 구린데 근데...?"라고 해 뺐습니다(2026-11-15). 다섯 가지를 나란히 보여 드렸고(명조 기울임, 제목 글꼴 중간 굵기, 본문 고딕, 제목 글꼴 가는 굵기, 픽셀 글꼴), 사용자가 고르기 전까지는 제목 글꼴 중간 굵기가 기본입니다.
 - `scene_*.mjs`: 장면마다 모형 하나(`state`·`ratio`·`progress`)에서 그림과 계기 숫자가 함께 나옵니다. 카메라는 한 무대 안에서 움직입니다.
 - 렌더는 편당 수십 초입니다. 장면 하나를 그리고 다듬는 데는 편당 20~30분이 들었습니다.
 
 ```bash
-~/.venv-scishort-render/bin/python samples/look-proposal-pixel/fetch_serif.py     # 명조체(Git 제외) — 없으면 본문 글꼴로 대신 그림
 node samples/look-proposal-pixel/run.mjs tsunami /tmp/poc.mp4                       # 영상
 node samples/look-proposal-pixel/run.mjs tsunami /tmp/poc --still=0.5,6.5,11.4       # 정지화면 /tmp/poc_0.5.png …
 ```
@@ -48,8 +47,9 @@ node samples/look-proposal-pixel/run.mjs tsunami /tmp/poc --still=0.5,6.5,11.4  
 |---|---|
 | 첫 프레임: 흰 물음 + 가장 큰 주제어, 답은 쓰지 않음 | 노을 하늘(2026-11-10 "노을 하늘 금지") |
 | 무대 하나, 계기와 그림이 같은 모형·같은 시계 | 난색 하나·한색 하나(색이 여러 가지) |
-| 움직임이 인과를 설명(카메라는 파도를 따라감) | 곁들이는 명조체(표준 글꼴이 아님) |
+| 움직임이 인과를 설명(카메라는 파도를 따라감) | — |
 | 빛나는 것은 빛·열뿐(해, 등불, 충돌 섬광, 갓 나온 플라스틱) | — |
+| 글꼴은 표준 그대로(GmarketSans, Noto Sans KR) | — |
 | 각주로 과장·설명 모형을 알림, 24 px 미만 글자 없음 | — |
 
 ## 시안의 수치

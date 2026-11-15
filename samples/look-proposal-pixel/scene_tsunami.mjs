@@ -92,7 +92,7 @@ export function overlay(T, t) {
     T.big('먼바다에서는', 60, 250, {size: 62, alpha: a0}); T.big('왜 보이지 않을까?', 60, 330, {size: 62, alpha: a0});
     T.big('쓰나미', 56, 500, {size: 168, color: '#F2A742', alpha: a0});
   }
-  const line = (txt, t0, t1) => { const a = ease(t, t0, t0 + 0.4) * (1 - ease(t, t1 - 0.4, t1)); if (a > 0) T.serif(txt, 60, 270, {size: 54, alpha: a}); };
+  const line = (txt, t0, t1) => { const a = ease(t, t0, t0 + 0.4) * (1 - ease(t, t1 - 0.4, t1)); if (a > 0) T.accent(txt, 60, 270, {size: 54, alpha: a}); };
   line('먼바다에서는 낮고, 빠릅니다', 2.3, 5.4);
   line('얕아지면 느려지고', 5.7, 9.3);
   line('높아집니다', 9.5, 12.6);

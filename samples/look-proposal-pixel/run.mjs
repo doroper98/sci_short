@@ -4,16 +4,12 @@ import fs from 'node:fs';
 import {createRequire} from 'node:module';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {createStage, renderVideo, resolveTheme} from '../../pipeline/render/index.mjs';
+import {createStage, renderVideo, resolveTheme, fontString} from '../../pipeline/render/index.mjs';
 import {Pix, W, H, SCALE} from './px.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)), REPO = path.resolve(HERE, '../..');
 const require = createRequire(path.join(REPO, 'pipeline/render/index.mjs'));
-const {ImageData, GlobalFonts} = require('@napi-rs/canvas');
-// 곁들이는 명조체: assets/fonts/NotoSerifKR-SemiBold.ttf (Git 제외, fetch_serif.py 로 받음). 없으면 본문 글꼴로 대신한다.
-const SERIF = path.join(REPO, 'assets/fonts/NotoSerifKR-SemiBold.ttf');
-const hasSerif = fs.existsSync(SERIF) && GlobalFonts.registerFromPath(SERIF, 'PocSerif');
-if (!hasSerif) console.warn('명조체가 없어 Noto Sans KR 로 그립니다: python samples/look-proposal-pixel/fetch_serif.py');
+const {ImageData} = require('@napi-rs/canvas');
 
 const [name, out, ...rest] = process.argv.slice(2);
 const opt = Object.fromEntries(rest.map(a => { const [k, v] = a.replace(/^--/, '').split('='); return [k, v ?? '1']; }));
@@ -29,11 +25,10 @@ const T = {
   /** small spaced label */
   kicker(s, x, y, o = {}) { stage.text(s, x, y, {size: o.size || 26, weight: 700, color: o.color || '#F2A742', tracking: 4, align: o.align || 'left', alpha: o.alpha ?? 1, shadow: SH, shadowBlur: 10}); },
   sans(s, x, y, o = {}) { return stage.text(s, x, y, {size: o.size || 30, weight: o.weight || 500, color: o.color || '#F6EFE2', align: o.align || 'left', alpha: o.alpha ?? 1, shadow: SH, shadowBlur: 10}); },
-  /** serif accent line, slightly slanted */
-  serif(s, x, y, o = {}) {
-    ctx.save(); ctx.globalAlpha = o.alpha ?? 1; ctx.font = hasSerif ? `${o.size || 46}px PocSerif` : `500 ${o.size || 46}px "Noto Sans KR"`; ctx.textBaseline = 'middle'; ctx.textAlign = o.align || 'left';
-    ctx.shadowColor = SH; ctx.shadowBlur = 14; ctx.fillStyle = o.color || '#FBEBC0';
-    ctx.translate(x, y); ctx.transform(1, 0, -(o.slant ?? 0.16), 1, 0, 0); ctx.fillText(s, 0, 0); ctx.restore();
+  /** accent line: the title family at medium weight (2026-11-15 사용자 "명조체 좀 구린데" — 명조를 뺐다) */
+  accent(s, x, y, o = {}) {
+    ctx.save(); ctx.globalAlpha = o.alpha ?? 1; ctx.font = fontString('display', o.size || 46, 500); ctx.textBaseline = 'middle'; ctx.textAlign = o.align || 'left';
+    ctx.shadowColor = SH; ctx.shadowBlur = 14; ctx.fillStyle = o.color || '#FBEBC0'; ctx.fillText(s, x, y); ctx.restore();
   },
   /** number readout: small name over a big value */
   gauge(name, value, x, y, o = {}) {

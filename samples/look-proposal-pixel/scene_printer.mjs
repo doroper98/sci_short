@@ -91,7 +91,7 @@ export function overlay(T, t) {
     T.big('물건을 어떻게', 60, 250, {size: 62, alpha: a0}); T.big('한 층씩 쌓을까?', 60, 330, {size: 62, alpha: a0});
     T.big('3D 프린터', 56, 492, {size: 136, color: '#F2A742', alpha: a0});
   }
-  const line = (txt, t0, t1) => { const a = ease(t, t0, t0 + 0.4) * (1 - ease(t, t1 - 0.4, t1)); if (a > 0) T.serif(txt, 60, 270, {size: 54, alpha: a}); };
+  const line = (txt, t0, t1) => { const a = ease(t, t0, t0 + 0.4) * (1 - ease(t, t1 - 0.4, t1)); if (a > 0) T.accent(txt, 60, 270, {size: 54, alpha: a}); };
   line('녹여서, 한 줄씩 긋고', 2.3, 5.5);
   line('한 층 위에 또 한 층', 5.9, 9.4);
   line('같은 일을 되풀이합니다', 9.7, 12.5);
