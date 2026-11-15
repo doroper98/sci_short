@@ -10,9 +10,11 @@
 | `world.mjs` | 무대 하나(단층 → 깊은 바다 → 비탈 → 해안)와 모형(빠르기·높이·물결 길이), `drawWorld()` |
 | `scenes.mjs` | 장면 = 카메라의 자리. `plan(tl)` 이 문장·낱말 시각에서 모든 장면의 시계를 만든다. 글자는 키운 그림 위에 얹는다 |
 | `emit_sound.mjs` | `sound.json` 을 `plan()` 과 모형에서 써 넣는다 |
+| `fetch_pixel_font.py` | 머리글 한 줄의 픽셀 글꼴 Galmuri11 Bold(OFL)를 `assets/fonts/` 에 받는다(Git 제외). 없으면 `scenes.mjs` 가 멈춘다 |
 | `sound.json` | 생성물(직접 고치지 않는다) |
 
 ```bash
+python3 episodes/tsunami/fetch_pixel_font.py           # 한 번(글꼴)
 episodes/tsunami/run.sh narrate                       # 음성(대본이 바뀌면)
 node episodes/tsunami/emit_sound.mjs                  # 타임라인이나 plan() 이 바뀌면 소리 표를 다시 쓴다
 SKIP_NARRATE=1 episodes/tsunami/run.sh stills render sfx mix finish validate

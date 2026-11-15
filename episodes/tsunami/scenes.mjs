@@ -3,13 +3,19 @@
 // 무대는 하나(world.mjs): 왼쪽 바다 밑 단층 → 깊은 바다 → 얕아지는 비탈 → 해안 마을. 장면은 카메라의 자리다.
 // 모형·단순화는 world.mjs 머리와 brief.md 에 있다. 한 장면 안에서 물결의 화면 빠르기는 √수심에 비례한다(장면마다 돌리는 배율은 다르고, 빨리 돌릴 때는 머리글에 적는다).
 // 소리 사건(sound.json)은 여기의 plan() 과 같은 문장·낱말 시각을 쓴다.
+import fs from 'node:fs';
 import {createRequire} from 'node:module';
+import {fileURLToPath} from 'node:url';
 import {fontString, progressBar} from '../../pipeline/render/index.mjs';
 import {Pix, W, H, SCALE, C, clamp, lerp, ease} from './px.mjs';
 import * as M from './world.mjs';
 
 const require = createRequire(new URL('../../pipeline/render/index.mjs', import.meta.url));
-const {ImageData} = require('@napi-rs/canvas');
+const {ImageData, GlobalFonts} = require('@napi-rs/canvas');
+// 머리글 한 줄은 픽셀 글꼴(2026-11-15 사용자: "그리고 폰트는 e가 좋은데?" — 다섯 가지 가운데 E). 12 px 격자 글꼴이라 48 px 로 쓰면 그림의 픽셀(4 px)과 맞는다.
+const PIXEL_FONT = fileURLToPath(new URL('../../assets/fonts/Galmuri11-Bold.ttf', import.meta.url));
+if (!fs.existsSync(PIXEL_FONT)) throw new Error('머리글 글꼴이 없습니다: python3 episodes/tsunami/fetch_pixel_font.py 를 먼저 실행하세요 (assets/fonts/Galmuri11-Bold.ttf)');
+GlobalFonts.registerFromPath(PIXEL_FONT, 'TsuPixel');
 
 export const theme = 'noturno';
 export const captionLayout = {};
@@ -86,9 +92,10 @@ function type(stage) {
     big(s, x, y, o = {}) { stage.text(s, x, y, {role: 'display', weight: 700, size: o.size || 64, color: o.color || INK, align: o.align || 'left', alpha: o.alpha ?? 1, shadow: SH, shadowBlur: 18}); },
     kicker(s, x = 60, y = 150, o = {}) { stage.text(s, x, y, {size: 26, weight: 700, color: AMB, tracking: 4, align: o.align || 'left', alpha: o.alpha ?? 1, shadow: SH, shadowBlur: 10}); },
     sans(s, x, y, o = {}) { stage.text(s, x, y, {size: o.size || 28, weight: o.weight || 500, color: o.color || CREAM, align: o.align || 'left', alpha: o.alpha ?? 1, shadow: SH, shadowBlur: 10}); },
+    /** 머리글 한 줄: 픽셀 글꼴 48 px(글꼴의 한 칸 = 4 px), 한 칸 어긋난 어두운 그림자. y 는 글자 밑줄(4의 배수) */
     accent(s, x, y, o = {}) {
-      ctx.save(); ctx.globalAlpha = o.alpha ?? 1; ctx.font = fontString('display', o.size || 54, 500); ctx.textBaseline = 'middle'; ctx.textAlign = o.align || 'left';
-      ctx.shadowColor = SH; ctx.shadowBlur = 14; ctx.fillStyle = o.color || CREAM; ctx.fillText(s, x, y); ctx.restore();
+      ctx.save(); ctx.globalAlpha = o.alpha ?? 1; ctx.font = '48px TsuPixel'; ctx.textBaseline = 'alphabetic'; ctx.textAlign = o.align || 'left';
+      ctx.fillStyle = 'rgba(6,10,20,0.9)'; ctx.fillText(s, x + 4, y + 4); ctx.fillStyle = o.color || CREAM; ctx.fillText(s, x, y); ctx.restore();
     },
     gauge(name, value, x, a = 1, color = INK) {
       stage.text(name, x, 1238, {size: 26, weight: 500, color: DIM, alpha: a, shadow: SH, shadowBlur: 8});
@@ -104,7 +111,7 @@ function type(stage) {
     },
     foot(s, a = 1) { stage.text(s, 60, 1342, {size: 24, weight: 500, color: DIM, alpha: a, shadow: SH, shadowBlur: 8}); },
     /** heading lines: [[text, t0, t1], …] — one at a time, same place */
-    lines(t, list) { for (const [s, t0, t1] of list) { const a = ease(t, t0, t0 + 0.35) * (1 - ease(t, t1 - 0.35, t1)); if (a > 0.01) this.accent(s, 60, 262, {alpha: a}); } },
+    lines(t, list) { for (const [s, t0, t1] of list) { const a = ease(t, t0, t0 + 0.35) * (1 - ease(t, t1 - 0.35, t1)); if (a > 0.01) this.accent(s, 60, 284, {alpha: a}); } },
     stage, ctx,
   };
 }
@@ -205,7 +212,7 @@ export const scenes = {
   ocean(stage, t, p, ctx) {
     const k = plan(ctx.tl), T = type(stage), s9 = k.S('s09'), s10 = k.S('s10'), s11 = k.S('s11'), end = ctx.scene.end;
     const tau = k.rate * (t - k.tRel), XR = M.crestX(tau), XL = X0 - tau, eta = x => M.pulse(x, XR) + M.pulse(x, XL);
-    const tp = k.Wd('s10', '여객기에', 0.85) - 1.4;
+    const tp = k.Wd('s10', '여객기에', 0.85) - 1.4, tdeep = k.Wd('s10', '깊을수록', 0.3);
     const v = {t, sea: SEA, eta, cx: XR + 20, boats: [k.xBoat, SL1 + 6], mark: XR,
       plane: t > tp ? {x: XR + lerp(-185, 24, ease(t, tp, tp + 3.4)) + k.rate * 0.26 * (t - tp), y: SEA - 82} : null};
     M.drawWorld(P, v);
@@ -220,10 +227,10 @@ export const scenes = {
     if (ah > 0.5) vbr(sx(XR - 30), SEA - Math.round(eta(XR)), SEA, C.ink);
     blit(stage);
     T.kicker('먼바다');
-    T.lines(t, [['물결 하나가 수백 킬로미터', s9 + 0.2, s10 - 0.3], ['빠르기 = √(중력 × 수심)', s10 + 0.2, s11 - 0.3], ['높이는 커도 1미터 안팎', s11 + 0.2, end + 1]]);
+    T.lines(t, [['물결 하나가 수백 킬로미터', s9 + 0.2, s10 - 0.3], ['빠르기는 수심이 정합니다', s10 + 0.2, tdeep - 0.2], ['깊을수록 빠릅니다', tdeep, s11 - 0.3], ['높이는 커도 1미터 안팎', s11 + 0.2, end + 1]]);
     if (aw > 0) { const [x, y] = scr(v, XR + 26, -6); T.tag('바람 파도 · 100 m쯤', x + 12, y - 2, {alpha: aw}); }
     if (at > 0) { const [x, y] = scr(v, XR + 20, -15); T.tag('쓰나미 · 수백 km', x - 120, y - 34, {alpha: at, align: 'center', color: '#F7C766'}); }
-    if (ad > 0) { const [x, y] = scr(v, XR - 96, 56); T.sans('수심 4,000 m', x + 22, y, {size: 26, alpha: ad}); }
+    if (ad > 0) { const [x, y] = scr(v, XR - 96, 56); T.sans('수심 4,000 m', x + 22, y, {size: 26, alpha: ad}); T.sans('빠르기 = √(중력가속도 × 수심)', x + 22, y + 44, {size: 26, alpha: ad * ease(t, td + 0.8, td + 1.2), color: '#F7C766'}); }
     if (ah > 0) { const [x, y] = scr(v, XR - 30, -2); T.tag('1 m 안팎', x - 16, y - 8, {alpha: ah, align: 'right', color: '#F7C766'}); }
     const pa = t > tp ? ease(t, tp + 2.6, tp + 3.2) : 0;
     if (pa > 0) { const [x, y] = scr(v, v.plane.x, 0); T.sans('여객기 · 시속 약 900 km', x - 40, v.plane.y * SCALE + 38, {size: 26, alpha: pa, align: 'center'}); }
