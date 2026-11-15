@@ -80,6 +80,19 @@ export function cloud(P, cx, cy, w, h, o = {}) {
   P.rect(Math.round(cx - w * 0.44), Math.round(cy + h * 0.2), Math.round(w * 0.88), 2, C.cloud4);
 }
 
+/**
+ * 기울어 선 비구름(둥근 지구 위): 밑면이 (ux, uy) 방향 — 그 자리의 지면과 나란하다. 그곳의 '위'는 (uy, −ux).
+ * 2026-11-15 사용자: "구름도 지구 곡률 고려한 지평선 너머의 지면에 평행하게 그려야 하지 않아?"
+ */
+export function cloudTilt(P, cx, cy, w, h, ux, uy, o = {}) {
+  const seed = o.seed ?? 1, n = Math.max(5, Math.round(w / 9)), nx = uy, ny = -ux, at = (a, b) => [cx + ux * a + nx * b, cy + uy * a + ny * b], dark = o.dark > 0.5;
+  const puffs = Array.from({length: n}, (_, i) => { const q = (i + 0.5) / n; return [-w / 2 + q * w + (hash(i, seed) - 0.5) * 5, h * 0.22 * Math.sin(q * Math.PI) + hash(i, seed + 3) * h * 0.2, h * (0.34 + 0.22 * Math.sin(q * Math.PI) + 0.1 * hash(i, seed + 7))]; });   // [밑면을 따라, 위로, 반지름]
+  for (const [a, b, r] of puffs) { const [x, y] = at(a, b - r * 0.35); P.disc(x, y, r, dark ? C.cloud4 : C.cloud3); }
+  for (const [a, b, r] of puffs) { const [x, y] = at(a, b); P.disc(x, y, r, dark ? C.cloud3 : C.cloud2); }
+  for (const [a, b, r] of puffs) { const [x, y] = at(a - r * 0.12, b + r * 0.3); P.disc(x, y, r * 0.68, dark ? C.cloud2 : C.cloud); }
+  for (let a = -w * 0.46; a <= w * 0.46; a += 0.5) for (let b = -h * 0.2 - 2.5; b <= -h * 0.2; b += 0.5) { const [x, y] = at(a, b); P.px(Math.round(x), Math.round(y), C.cloud4); }   // 납작한 밑면(지면과 나란하다)
+}
+
 // ---------------------------------------------------------------------------------------------------------------
 // 신호(빛나는 것): 전파 묶음, 메아리
 // ---------------------------------------------------------------------------------------------------------------

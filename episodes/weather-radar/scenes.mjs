@@ -48,14 +48,11 @@ export function plan(tl) {
   k.spin = t => 1.45 + 1.3 * t; k.camAz = t => 0.32 + 0.2 * Math.sin(t * 0.33); k.HTILT = 0.16;
   k.heroRight = t => Math.cos(k.HTILT) * Math.sin(k.spin(t) - k.camAz(t)); k.heroHit = t => k.heroRight(t) > 0.72;
   k.oRain = Wd('s04', '화면에', 0.3); k.oTool = Wd('s04', '신호가', 0.85);
-  // 전파 묶음: 가는 데 TLEG, 오는 데 TLEG. 닿는 순간과 '천 분의 일 초'에 맞춰 되풀이한다
-  k.TLEG = 2.0;
-  const hitA = Wd('s07', '닿으면', 0.25) + 0.1, backB = Wd('s08', '천 분의', 0.7) + 0.15, first = Wd('s05', '쏩니다', 0.55) + 0.1;
-  const emitA = hitA - k.TLEG, m = Math.max(1, Math.round((emitA - first) / 5.0)), p1 = (emitA - first) / m;
-  const n = Math.max(1, Math.round((backB - 2 * k.TLEG - emitA) / 5.0)), p2 = (backB - 2 * k.TLEG - emitA) / n;
-  k.emits = [...Array.from({length: m}, (_, i) => first + i * p1), ...Array.from({length: n + 1}, (_, i) => emitA + i * p2)];
-  k.cycle = t => { let e = null; for (const x of k.emits) if (x <= t) e = x; return e; };
-  k.pDist = Wd('s08', '곧 거리', 0.45); k.pHalf = k.emits[k.emits.length - 1] + 2 * k.TLEG;          // '시간이 곧 거리' / 마지막 메아리가 돌아오는 때
+  // 쏘고 듣는다: 전파 묶음 하나의 왕복 한 번을 장면 전체에 걸쳐 느리게 보인다(같은 왕복을 되풀이하지 않는다 — 2026-11-15 사용자 지적).
+  //   모은다 → 쏜다('쏩니다') → 듣기 시작('그러고는') → 빗방울에 닿아 흩어진다('닿으면' 뒤) → 돌아온다 → 도착('천 분의 일 초')
+  k.pFocus = S('s05') + 0.3; k.pEmit = Wd('s05', '쏩니다', 0.55) + 0.1; k.pListen = Wd('s05', '그러고는', 0.75); k.pBack = Wd('s08', '천 분의', 0.7) + 0.15;
+  k.TLEG = (k.pBack - k.pEmit) / 2; k.pHit = k.pEmit + k.TLEG;                                           // 가는 데 TLEG, 오는 데 TLEG(같은 빠르기)
+  k.pDist = Wd('s08', '곧 거리', 0.45); k.pHalf = Wd('s08', '절반인', 0.8) - 0.3; k.p150 = Wd('s08', '백오십', 0.88);
   k.eMany = Wd('s09', '많다는', 0.75) - 0.2; k.eB = Wd('s10', '지름이 두 배면', 0.5) - 0.2; k.e64 = Wd('s10', '예순네', 0.85); k.eC = S('s11') + 0.3; k.eSee = Wd('s11', '레이더가 보는', 0.6);
   // 훑기: 한 바퀴 2.4초, 바퀴마다 고개를 든다
   const scan = sc('scan');
@@ -95,6 +92,10 @@ function type(stage) {
       if (a > 0.5) unlit(x0, y0, ww, hh);
       stage.text(s, x0 + 10, y0 + hh / 2 + 1, {size, weight: 500, color: o.color || CREAM, alpha: a});
     },
+    /** 머리띠 자리에 단계 줄: 지금 단계만 밝게 */
+    steps(names, cur) { let x = 60; names.forEach((n, i) => { const on = i + 1 === cur;
+      x += stage.text(`${i + 1} ${n}`, x, 150, {size: 30, weight: 700, color: on ? AMB : '#9DB2BD', shadow: SH, shadowBlur: 10});
+      if (i + 1 < names.length) x += stage.text('→', x + 14, 150, {size: 26, weight: 500, color: '#9DB2BD', alpha: 0.8}) + 28; }); },
     foot(s, a = 1) { stage.text(s, 60, 1342, {size: 24, weight: 500, color: DIM, alpha: a, shadow: SH, shadowBlur: 8}); },
     footR(s, a = 1) { stage.text(s, 940, 1342, {size: 24, weight: 500, color: DIM, alpha: a, align: 'right', shadow: SH, shadowBlur: 8}); },
     lines(t, list) { for (const [s, t0, t1] of list) { const a = ease(t, t0, t0 + 0.35) * (1 - ease(t, t1 - 0.35, t1)); if (a > 0.01) this.accent(s, 60, 284, {alpha: a}); } },
@@ -146,6 +147,25 @@ async function station(x, tiltRad, o = {}) {
   const dx = x - 135, dy = (o.gy ?? GY) - (240 + 40 * zoom * Math.cos(0.07)) - 1;
   P.blit3d(r.solid, M.RAMP, {dx, dy, emit: id => (id === 8 ? 0.7 : 0)});
   return [r.feed[0] + dx, r.feed[1] + dy];
+}
+/**
+ * 멀리서 본 작은 레이더(2D): 땅의 점 (bx, by)에 그곳의 '위' 방향 (nx, ny)로 서고, 접시는 (dx, dy) 쪽을 본다.
+ * 둥근 지구 위에서는 관측소가 기울어 서야 하므로 3D 조각 대신 이것을 쓴다(한계 장면). 돌려주는 것: 급전부의 자리
+ */
+function radar2d(bx, by, nx, ny, dx, dy) {
+  const px = -dy, py = dx, MAST = 15, top = [bx + nx * MAST, by + ny * MAST], blob = (x, y, r, c) => P.rect(Math.round(x) - r, Math.round(y) - r, 2 * r + 1, 2 * r + 1, c);
+  const dn = dx * nx + dy * ny, tl = Math.hypot(dx - dn * nx, dy - dn * ny) || 1, tx = (dx - dn * nx) / tl, ty = (dy - dn * ny) / tl;   // 땅을 따라 빔 쪽을 보는 방향
+  const hut = [bx - tx * 9 + nx * 3, by - ty * 9 + ny * 3];                                        // 관측소 건물(접시 반대쪽 발치)
+  const dish = []; for (let a = -9; a <= 9; a += 0.5) for (let th = 0; th <= 1.5; th += 0.5) dish.push([top[0] + px * a + dx * ((a / 9) ** 2 * 6 + 1 - th), top[1] + py * a + dy * ((a / 9) ** 2 * 6 + 1 - th), th]);
+  for (let i = 0; i <= MAST; i += 0.5) blob(bx + nx * i, by + ny * i, 2, C.ink);                  // 윤곽
+  blob(hut[0], hut[1], 4, C.ink); blob(hut[0] + nx * 4, hut[1] + ny * 4, 3, C.ink); for (const [x, y] of dish) blob(x, y, 1, C.ink);
+  for (let i = 0; i <= MAST; i += 0.5) blob(bx + nx * i, by + ny * i, 1, C.metal);
+  blob(hut[0], hut[1], 3, C.wall); blob(hut[0] + nx * 4, hut[1] + ny * 4, 2, C.roof);
+  for (const [x, y, th] of dish) P.px(Math.round(x), Math.round(y), th < 1 ? C.white : C.metal2);
+  const f = [top[0] + dx * 11, top[1] + dy * 11];
+  for (let q = 2; q < 10; q++) P.px(Math.round(top[0] + dx * q), Math.round(top[1] + dy * q), C.metal3);
+  P.lit(0.7, () => P.rect(Math.round(f[0]) - 1, Math.round(f[1]) - 1, 3, 3, C.gold));
+  return f;
 }
 /** 옆에서 본 세계의 바탕: 하늘, 먼 산, 땅 */
 function sideWorld(t, gy = GY, o = {}) { P.begin(); M.sky(P, typeof gy === 'function' ? gy(0) : gy, t); if (o.hills !== false) M.hills(P, typeof gy === 'function' ? gy(0) : gy, 0); M.ground(P, gy); }
@@ -201,35 +221,57 @@ export const scenes = {
     T.footR(FOOT);
   },
 
-  // 쏘고 듣는다: 짧은 전파 묶음이 150 km 를 다녀오는 데 1,000분의 1초. 달린 길 300 km 의 절반이 비까지의 거리.
+  // 쏘고 듣는다: 전파 묶음 하나의 왕복 한 번. 문장마다 왕복의 다른 단계를 보인다(1 쏜다 → 2 듣는다 → 3 흩어진다 → 4 돌아온다).
   async pulse(stage, t, p, ctx) {
     const k = plan(ctx.tl), T = type(stage), s5 = k.S('s05'), s6 = k.S('s06'), s7 = k.S('s07'), s8 = k.S('s08'), end = ctx.scene.end;
     sideWorld(t);
     const XR = 200, cy = GY - 106;                                              // 비: 150 km 밖
     M.cloud(P, XR, cy, 84, 40, {seed: 3, dark: 1, rain: 0.85, t, rainTo: GY, slant: 0.18});
-    const [fx, fy] = await station(46, 0.07, {zoom: 0.8}), xe = XR - 12, ye = fy - 8;
+    const [fx, fy] = await station(46, 0.07, {zoom: 0.8}), xe = XR - 12, ye = fy - 8, slope = (ye - fy) / (xe - fx - 4);
     for (let i = 0; i <= 3; i++) P.rect(Math.round(lerp(fx, XR, i / 3)), GY + 3, 1, 4, C.pale);                 // 50 km 마다 눈금
+    const u = (t - k.pEmit) / k.TLEG, step = t < k.pListen ? 1 : t < s7 ? 2 : t < s8 ? 3 : 4;                    // u: 0..1 가는 중, 1..2 오는 중, 2 = 도착
+    // 1 쏜다 — 모은다: 급전부에서 나온 전파가 접시에 맞고 나란한 가느다란 빔이 된다(쏘기 직전까지)
+    const foc = ease(t, k.pFocus, k.pFocus + 0.5) * (1 - ease(t, k.pEmit - 0.5, k.pEmit - 0.1));
+    if (foc > 0.02) P.lit(0.55, () => { for (const j of [-15, -9, -3, 3, 9, 15]) { const dx = Math.round(fx - 20 + (j / 24) ** 2 * 11.6), dy = fy + j, l1 = Math.hypot(dx - fx, dy - fy), L = l1 + 84;
+      for (let d = 2; d < L; d++) { const back = d < l1, q = back ? d / l1 : d - l1, x = Math.round(back ? lerp(fx, dx, q) : dx + q), y = Math.round(back ? lerp(fy, dy, q) : dy + q * slope);
+        const ph = ((d - t * 46 + j * 5) % 14 + 14) % 14, a = foc * (back ? 0.55 : 0.8 * (1 - q / 90));                 // 선 위를 달리는 밝은 마디
+        if (ph < 3) P.px(x, y, back ? C.gold : C.cream); else P.pxA(x, y, back ? C.amber : C.gold, a); } } });
     P.line(fx + 4, fy, xe, ye, C.pale, 2);                                                                        // 전파가 가는 길
-    const e = k.cycle(t), u = e == null ? -1 : (t - e) / k.TLEG;                                                  // 0..1 가는 중, 1..2 오는 중
+    if (t > k.pEmit - 0.1 && t < k.pEmit + 0.25) P.lit(1, () => P.disc(fx, fy, 5, C.cream));                       // 쏘는 순간
     if (u >= 0 && u < 1) M.packet(P, lerp(fx + 4, xe, u), lerp(fy, ye, u), 1, 12, 5, 1);
     if (u >= 1 && u < 2) M.packet(P, lerp(xe, fx + 4, u - 1), lerp(ye, fy, u - 1), -1, 8, 3, 0.65);
-    if (u >= 0.96 && u < 1.9) for (let i = 0; i < 8; i++) { const q = (u - 0.96) * 1.1 - hash(i, 4) * 0.25; if (q > 0 && q < 1) M.ripple(P, XR - 26 + 52 * hash(i, 1), ye - 14 + 44 * hash(i, 2), 1 + 13 * q, 0.8 * (1 - q)); }
-    if (u > 0.08 && u < 2.3) { const b = 0.5 + 0.5 * Math.sin(t * 9); P.lit(0.5, () => P.ring(fx, fy, 6 + 2 * b, 1, C.amber, 0.75)); }      // 듣는 중
+    // 3 흩어진다: 빗방울마다 사방으로 퍼지는 고리(닿은 뒤 약 4초)
+    const sc = (t - k.pHit) / 4.2;
+    if (sc > 0 && sc < 1) for (let i = 0; i < 12; i++) { const q = sc * 1.35 - hash(i, 4) * 0.35; if (q > 0 && q < 1) M.ripple(P, XR - 28 + 56 * hash(i, 1), ye - 18 + 52 * hash(i, 2), 1 + 15 * q, 0.85 * (1 - q)); }
+    // 2 듣는다: 쏜 뒤로 메아리가 올 때까지 접시는 듣는다
+    if (t > k.pListen && u < 2) { const b = 0.5 + 0.5 * Math.sin(t * 9); P.lit(0.5, () => P.ring(fx, fy, 6 + 2 * b, 1, C.amber, 0.75)); }
+    if (u >= 2 && u < 2.06) P.lit(1, () => P.disc(fx, fy, 5, C.cream));                                             // 메아리가 닿는 순간
+    // 3 의 돋보기: 빗방울을 크게 본 모습 — 전파가 지나가면 방울마다 사방으로 흩고, 아주 조금만 레이더 쪽으로 되돌아간다
+    const mag = t > s7 + 0.2 && t < s8 - 0.3, MX = 14, MY = 86, MW = 118, MH = 58;
+    if (mag) { P.line(MX + MW, MY + MH - 6, XR - 22, ye + 10, C.pale, 2);
+      M.drops(P, MX, MY, MW, MH, 12, 3, {seed: 7, pulse: (t - k.pHit + 0.7) / 1.4, echo: t > k.pHit - 0.3 ? (t - k.pHit + 0.3) * 0.5 : 0, t, fall: 2});
+      const r = (t - k.pHit - 1.6) / 2.2; if (r > 0 && r < 1) M.packet(P, lerp(MX + MW - 34, MX + 8, r), MY + MH - 12, -1, 7, 2, 0.75); }
     // 계기: 시간–세기 화면(훑는 점이 150 km 자리에 올 때 메아리가 도착한다) / 1시간 가운데 쏘는 시간
-    const tDist = k.pDist, tHalf = k.pHalf;
-    const hour = t > s6 + 0.2 && t < s7 - 0.2, back = u >= 2, q = u < 0 ? 0 : Math.min(1, u / 2) * 0.75;
+    const hour = t > s6 + 0.2 && t < s7 - 0.2, back = u >= 2, q = clamp(u / 2) * 0.75;
     if (hour) { M.panel(P, 10, 252, 250, 44); P.rect(18, 272, 234, 9, C.panel2); P.lit(1, () => P.rect(18, 272, 1, 9, C.gold)); }
     else M.ascope(P, 10, 252, 250, 44, q, back ? [[0.75, 16]] : [], {seed: Math.floor(t * 12)});
     blit(stage);
-    T.kicker('아주 느리게 본 모습');
-    T.lines(t, [['아주 짧게 쏘고, 곧바로 듣습니다', s5 + 0.3, s6 - 0.3], ['1시간에 쏘는 시간은 7초 남짓', s6 + 0.2, s7 - 0.3], ['빗방울이 전파를 사방으로 흩습니다', s7 + 0.2, s8 - 0.3], ['걸린 시간이 곧 거리', s8 + 0.2, end + 1]]);
+    T.steps(['쏜다', '듣는다', '흩어진다', '돌아온다'], step);
+    T.lines(t, [['전파를 모아, 아주 짧게 쏩니다', s5 + 0.3, k.pListen - 0.15], ['곧바로 듣기 시작합니다', k.pListen + 0.05, s6 - 0.3], ['1시간에 쏘는 시간은 7초 남짓', s6 + 0.2, s7 - 0.3],
+      ['빗방울이 전파를 사방으로 흩습니다', s7 + 0.2, s8 - 0.3], ['걸린 시간이 곧 거리', s8 + 0.2, k.pBack - 0.2], ['1,000분의 1초 = 150 km 밖', k.pBack, end + 1]]);
+    T.tag('가느다란 빔', (fx + 44) * 4, (fy - 30) * 4, {alpha: foc > 0.5 ? 1 : 0});
+    T.tag('쏘는 시간 100만분의 1초쯤', (fx + 12) * 4, (fy - 30) * 4, {alpha: fade(t, k.pEmit, k.pListen + 0.6, 0.2), color: GOLD});
+    T.tag('듣는 중', (fx + 12) * 4, (fy + 26) * 4, {alpha: fade(t, k.pListen, s7 - 0.2, 0.2)});
+    if (mag) { T.sans('빗방울을 크게 본 모습', (MX + 2) * 4, (MY - 8) * 4, {size: 24, color: CREAM});
+      T.tag('아주 조금만 되돌아옵니다', (MX + 6) * 4, (MY + MH + 9) * 4, {alpha: fade(t, k.pHit + 1.6, s8 - 0.3, 0.2), color: GOLD}); }
     if (hour) { T.sans('쏘는 시간을 다 합쳐 7초', 76, 1050, {size: 24, color: GOLD}); T.sans('듣는 시간 59분 53초', 1000, 1050, {size: 24, align: 'right'}); T.sans('1시간', 540, 1152, {size: 24, align: 'center', color: DIM}); }
-    else { T.sans(t < tDist ? '돌아온 세기 · 가로는 쏜 뒤 지난 시간(1,000분의 1초)' : '돌아온 세기 · 가로는 거리', 56, 1030, {size: 24, color: DIM});
-      (t < tDist ? ['0', '0.33', '0.67', '1.00', '1.33'] : ['0', '50', '100', '150', '200 km']).forEach((v, i) => T.sans(v, 64 + 952 * i / 4, 1172, {size: 22, color: t < tDist ? DIM : GOLD, align: i === 4 ? 'right' : i ? 'center' : 'left'})); }
-    const ms = u < 0 ? 0 : Math.min(2, u) / 2, tone = back ? AMB : INK;
-    T.gauge('지난 시간(1,000분의 1초)', ms.toFixed(2), 60, 1, tone); T.gauge('전파가 달린 길', `${Math.round(300 * ms)} km`, 450, ease(t, s8 + 0.2, s8 + 0.7), tone); T.gauge('비까지는 그 절반', back ? '150 km' : '— km', 740, ease(t, tDist, tDist + 0.5), tone);
-    T.tag('150 km', XR * 4, (GY + 10) * 4, {align: 'center', alpha: ease(t, tHalf, tHalf + 0.4)});
-    T.foot(hour ? '7초는 미국 기상 레이더(NEXRAD)의 값입니다' : FOOT);
+    else { T.sans(t < k.pDist ? '돌아온 세기 · 가로는 쏜 뒤 지난 시간(1,000분의 1초)' : '돌아온 세기 · 가로는 거리', 56, 1030, {size: 24, color: DIM});
+      (t < k.pDist ? ['0', '0.33', '0.67', '1.00', '1.33'] : ['0', '50', '100', '150', '200 km']).forEach((v, i) => T.sans(v, 64 + 952 * i / 4, 1172, {size: 22, color: t < k.pDist ? DIM : GOLD, align: i === 4 ? 'right' : i ? 'center' : 'left'})); }
+    const ms = clamp(u / 2), tone = back ? AMB : INK;
+    T.gauge('지난 시간(1,000분의 1초)', ms.toFixed(2), 60, 1, tone); T.gauge('전파가 달린 길', `${Math.round(300 * ms)} km`, 450, ease(t, s8 + 0.2, s8 + 0.7), tone);
+    T.gauge('비까지는 그 절반', t > k.p150 ? '150 km' : '— km', 740, ease(t, k.pHalf, k.pHalf + 0.5), t > k.p150 ? AMB : INK);
+    T.tag('150 km', XR * 4, (GY + 10) * 4, {align: 'center', alpha: ease(t, k.p150, k.p150 + 0.4)});
+    T.foot(hour ? '7초는 미국 기상 레이더(NEXRAD)의 값입니다' : '아주 느리게 본 모습 · 크기와 각도는 과장한 그림');
   },
 
   // 메아리의 세기: 방울이 많으면 그만큼(3방울 = 3칸), 크면 지름의 여섯제곱만큼(지름 2배 한 방울 = 64칸). 구름 방울은 0칸.
@@ -335,33 +377,58 @@ export const scenes = {
     T.foot('막대의 길이는 설명용 비율입니다 · 설명 모형');
   },
 
-  // 한계: 빔은 곧게 가고 땅은 둥글게 내려간다 → 멀수록 빔이 높다 → 그 아래의 비는 놓친다 → 다른 레이더가 메운다
+  // 한계: 빔은 곧게 가고 땅은 둥글게 내려간다 → 멀수록 빔이 땅에서 높다 → 그 아래의 비는 놓친다 → 다른 레이더가 메운다
+  // 2026-11-15 사용자: "레이더와 구름이 그냥 수평면에 그려져서 직관적이지 않음" → 처음부터 둥근 지구(큰 원호) 위에 세운다.
+  // 그림의 약속(휨과 높이를 크게 과장): 반지름 RP 의 원호 꼭대기에 레이더, 호를 따라 200 km = 0.6 rad. 빔은 화면에서도 곧은 선이고
+  // 아래 가장자리가 수평(올려다보는 각 0°), 가운데가 EPS(0.5°를 과장), 위 가장자리가 2·EPS 다.
   async limit(stage, t, p, ctx) {
     const k = plan(ctx.tl), T = type(stage), s = ctx.scene, end = s.end;
-    const X0 = 22, KX = 0.9, KY = 10, bend = ease(t, k.lEarth - 0.2, k.lEarth + 1.2);                       // 가로 1 px = 1.1 km, 세로 1 px = 0.1 km
-    const gy = x => GY - 24 + Math.max(0, (x - X0) / KX) ** 2 / (2 * 8495) * KY * bend, xk = km => X0 + km * KX, far = xk(204);
-    sideWorld(t, gy, {hills: false});
-    M.cloud(P, far, gy(far) - 96, 58, 26, {seed: 6, dark: 1, rain: 0.85, t, rainTo: gy(far), slant: 0.08});
-    const [fx, fy] = await station(X0, 0.035, {zoom: 0.4, gy: gy(X0)}), SIN = Math.sin(0.5 * Math.PI / 180);
-    const by = km => fy - km * SIN * KY, hw = km => Math.max(1, km * 0.0087 * KY), show = clamp((t - s.start - 0.4) / 2.2) * 215;
-    P.lit(0.7, () => { for (let km = 4; km < show; km += 1 / KX) { const x = Math.round(xk(km)), c = by(km), w = hw(km); for (let j = -w; j <= w; j++) P.pxA(x, Math.round(c + j), Math.abs(j) < w * 0.3 ? C.gold : C.amber, 0.55 * (1 - Math.abs(j) / (w + 1))); } });
-    const a100 = t > k.E('s16') - 0.5, a200 = t > k.l200 + 0.3, miss = t > k.lMiss - 0.6, fill = t > k.lMany + 0.2;
-    const mark = km => { const x = Math.round(xk(km)), y0 = Math.round(by(km)), y1 = Math.round(gy(x)); for (let y = y0; y < y1; y += 2) P.px(x, y, C.cream); P.rect(x - 2, y0, 5, 1, C.cream); P.rect(x - 2, y1 - 1, 5, 1, C.cream); };
-    if (a100) mark(100); if (a200) mark(200);
-    if (miss) for (let x = Math.round(far - 25); x < far + 25; x++) { const km = (x - X0) / KX; for (let y = Math.round(by(km) + hw(km) + 2); y < gy(x) - 1; y++) if ((x + y) % 4 === 0) P.px(x, y, fill ? C.gold : C.red); }
-    const x2 = 247;
-    if (fill) { const [gx, g2] = await station(x2, 0.035, {zoom: 0.4, gy: gy(x2), flip: true});
-      P.lit(0.7, () => { for (let d = 3; d < 66 * clamp((t - k.lMany - 0.4) / 1.2); d++) { const x = Math.round(gx - d), c = g2 - d / KX * SIN * KY, w = hw(d / KX); for (let j = -w; j <= w; j++) P.pxA(x, Math.round(c + j), C.gold, 0.5 * (1 - Math.abs(j) / (w + 1))); } }); }
+    const X0 = 30, Y0 = 190, RP = 230, KPHI = 0.6 / 200, EPS = 0.06, CX = X0, CY = Y0 + RP, HZ = Y0 + 84;
+    const gp = km => { const f = km * KPHI; return {x: CX + RP * Math.sin(f), y: CY - RP * Math.cos(f), nx: Math.sin(f), ny: -Math.cos(f)}; };   // 땅의 점과 그곳의 '위'
+    P.begin(); M.sky(P, HZ, t);
+    P.bands(0, W, [[HZ, C.haze], [HZ + 10, C.sky2], [HZ + 24, C.steel], [HZ + 40, C.storm], [HZ + 56, C.night], [HZ + 72, C.ink]], H, 5);   // 지구 너머의 하늘은 아래로 갈수록 어둡게(계기·자막 자리)
+    for (let y = Y0 - 1; y < H; y++) for (let x = 0; x < W; x++) {                                    // 둥근 땅(단면): 겉에서 속으로 풀·흙·어둠
+      const d = RP - Math.hypot(x + 0.5 - CX, y + 0.5 - CY);
+      if (d >= 0) { const q = d + 3 * (bayer(x, y) - 0.5); P.px(x, y, q < 2 ? C.grass : q < 5 ? C.grass2 : q < 9 ? C.grass3 : q < 24 ? C.soil : q < 56 ? C.soil2 : C.ink); }
+    }
+    // 비구름: 200 km 남짓, 그곳의 '위' 방향으로 서 있다. 구름의 밑면은 그곳의 지면과 나란하고, 빗줄기는 그곳의 땅을 향해 떨어진다
+    const R = gp(204), HC = 126, cx = R.x + R.nx * HC, cyc = R.y + R.ny * HC, qx = -R.ny, qy = R.nx;      // q = 빗줄기에 가로 방향
+    const F = radar2d(X0, Y0, 0, -1, Math.cos(EPS), -Math.sin(EPS));
+    const miss = t > k.lMiss - 0.6, fill = t > k.lMany + 0.2;
+    for (let i = -24; i <= 24; i += 3) for (let d = 6; d < HC + 12; d++) {
+      const x = Math.round(cx - R.nx * d + qx * i), y = Math.round(cyc - R.ny * d + qy * i); if (Math.hypot(x + 0.5 - CX, y + 0.5 - CY) < RP + 1) break;
+      const under = y > F[1] + 1, ph = (((d - t * 34 + hash(i, 9) * 40) % 9) + 9) % 9;
+      if (miss && under) { if ((x + y) % 2 === 0) P.px(x, y, fill ? C.gold : C.red); } else if (ph < 4 && 0.85 > bayer(x, y)) P.px(x, y, C.steel);
+    }
+    // 땅이 평평하다면: 레이더의 발밑에서 곧게 뻗은 선(둥근 땅은 이 선 아래로 내려간다)
+    const flat = t > k.lEarth - 0.2;
+    if (flat) for (let x = X0 + 6; x < Math.min(W, X0 + 6 + (t - k.lEarth + 0.2) * 260); x++) if (x % 4 < 2) P.px(x, Y0, C.pale);
+    // 빔: 급전부에서 곧게. 가운데 EPS, 폭 ±EPS
+    const dcx = Math.cos(EPS), dcy = -Math.sin(EPS), LB = 226, show = clamp((t - s.start - 0.4) / 2.2) * LB;
+    P.lit(0.7, () => { for (let r = 4; r < show; r++) { const w = Math.max(1, r * Math.tan(EPS)), bx = F[0] + dcx * r, by = F[1] + dcy * r;
+      for (let j = -w; j <= w; j++) P.pxA(Math.round(bx - dcy * j), Math.round(by + dcx * j), Math.abs(j) < w * 0.3 ? C.gold : C.amber, 0.55 * (1 - Math.abs(j) / (w + 1))); } });
+    M.cloudTilt(P, cx, cyc, 46, 22, qx, qy, {seed: 6, dark: 1});                                    // 구름의 밑면도 그 자리의 지면과 나란하다(빔은 그 아래를 지난다)
+    // 높이 표시: 땅의 점에서 그곳의 '위'로, 빔 가운데까지
+    const up = km => { const g = gp(km), det = g.nx * -dcy - g.ny * -dcx, tt = ((F[0] - g.x) * -dcy - (F[1] - g.y) * -dcx) / det; return {g, h: tt, x: g.x + g.nx * tt, y: g.y + g.ny * tt}; };
+    const a100 = t > k.E('s16') - 0.5, a200 = t > k.l200 + 0.3;
+    const mark = km => { const m = up(km), g = m.g; for (let d = 0; d < m.h; d += 2) P.px(Math.round(g.x + g.nx * d), Math.round(g.y + g.ny * d), C.cream);
+      for (const [x, y] of [[g.x, g.y], [m.x, m.y]]) for (let j = -2; j <= 2; j++) P.px(Math.round(x - g.ny * j), Math.round(y + g.nx * j), C.cream); return m; };
+    const m1 = a100 ? mark(100) : null, m2 = a200 ? mark(200) : null;
+    // 다른 레이더: 비 너머 262 km 자리에서 이쪽을 본다(그곳의 땅에 맞춰 기울어 서 있다)
+    if (fill) { const g = gp(262), tx = -Math.cos(262 * KPHI), ty = -Math.sin(262 * KPHI), ex = tx * Math.cos(EPS) + g.nx * Math.sin(EPS), ey = ty * Math.cos(EPS) + g.ny * Math.sin(EPS);
+      const F2 = radar2d(g.x, g.y, g.nx, g.ny, ex, ey), len = 74 * clamp((t - k.lMany - 0.4) / 1.2);
+      P.lit(0.7, () => { for (let r = 4; r < len; r++) { const w = Math.max(1, r * Math.tan(EPS)); for (let j = -w; j <= w; j++) P.pxA(Math.round(F2[0] + ex * r - ey * j), Math.round(F2[1] + ey * r + ex * j), C.gold, 0.5 * (1 - Math.abs(j) / (w + 1))); } }); }
     blit(stage);
     T.kicker('한계');
-    T.lines(t, [['빔은 곧게, 땅은 둥글게', k.lEarth - 0.2, k.E('s16') + 0.3], ['멀수록 빔이 높아집니다', k.S('s17') + 0.2, k.lMiss - 0.7], ['빔 아래의 비는 놓칩니다', k.lMiss - 0.5, k.S('s18') - 0.2], ['여러 레이더가 놓친 곳을 메웁니다', k.S('s18') + 0.2, end + 1]]);
-    const midY = km => (by(km) + gy(xk(km))) / 2 * 4;
-    if (a100) { T.tag('약 1.5 km', (xk(100) + 4) * 4, midY(100)); T.sans('100 km', xk(100) * 4, (gy(xk(100)) + 7) * 4, {size: 24, align: 'center'}); }
-    if (a200) { T.tag('약 4 km', (xk(200) + 4) * 4, midY(200), {color: GOLD}); T.sans('200 km', xk(200) * 4, (gy(xk(200)) + 7) * 4, {size: 24, align: 'center'}); }
-    if (miss) T.tag(fill ? '다른 레이더가 봅니다' : '보이지 않는 비', (xk(200) - 5) * 4, (gy(far) - 9) * 4, {align: 'right', color: fill ? GOLD : '#E88A78'});
+    T.lines(t, [['빔은 곧게, 땅은 둥글게', k.lEarth - 0.2, k.E('s16') + 0.3], ['멀수록 빔이 땅에서 높아집니다', k.S('s17') + 0.2, k.lMiss - 0.7], ['빔 아래의 비는 놓칩니다', k.lMiss - 0.5, k.S('s18') - 0.2], ['여러 레이더가 놓친 곳을 메웁니다', k.S('s18') + 0.2, end + 1]]);
+    T.tag('땅이 평평하다면 여기', (X0 + 16) * 4, (Y0 + 8) * 4, {alpha: fade(t, k.lEarth + 0.3, k.E('s16') - 0.7, 0.2)});
+    for (const [m, km, lab, c] of [[m1, 100, '약 1.5 km', CREAM], [m2, 200, '약 4 km', GOLD]]) if (m) { const g = m.g;
+      T.tag(lab, ((g.x + m.x) / 2 - 3) * 4, ((g.y + m.y) / 2) * 4, {align: 'right', color: c});
+      T.sans(`${km} km`, (g.x - g.nx * 9) * 4, (g.y - g.ny * 9) * 4, {size: 24, align: 'center'}); }
+    if (miss) T.tag(fill ? '다른 레이더가 봅니다' : '보이지 않는 비', (R.x + R.nx * 22 + 14) * 4, (R.y + R.ny * 22 + 10) * 4, {color: fill ? GOLD : '#E88A78'});
     const km = clamp((t - s.start - 0.4) / 2.2) * 200;
     T.gauge('거리', `${Math.round(km)} km`, 60); T.gauge('빔 가운데의 높이', `${M.beamHeightKm(km).toFixed(1)} km`, 420, 1, AMB);
-    T.foot('높이는 11배 크게 그림 · 0.5° 빔의 가운데 · 표준 대기');
+    T.foot('지구의 휨과 높이를 크게 과장한 그림 · 0.5° 빔 · 표준 대기');
   },
 
   // 맺음: 구름을 찍지 않는다. 쏘고, 듣고, 시간과 세기를 잰다.

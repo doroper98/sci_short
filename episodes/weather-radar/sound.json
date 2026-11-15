@@ -293,29 +293,47 @@
    "means": "잡음이 날씨를 읽는 신호가 됨"
   },
   {
-   "id": "p_out1",
+   "id": "p_focus",
+   "at": 31.092,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     147,
+     220
+    ],
+    "dur": 5.038,
+    "attack": 0.8,
+    "gain_db": -27
+   },
+   "means": "접시가 전파를 가느다란 빔으로 모음"
+  },
+  {
+   "id": "p_out",
    "at": 36.53,
    "kind": "tick",
    "params": {
     "freq": 440,
     "decay": 0.06,
     "click": 0.08,
-    "gain_db": -17
+    "gain_db": -16
    },
    "means": "전파 묶음을 쏨 — 짧은 틱"
   },
   {
-   "id": "p_hit1",
-   "at": 38.48,
-   "kind": "noise",
+   "id": "p_listen",
+   "at": 37.371,
+   "kind": "tone",
    "params": {
+    "freq": 196,
     "dur": 0.5,
-    "low": 260,
-    "high": 680,
-    "release": 0.35,
-    "gain_db": -23
+    "harmonics": [
+     1,
+     0.2
+    ],
+    "attack": 0.1,
+    "gain_db": -27
    },
-   "means": "전파가 빗방울에 닿아 사방으로 흩어짐"
+   "means": "접시가 듣기 시작함"
   },
   {
    "id": "p_hour",
@@ -330,152 +348,49 @@
    "means": "1시간 막대 가운데 쏘는 시간의 가는 금"
   },
   {
-   "id": "p_back1",
-   "at": 40.53,
+   "id": "p_hit",
+   "at": 48.799,
+   "kind": "env_noise",
+   "params": {
+    "low": 260,
+    "high": 680,
+    "gain_db": -21,
+    "points": [
+     [
+      0,
+      0
+     ],
+     [
+      0.15,
+      1
+     ],
+     [
+      1.2,
+      0.55
+     ],
+     [
+      3.2,
+      0.2
+     ],
+     [
+      4.2,
+      0
+     ]
+    ]
+   },
+   "means": "전파가 빗방울에 닿아 사방으로 흩어짐(고리가 퍼지는 동안)"
+  },
+  {
+   "id": "p_small",
+   "at": 50.449,
    "kind": "tick",
    "params": {
     "freq": 220,
     "decay": 0.16,
     "click": 0.03,
-    "gain_db": -19
+    "gain_db": -25
    },
-   "means": "메아리가 안테나로 돌아옴 — 쏜 틱과의 간격이 걸린 시간"
-  },
-  {
-   "id": "p_out2",
-   "at": 41.347,
-   "kind": "tick",
-   "params": {
-    "freq": 440,
-    "decay": 0.06,
-    "click": 0.08,
-    "gain_db": -17
-   },
-   "means": "전파 묶음을 쏨 — 짧은 틱"
-  },
-  {
-   "id": "p_hit2",
-   "at": 43.297,
-   "kind": "noise",
-   "params": {
-    "dur": 0.5,
-    "low": 260,
-    "high": 680,
-    "release": 0.35,
-    "gain_db": -23
-   },
-   "means": "전파가 빗방울에 닿아 사방으로 흩어짐"
-  },
-  {
-   "id": "p_back2",
-   "at": 45.347,
-   "kind": "tick",
-   "params": {
-    "freq": 220,
-    "decay": 0.16,
-    "click": 0.03,
-    "gain_db": -19
-   },
-   "means": "메아리가 안테나로 돌아옴 — 쏜 틱과의 간격이 걸린 시간"
-  },
-  {
-   "id": "p_out3",
-   "at": 46.163,
-   "kind": "tick",
-   "params": {
-    "freq": 440,
-    "decay": 0.06,
-    "click": 0.08,
-    "gain_db": -17
-   },
-   "means": "전파 묶음을 쏨 — 짧은 틱"
-  },
-  {
-   "id": "p_hit3",
-   "at": 48.113,
-   "kind": "noise",
-   "params": {
-    "dur": 0.5,
-    "low": 260,
-    "high": 680,
-    "release": 0.35,
-    "gain_db": -23
-   },
-   "means": "전파가 빗방울에 닿아 사방으로 흩어짐"
-  },
-  {
-   "id": "p_back3",
-   "at": 50.163,
-   "kind": "tick",
-   "params": {
-    "freq": 220,
-    "decay": 0.16,
-    "click": 0.03,
-    "gain_db": -19
-   },
-   "means": "메아리가 안테나로 돌아옴 — 쏜 틱과의 간격이 걸린 시간"
-  },
-  {
-   "id": "p_out4",
-   "at": 51.665,
-   "kind": "tick",
-   "params": {
-    "freq": 440,
-    "decay": 0.06,
-    "click": 0.08,
-    "gain_db": -17
-   },
-   "means": "전파 묶음을 쏨 — 짧은 틱"
-  },
-  {
-   "id": "p_hit4",
-   "at": 53.615,
-   "kind": "noise",
-   "params": {
-    "dur": 0.5,
-    "low": 260,
-    "high": 680,
-    "release": 0.35,
-    "gain_db": -23
-   },
-   "means": "전파가 빗방울에 닿아 사방으로 흩어짐"
-  },
-  {
-   "id": "p_back4",
-   "at": 55.665,
-   "kind": "tick",
-   "params": {
-    "freq": 220,
-    "decay": 0.16,
-    "click": 0.03,
-    "gain_db": -19
-   },
-   "means": "메아리가 안테나로 돌아옴 — 쏜 틱과의 간격이 걸린 시간"
-  },
-  {
-   "id": "p_out5",
-   "at": 57.167,
-   "kind": "tick",
-   "params": {
-    "freq": 440,
-    "decay": 0.06,
-    "click": 0.08,
-    "gain_db": -17
-   },
-   "means": "전파 묶음을 쏨 — 짧은 틱"
-  },
-  {
-   "id": "p_hit5",
-   "at": 59.117,
-   "kind": "noise",
-   "params": {
-    "dur": 0.5,
-    "low": 260,
-    "high": 680,
-    "release": 0.35,
-    "gain_db": -23
-   },
-   "means": "전파가 빗방울에 닿아 사방으로 흩어짐"
+   "means": "돋보기 안: 아주 조금이 레이더 쪽으로 되돌아감"
   },
   {
    "id": "p_axis",
@@ -494,20 +409,20 @@
    "means": "계기의 가로가 시간에서 거리로 바뀜"
   },
   {
-   "id": "p_back5",
+   "id": "p_back",
    "at": 61.167,
    "kind": "tick",
    "params": {
     "freq": 220,
     "decay": 0.16,
     "click": 0.03,
-    "gain_db": -19
+    "gain_db": -18
    },
    "means": "메아리가 안테나로 돌아옴 — 쏜 틱과의 간격이 걸린 시간"
   },
   {
    "id": "p_dist",
-   "at": 61.287,
+   "at": 64.802,
    "kind": "tone",
    "params": {
     "freq": 523,
@@ -1084,7 +999,7 @@
     "dur": 1.6,
     "gain_db": -24
    },
-   "means": "땅이 둥글게 내려앉음(빔은 곧게 간다)"
+   "means": "평평한 땅의 선이 그어짐 — 둥근 땅은 그 아래로 내려간다(빔은 곧게 간다)"
   },
   {
    "id": "l_100",

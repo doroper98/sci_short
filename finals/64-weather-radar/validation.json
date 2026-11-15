@@ -1,8 +1,8 @@
 {
   "file": "weather-radar.mp4",
-  "bytes": 13665214,
-  "sha256": "b0977e27d3c50fa17d2f9d9bfe2d792595f206377de943cc5fa217d66f5fabf1",
-  "created": "2026-11-15T08:38:11+00:00",
+  "bytes": 13597807,
+  "sha256": "067b243a995641b71dff3eca00d24079bbc8b64a6d6f2c29e6f323876fca6b7f",
+  "created": "2026-11-15T12:13:12+00:00",
   "title": "기상 레이더 — 전파를 쏘고, 빗방울의 메아리를 듣는다",
   "timeline_duration": 164.754,
   "max_sec": 180.0,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2530816,
         "duration": "164.766667",
-        "bit_rate": "463127",
+        "bit_rate": "459748",
         "bits_per_raw_sample": "8",
         "nb_frames": "4943",
         "extradata_size": 50,
@@ -95,7 +95,7 @@
         "start_time": "0.000000",
         "duration_ts": 7908192,
         "duration": "164.754000",
-        "bit_rate": "191536",
+        "bit_rate": "191614",
         "nb_frames": "7722",
         "extradata_size": 5,
         "disposition": {
@@ -133,8 +133,8 @@
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "164.766667",
-      "size": "13665214",
-      "bit_rate": "663494",
+      "size": "13597807",
+      "bit_rate": "660221",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -159,7 +159,7 @@
   },
   "encoded_audio": {
     "input_i": "-14.07",
-    "input_tp": "-1.21",
+    "input_tp": "-1.16",
     "input_lra": "3.70"
   },
   "targets": {

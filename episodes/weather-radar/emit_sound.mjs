@@ -36,15 +36,16 @@ add('o_scope', k.S('s04') + 0.1, 'tone', {freq: 330, dur: 0.35, harmonics: [1, 0
 add('o_blip', k.S('s04') + 1.0, 'tick', {...BACK, gain_db: -24, repeat: 2, interval: 0.6}, '화면의 점: 비행기와 배의 메아리');
 add('o_clutter', k.oRain, 'env_noise', {low: 300, high: 680, gain_db: -20, points: [[0, 0], [0.25, 0.9], [1.4, 0.6], [r(k.oTool - k.oRain - 0.7), 0.5], [r(k.oTool - k.oRain - 0.2), 0]]}, '화면에 끼어든 잡음(비와 눈) — 잡음 소리');
 add('o_signal', k.oTool - 0.7, 'swell', {freqs: [196, 294], dur: 1.6, gain_db: -25}, '잡음이 날씨를 읽는 신호가 됨');
-// 쏘고 듣는다: 쏘는 틱 → (가는 시간) → 흩어짐 → (오는 시간) → 메아리. 간격이 곧 거리다
-k.emits.forEach((e, n) => {
-  add(`p_out${n + 1}`, e, 'tick', {...OUT, gain_db: -17}, '전파 묶음을 쏨 — 짧은 틱');
-  add(`p_hit${n + 1}`, e + k.TLEG - 0.05, 'noise', {dur: 0.5, low: 260, high: 680, release: 0.35, gain_db: -23}, '전파가 빗방울에 닿아 사방으로 흩어짐');
-  add(`p_back${n + 1}`, e + 2 * k.TLEG, 'tick', {...BACK, gain_db: -19}, '메아리가 안테나로 돌아옴 — 쏜 틱과의 간격이 걸린 시간');
-});
+// 쏘고 듣는다: 왕복 한 번(되풀이하지 않는다). 모으는 소리 → 쏘는 틱 → (가는 시간) → 흩어짐 → (오는 시간) → 메아리. 쏜 틱과 메아리의 간격이 걸린 시간이다
+add('p_focus', k.pFocus, 'swell', {freqs: [147, 220], dur: r(k.pEmit - k.pFocus - 0.4), attack: 0.8, gain_db: -27}, '접시가 전파를 가느다란 빔으로 모음');
+add('p_out', k.pEmit, 'tick', {...OUT, gain_db: -16}, '전파 묶음을 쏨 — 짧은 틱');
+add('p_listen', k.pListen + 0.1, 'tone', {freq: 196, dur: 0.5, harmonics: [1, 0.2], attack: 0.1, gain_db: -27}, '접시가 듣기 시작함');
 add('p_hour', k.S('s06') + 0.25, 'tick', {freq: 587, decay: 0.03, click: 0.05, gain_db: -24}, '1시간 막대 가운데 쏘는 시간의 가는 금');
+add('p_hit', k.pHit - 0.05, 'env_noise', {low: 260, high: 680, gain_db: -21, points: [[0, 0], [0.15, 1], [1.2, 0.55], [3.2, 0.2], [4.2, 0]]}, '전파가 빗방울에 닿아 사방으로 흩어짐(고리가 퍼지는 동안)');
+add('p_small', k.pHit + 1.6, 'tick', {...BACK, gain_db: -25}, '돋보기 안: 아주 조금이 레이더 쪽으로 되돌아감');
+add('p_back', k.pBack, 'tick', {...BACK, gain_db: -18}, '메아리가 안테나로 돌아옴 — 쏜 틱과의 간격이 걸린 시간');
 add('p_axis', k.pDist, 'tone', {freq: 392, glide_to: 523, dur: 0.4, harmonics: [1, 0.3], gain_db: -24}, '계기의 가로가 시간에서 거리로 바뀜');
-add('p_dist', k.pHalf + 0.12, 'tone', {freq: 523, dur: 0.5, harmonics: [1, 0.3], gain_db: -22}, '150 km 가 정해짐');
+add('p_dist', k.p150, 'tone', {freq: 523, dur: 0.5, harmonics: [1, 0.3], gain_db: -22}, '150 km 가 정해짐');
 // 메아리의 세기 = 틱의 수와 크기: 1칸, 3칸, 64칸(차오름), 구름 방울은 거의 0
 add('e_one', k.S('s09') + 1.3, 'tick', {...BACK, gain_db: -22}, '1 mm 방울 하나의 메아리 = 1칸');
 add('e_three', k.eMany + 0.9, 'tick', {...BACK, gain_db: -22, repeat: 3, interval: 0.14}, '세 방울의 메아리 = 3칸(방울 수만큼)');
@@ -70,7 +71,7 @@ add('x_hail_v', k.pHail + 0.4, 'tick', {...BACK, freq: 330, gain_db: -21}, '우�
 // 한계
 { const s = sc('limit');
   add('l_beam', s.start + 0.4, 'whoosh', {dur: 2.2, f_start: 260, f_end: 620, q: 3, gain_db: -25}, '빔이 200 km 밖까지 뻗음');
-  add('l_bend', k.lEarth - 0.2, 'swell', {freqs: [98, 147], dur: 1.6, gain_db: -24}, '땅이 둥글게 내려앉음(빔은 곧게 간다)');
+  add('l_bend', k.lEarth - 0.2, 'swell', {freqs: [98, 147], dur: 1.6, gain_db: -24}, '평평한 땅의 선이 그어짐 — 둥근 땅은 그 아래로 내려간다(빔은 곧게 간다)');
   add('l_100', k.E('s16') - 0.5, 'tick', {freq: 392, decay: 0.1, click: 0.05, gain_db: -25}, '100 km 자리의 높이 표시');
   add('l_200', k.l200 + 0.3, 'tick', {freq: 523, decay: 0.1, click: 0.05, gain_db: -24}, '200 km 자리의 높이 표시');
   add('l_miss', k.lMiss - 0.6, 'tone', {freq: 147, dur: 0.6, harmonics: [1, 0.4], gain_db: -21}, '빔 아래의 비 — 메아리가 없다(낮고 둔한 음)');

@@ -27,4 +27,6 @@ SKIP_NARRATE=1 episodes/weather-radar/run.sh stills render sfx mix finish hdr va
 - **필요한 것**: Playwright 와 Chromium(Claude 클라우드 세션에는 깔려 있음), `pipeline/render/node_modules/three`. 없으면 `three3d.mjs` 가 까닭을 적고 멈춘다. WebGL 은 소프트웨어 렌더(SwiftShader)로 돈다 — 270×480 이라 초당 약 18프레임으로 렌더된다.
 - **HDR**: 픽셀 버퍼는 `lit(stage, …)` 대신 `P.lit(세기, () => …)` 를 쓴다. `blit()` 이 화소별 빛 지도를 `stage.gain` 에 그대로 넣는다. 이름표(`T.tag`)는 제 밑의 빛을 끈다. 색의 자(범례)·글자·바탕은 빛나지 않는다.
 - **하늘**: 이 편은 비 오는 흐린 낮이다. 픽셀 화풍의 하늘은 노을로 정해져 있지 않다 — 주제에 맞춰 고른다.
+- 한계 장면은 3D 조각을 쓰지 않는다: 둥근 지구의 원호 위에서 관측소가 기울어 서야 해서 작은 2D 레이더(`scenes.mjs` `radar2d`)로 그린다.
+- 쏘고 듣는다 장면은 왕복 한 번이다(`plan()` 의 `pEmit`·`pHit`·`pBack`). 같은 왕복을 되풀이하지 않는다(2026-11-15 사용자 지적 — `brief.md` 검증 메모).
 - 작은 크기로 그릴 때(`stationScale × zoom < 0.45`)는 접시의 가는 버팀대를 뺀다(점으로 뭉개져 얼굴처럼 보인다).
