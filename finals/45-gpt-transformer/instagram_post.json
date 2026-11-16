@@ -1,0 +1,28 @@
+{
+ "media_id": "18170512207478223",
+ "permalink": "https://www.instagram.com/reel/Df0agmhjpEK/",
+ "posted_at": "2026-11-16T22:21:30+00:00",
+ "ig_user_id": "17841457693338876",
+ "username": "_scishorts",
+ "video_file": "gpt-transformer.mp4",
+ "video_bytes": 13079106,
+ "video_md5": "93ab3a23d84bc6a7e4b0f580c2d6fb28",
+ "caption_chars": 489,
+ "hashtags": [
+  "#GPT",
+  "#트랜스포머",
+  "#어텐션",
+  "#언어모델",
+  "#과학"
+ ],
+ "container_id": "17984998946923112",
+ "shortcode": "Df0agmhjpEK",
+ "transfer": "url",
+ "ai_label": true,
+ "number": 45,
+ "slug": "gpt-transformer",
+ "status": "posted",
+ "note": "",
+ "source": "api",
+ "schema_version": 1
+}
