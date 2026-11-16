@@ -1,0 +1,510 @@
+{
+ "schema_version": 1,
+ "measured": "2026-11-16",
+ "method": "ffmpeg 로 0초와 0.5·1·1.5·2·3초 프레임을 270×480 회색조로 뽑아 0초보다 16/255 넘게 달라진 화소의 비율을 세고, 앞 5초에 silencedetect(-40 dB, 0.05초)를 돌려 맨 앞 무음이 끝나는 시각을 첫 소리로 잰다.",
+ "thresholds": {
+  "sample_times": [
+   0.5,
+   1.0,
+   1.5,
+   2.0,
+   3.0
+  ],
+  "frame_size": [
+   270,
+   480
+  ],
+  "pixel_threshold": 16,
+  "silence_noise_db": -40,
+  "silence_min_sec": 0.05,
+  "audio_window_sec": 5,
+  "min_changed_pct": {
+   "1.0": 10,
+   "2.0": 20
+  },
+  "max_first_sound_sec": 0.3,
+  "enforce_lead_sec": 0.3
+ },
+ "episodes": {
+  "01-gravitational-waves": {
+   "changed_pct": {
+    "0.5": 0.0,
+    "1.0": 6.3,
+    "1.5": 15.3,
+    "2.0": 15.9,
+    "3.0": 16.0
+   },
+   "luma0_pct": 9.3,
+   "first_sound_sec": 0.63,
+   "pass": false
+  },
+  "02-ligo-how-it-works": {
+   "changed_pct": {
+    "0.5": 0.0,
+    "1.0": 7.7,
+    "1.5": 13.4,
+    "2.0": 12.9,
+    "3.0": 13.0
+   },
+   "luma0_pct": 10.0,
+   "first_sound_sec": 0.63,
+   "pass": false
+  },
+  "03-el-nino-la-nina": {
+   "changed_pct": {
+    "0.5": 0.0,
+    "1.0": 6.0,
+    "1.5": 24.4,
+    "2.0": 25.9,
+    "3.0": 26.0
+   },
+   "luma0_pct": 11.9,
+   "first_sound_sec": 0.63,
+   "pass": false
+  },
+  "04-wavelength": {
+   "changed_pct": {
+    "0.5": 0.0,
+    "1.0": 6.4,
+    "1.5": 15.3,
+    "2.0": 16.3,
+    "3.0": 15.5
+   },
+   "luma0_pct": 9.4,
+   "first_sound_sec": 0.63,
+   "pass": false
+  },
+  "05-global-winds": {
+   "changed_pct": {
+    "0.5": 0.0,
+    "1.0": 6.1,
+    "1.5": 26.9,
+    "2.0": 28.3,
+    "3.0": 28.2
+   },
+   "luma0_pct": 12.5,
+   "first_sound_sec": 0.63,
+   "pass": false
+  },
+  "06-seasons": {
+   "changed_pct": {
+    "0.5": 0.0,
+    "1.0": 5.1,
+    "1.5": 11.6,
+    "2.0": 12.0,
+    "3.0": 12.6
+   },
+   "luma0_pct": 9.5,
+   "first_sound_sec": 1.03,
+   "pass": false
+  },
+  "07-precession": {
+   "changed_pct": {
+    "0.5": 0.0,
+    "1.0": 6.7,
+    "1.5": 19.4,
+    "2.0": 20.3,
+    "3.0": 20.7
+   },
+   "luma0_pct": 11.3,
+   "first_sound_sec": 1.03,
+   "pass": false
+  },
+  "08-log-scale": {
+   "changed_pct": {
+    "0.5": 0.0,
+    "1.0": 7.3,
+    "1.5": 25.8,
+    "2.0": 28.1,
+    "3.0": 27.8
+   },
+   "luma0_pct": 13.3,
+   "first_sound_sec": 1.02,
+   "pass": false
+  },
+  "09-twinkle": {
+   "changed_pct": {
+    "0.5": 0.1,
+    "1.0": 3.6,
+    "1.5": 12.1,
+    "2.0": 12.5,
+    "3.0": 12.9
+   },
+   "luma0_pct": 10.9,
+   "first_sound_sec": 1.03,
+   "pass": false
+  },
+  "10-aurora": {
+   "changed_pct": {
+    "0.5": 1.3,
+    "1.0": 5.8,
+    "1.5": 12.1,
+    "2.0": 14.8,
+    "3.0": 19.4
+   },
+   "luma0_pct": 15.0,
+   "first_sound_sec": 0.34,
+   "pass": false
+  },
+  "11-eddington-limit": {
+   "changed_pct": {
+    "0.5": 25.4,
+    "1.0": 40.4,
+    "1.5": 50.5,
+    "2.0": 38.2,
+    "3.0": 28.1
+   },
+   "luma0_pct": 19.2,
+   "first_sound_sec": 0.13,
+   "pass": true
+  },
+  "12-quasar": {
+   "changed_pct": {
+    "0.5": 1.4,
+    "1.0": 3.0,
+    "1.5": 5.5,
+    "2.0": 6.7,
+    "3.0": 6.9
+   },
+   "luma0_pct": 9.5,
+   "first_sound_sec": 0.0,
+   "pass": false
+  },
+  "13-gamma-ray-burst": {
+   "changed_pct": {
+    "0.5": 0.0,
+    "1.0": 3.4,
+    "1.5": 7.5,
+    "2.0": 8.1,
+    "3.0": 17.2
+   },
+   "luma0_pct": 15.7,
+   "first_sound_sec": 0.0,
+   "pass": false
+  },
+  "14-cold-vaccine": {
+   "changed_pct": {
+    "0.5": 4.5,
+    "1.0": 9.1,
+    "1.5": 19.3,
+    "2.0": 26.1,
+    "3.0": 32.8
+   },
+   "luma0_pct": 18.0,
+   "first_sound_sec": 1.02,
+   "pass": false
+  },
+  "15-traffic-jam": {
+   "changed_pct": {
+    "0.5": 3.5,
+    "1.0": 10.0,
+    "1.5": 25.4,
+    "2.0": 29.8,
+    "3.0": 28.4
+   },
+   "luma0_pct": 11.9,
+   "first_sound_sec": 0.52,
+   "pass": false
+  },
+  "16-absolute-zero": {
+   "changed_pct": {
+    "0.5": 0.9,
+    "1.0": 3.6,
+    "1.5": 29.5,
+    "2.0": 31.7,
+    "3.0": 31.1
+   },
+   "luma0_pct": 14.2,
+   "first_sound_sec": 0.58,
+   "pass": false
+  },
+  "17-superfluid-helium": {
+   "changed_pct": {
+    "0.5": 0.8,
+    "1.0": 4.7,
+    "1.5": 10.2,
+    "2.0": 11.9,
+    "3.0": 12.9
+   },
+   "luma0_pct": 14.9,
+   "first_sound_sec": 0.08,
+   "pass": false
+  },
+  "18-temperature-scales": {
+   "changed_pct": {
+    "0.5": 0.1,
+    "1.0": 6.1,
+    "1.5": 24.2,
+    "2.0": 25.4,
+    "3.0": 25.3
+   },
+   "luma0_pct": 12.9,
+   "first_sound_sec": 0.48,
+   "pass": false
+  },
+  "19-gravity-time": {
+   "changed_pct": {
+    "0.5": 0.1,
+    "1.0": 2.8,
+    "1.5": 10.9,
+    "2.0": 18.3,
+    "3.0": 18.8
+   },
+   "luma0_pct": 11.6,
+   "first_sound_sec": 0.52,
+   "pass": false
+  },
+  "20-atomic-bomb": {
+   "changed_pct": {
+    "0.5": 0.0,
+    "1.0": 1.4,
+    "1.5": 9.7,
+    "2.0": 26.5,
+    "3.0": 35.7
+   },
+   "luma0_pct": 15.0,
+   "first_sound_sec": 0.57,
+   "pass": false
+  },
+  "21-hydrogen-bomb": {
+   "changed_pct": {
+    "0.5": 0.5,
+    "1.0": 3.4,
+    "1.5": 12.3,
+    "2.0": 13.4,
+    "3.0": 75.7
+   },
+   "luma0_pct": 13.0,
+   "first_sound_sec": 0.59,
+   "pass": false
+  },
+  "22-mushroom-cloud": {
+   "changed_pct": {
+    "0.5": 0.0,
+    "1.0": 1.7,
+    "1.5": 9.3,
+    "2.0": 45.1,
+    "3.0": 30.2
+   },
+   "luma0_pct": 12.9,
+   "first_sound_sec": 0.53,
+   "pass": false
+  },
+  "23-orbit-altitudes": {
+   "changed_pct": {
+    "0.5": 0.0,
+    "1.0": 1.9,
+    "1.5": 8.8,
+    "2.0": 10.2,
+    "3.0": 10.5
+   },
+   "luma0_pct": 14.9,
+   "first_sound_sec": 0.54,
+   "pass": false
+  },
+  "24-lagrange-points": {
+   "changed_pct": {
+    "0.5": 0.0,
+    "1.0": 2.6,
+    "1.5": 7.4,
+    "2.0": 8.4,
+    "3.0": 9.8
+   },
+   "luma0_pct": 14.5,
+   "first_sound_sec": 0.52,
+   "pass": false
+  },
+  "25-typhoon-track": {
+   "changed_pct": {
+    "0.5": 0.4,
+    "1.0": 5.0,
+    "1.5": 24.9,
+    "2.0": 35.5,
+    "3.0": 35.5
+   },
+   "luma0_pct": 18.2,
+   "first_sound_sec": 0.5,
+   "pass": false
+  },
+  "27-towed-array-sonar": {
+   "changed_pct": {
+    "0.5": 5.3,
+    "1.0": 9.2,
+    "1.5": 13.0,
+    "2.0": 13.6,
+    "3.0": 14.8
+   },
+   "luma0_pct": 9.5,
+   "first_sound_sec": 0.34,
+   "pass": false
+  },
+  "28-tides": {
+   "changed_pct": {
+    "0.5": 0.0,
+    "1.0": 3.5,
+    "1.5": 10.6,
+    "2.0": 10.9,
+    "3.0": 10.9
+   },
+   "luma0_pct": 12.4,
+   "first_sound_sec": 0.5,
+   "pass": false
+  },
+  "29-fission-fusion": {
+   "changed_pct": {
+    "0.5": 0.4,
+    "1.0": 11.9,
+    "1.5": 20.8,
+    "2.0": 23.3,
+    "3.0": 26.7
+   },
+   "luma0_pct": 14.7,
+   "first_sound_sec": 0.53,
+   "pass": false
+  },
+  "31-reusable-rocket": {
+   "changed_pct": {
+    "0.5": 0.0,
+    "1.0": 1.9,
+    "1.5": 7.7,
+    "2.0": 30.3,
+    "3.0": 27.7
+   },
+   "luma0_pct": 16.2,
+   "first_sound_sec": 0.53,
+   "pass": false
+  },
+  "32-radar": {
+   "changed_pct": {
+    "0.5": 3.0,
+    "1.0": 6.3,
+    "1.5": 12.8,
+    "2.0": 12.3,
+    "3.0": 14.5
+   },
+   "luma0_pct": 11.4,
+   "first_sound_sec": 0.17,
+   "pass": false
+  },
+  "33-sar": {
+   "changed_pct": {
+    "0.5": 0.6,
+    "1.0": 4.4,
+    "1.5": 11.8,
+    "2.0": 12.6,
+    "3.0": 12.7
+   },
+   "luma0_pct": 10.9,
+   "first_sound_sec": 0.52,
+   "pass": false
+  },
+  "34-telescope-types": {
+   "changed_pct": {
+    "0.5": 3.1,
+    "1.0": 2.3,
+    "1.5": 13.9,
+    "2.0": 14.9,
+    "3.0": 17.6
+   },
+   "luma0_pct": 11.4,
+   "first_sound_sec": 0.53,
+   "pass": false
+  },
+  "36-accretion-disk": {
+   "changed_pct": {
+    "0.5": 0.1,
+    "1.0": 0.1,
+    "1.5": 6.9,
+    "2.0": 7.3,
+    "3.0": 7.3
+   },
+   "luma0_pct": 10.7,
+   "first_sound_sec": 0.5,
+   "pass": false
+  },
+  "38-submarine-detection": {
+   "changed_pct": {
+    "0.5": 6.1,
+    "1.0": 8.9,
+    "1.5": 13.0,
+    "2.0": 14.3,
+    "3.0": 14.6
+   },
+   "luma0_pct": 12.5,
+   "first_sound_sec": 0.54,
+   "pass": false
+  },
+  "43-gpt-generative": {
+   "changed_pct": {
+    "0.5": 3.4,
+    "1.0": 6.6,
+    "1.5": 13.8,
+    "2.0": 22.0,
+    "3.0": 25.3
+   },
+   "luma0_pct": 10.6,
+   "first_sound_sec": 0.2,
+   "pass": false
+  },
+  "44-gpt-pretrained": {
+   "changed_pct": {
+    "0.5": 0.0,
+    "1.0": 3.8,
+    "1.5": 23.6,
+    "2.0": 23.5,
+    "3.0": 24.1
+   },
+   "luma0_pct": 10.2,
+   "first_sound_sec": 0.54,
+   "pass": false
+  },
+  "45-gpt-transformer": {
+   "changed_pct": {
+    "0.5": 0.3,
+    "1.0": 3.6,
+    "1.5": 18.6,
+    "2.0": 18.9,
+    "3.0": 18.9
+   },
+   "luma0_pct": 11.0,
+   "first_sound_sec": 0.51,
+   "pass": false
+  },
+  "46-gpt-image": {
+   "changed_pct": {
+    "0.5": 0.6,
+    "1.0": 4.5,
+    "1.5": 23.6,
+    "2.0": 29.7,
+    "3.0": 26.3
+   },
+   "luma0_pct": 11.6,
+   "first_sound_sec": 0.05,
+   "pass": false
+  },
+  "58-tsunami": {
+   "changed_pct": {
+    "0.5": 0.9,
+    "1.0": 1.1,
+    "1.5": 1.1,
+    "2.0": 0.8,
+    "3.0": 1.5
+   },
+   "luma0_pct": 27.5,
+   "first_sound_sec": 0.22,
+   "pass": false
+  },
+  "64-weather-radar": {
+   "changed_pct": {
+    "0.5": 3.0,
+    "1.0": 3.5,
+    "1.5": 4.5,
+    "2.0": 5.1,
+    "3.0": 7.2
+   },
+   "luma0_pct": 31.0,
+   "first_sound_sec": 0.05,
+   "pass": false
+  }
+ }
+}

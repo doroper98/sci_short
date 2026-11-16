@@ -14,7 +14,8 @@ pipeline/
     tests/          node --test, fixtures/timeline.sample.json, make_fixture.py
   audio/            sfx.py(설명용 소리), mix.py(덕킹 믹스), finish.py(마스터링·mux·validation.json), tests/
   hdr.py            SDR 그림(visual.mp4) + 빛 지도(gain.mp4) → HDR 판 final/hdr/<slug>.hdr.mp4 (docs/HDR.md)
-  validate.py       완성 폴더 자동 검사 → validate.json (--hdr auto|require|skip)
+  validate.py       완성 폴더 자동 검사 → validate.json (--hdr auto|require|skip, --allow-static-open "까닭")
+  first_moment.py   첫 순간 점검: 1초·2초 화면 변화, 첫 소리 (config/first_moment.json)
   new_episode.py    episodes/_template → episodes/<slug>
 episodes/
   _template/        brief.md script.json scenes.mjs sound.json render.mjs run.sh README.md
@@ -88,12 +89,14 @@ $PY pipeline/audio/mix.py --narration $O/narration/narration.wav --sfx $O/sfx.wa
     --timeline $O/narration/timeline.json --out $O/mix.wav [--music assets/music/x.mp3 --music-credit "…" --music-under-db 12 --music-duck-db 6] [--ambient-duck-db 12 --sfx-duck-db 6 --pre 0.25 --post 0.3]
 $PY pipeline/audio/finish.py --visual $O/visual.mp4 --mix $O/mix.wav --timeline $O/narration/timeline.json \
     --captions-srt $O/narration/captions.srt --out $O/final/$S.mp4 --title "…" [--max-sec 180] [--allow-degraded]
-python3 pipeline/validate.py $O [--max-sec 180]
+python3 pipeline/validate.py $O [--max-sec 180] [--allow-static-open "까닭"]
+python3 -m pipeline.first_moment $O/final/$S.mp4 [--json F]   # 첫 순간 점검만(못 미치면 exit 1)
 episodes/$S/run.sh                                   # 위 전체를 순서대로 (단계 이름을 인자로 주면 그 단계만)
 ```
 
 테스트:
 ```bash
+python3 -m unittest tests.test_first_moment -v                          # 첫 순간 점검(ffmpeg 없으면 영상 시험은 건너뜀)
 (cd pipeline/render && npm test)                                         # timeline/captions/3D 단위 테스트
 /home/user/.venv-scishort-render/bin/python -m pytest pipeline/audio/tests   # 소리 시각, JS↔Python 참조 일치, 덕킹
 /home/user/.venv-scishort-render/bin/python pipeline/render/tests/make_fixture.py --out /tmp/x/narration   # 가짜 내레이션(음성 아님)
@@ -117,12 +120,28 @@ episodes/$S/run.sh                                   # 위 전체를 순서대�
 |---|---|
 | 길이 ≤ 180초, 1080×1920, 30 fps, yuv420p, H.264, `kor` 오디오, A/V 길이 일치 | 과학 설명이 맞는가, 인과가 화면에서 보이는가 |
 | SRT 파싱·순서·겹침·길이 안, 2줄·22자 추정, SRT = timeline.captions(±50 ms) | 자막이 **핵심 현상을 가리지 않는가**(스틸·영상으로 확인) |
-| 스틸·contact sheet 존재, `degraded` 표시 | 발음(숫자·용어), 문장 끝 억양, 합성 잡음 |
+| 스틸·contact sheet 존재, `degraded` 표시, 첫 순간(1초·2초 화면 변화, 첫 소리) | 발음(숫자·용어), 문장 끝 억양, 합성 잡음 |
 | 소리 사건 시각 = 화면 사건 시각(events.json 대조), 전체 디코드 | 소리와 화면이 같은 사건으로 **들리고 보이는가**, 음악이 말을 가리는가 |
 | loudnorm 측정값, 피크 | 휴대전화 크기에서 라벨이 읽히는가, 모노 재생, 플랫폼 UI와 실제 겹침 |
 
 자동 검사 PASS는 기능 검증입니다. 시청·청취를 대신했다고 기록하지 마세요.
 `validation.json`의 `direct_listening`, `physical_phone_playback`은 기본값 `not performed`이며 직접 한 경우에만 바꿉니다.
+
+## 첫 순간 점검 — `pipeline/first_moment.py`
+
+2026-11-16 사용자 말 "어 너가 생각하는 모든 것들을 다 적용해봐. 무한한 권한과 지지를 보낸다"로 적용한 [CHANNEL_GROWTH](../docs/CHANNEL_GROWTH.md) 9절 방안 2(제작 세션의 제안)입니다. 쇼츠는 첫 순간에 넘길지가 정해지는데, 14편 합산 넘기지 않고 본 비율은 48.0%(바깥 표본 평균 약 61%)이고 새 형식 58번도 첫 3초 동안 화면이 거의 바뀌지 않았습니다(9절 O3·O4). 규칙은 [스킬](../skills/science-short/SKILL.md) 4단계 '첫 순간 보강'.
+
+```bash
+python3 -m pipeline.first_moment outputs/<slug>/final/<slug>.mp4 [--json out.json]        # 표, 못 미치면 exit 1
+python3 -m pipeline.first_moment --all finals --out reports/first_moment_baseline.json    # finals/<NN>-<slug>/ 전부(맨 위 mp4 가 하나인 폴더)
+```
+
+- 재는 법: ffmpeg 로 0초와 0.5·1·1.5·2·3초 프레임을 270×480 회색조(ffmpeg `gray`)로 뽑아, 0초보다 16/255 넘게 달라진 화소의 비율(`changed_pct`)을 셉니다. `luma0_pct` 는 0초 프레임의 평균 밝기(0~100). `first_sound_sec` 는 앞 5초에 `silencedetect=noise=-40dB:d=0.05` 를 돌려 맨 앞 무음이 끝나는 시각(맨 앞 무음이 없으면 0.0, 소리 줄기가 없거나 끝까지 무음이면 `null`).
+- 통과(`pass`): 1.0초 ≥ 10%, 2.0초 ≥ 20%, 첫 소리가 `null` 이 아니고 ≤ 0.3초. 값은 모두 `config/first_moment.json`.
+- 결과 꼴(다른 도구와의 약속, 키 이름을 바꾸지 않습니다): `{"changed_pct": {"0.5": 0.9, "1.0": 1.1, "1.5": 1.1, "2.0": 0.8, "3.0": 1.5}, "luma0_pct": 27.5, "first_sound_sec": 0.22, "pass": false}`(58 쓰나미).
+- `validate.py` 가 같은 점검을 돌려 `validate.json` 과 `final/validation.json` 에 `first_moment`·`first_moment_waiver` 로 적습니다. `timeline.json` 의 `lead_sec` 가 0.3 이하(새 형식)인 편에서 못 미치면 FAIL, 옛 편은 WARN 입니다. 주제의 성격상 불가능하면 `--allow-static-open "까닭"`(또는 환경 변수 `ALLOW_STATIC_OPEN`, `run.sh` 는 고치지 않아도 됨)으로 WARN 으로 바꾸고 까닭을 남깁니다. 이런 예외는 드물어야 합니다.
+- 기준선: `reports/first_moment_baseline.json`(2026-11-16, 완성본 40편). 통과는 11 에딩턴 한계 한 편뿐입니다. 이 도구로 잰 15 유령 체증은 1초 10.0%·2초 29.8% 로 9절 표(12.6%·32.5%)와 조금 다릅니다(9절을 잰 때의 회색조 변환 차이로 보임). 58·64·27·28 은 0.4%p 안에서 같습니다.
+- 이 점검은 '그림이 움직이는가'만 잽니다. 그 움직임이 인과 사슬의 한 고리인지, 장식용 움직임으로 수치를 채우지 않았는지는 정지화면으로 직접 봅니다.
 
 ## 생성 영상 클립 (선택) — `pipeline/genvideo/`
 

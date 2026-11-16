@@ -1,0 +1,27 @@
+{
+ "_": "묶음 장편 1: 탐지 네 편(채널 분석 3판 방안 6의 시험). 순서·제목은 제작 세션의 제안. titles 는 각 편 upload.md 제목에서 해시태그를 뺀 것이며 설명란 챕터 줄이 된다.",
+ "slug": "detection",
+ "parts": [
+  "finals/32-radar",
+  "finals/33-sar",
+  "finals/27-towed-array-sonar",
+  "finals/38-submarine-detection"
+ ],
+ "titles": [
+  "레이더를 피하려면? | 레이더의 원리와 스텔스",
+  "구름 낀 밤, 위성 사진? | 합성개구레이더(SAR)의 원리",
+  "군함은 왜 긴 줄을 끌까? | 예인 소나의 원리",
+  "잠수함은 어떻게 찾을까 | 소리와 자기장의 흔적"
+ ],
+ "thumbnail": {
+  "_": "longform/thumbnail.py 가 읽는다. focus 는 편마다 포스터를 가로로 자를 때의 중심(0 왼쪽 ~ 1 오른쪽).",
+  "title": "보이지 않는 것을 찾는 법",
+  "sub": "레이더 · SAR · 소나 · 잠수함 탐지",
+  "focus": [
+   0.5,
+   0.5,
+   0.5,
+   0.5
+  ]
+ }
+}
