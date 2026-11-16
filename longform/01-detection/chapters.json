@@ -1,0 +1,40 @@
+{
+ "slug": "detection",
+ "video": "detection.mp4",
+ "total_sec": 654.033,
+ "chapters": [
+  {
+   "start_sec": 0.0,
+   "start": "0:00",
+   "title": "레이더를 피하려면? | 레이더의 원리와 스텔스",
+   "duration_sec": 164.333,
+   "dir": "finals/32-radar",
+   "video": "finals/32-radar/radar.mp4"
+  },
+  {
+   "start_sec": 164.333,
+   "start": "2:44",
+   "title": "구름 낀 밤, 위성 사진? | 합성개구레이더(SAR)의 원리",
+   "duration_sec": 169.933,
+   "dir": "finals/33-sar",
+   "video": "finals/33-sar/sar.mp4"
+  },
+  {
+   "start_sec": 334.267,
+   "start": "5:34",
+   "title": "군함은 왜 긴 줄을 끌까? | 예인 소나의 원리",
+   "duration_sec": 149.2,
+   "dir": "finals/27-towed-array-sonar",
+   "video": "finals/27-towed-array-sonar/towed-array-sonar.mp4"
+  },
+  {
+   "start_sec": 483.467,
+   "start": "8:03",
+   "title": "잠수함은 어떻게 찾을까 | 소리와 자기장의 흔적",
+   "duration_sec": 170.567,
+   "dir": "finals/38-submarine-detection",
+   "video": "finals/38-submarine-detection/submarine-detection.mp4"
+  }
+ ],
+ "_": "longform/build.py 가 원본들의 실제 영상 길이(ffprobe)로 쓴다. 손으로 고치지 말 것. upload.md 설명의 챕터 줄은 이 파일과 같아야 한다(--check)."
+}

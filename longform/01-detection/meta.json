@@ -1,0 +1,7 @@
+{
+ "_": "묶음 장편은 youtube-longform 수동 실행으로만 올린다. finals/ 밖이라 일정 업로드·인스타·틱톡·48시간 점검이 이 폴더를 보지 않지만, 혹시 누가 경로로 지정해도 인스타·틱톡에는 나가지 않게 막아 둔다. video 를 적어 두어 폴더에 다른 mp4 가 생겨도 이 파일만 올린다.",
+ "video": "detection.mp4",
+ "thumbnail": true,
+ "instagram": false,
+ "tiktok": false
+}

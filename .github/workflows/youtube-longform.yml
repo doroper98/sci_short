@@ -1,0 +1,102 @@
+# 묶음 장편(longform/<NN>-<slug>/)을 만들어 유튜브에 **비공개**로 올리는 수동 실행 전용 워크플로.
+# - 무엇: 완성 쇼츠 여러 편을 이어 붙인 일반 영상(쇼츠 아님). 채널 분석 3판(docs/CHANNEL_GROWTH.md 9-4) 방안 6의 시험.
+#   영상(mp4)은 저장소에 없다. 이 실행이 recipe.json 대로 finals/ 의 원본을 이어 만들고(longform/build.py), 검사한 뒤 올린다.
+# - 언제나 비공개로만 올리고 예약 공개 시각도 걸지 않는다(폴더 지정 실행 — publish/youtube.py 는 publish_at 없이 private).
+#   공개는 사용자가 YouTube Studio 에서 직접 한다. 인스타·틱톡에는 올리지 않는다(meta.json instagram·tiktok false).
+# - 실행: Actions → youtube-longform → Run workflow. dir(기본 longform/01-detection)을 고르고,
+#   dry_run 은 기본이 켜짐(만들고 검사만) — 실제로 올릴 때만 끈다.
+# - 결과: 실제 업로드면 <dir>/youtube_upload.json 을 main 에 커밋한다(youtube-upload 와 같은 방식).
+#   같은 영상을 다시 실행하면 기록의 md5 가 같아 다시 올리지 않는다.
+# - 비밀값: YT_CLIENT_ID · YT_CLIENT_SECRET · YT_REFRESH_TOKEN (youtube-upload 와 같음).
+name: youtube-longform
+
+on:
+  workflow_dispatch:
+    inputs:
+      dir:
+        description: "묶음 장편 폴더 (recipe.json 이 있는 곳)"
+        required: true
+        default: "longform/01-detection"
+      dry_run:
+        description: "만들고 검사만 하고 올리지 않음 (실제 업로드는 끄기)"
+        type: boolean
+        default: true
+
+concurrency:
+  group: youtube-upload
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  longform:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      PYTHONUTF8: "1"
+      DIR: ${{ inputs.dir }}
+      DRY_RUN: ${{ inputs.dry_run }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: ffmpeg 설치 (이어 붙이기 · 규격 검사)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+      - name: 대상 확인 (longform/ 아래 폴더만)
+        run: |
+          case "$DIR" in
+            longform/*/*|*..*) echo "::error::dir 는 longform/<NN>-<slug> 하나여야 합니다: $DIR"; exit 1 ;;
+            longform/?*) ;;
+            *) echo "::error::dir 는 longform/<NN>-<slug> 여야 합니다: $DIR"; exit 1 ;;
+          esac
+          test -f "$DIR/recipe.json" || { echo "::error::$DIR/recipe.json 없음"; exit 1; }
+      - name: 단위 시험 (묶음 장편)
+        run: python -m unittest tests.test_longform -v
+      - name: 만들기 (다시 인코딩 — 10분 남짓)
+        run: python longform/build.py "$DIR"
+      - name: 검사 (길이 · 소리 동기 · 규격 · 챕터 줄)
+        run: python longform/build.py "$DIR" --check
+      - name: 업로드 (항상 비공개 · 예약 없음 · 일반 영상)
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: |
+          ARGS=("$DIR" --not-shorts)
+          if [ "$DRY_RUN" = "true" ]; then ARGS+=(--dry-run); fi
+          python -m publish.youtube "${ARGS[@]}" --report upload-report.json
+      - name: 기록 커밋 (youtube_upload.json)
+        if: ${{ always() && env.DRY_RUN != 'true' }}
+        run: |
+          # .github/scripts/stage_records.py 는 finals/*/ 만 보므로 이 폴더의 기록은 직접 올린다.
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          REC="$DIR/youtube_upload.json"
+          STATUS=$(python -c "import json,sys; d=json.load(open('upload-report.json')); print(','.join(r.get('status','') for r in d.get('results',[])))" 2>/dev/null || echo "")
+          if [ ! -f "$REC" ]; then
+            if [ "$STATUS" = "uploaded" ]; then echo "::error::올렸는데 $REC 가 없습니다(다시 올라갈 위험)"; exit 1; fi
+            echo "기록 없음(올리지 않음: $STATUS)"; exit 0
+          fi
+          git add -- "$REC"
+          if git diff --cached --quiet; then echo "기록 변경 없음"; exit 0; fi
+          git commit -m "publish: 유튜브 묶음 장편 업로드 기록 [skip ci]"
+          git pull --rebase --autostash origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
+      - name: 결과 요약
+        if: ${{ always() }}
+        run: |
+          {
+            echo "## 묶음 장편 $DIR"
+            if [ "$DRY_RUN" = "true" ]; then echo "dry-run — 만들고 검사만 했습니다(올리지 않음)."; fi
+            if [ -f "$DIR/chapters.json" ]; then
+              python -c "import json,sys; d=json.load(open(sys.argv[1])); print(*[c['start']+' '+c['title'] for c in d['chapters']], sep='  \n')" "$DIR/chapters.json"
+            fi
+            if [ -f upload-report.json ]; then
+              python -c "import json; d=json.load(open('upload-report.json')); [print('-', r.get('status'), r.get('url') or '', r.get('studio_url') or '', r.get('error') or '') for r in d.get('results',[])]"
+            fi
+            echo "올라간 영상은 **비공개**입니다. YouTube Studio 에서 보고 직접 공개하십시오."
+          } >> "$GITHUB_STEP_SUMMARY"
