@@ -1,0 +1,1742 @@
+{
+ "date": "2026-11-16",
+ "channel": {
+  "id": "UCZJSpmlBYUthLg0PSWcbU6w",
+  "title": "과학쑛츠",
+  "subscribers": 28,
+  "video_count": 23,
+  "total_views": 16838
+ },
+ "analytics": true,
+ "videos": [
+  {
+   "video_id": "amEyQA0_laE",
+   "title": "북극성은 영원하지 않다 | 지구 자전축의 세차운동과 장동 #북극성 #세차운동 #별자리 #천문학 #우주 #지구과학 #과학",
+   "published": "2026-11-15",
+   "privacy": "private",
+   "duration_sec": 174,
+   "views": 1,
+   "likes": 0,
+   "comments": 0,
+   "episode": "07-precession",
+   "number": 7,
+   "opener": "today",
+   "a_total": {},
+   "a_week": {}
+  },
+  {
+   "video_id": "ZKRqdFehV5k",
+   "title": "GPT는 문맥을 어떻게 읽을까? | 트랜스포머와 어텐션 #GPT #트랜스포머 #과학",
+   "published": "2026-11-15",
+   "privacy": "public",
+   "duration_sec": 165,
+   "views": 307,
+   "likes": 0,
+   "comments": 0,
+   "episode": "45-gpt-transformer",
+   "number": 45,
+   "opener": "today",
+   "a_total": {},
+   "a_week": {}
+  },
+  {
+   "video_id": "mGQZXRro-nU",
+   "title": "다 쓴 로켓, 버릴까? | 저궤도와 재사용 로켓 #로켓 #스페이스X #팰컨9 #스타링크 #우주 #물리 #과학",
+   "published": "2026-11-15",
+   "privacy": "public",
+   "duration_sec": 157,
+   "views": 173,
+   "likes": 1,
+   "comments": 0,
+   "episode": "31-reusable-rocket",
+   "number": 31,
+   "opener": "today",
+   "a_total": {},
+   "a_week": {}
+  },
+  {
+   "video_id": "TwIRa9fy-Ys",
+   "title": "쓰나미는 어떻게 생기고, 어떻게 바다를 건널까? | 먼바다에서는 낮고 빠르게 #쓰나미 #지진해일 #과학 #tsunami",
+   "published": "2026-11-15",
+   "privacy": "public",
+   "duration_sec": 165,
+   "views": 1122,
+   "likes": 7,
+   "comments": 0,
+   "episode": "58-tsunami",
+   "number": 58,
+   "opener": "question",
+   "a_total": {},
+   "a_week": {}
+  },
+  {
+   "video_id": "Z5oanb6farY",
+   "title": "GPT는 어떻게 배웠을까? | 다음 말 맞히기 3천억 번 #GPT #챗GPT #과학",
+   "published": "2026-11-14",
+   "privacy": "public",
+   "duration_sec": 163,
+   "views": 388,
+   "likes": 0,
+   "comments": 0,
+   "episode": "44-gpt-pretrained",
+   "number": 44,
+   "opener": "today",
+   "a_total": {},
+   "a_week": {}
+  },
+  {
+   "video_id": "95KbX5f-bKc",
+   "title": "GPT는 대답을 어떻게 쓸까? | 한 조각씩 뽑아서 써 내려간다 #GPT #챗GPT #과학",
+   "published": "2026-11-13",
+   "privacy": "public",
+   "duration_sec": 160,
+   "views": 105,
+   "likes": 0,
+   "comments": 0,
+   "episode": "43-gpt-generative",
+   "number": 43,
+   "opener": "today",
+   "a_total": {
+    "views": 103,
+    "engagedViews": 57,
+    "estimatedMinutesWatched": 95,
+    "averageViewDuration": 98,
+    "averageViewPercentage": 61.809999999999995,
+    "likes": 0,
+    "shares": 1,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 103,
+    "engagedViews": 57,
+    "estimatedMinutesWatched": 95,
+    "averageViewDuration": 98,
+    "averageViewPercentage": 61.809999999999995,
+    "likes": 0,
+    "shares": 1,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "pW8I_5kL8p4",
+   "title": "제임스웹은 얼마나 높이 있을까? | 산에서 우주까지 #제임스웹 #인공위성 #스타링크 #NASA #우주 #천문학 #과학",
+   "published": "2026-11-13",
+   "privacy": "public",
+   "duration_sec": 164,
+   "views": 1030,
+   "likes": 8,
+   "comments": 0,
+   "episode": "23-orbit-altitudes",
+   "number": 23,
+   "opener": "today",
+   "a_total": {
+    "views": 1004,
+    "engagedViews": 499,
+    "estimatedMinutesWatched": 1067,
+    "averageViewDuration": 127,
+    "averageViewPercentage": 77.49,
+    "likes": 7,
+    "shares": 1,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 1004,
+    "engagedViews": 499,
+    "estimatedMinutesWatched": 1067,
+    "averageViewDuration": 127,
+    "averageViewPercentage": 77.49,
+    "likes": 7,
+    "shares": 1,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "UpX7WyL4zaU",
+   "title": "여름은 태양에 가까워서 더울까? | 계절이 생기는 진짜 이유 #계절 #여름 #겨울 #지구 #지구과학 #천문학 #과학",
+   "published": "2026-11-12",
+   "privacy": "public",
+   "duration_sec": 161,
+   "views": 179,
+   "likes": 0,
+   "comments": 0,
+   "episode": "06-seasons",
+   "number": 6,
+   "opener": "today",
+   "a_total": {
+    "views": 127,
+    "engagedViews": 59,
+    "estimatedMinutesWatched": 217,
+    "averageViewDuration": 220,
+    "averageViewPercentage": 136.72,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 127,
+    "engagedViews": 59,
+    "estimatedMinutesWatched": 217,
+    "averageViewDuration": 220,
+    "averageViewPercentage": 136.72,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "71sYjWgDIiY",
+   "title": "잠수함은 어떻게 찾을까 | 소리와 자기장의 흔적 #잠수함 #초계기 #과학 #밀리터리 #밀덕 #탐지 #장보고함 #해군",
+   "published": "2026-11-12",
+   "privacy": "public",
+   "duration_sec": 171,
+   "views": 777,
+   "likes": 5,
+   "comments": 0,
+   "episode": "38-submarine-detection",
+   "number": 38,
+   "opener": "today",
+   "a_total": {
+    "views": 747,
+    "engagedViews": 384,
+    "estimatedMinutesWatched": 1306,
+    "averageViewDuration": 203,
+    "averageViewPercentage": 118.72,
+    "likes": 5,
+    "shares": 1,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 747,
+    "engagedViews": 384,
+    "estimatedMinutesWatched": 1306,
+    "averageViewDuration": 203,
+    "averageViewPercentage": 118.72,
+    "likes": 5,
+    "shares": 1,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "LdgJVPVKQsw",
+   "title": "구름 낀 밤, 위성 사진? | 합성개구레이더(SAR)의 원리 #SAR #인공위성 #과학 #밀리터리 #밀덕 #레이더 #radar #스텔스 #stealth #북한 #전쟁",
+   "published": "2026-11-12",
+   "privacy": "public",
+   "duration_sec": 170,
+   "views": 141,
+   "likes": 0,
+   "comments": 0,
+   "episode": "33-sar",
+   "number": 33,
+   "opener": "today",
+   "a_total": {
+    "views": 138,
+    "engagedViews": 93,
+    "estimatedMinutesWatched": 140,
+    "averageViewDuration": 89,
+    "averageViewPercentage": 52.86,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 138,
+    "engagedViews": 93,
+    "estimatedMinutesWatched": 140,
+    "averageViewDuration": 89,
+    "averageViewPercentage": 52.86,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "zW5DTyYmRyA",
+   "title": "반대쪽 바다는 왜 부풀까? | 밀물과 썰물이 생기는 이유 #밀물썰물 #조석 #과학",
+   "published": "2026-11-11",
+   "privacy": "public",
+   "duration_sec": 174,
+   "views": 1287,
+   "likes": 14,
+   "comments": 0,
+   "episode": "28-tides",
+   "number": 28,
+   "opener": "today",
+   "a_total": {
+    "views": 1268,
+    "engagedViews": 624,
+    "estimatedMinutesWatched": 1929,
+    "averageViewDuration": 184,
+    "averageViewPercentage": 106.15999999999998,
+    "likes": 14,
+    "shares": 10,
+    "subscribersGained": 2
+   },
+   "a_week": {
+    "views": 1268,
+    "engagedViews": 624,
+    "estimatedMinutesWatched": 1929,
+    "averageViewDuration": 184,
+    "averageViewPercentage": 106.15999999999998,
+    "likes": 14,
+    "shares": 10,
+    "subscribersGained": 2
+   }
+  },
+  {
+   "video_id": "wiov4yp-Tao",
+   "title": "블랙홀 둘레엔 왜 원반이 생길까? | 강착원반과 찢어지는 별 #블랙홀 #강착원반 #과학 #인터스텔라 #우주 #평행우주 #중력",
+   "published": "2026-11-10",
+   "privacy": "public",
+   "duration_sec": 175,
+   "views": 168,
+   "likes": 1,
+   "comments": 0,
+   "episode": "36-accretion-disk",
+   "number": 36,
+   "opener": "today",
+   "a_total": {
+    "views": 167,
+    "engagedViews": 93,
+    "estimatedMinutesWatched": 162,
+    "averageViewDuration": 103,
+    "averageViewPercentage": 59.160000000000004,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 167,
+    "engagedViews": 93,
+    "estimatedMinutesWatched": 162,
+    "averageViewDuration": 103,
+    "averageViewPercentage": 59.160000000000004,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "zUVJKXOX8ks",
+   "title": "레이더를 피하려면? | 레이더의 원리와 스텔스 #레이더 #스텔스 #과학 #밀리터리 #kf21 #밀덕",
+   "published": "2026-11-08",
+   "privacy": "public",
+   "duration_sec": 165,
+   "views": 1004,
+   "likes": 7,
+   "comments": 0,
+   "episode": "32-radar",
+   "number": 32,
+   "opener": "today",
+   "a_total": {
+    "views": 1007,
+    "engagedViews": 452,
+    "estimatedMinutesWatched": 1059,
+    "averageViewDuration": 138,
+    "averageViewPercentage": 84.13,
+    "likes": 7,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 420,
+    "engagedViews": 199,
+    "estimatedMinutesWatched": 556,
+    "averageViewDuration": 166,
+    "averageViewPercentage": 100.72000000000001,
+    "likes": 3,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "9bkoBWHQA28",
+   "title": "군함은 왜 긴 줄을 끌까? | 예인 소나의 원리 #소나 #물리 #과학 #밀리터리 #군함 #이지스함 #해군",
+   "published": "2026-11-08",
+   "privacy": "public",
+   "duration_sec": 150,
+   "views": 1030,
+   "likes": 5,
+   "comments": 0,
+   "episode": "27-towed-array-sonar",
+   "number": 27,
+   "opener": "today",
+   "a_total": {
+    "views": 1037,
+    "engagedViews": 630,
+    "estimatedMinutesWatched": 1014,
+    "averageViewDuration": 95,
+    "averageViewPercentage": 63.9,
+    "likes": 5,
+    "shares": 0,
+    "subscribersGained": 2
+   },
+   "a_week": {
+    "views": 11,
+    "engagedViews": 7,
+    "estimatedMinutesWatched": 4,
+    "averageViewDuration": 36,
+    "averageViewPercentage": 24.12,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "UNmEDyYbvNM",
+   "title": "버섯구름은 왜 버섯 모양일까? | 떠오르는 뜨거운 공기 #버섯구름 #과학 #유체역학",
+   "published": "2026-11-07",
+   "privacy": "private",
+   "duration_sec": 150,
+   "views": 20,
+   "likes": 0,
+   "comments": 0,
+   "episode": "22-mushroom-cloud",
+   "number": 22,
+   "opener": "today",
+   "a_total": {
+    "views": 21,
+    "engagedViews": 12,
+    "estimatedMinutesWatched": 16,
+    "averageViewDuration": 80,
+    "averageViewPercentage": 53.52,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 9,
+    "engagedViews": 3,
+    "estimatedMinutesWatched": 2,
+    "averageViewDuration": 58,
+    "averageViewPercentage": 39.24,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "H61JTJBgi2U",
+   "title": "쪼개도 합쳐도 에너지가? | 핵분열과 핵융합 #핵분열 #핵융합 #과학",
+   "published": "2026-11-07",
+   "privacy": "public",
+   "duration_sec": 166,
+   "views": 53,
+   "likes": 0,
+   "comments": 0,
+   "episode": "29-fission-fusion",
+   "number": 29,
+   "opener": "today",
+   "a_total": {
+    "views": 54,
+    "engagedViews": 19,
+    "estimatedMinutesWatched": 49,
+    "averageViewDuration": 152,
+    "averageViewPercentage": 92.06,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 23,
+    "engagedViews": 6,
+    "estimatedMinutesWatched": 20,
+    "averageViewDuration": 205,
+    "averageViewPercentage": 123.61999999999999,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "EvFpfurSiwE",
+   "title": "망원경의 핵심은 확대? | 렌즈·거울·전파 접시 #망원경 #천문학 #과학",
+   "published": "2026-11-07",
+   "privacy": "private",
+   "duration_sec": 159,
+   "views": 26,
+   "likes": 0,
+   "comments": 0,
+   "episode": "34-telescope-types",
+   "number": 34,
+   "opener": "today",
+   "a_total": {
+    "views": 27,
+    "engagedViews": 10,
+    "estimatedMinutesWatched": 15,
+    "averageViewDuration": 88,
+    "averageViewPercentage": 55.96,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 17,
+    "engagedViews": 5,
+    "estimatedMinutesWatched": 8,
+    "averageViewDuration": 105,
+    "averageViewPercentage": 66.26,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "981IDPtVfWM",
+   "title": "다 쓴 로켓, 버릴까? | 저궤도와 재사용 로켓 #로켓 #우주 #과학",
+   "published": "2026-11-07",
+   "privacy": "private",
+   "duration_sec": 157,
+   "views": 10,
+   "likes": 0,
+   "comments": 0,
+   "episode": "31-reusable-rocket",
+   "number": 31,
+   "opener": "today",
+   "a_total": {
+    "views": 12,
+    "engagedViews": 6,
+    "estimatedMinutesWatched": 14,
+    "averageViewDuration": 144,
+    "averageViewPercentage": 91.89,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 6,
+    "engagedViews": 2,
+    "estimatedMinutesWatched": 5,
+    "averageViewDuration": 150,
+    "averageViewPercentage": 95.69,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "CHwURvIIRmA",
+   "title": "우주의 주차 자리는? | 라그랑주 점 5곳 #라그랑주점 #제임스웹 #과학",
+   "published": "2026-11-07",
+   "privacy": "private",
+   "duration_sec": 159,
+   "views": 13,
+   "likes": 2,
+   "comments": 0,
+   "episode": "24-lagrange-points",
+   "number": 24,
+   "opener": "today",
+   "a_total": {
+    "views": 13,
+    "engagedViews": 7,
+    "estimatedMinutesWatched": 17,
+    "averageViewDuration": 149,
+    "averageViewPercentage": 94.13,
+    "likes": 2,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 8,
+    "engagedViews": 4,
+    "estimatedMinutesWatched": 12,
+    "averageViewDuration": 194,
+    "averageViewPercentage": 122.04000000000002,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "ORlV-iqUq7M",
+   "title": "제임스웹은 얼마나 높이 있을까? | 산에서 우주까지 #제임스웹 #인공위성 #과학",
+   "published": "2026-11-07",
+   "privacy": "private",
+   "duration_sec": 164,
+   "views": 13,
+   "likes": 1,
+   "comments": 0,
+   "episode": "23-orbit-altitudes",
+   "number": 23,
+   "opener": "today",
+   "a_total": {
+    "views": 13,
+    "engagedViews": 9,
+    "estimatedMinutesWatched": 12,
+    "averageViewDuration": 83,
+    "averageViewPercentage": 50.84000000000001,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 4,
+    "engagedViews": 3,
+    "estimatedMinutesWatched": 1,
+    "averageViewDuration": 26,
+    "averageViewPercentage": 15.98,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "-fec9yosxdA",
+   "title": "양성자 지름의 수백분의 1을 재는 법 | LIGO 간섭계",
+   "published": "2026-11-07",
+   "privacy": "private",
+   "duration_sec": 176,
+   "views": 2,
+   "likes": 0,
+   "comments": 0,
+   "episode": "02-ligo-how-it-works",
+   "number": 2,
+   "opener": "question",
+   "a_total": {
+    "views": 2,
+    "engagedViews": 2,
+    "estimatedMinutesWatched": 0,
+    "averageViewDuration": 27,
+    "averageViewPercentage": 15.620000000000001,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 1,
+    "engagedViews": 1,
+    "estimatedMinutesWatched": 0,
+    "averageViewDuration": 13,
+    "averageViewPercentage": 7.44,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "qVwxaxwkSBI",
+   "title": "엘니뇨와 라니냐는 무엇이 다를까 | 적도 바람과 한국의 겨울",
+   "published": "2026-11-07",
+   "privacy": "public",
+   "duration_sec": 179,
+   "views": 99,
+   "likes": 0,
+   "comments": 0,
+   "episode": "03-el-nino-la-nina",
+   "number": 3,
+   "opener": "question",
+   "a_total": {
+    "views": 95,
+    "engagedViews": 23,
+    "estimatedMinutesWatched": 28,
+    "averageViewDuration": 69,
+    "averageViewPercentage": 38.95,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 49,
+    "engagedViews": 9,
+    "estimatedMinutesWatched": 10,
+    "averageViewDuration": 66,
+    "averageViewPercentage": 37,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "MLm34NyFBYk",
+   "title": "무역풍은 왜 늘 동쪽에서 불까 | 지구를 두른 바람의 띠",
+   "published": "2026-11-07",
+   "privacy": "private",
+   "duration_sec": 180,
+   "views": 46,
+   "likes": 1,
+   "comments": 0,
+   "episode": "05-global-winds",
+   "number": 5,
+   "opener": "today",
+   "a_total": {
+    "views": 46,
+    "engagedViews": 23,
+    "estimatedMinutesWatched": 47,
+    "averageViewDuration": 123,
+    "averageViewPercentage": 68.48,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 23,
+    "engagedViews": 10,
+    "estimatedMinutesWatched": 18,
+    "averageViewDuration": 111,
+    "averageViewPercentage": 61.84,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "xSC_L470sNs",
+   "title": "여름은 태양에 가까워서 더울까? | 계절이 생기는 진짜 이유",
+   "published": "2026-11-07",
+   "privacy": "private",
+   "duration_sec": 161,
+   "views": 4,
+   "likes": 0,
+   "comments": 0,
+   "episode": "06-seasons",
+   "number": 6,
+   "opener": "today",
+   "a_total": {
+    "views": 4,
+    "engagedViews": 2,
+    "estimatedMinutesWatched": 1,
+    "averageViewDuration": 39,
+    "averageViewPercentage": 24.66,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 2,
+    "engagedViews": 1,
+    "estimatedMinutesWatched": 0,
+    "averageViewDuration": 7,
+    "averageViewPercentage": 4.41,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "YehxwqV7rAs",
+   "title": "북극성은 영원하지 않다 | 지구 자전축의 세차운동과 장동",
+   "published": "2026-11-07",
+   "privacy": "private",
+   "duration_sec": 174,
+   "views": 29,
+   "likes": 1,
+   "comments": 0,
+   "episode": "07-precession",
+   "number": 7,
+   "opener": "today",
+   "a_total": {
+    "views": 29,
+    "engagedViews": 14,
+    "estimatedMinutesWatched": 30,
+    "averageViewDuration": 130,
+    "averageViewPercentage": 75.01,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 20,
+    "engagedViews": 9,
+    "estimatedMinutesWatched": 22,
+    "averageViewDuration": 149,
+    "averageViewPercentage": 85.76,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "JvUyU13QIz4",
+   "title": "규모 6은 규모 3의 두 배일까? | 한 칸에 열 배, 로그",
+   "published": "2026-11-07",
+   "privacy": "private",
+   "duration_sec": 166,
+   "views": 3,
+   "likes": 0,
+   "comments": 0,
+   "episode": null,
+   "number": null,
+   "opener": "?",
+   "a_total": {
+    "views": 3,
+    "engagedViews": 0,
+    "estimatedMinutesWatched": 0,
+    "averageViewDuration": 0,
+    "averageViewPercentage": 0,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 1,
+    "engagedViews": 0,
+    "estimatedMinutesWatched": 0,
+    "averageViewDuration": 0,
+    "averageViewPercentage": 0,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "3n4MJZM6trk",
+   "title": "두 블랙홀이 하나가 될 때, 공간이 출렁인다 | 중력파",
+   "published": "2026-11-07",
+   "privacy": "private",
+   "duration_sec": 178,
+   "views": 3,
+   "likes": 0,
+   "comments": 0,
+   "episode": "01-gravitational-waves",
+   "number": 1,
+   "opener": "question",
+   "a_total": {
+    "views": 3,
+    "engagedViews": 2,
+    "estimatedMinutesWatched": 1,
+    "averageViewDuration": 33,
+    "averageViewPercentage": 19.01,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {}
+  },
+  {
+   "video_id": "dbnYxnEgtpo",
+   "title": "적외선은 빨간빛일까? | 파장으로 보는 빛의 정체",
+   "published": "2026-11-07",
+   "privacy": "private",
+   "duration_sec": 177,
+   "views": 16,
+   "likes": 0,
+   "comments": 0,
+   "episode": "04-wavelength",
+   "number": 4,
+   "opener": "today",
+   "a_total": {
+    "views": 16,
+    "engagedViews": 8,
+    "estimatedMinutesWatched": 17,
+    "averageViewDuration": 124,
+    "averageViewPercentage": 70.59,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 6,
+    "engagedViews": 2,
+    "estimatedMinutesWatched": 2,
+    "averageViewDuration": 64,
+    "averageViewPercentage": 36.36,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "1WnSLOOM5ys",
+   "title": "가장 큰 수소폭탄의 위력은? | 핵융합의 힘 #수소폭탄 #핵융합 #과학",
+   "published": "2026-11-07",
+   "privacy": "private",
+   "duration_sec": 164,
+   "views": 30,
+   "likes": 0,
+   "comments": 0,
+   "episode": "21-hydrogen-bomb",
+   "number": 21,
+   "opener": "today",
+   "a_total": {
+    "views": 31,
+    "engagedViews": 17,
+    "estimatedMinutesWatched": 17,
+    "averageViewDuration": 62,
+    "averageViewPercentage": 38.01,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 12,
+    "engagedViews": 5,
+    "estimatedMinutesWatched": 2,
+    "averageViewDuration": 22,
+    "averageViewPercentage": 13.81,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "R3LOd0XLZy0",
+   "title": "히로시마 원폭, 에너지가 된 질량은? | 핵분열 연쇄반응 #원자폭탄 #핵분열 #과학",
+   "published": "2026-11-07",
+   "privacy": "private",
+   "duration_sec": 171,
+   "views": 16,
+   "likes": 0,
+   "comments": 0,
+   "episode": "20-atomic-bomb",
+   "number": 20,
+   "opener": "today",
+   "a_total": {
+    "views": 16,
+    "engagedViews": 7,
+    "estimatedMinutesWatched": 15,
+    "averageViewDuration": 132,
+    "averageViewPercentage": 77.57,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 7,
+    "engagedViews": 2,
+    "estimatedMinutesWatched": 3,
+    "averageViewDuration": 92,
+    "averageViewPercentage": 54.059999999999995,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "4dK8tp_z9UU",
+   "title": "머리와 발, 어디가 더 빨리 늙을까? | 중력과 시간 #상대성이론 #물리 #과학",
+   "published": "2026-11-07",
+   "privacy": "public",
+   "duration_sec": 158,
+   "views": 1086,
+   "likes": 3,
+   "comments": 4,
+   "episode": "19-gravity-time",
+   "number": 19,
+   "opener": "today",
+   "a_total": {
+    "views": 1084,
+    "engagedViews": 421,
+    "estimatedMinutesWatched": 409,
+    "averageViewDuration": 56,
+    "averageViewPercentage": 35.51,
+    "likes": 3,
+    "shares": 0,
+    "subscribersGained": 1
+   },
+   "a_week": {
+    "views": 13,
+    "engagedViews": 3,
+    "estimatedMinutesWatched": 1,
+    "averageViewDuration": 27,
+    "averageViewPercentage": 17.67,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "-T2Fe_DS6rU",
+   "title": "헬륨을 영하 271도로 식히면? | 벽을 타는 초유체 #헬륨 #초유체 #과학",
+   "published": "2026-11-07",
+   "privacy": "public",
+   "duration_sec": 167,
+   "views": 1282,
+   "likes": 4,
+   "comments": 0,
+   "episode": "17-superfluid-helium",
+   "number": 17,
+   "opener": "today",
+   "a_total": {
+    "views": 1274,
+    "engagedViews": 573,
+    "estimatedMinutesWatched": 920,
+    "averageViewDuration": 94,
+    "averageViewPercentage": 56.72999999999999,
+    "likes": 4,
+    "shares": 1,
+    "subscribersGained": 1
+   },
+   "a_week": {
+    "views": 30,
+    "engagedViews": 18,
+    "estimatedMinutesWatched": 22,
+    "averageViewDuration": 73,
+    "averageViewPercentage": 43.84,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 1
+   }
+  },
+  {
+   "video_id": "q2wQUeYmqjA",
+   "title": "얼마나 차가워질 수 있을까? | 절대영도의 세상 #절대영도 #물리 #과학",
+   "published": "2026-11-07",
+   "privacy": "public",
+   "duration_sec": 165,
+   "views": 1282,
+   "likes": 7,
+   "comments": 0,
+   "episode": "16-absolute-zero",
+   "number": 16,
+   "opener": "today",
+   "a_total": {
+    "views": 1280,
+    "engagedViews": 552,
+    "estimatedMinutesWatched": 1166,
+    "averageViewDuration": 125,
+    "averageViewPercentage": 75.94,
+    "likes": 7,
+    "shares": 1,
+    "subscribersGained": 1
+   },
+   "a_week": {
+    "views": 12,
+    "engagedViews": 5,
+    "estimatedMinutesWatched": 10,
+    "averageViewDuration": 123,
+    "averageViewPercentage": 74.82,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "3KLu5lRaLPQ",
+   "title": "사고도 없는데 왜 막힐까? | 유령 체증의 정체 #교통체증 #물리 #과학 #한문철 #한문철tv",
+   "published": "2026-11-06",
+   "privacy": "public",
+   "duration_sec": 176,
+   "views": 1308,
+   "likes": 6,
+   "comments": 1,
+   "episode": "15-traffic-jam",
+   "number": 15,
+   "opener": "today",
+   "a_total": {
+    "views": 1308,
+    "engagedViews": 517,
+    "estimatedMinutesWatched": 867,
+    "averageViewDuration": 98,
+    "averageViewPercentage": 56.04,
+    "likes": 6,
+    "shares": 1,
+    "subscribersGained": 1
+   },
+   "a_week": {
+    "views": 19,
+    "engagedViews": 4,
+    "estimatedMinutesWatched": 6,
+    "averageViewDuration": 90,
+    "averageViewPercentage": 51.49,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "vex6YCVxVFE",
+   "title": "감기 주사는 왜 없을까? | 범인이 200가지 #감기 #백신 #과학상식 #과학",
+   "published": "2026-11-05",
+   "privacy": "private",
+   "duration_sec": 173,
+   "views": 16,
+   "likes": 0,
+   "comments": 0,
+   "episode": "14-cold-vaccine",
+   "number": 14,
+   "opener": "today",
+   "a_total": {
+    "views": 16,
+    "engagedViews": 7,
+    "estimatedMinutesWatched": 8,
+    "averageViewDuration": 73,
+    "averageViewPercentage": 42.41,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 2,
+    "engagedViews": 0,
+    "estimatedMinutesWatched": 0,
+    "averageViewDuration": 0,
+    "averageViewPercentage": 0,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "QuJldGMtJFM",
+   "title": "단 몇 초에 태양 100억 년 치 에너지 | 감마선 폭발 #감마선폭발 #블랙홀 #천문 #gbr #gammaraybursts",
+   "published": "2026-11-05",
+   "privacy": "private",
+   "duration_sec": 176,
+   "views": 26,
+   "likes": 0,
+   "comments": 0,
+   "episode": "13-gamma-ray-burst",
+   "number": 13,
+   "opener": "today",
+   "a_total": {
+    "views": 26,
+    "engagedViews": 11,
+    "estimatedMinutesWatched": 45,
+    "averageViewDuration": 245,
+    "averageViewPercentage": 139.59,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 10,
+    "engagedViews": 4,
+    "estimatedMinutesWatched": 16,
+    "averageViewDuration": 242,
+    "averageViewPercentage": 137.73,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "J1LfK2E3qlE",
+   "title": "한국에서도 찍힌 붉은 오로라 | 오로라는 왜 극지방에서만 보일까 #오로라 #극광 #지구과학",
+   "published": "2026-11-05",
+   "privacy": "private",
+   "duration_sec": 162,
+   "views": 17,
+   "likes": 0,
+   "comments": 0,
+   "episode": "10-aurora",
+   "number": 10,
+   "opener": "today",
+   "a_total": {
+    "views": 17,
+    "engagedViews": 9,
+    "estimatedMinutesWatched": 5,
+    "averageViewDuration": 33,
+    "averageViewPercentage": 20.65,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   },
+   "a_week": {
+    "views": 11,
+    "engagedViews": 4,
+    "estimatedMinutesWatched": 1,
+    "averageViewDuration": 15,
+    "averageViewPercentage": 9.5,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "k2TZcQiCmC0",
+   "title": "별은 반짝이는데 달은 왜 안 반짝일까? | 별의 반짝임 #별 #천문 #과학",
+   "published": "2026-11-05",
+   "privacy": "public",
+   "duration_sec": 176,
+   "views": 1173,
+   "likes": 18,
+   "comments": 0,
+   "episode": "09-twinkle",
+   "number": 9,
+   "opener": "today",
+   "a_total": {
+    "views": 1170,
+    "engagedViews": 543,
+    "estimatedMinutesWatched": 943,
+    "averageViewDuration": 102,
+    "averageViewPercentage": 58.31000000000001,
+    "likes": 18,
+    "shares": 5,
+    "subscribersGained": 2
+   },
+   "a_week": {
+    "views": 12,
+    "engagedViews": 4,
+    "estimatedMinutesWatched": 15,
+    "averageViewDuration": 227,
+    "averageViewPercentage": 128.99,
+    "likes": 0,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "WMkrHHwlom0",
+   "title": "별인 줄 알았던 우주에서 가장 밝은 빛 | 퀘이사 #퀘이사 #블랙홀 #천문",
+   "published": "2026-11-05",
+   "privacy": "public",
+   "duration_sec": 175,
+   "views": 1383,
+   "likes": 14,
+   "comments": 0,
+   "episode": "12-quasar",
+   "number": 12,
+   "opener": "today",
+   "a_total": {
+    "views": 1383,
+    "engagedViews": 732,
+    "estimatedMinutesWatched": 1494,
+    "averageViewDuration": 121,
+    "averageViewPercentage": 69.42,
+    "likes": 14,
+    "shares": 0,
+    "subscribersGained": 5
+   },
+   "a_week": {
+    "views": 15,
+    "engagedViews": 5,
+    "estimatedMinutesWatched": 16,
+    "averageViewDuration": 199,
+    "averageViewPercentage": 114.14,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "AWgwtgXLaAM",
+   "title": "별은 얼마나 밝아질 수 있을까? | 에딩턴 한계 #에딩턴한계 #천문 #과학",
+   "published": "2026-11-05",
+   "privacy": "public",
+   "duration_sec": 172,
+   "views": 1173,
+   "likes": 8,
+   "comments": 0,
+   "episode": "11-eddington-limit",
+   "number": 11,
+   "opener": "today",
+   "a_total": {
+    "views": 1173,
+    "engagedViews": 583,
+    "estimatedMinutesWatched": 987,
+    "averageViewDuration": 100,
+    "averageViewPercentage": 58.28,
+    "likes": 8,
+    "shares": 0,
+    "subscribersGained": 3
+   },
+   "a_week": {
+    "views": 17,
+    "engagedViews": 5,
+    "estimatedMinutesWatched": 15,
+    "averageViewDuration": 186,
+    "averageViewPercentage": 108.62,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  },
+  {
+   "video_id": "GMkRzXt78TI",
+   "title": "중력파 - 두 블랙홀이 하나가 될 때, 공간이 출렁인다.",
+   "published": "2026-11-03",
+   "privacy": "public",
+   "duration_sec": 179,
+   "views": 662,
+   "likes": 12,
+   "comments": 1,
+   "episode": null,
+   "number": null,
+   "opener": "?",
+   "a_total": {
+    "views": 662,
+    "engagedViews": 405,
+    "estimatedMinutesWatched": 551,
+    "averageViewDuration": 81,
+    "averageViewPercentage": 45.31,
+    "likes": 12,
+    "shares": 0,
+    "subscribersGained": 1
+   },
+   "a_week": {
+    "views": 8,
+    "engagedViews": 2,
+    "estimatedMinutesWatched": 9,
+    "averageViewDuration": 294,
+    "averageViewPercentage": 164.47,
+    "likes": 1,
+    "shares": 0,
+    "subscribersGained": 0
+   }
+  }
+ ],
+ "sources": [
+  {
+   "insightTrafficSourceType": "SHORTS",
+   "views": 13934,
+   "estimatedMinutesWatched": 13365
+  },
+  {
+   "insightTrafficSourceType": "YT_SEARCH",
+   "views": 735,
+   "estimatedMinutesWatched": 570
+  },
+  {
+   "insightTrafficSourceType": "YT_OTHER_PAGE",
+   "views": 547,
+   "estimatedMinutesWatched": 587
+  },
+  {
+   "insightTrafficSourceType": "YT_CHANNEL",
+   "views": 263,
+   "estimatedMinutesWatched": 236
+  },
+  {
+   "insightTrafficSourceType": "SUBSCRIBER",
+   "views": 125,
+   "estimatedMinutesWatched": 61
+  },
+  {
+   "insightTrafficSourceType": "EXT_URL",
+   "views": 12,
+   "estimatedMinutesWatched": 8
+  },
+  {
+   "insightTrafficSourceType": "RELATED_VIDEO",
+   "views": 3,
+   "estimatedMinutesWatched": 6
+  },
+  {
+   "insightTrafficSourceType": "PLAYLIST",
+   "views": 3,
+   "estimatedMinutesWatched": 0
+  },
+  {
+   "insightTrafficSourceType": "NOTIFICATION",
+   "views": 3,
+   "estimatedMinutesWatched": 1
+  },
+  {
+   "insightTrafficSourceType": "NO_LINK_OTHER",
+   "views": 1,
+   "estimatedMinutesWatched": 0
+  }
+ ],
+ "daily": [
+  {
+   "day": "2026-10-19",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-20",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-21",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-22",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-23",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-24",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-25",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-26",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-27",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-28",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-29",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-30",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-10-31",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-11-01",
+   "views": 0,
+   "engagedViews": 0,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-11-02",
+   "views": 265,
+   "engagedViews": 155,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-11-03",
+   "views": 551,
+   "engagedViews": 344,
+   "subscribersGained": 2
+  },
+  {
+   "day": "2026-11-04",
+   "views": 1505,
+   "engagedViews": 741,
+   "subscribersGained": 4
+  },
+  {
+   "day": "2026-11-05",
+   "views": 1958,
+   "engagedViews": 992,
+   "subscribersGained": 7
+  },
+  {
+   "day": "2026-11-06",
+   "views": 4795,
+   "engagedViews": 2017,
+   "subscribersGained": 7
+  },
+  {
+   "day": "2026-11-07",
+   "views": 939,
+   "engagedViews": 518,
+   "subscribersGained": 1
+  },
+  {
+   "day": "2026-11-08",
+   "views": 1284,
+   "engagedViews": 655,
+   "subscribersGained": 2
+  },
+  {
+   "day": "2026-11-09",
+   "views": 214,
+   "engagedViews": 99,
+   "subscribersGained": 0
+  },
+  {
+   "day": "2026-11-10",
+   "views": 1289,
+   "engagedViews": 621,
+   "subscribersGained": 2
+  },
+  {
+   "day": "2026-11-11",
+   "views": 360,
+   "engagedViews": 170,
+   "subscribersGained": 1
+  },
+  {
+   "day": "2026-11-12",
+   "views": 953,
+   "engagedViews": 482,
+   "subscribersGained": 2
+  },
+  {
+   "day": "2026-11-13",
+   "views": 1513,
+   "engagedViews": 766,
+   "subscribersGained": 0
+  }
+ ],
+ "benchmark": {
+  "channels": [
+   {
+    "label": "세모과학",
+    "tier": "mid",
+    "subs": 200000,
+    "n_shorts": 27,
+    "n_judged": 27,
+    "median_sec": 105,
+    "share_le60": 0.037037037037037035,
+    "median_views": 151014,
+    "p90_views": 1325279,
+    "lt50": 0.0,
+    "per_week": 0.0,
+    "median_gap_days": 6.0,
+    "same_day_share": 0.0
+   },
+   {
+    "label": "Cosmoswag",
+    "tier": "mid",
+    "subs": 281000,
+    "n_shorts": 43,
+    "n_judged": 43,
+    "median_sec": 41,
+    "share_le60": 0.7441860465116279,
+    "median_views": 223147,
+    "p90_views": 994822,
+    "lt50": 0.0,
+    "per_week": 0.5,
+    "median_gap_days": 7.0,
+    "same_day_share": 0.047619047619047616
+   },
+   {
+    "label": "과학을보다",
+    "tier": "mid",
+    "subs": 244000,
+    "n_shorts": 30,
+    "n_judged": 27,
+    "median_sec": 70.0,
+    "share_le60": 0.13333333333333333,
+    "median_views": 39539,
+    "p90_views": 124014,
+    "lt50": 0.0,
+    "per_week": 7.5,
+    "median_gap_days": 1,
+    "same_day_share": 0.27586206896551724
+   },
+   {
+    "label": "신박한천문학연구소",
+    "tier": "mid",
+    "subs": 184000,
+    "n_shorts": 49,
+    "n_judged": 47,
+    "median_sec": 8,
+    "share_le60": 0.9795918367346939,
+    "median_views": 26060,
+    "p90_views": 48071,
+    "lt50": 0.0,
+    "per_week": 5.0,
+    "median_gap_days": 1.0,
+    "same_day_share": 0.3958333333333333
+   },
+   {
+    "label": "엉뚱박사과학TV",
+    "tier": "mid",
+    "subs": 9900,
+    "n_shorts": 14,
+    "n_judged": 14,
+    "median_sec": 67.5,
+    "share_le60": 0.42857142857142855,
+    "median_views": 3686.0,
+    "p90_views": 13009,
+    "lt50": 0.0,
+    "per_week": 0.0,
+    "median_gap_days": 7,
+    "same_day_share": 0.07692307692307693
+   },
+   {
+    "label": "과학상잡",
+    "tier": "small",
+    "subs": 435,
+    "n_shorts": 25,
+    "n_judged": 25,
+    "median_sec": 55,
+    "share_le60": 0.92,
+    "median_views": 9984,
+    "p90_views": 22568,
+    "lt50": 0.0,
+    "per_week": 0.0,
+    "median_gap_days": 6.5,
+    "same_day_share": 0.0
+   },
+   {
+    "label": "과학상식ForYou",
+    "tier": "small",
+    "subs": 311,
+    "n_shorts": 50,
+    "n_judged": 50,
+    "median_sec": 54.0,
+    "share_le60": 1.0,
+    "median_views": 1595.5,
+    "p90_views": 8620,
+    "lt50": 0.0,
+    "per_week": 0.0,
+    "median_gap_days": 3,
+    "same_day_share": 0.0
+   },
+   {
+    "label": "1분과학쎈세",
+    "tier": "small",
+    "subs": 315,
+    "n_shorts": 31,
+    "n_judged": 30,
+    "median_sec": 36,
+    "share_le60": 1.0,
+    "median_views": 372.5,
+    "p90_views": 1291,
+    "lt50": 0.3333333333333333,
+    "per_week": 7.75,
+    "median_gap_days": 0.0,
+    "same_day_share": 0.6666666666666666
+   },
+   {
+    "label": "공학쇼츠",
+    "tier": "small",
+    "subs": 1180,
+    "n_shorts": 50,
+    "n_judged": 43,
+    "median_sec": 70.5,
+    "share_le60": 0.28,
+    "median_views": 1091,
+    "p90_views": 1406,
+    "lt50": 0.046511627906976744,
+    "per_week": 12.5,
+    "median_gap_days": 0,
+    "same_day_share": 0.6938775510204082
+   },
+   {
+    "label": "1분 과학",
+    "tier": "small",
+    "subs": 89,
+    "n_shorts": 50,
+    "n_judged": 50,
+    "median_sec": 27.0,
+    "share_le60": 1.0,
+    "median_views": 1383.0,
+    "p90_views": 2031,
+    "lt50": 0.08,
+    "per_week": 0.0,
+    "median_gap_days": 1,
+    "same_day_share": 0.0
+   },
+   {
+    "label": "지식냠냠",
+    "tier": "small",
+    "subs": 69,
+    "n_shorts": 49,
+    "n_judged": 49,
+    "median_sec": 33,
+    "share_le60": 1.0,
+    "median_views": 2037,
+    "p90_views": 4337,
+    "lt50": 0.02040816326530612,
+    "per_week": 0.0,
+    "median_gap_days": 1.0,
+    "same_day_share": 0.020833333333333332
+   },
+   {
+    "label": "우주 한 스푼",
+    "tier": "small",
+    "subs": 53,
+    "n_shorts": 37,
+    "n_judged": 37,
+    "median_sec": 51,
+    "share_le60": 0.8918918918918919,
+    "median_views": 1755,
+    "p90_views": 3110,
+    "lt50": 0.0,
+    "per_week": 0.0,
+    "median_gap_days": 1.0,
+    "same_day_share": 0.2222222222222222
+   },
+   {
+    "label": "우주쇼츠",
+    "tier": "small",
+    "subs": 48,
+    "n_shorts": 32,
+    "n_judged": 32,
+    "median_sec": 28.0,
+    "share_le60": 1.0,
+    "median_views": 1794.5,
+    "p90_views": 2252,
+    "lt50": 0.0,
+    "per_week": 0.0,
+    "median_gap_days": 1,
+    "same_day_share": 0.0
+   },
+   {
+    "label": "Zap Facts",
+    "tier": "ref",
+    "subs": 39600,
+    "n_shorts": 50,
+    "n_judged": 50,
+    "median_sec": 40.0,
+    "share_le60": 1.0,
+    "median_views": 71049.5,
+    "p90_views": 291051,
+    "lt50": 0.0,
+    "per_week": 1.75,
+    "median_gap_days": 2,
+    "same_day_share": 0.0
+   },
+   {
+    "label": "Zack D. Films",
+    "tier": "ref",
+    "subs": 29700000,
+    "n_shorts": 50,
+    "n_judged": 40,
+    "median_sec": 36.0,
+    "share_le60": 0.94,
+    "median_views": 7833739.5,
+    "p90_views": 14405137,
+    "lt50": 0.0,
+    "per_week": 12.5,
+    "median_gap_days": 0,
+    "same_day_share": 0.7959183673469388
+   }
+  ],
+  "own": {
+   "label": "과학쑛츠",
+   "tier": "self",
+   "subs": 28,
+   "n_shorts": 23,
+   "n_judged": 19,
+   "median_sec": 166,
+   "share_le60": 0.0,
+   "median_views": 1030,
+   "p90_views": 1287,
+   "lt50": 0.0,
+   "per_week": 5.75,
+   "median_gap_days": 0.0,
+   "same_day_share": 0.5454545454545454
+  },
+  "length_effect": [
+   {
+    "bucket": "60초 이하",
+    "n": 126,
+    "channels": 6,
+    "mean_pct": 0.46668895478419287
+   },
+   {
+    "bucket": "61~120초",
+    "n": 86,
+    "channels": 6,
+    "mean_pct": 0.5298967828037595
+   },
+   {
+    "bucket": "121~180초",
+    "n": 19,
+    "channels": 4,
+    "mean_pct": 0.585582546108862
+   }
+  ],
+  "errors": []
+ }
+}
