@@ -1322,7 +1322,23 @@ def target_done(finals: Path, key: str, now: dt.datetime | None = None) -> bool:
 
 
 SLOT_KO = {"morning": "아침", "evening": "저녁"}
-EMPTY_COUNTS = {"uploaded": 0, "skipped": 0, "dry-run": 0, "error": 0}
+
+
+def slot_label(daily: dict[str, Any], slot: str) -> str:
+    """사람이 읽는 자리 이름(알림·요약용). 예약 공개 시각이 걸려 있으면 그 시각으로 '17:00 공개 편', 없으면 '아침'·'저녁'.
+    2026-11-16 한 주 시험부터 자리 이름 morning 이 17:00 에 공개되므로(config/daily.json _trial_2026_11_16) 글은 시각을 따른다.
+    자리 키(slot_key)·동작은 바꾸지 않는다."""
+    try:
+        st = schedule_settings(daily)
+    except ValueError:
+        st = None
+    if st is not None and slot in st["times"]:
+        h, mi = st["times"][slot]
+        return f"{h:02d}:{mi:02d} 공개 편"
+    return SLOT_KO.get(slot, slot)
+
+
+EMPTY_COUNTS ={"uploaded": 0, "skipped": 0, "dry-run": 0, "error": 0}
 
 
 def _upload_slot(cfg: Config, daily: dict[str, Any], rc: dict[str, Any], republish_path: Path, finals: Path, slot: str, *,
@@ -1418,6 +1434,7 @@ def _daily_auto(cfg: Config, daily: dict[str, Any], republish_path: Path, finals
     assert st is not None
     targets = due_targets(daily, now)
     rc = load_republish(republish_path)
+    republish_gate(rc)                          # 고친 판·주간 상한 설정의 꼴이 틀리면 아무것도 하기 전에 멈춘다(UploadError)
     sweep = run_sweep(cfg, republish_path, finals, dry_run=dry_run, send=send, env=env) if rc.get("auto_sweep") else None
     catch = privatize_pending(cfg, republish_path, finals, dry_run=dry_run, send=send, env=env) if rc else None
     evening = evening_enabled(daily)
@@ -1425,7 +1442,7 @@ def _daily_auto(cfg: Config, daily: dict[str, Any], republish_path: Path, finals
     slots: list[dict[str, Any]] = []
     used: set[Path] = set()
     for t in targets:
-        info: dict[str, Any] = {"slot": t["slot"], "key": t["key"], "late": t["late"],
+        info: dict[str, Any] = {"slot": t["slot"], "label": slot_label(daily, t["slot"]), "key": t["key"], "late": t["late"],
                                 "target": t["target"].isoformat(timespec="minutes")}
         slots.append(info)
         if target_done(finals, t["key"], now):
@@ -1452,9 +1469,9 @@ def _daily_auto(cfg: Config, daily: dict[str, Any], republish_path: Path, finals
              "error": "오류"}
     lines = []
     for i in slots:
-        when = dt.datetime.fromisoformat(i["target"]).strftime("%m-%d %H:%M")
+        when = dt.datetime.fromisoformat(i["target"]).strftime("%m-%d")
         pub = f" · 예약 공개 {kst_label(i['publish_at'])}" if i.get("publish_at") and i["status"] in ("uploaded", "dry-run") else ""
-        lines.append(f"{SLOT_KO[i['slot']]} {when}{' (늦음)' if i['late'] else ''}: {st_ko[i['status']]}{pub} — {i.get('note', '')}")
+        lines.append(f"{i['label']}({when}){' (늦음)' if i['late'] else ''}: {st_ko[i['status']]}{pub} — {i.get('note', '')}")
     out = {"ok": counts["error"] == 0, "counts": counts, "results": results, "slots": slots, "slot": "auto",
            "note": " / ".join(lines) if lines else "맡을 예약 목표 없음"}
     return _attach_checks(out, sweep, catch)
@@ -1512,6 +1529,7 @@ def daily_next(cfg: Config, daily_path: Path, republish_path: Path, finals: Path
     publish_at = scheduled_publish_at(daily, slot, now)   # 형식 오류면 ValueError — 아무것도 하기 전에 멈춘다
     key = slot_key(_parse_time(publish_at), slot) if publish_at else None
     rc = load_republish(republish_path)
+    republish_gate(rc)                          # 꼴이 틀리면 아무것도 하기 전에 멈춘다(UploadError)
     sweep = (run_sweep(cfg, republish_path, finals, dry_run=dry_run, send=send, env=env)
              if slot == "morning" and rc.get("auto_sweep") else None)
     catch = privatize_pending(cfg, republish_path, finals, dry_run=dry_run, send=send, env=env) if rc else None
@@ -1559,19 +1577,84 @@ def dropped_dirs(rc: dict[str, Any]) -> frozenset[Path]:
     return frozenset(out)
 
 
+# ───────────────────── 고친 판만 다시 올리기 · 주간 상한 ─────────────────────
+# 2026-11-16 사용자: "어 너가 생각하는 모든 것들을 다 적용해봐. 무한한 권한과 지지를 보낸다"(채널 분석 3판 방안 3,
+# docs/CHANNEL_GROWTH.md 9절). 같은 파일을 다시 올리지 않고, 첫 5초(새 첫 문장 + 첫 장면)를 고쳐 다시 만든 편(remade)만
+# 자동 다시 올리기 차례에 둔다. 최근 7일(7×24시간) 다시 올리기는 max_per_week 편까지. 구조와 주 2편이라는 수치는
+# 제작 세션의 제안을 위 말로 적용한 것이다(config/republish.json _remade_only).
+
+WEEK_SEC = 7 * 24 * 3600
+
+
+def republish_gate(rc: dict[str, Any]) -> dict[str, Any]:
+    """config/republish.json remade_only·remade·max_per_week → {'remade_only': bool, 'remade': frozenset[Path](resolve 한 경로),
+    'max_per_week': int | None}. 키가 없으면 지금까지처럼(거르지 않음·상한 없음). 꼴이 틀리면 UploadError(추측하지 않는다)."""
+    only = rc.get("remade_only", False)
+    if not isinstance(only, bool):
+        raise UploadError("config/republish.json remade_only 는 true/false 여야 합니다")
+    items = rc.get("remade", [])
+    if not isinstance(items, list) or not all(isinstance(x, str) and x.strip() for x in items):
+        raise UploadError("config/republish.json remade 는 저장소 기준 경로 문자열(예 \"finals/22-mushroom-cloud\")의 목록이어야 합니다")
+    cap = rc.get("max_per_week")
+    if cap is not None and (isinstance(cap, bool) or not isinstance(cap, int) or cap < 1):
+        raise UploadError("config/republish.json max_per_week 는 1 이상의 정수(또는 null — 상한 없음)여야 합니다")
+    return {"remade_only": only, "remade": frozenset((REPO / x.strip()).resolve() for x in items), "max_per_week": cap}
+
+
+def republish_events(finals: Path) -> list[dt.datetime]:
+    """지금까지 한 다시 올리기의 시각들. 기록의 previous[] 중 reason == republish 인 항목 하나가 다시 올리기 한 번이다
+    (republish_count 와 같은 뜻). 시각은 그 항목의 republished_at, 없으면 맨 앞 항목에 한해 기록의 uploaded_at(지금 판을 올린 때)."""
+    out: list[dt.datetime] = []
+    for d in episode_dirs(finals):
+        try:
+            rec = read_record(d)
+        except UploadError:
+            continue
+        if rec is None:
+            continue
+        for i, p in enumerate(rec.previous):
+            if not isinstance(p, dict) or p.get("reason") != "republish":
+                continue
+            t = _parse_time(p.get("republished_at")) or (_parse_time(rec.uploaded_at) if i == 0 else None)
+            if t is not None:
+                out.append(t)
+    return out
+
+
+def republish_week_count(finals: Path, now: dt.datetime | None = None) -> int:
+    """최근 7×24시간(now 기준) 안에 한 다시 올리기 수."""
+    now = _aware(now or _utcnow())
+    return sum(1 for t in republish_events(finals) if 0 <= (now - t).total_seconds() < WEEK_SEC)
+
+
+def week_cap_note(rc: dict[str, Any], finals: Path, now: dt.datetime | None = None) -> str:
+    """주간 상한에 이르렀으면 그 까닭 한 줄, 아니면 ''."""
+    cap = republish_gate(rc)["max_per_week"]
+    if cap is None:
+        return ""
+    n = republish_week_count(finals, now)
+    return f"이번 주 다시 올리기 상한 {cap}편(최근 7일 {n}편)" if n >= cap else ""
+
+
 def republish_todo(rc: dict[str, Any], finals: Path | None = None) -> list[Path]:
     """다시 올릴 편의 차례. ① 대기열(queue)에서 아직 다시 올리지 않은 편(경로는 저장소 기준), 그다음
     ② 48시간 점검이 지금 판을 flagged 로 적은 편(점검 시각 순, 2026-11-13). ②는 다시 올린 편도 지금 판이 flagged 면
     다시 대상이 되며, 다시 올린 횟수가 auto_sweep.max_republish 에 이르면 빠진다. 비공개 전환이 거절된(그사이 조회수가
-    기준을 넘은) 판은 빠진다. 탈락한 편(dropped)은 ①②에서 모두 빠진다."""
+    기준을 넘은) 판은 빠진다. 탈락한 편(dropped)은 ①②에서 모두 빠진다.
+    remade_only 가 true 면(2026-11-16) ①② 모두 remade 에 적힌 편(고친 판)만 남는다. 주간 상한(max_per_week)은 시각에 따라
+    바뀌므로 여기서 보지 않고 republish_available·republish_next 가 본다."""
     dropped = dropped_dirs(rc)
-    manual = [REPO / q for q in rc.get("queue", [])
-              if (REPO / q).resolve() not in dropped and not republished(read_record(REPO / q))]
+    gate = republish_gate(rc)
+
+    def allowed(d: Path) -> bool:
+        return d.resolve() not in dropped and (not gate["remade_only"] or d.resolve() in gate["remade"])
+
+    manual = [REPO / q for q in rc.get("queue", []) if allowed(REPO / q) and not republished(read_record(REPO / q))]
     sw_cfg = rc.get("auto_sweep") if isinstance(rc.get("auto_sweep"), dict) else {}
     cap = int(sw_cfg.get("max_republish", 2))
     flagged: list[tuple[str, Path]] = []
     for d in episode_dirs(DEFAULT_FINALS if finals is None else finals):
-        if d.resolve() in dropped:
+        if not allowed(d):
             continue
         rec = read_record(d)
         sw = rec.sweep if rec is not None and isinstance(rec.sweep, dict) else {}
@@ -1588,19 +1671,24 @@ def republish_pending(dir_: Path, republish_path: Path) -> bool:
         if not rc:
             return False
         todo = republish_todo(rc, dir_.parent)
-    except (OSError, ValueError, TypeError, AttributeError):
+    except (OSError, ValueError, TypeError, AttributeError, UploadError):
         return False
     me = dir_.resolve()
     return any(p.resolve() == me for p in todo)
 
 
-def republish_available(rc: dict[str, Any], today: dt.date, finals: Path | None = None) -> tuple[bool, str]:
-    """다시 올리기에 할 일이 있는가(시작일이 지났고 대기열이나 48시간 점검 대상이 남음). 이전 판 조회수는 실제 실행 때 본다."""
+def republish_available(rc: dict[str, Any], today: dt.date, finals: Path | None = None,
+                        now: dt.datetime | None = None) -> tuple[bool, str]:
+    """다시 올리기에 할 일이 있는가(시작일이 지났고 대기열이나 48시간 점검 대상이 남았고 주간 상한 전). 이전 판 조회수는
+    실제 실행 때 본다. remade_only 면 고친 판(remade)이 없을 때 '대기열 끝'이다."""
     start = dt.date.fromisoformat(rc["start"]) if rc.get("start") else None
     if start is None or today < start:
         return False, f"시작 전({start.isoformat() if start else '시작일 없음'})"
     if not republish_todo(rc, finals):
-        return False, "대기열 끝"
+        return False, "대기열 끝" + (" — 고친 판(remade)만 올림" if republish_gate(rc)["remade_only"] else "")
+    capped = week_cap_note(rc, DEFAULT_FINALS if finals is None else finals, now)
+    if capped:
+        return False, capped
     return True, ""
 
 
@@ -1958,7 +2046,8 @@ def republish_next(cfg: Config, queue_path: Path, finals: Path, *, today: dt.dat
                    exclude: frozenset[Path] = frozenset()) -> dict[str, Any]:
     """대기열(config/republish.json)에서 다음 한 편을 다시 올린다. 아침 업로드(daily_next)가 새 편이 없는 날 부른다.
 
-    쉬는 경우: 시작일 전 · 대기열 끝 · 최근 hold_days 안에 올린 영상이 아직 비공개(사용자가 공개하기 전, hold_days 0 이면 보지 않음).
+    쉬는 경우: 시작일 전 · 대기열 끝(remade_only 면 고친 판이 없을 때도) · 최근 7일 다시 올리기가 max_per_week 에 이름 ·
+    최근 hold_days 안에 올린 영상이 아직 비공개(사용자가 공개하기 전, hold_days 0 이면 보지 않음).
     이전 판이 그사이 min_views 이상이면 그 편은 건너뛰고 다음 편으로 간다. 한 번에 최대 한 편만 올린다.
     기록이 없는(손으로 올린) 편의 이전 판은 previous_ids 로 안다. 올린 뒤 이전 판을 비공개로 돌린다(process_episode).
     publish_at(예약 공개)·slot_key 는 daily_next 만 넘긴다 — CLI --republish-next 는 예약 없이 올린다.
@@ -1974,7 +2063,11 @@ def republish_next(cfg: Config, queue_path: Path, finals: Path, *, today: dt.dat
         return {"ok": True, "counts": empty, "results": [], "note": f"다시 올리기 시작 전입니다({start.isoformat()}부터)"}
     todo = [d for d in republish_todo(rc, finals) if d.resolve() not in exclude]
     if not todo:
-        return {"ok": True, "counts": empty, "results": [], "note": "다시 올리기 대기열이 끝났습니다"}
+        return {"ok": True, "counts": empty, "results": [], "note": "다시 올리기 대기열이 끝났습니다"
+                + (" — 고친 판(remade)만 올립니다" if republish_gate(rc)["remade_only"] else "")}
+    capped = week_cap_note(rc, finals)
+    if capped:                                   # 2026-11-16 주간 상한(max_per_week) — 쉰다
+        return {"ok": True, "counts": empty, "results": [], "note": capped + " — 다시 올리기는 쉽니다"}
     if not dry_run and not skip_hold and hold_days > 0:
         tx = send or urllib_transport(cfg.timeout_sec)
         waiting = private_waiting(tx, access_token(tx, read_secrets(env)), finals, today, hold_days)
@@ -2152,6 +2245,7 @@ def main(argv: list[str] | None = None) -> int:
                 _log(f"{_rel(a.finals)}: 에피소드 폴더가 없습니다 — 할 일 없음")
             caption = True if a.caption else (False if a.no_caption else None)
             rc = load_republish(a.republish_config) if a.republish else {}
+            gate = republish_gate(rc) if rc else None   # 꼴이 틀리면 올리기 전에 멈춘다(UploadError)
             min_views = a.republish_min_views if a.republish_min_views is not None else int(rc.get("min_views", 100))
             prev_ids = {str(k): str(v) for k, v in rc.get("previous_ids", {}).items()}
 
@@ -2173,6 +2267,15 @@ def main(argv: list[str] | None = None) -> int:
             out = {"ok": counts["error"] == 0, "counts": counts, "results": results}
             if not dirs:
                 out["warnings"] = ["finals 에 에피소드 폴더가 없습니다"]
+            if a.republish and gate and gate["remade_only"]:
+                # 사람이 고른 --republish 는 그대로 하되, 고친 판만 올리는 동안(remade_only, 2026-11-16) 목록에 없는 편이면 알린다
+                for d, r in zip(dirs, results):
+                    if d.resolve() not in gate["remade"]:
+                        w = (f"{_rel(d)}: 고친 판 목록(config/republish.json remade)에 없는 편을 손으로 다시 올립니다 — "
+                             "같은 파일을 다시 올리는 것은 스팸으로 보일 위험이 있습니다(docs/CHANNEL_GROWTH.md 9절 O8)")
+                        r.setdefault("warnings", []).append(w)
+                        out.setdefault("warnings", []).append(w)
+                        _log(w)
     except (UploadError, TransportError, OSError, ValueError) as ex:
         out = {"ok": False, "error": str(ex)}
         _log(f"실패 — {ex}")

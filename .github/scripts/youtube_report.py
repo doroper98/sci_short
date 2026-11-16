@@ -109,7 +109,10 @@ def slot_lines(data: dict) -> list[str]:
             tgt = dt.datetime.fromisoformat(str(s.get("target", ""))).strftime("%m-%d %H:%M")
         except ValueError:
             tgt = str(s.get("target", ""))
-        out.append(f"- {SLOT_KO.get(s.get('slot'), s.get('slot'))} 목표 {cell(tgt)}{' (늦음)' if s.get('late') else ''}: "
+        # 자리 이름(morning·evening)이 아니라 공개 시각으로 부른다 — 2026-11-16 한 주 시험부터 morning 자리가 17:00 에 공개한다
+        # (publish.youtube slot_label 이 slots[].label 에 '17:00 공개 편' 꼴로 넣는다. 옛 보고서에는 없어 자리 이름으로 돌아간다).
+        name = cell(s['label']) if s.get('label') else f"{SLOT_KO.get(s.get('slot'), s.get('slot'))} 목표"
+        out.append(f"- {name} {cell(tgt)}{' (늦음)' if s.get('late') else ''}: "
                    f"{SLOT_STATUS_KO.get(s.get('status'), s.get('status'))}{pub} — {cell(s.get('note', ''))}")
     return out
 

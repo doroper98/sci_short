@@ -1,6 +1,7 @@
 """Automatic checks on a finished episode output directory (standard library + ffprobe only).
 
   python pipeline/validate.py outputs/<slug> [--mp4 F] [--srt F] [--timeline F] [--max-sec 180] [--hdr auto|require|skip]
+                               [--allow-static-open "<까닭>"]
 
 Expected layout (what run.sh produces):
   outputs/<slug>/narration/timeline.json      outputs/<slug>/stills/contact-sheet.jpg
@@ -10,6 +11,13 @@ Expected layout (what run.sh produces):
 --hdr auto (default) checks the HDR version only when the file exists (no file = no HDR rows, so older episodes
 validate as before). require also FAILs when it is missing (new episodes' run.sh passes this); skip adds one WARN row.
 
+First moment (pipeline/first_moment.py, config/first_moment.json; docs/CHANNEL_GROWTH.md 9절 방안 2, applied under the
+2026-11-16 user statement "어 너가 생각하는 모든 것들을 다 적용해봐. 무한한 권한과 지지를 보낸다"): how much of the screen changes
+by 1 s / 2 s and when the first sound starts. The result is written as "first_moment" into validate.json and into
+final/validation.json (which goes to finals/). Not passing is FAIL only for new-format episodes (timeline lead_sec ≤ 0.3);
+older episodes get a WARN row. --allow-static-open "<까닭>" (or env ALLOW_STATIC_OPEN, so run.sh needs no change) turns the
+FAIL into a WARN and records the reason as "first_moment_waiver" — for topics where a result-first opening is impossible.
+
 Prints a PASS/WARN/FAIL table and writes <dir>/validate.json. Exit 1 if any FAIL.
 These are functional checks. They do not replace watching the video and listening on a phone.
 """
@@ -17,10 +25,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
 from pathlib import Path
+
+try:
+    from pipeline import first_moment as fmod
+except ImportError:          # python pipeline/validate.py (script dir on sys.path, not the repo root)
+    import first_moment as fmod
 
 CAPTION_SIZE_PX, CAPTION_MAX_WIDTH_PX = 44, 840  # width + maxChars wrap; keep in sync with pipeline/render/captions.mjs CAPTION_DEFAULTS
 MAX_LINES, MAX_LINE_CHARS = 2, 22
@@ -100,6 +114,41 @@ def hdr_rows(pr: dict | None, sdr_duration: float | None, hdr_path: str, slug: s
     return rows
 
 
+FM_CHECK = "첫 순간 (1초·2초 화면 변화, 첫 소리)"
+
+
+def first_moment_row(fm: dict | None, lead_sec, waiver: str | None, enforce_lead_sec: float,
+                     error: str | None = None) -> tuple[str, str, str]:
+    """first_moment 결과 → 검사 행. 새 형식(lead_sec ≤ enforce_lead_sec)만 FAIL, 예외 까닭이 있으면 WARN. Pure function."""
+    enforced = lead_sec is not None and float(lead_sec) <= enforce_lead_sec + 1e-9
+    if fm is None:
+        detail = f"재지 못함: {error}"
+        ok = False
+    else:
+        ch = fm.get("changed_pct") or {}
+        fs = fm.get("first_sound_sec")
+        detail = (f"1.0s {ch.get('1.0')}% · 2.0s {ch.get('2.0')}% · 첫 소리 {'재지 못함' if fs is None else f'{fs:.2f}s'}"
+                  f" (문턱 10% · 20% · 0.3s)")
+        ok = bool(fm.get("pass"))
+    if ok:
+        return (FM_CHECK, "PASS", detail)
+    if waiver:
+        return (FM_CHECK, "WARN", f"{detail} — 예외: {waiver}")
+    if enforced:
+        return (FM_CHECK, "FAIL", f"{detail} — 첫 2초를 '결과 먼저'로 고치거나, 불가능하면 --allow-static-open \"까닭\"")
+    return (FM_CHECK, "WARN", f"{detail} — lead_sec {lead_sec}: 첫 순간 결정 전 편이라 FAIL 로 치지 않음")
+
+
+def record_first_moment(path: Path, fm: dict | None, waiver: str | None) -> None:
+    """finish.py 의 validation.json 에 first_moment(·예외 까닭)를 더한다. 파일이 없으면 아무것도 하지 않는다."""
+    if not path.is_file():
+        return
+    rep = json.loads(path.read_text(encoding="utf-8"))
+    rep["first_moment"] = fm
+    rep["first_moment_waiver"] = waiver
+    path.write_text(json.dumps(rep, ensure_ascii=False, indent=2) + "\n")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("dir", type=Path)
@@ -109,7 +158,11 @@ def main() -> int:
     ap.add_argument("--max-sec", type=float, default=180.0)
     ap.add_argument("--hdr", choices=("auto", "require", "skip"), default="auto",
                     help="HDR version check: auto = only if final/hdr/<slug>.hdr.mp4 exists · require = missing is FAIL · skip = one WARN row")
+    ap.add_argument("--allow-static-open", metavar="까닭", default=os.environ.get("ALLOW_STATIC_OPEN") or None,
+                    help="첫 순간 점검을 못 넘어도 FAIL 로 치지 않는다(까닭을 validate.json·validation.json 에 적음). 환경 변수 ALLOW_STATIC_OPEN 도 같다")
     a = ap.parse_args()
+    if a.allow_static_open is not None and not a.allow_static_open.strip():
+        ap.error("--allow-static-open 에는 까닭을 적어야 합니다")
     d = a.dir
     rows: list[tuple[str, str, str]] = []
     add = lambda name, ok, detail, warn=False: rows.append((name, "PASS" if ok else ("WARN" if warn else "FAIL"), detail))
@@ -191,6 +244,17 @@ def main() -> int:
                if hp.exists() else None)
         rows += hdr_rows(hpr, duration, str(hp), slug)
 
+    fm, fm_err = None, None
+    if mp4 and mp4.exists():
+        fcfg = fmod.load_config()
+        try:
+            fm = fmod.measure(mp4, fcfg)
+        except (subprocess.CalledProcessError, RuntimeError, ValueError) as e:
+            fm_err = str(e)
+        rows.append(first_moment_row(fm, tl.get("lead_sec") if tl else None, a.allow_static_open,
+                                     float(fcfg["enforce_lead_sec"]), fm_err))
+        record_first_moment(mp4.with_name("validation.json"), fm, a.allow_static_open)
+
     w = max(len(r[0]) for r in rows)
     print(f"validate {d}")
     for name, status, detail in rows:
@@ -200,6 +264,7 @@ def main() -> int:
     print(f"RESULT: {overall}  ({len(rows) - len(fails)}/{len(rows)} not failing)")
     (d / "validate.json").write_text(json.dumps({"result": overall, "max_sec": a.max_sec, "mp4": str(mp4) if mp4 else None,
                                                  "checks": [{"check": n, "status": s, "detail": x} for n, s, x in rows],
+                                                 "first_moment": fm, "first_moment_waiver": a.allow_static_open,
                                                  "not_checked": ["direct viewing", "listening", "phone playback", "science correctness",
                                                                  "pronunciation", "caption covering key phenomenon"]},
                                                 ensure_ascii=False, indent=2) + "\n")

@@ -1592,7 +1592,13 @@ class SweepTest(unittest.TestCase):
 
     def test_repo_sweep_config_and_validation(self) -> None:
         rc = json.loads((yu.REPO / "config" / "republish.json").read_text(encoding="utf-8"))
-        self.assertEqual(yu.sweep_settings(rc), {"min_age_hours": 48.0, "max_republish": 2, "min_views": 50})
+        # 2026-11-16 사용자 "어 너가 생각하는 모든 것들을 다 적용해봐. 무한한 권한과 지지를 보낸다" — 한 주 시험 동안 48시간 점검을
+        # 끈다(config/republish.json _pause_2026_11_16). 점검 수치(48시간·2회·50회)는 그대로 두어 켜면 예전처럼 돈다.
+        self.assertIs(rc["auto_sweep"]["enabled"], False)
+        self.assertIsNone(yu.sweep_settings(rc))
+        self.assertIn("auto_sweep.enabled true", rc["_pause_2026_11_16"])       # 되돌리는 법이 적혀 있다
+        on = {**rc, "auto_sweep": {**rc["auto_sweep"], "enabled": True}}
+        self.assertEqual(yu.sweep_settings(on), {"min_age_hours": 48.0, "max_republish": 2, "min_views": 50})
         self.assertIn("50회 미만", rc["_rules"])
         self.assertIn("사용자 결정이 아니다", rc["_rules"])                    # max_republish 는 제작 세션 제안
         self.assertIsNone(yu.sweep_settings({}))
@@ -1604,6 +1610,168 @@ class SweepTest(unittest.TestCase):
                 yu.sweep_settings(bad)
         # 저장소 기록 중 privatize_only·never_privatize 영상은 점검 대상이 아니다(01 중력파는 사용자 결정 전까지 다시 올리지 않음)
         self.assertNotIn(yu.DEFAULT_FINALS / "01-gravitational-waves", yu.republish_todo(rc))
+
+
+@mock.patch.object(yu, "probe_video", lambda p: dict(PROBE_OK))
+class RemadeGateTest(unittest.TestCase):
+    """2026-11-16 사용자: "어 너가 생각하는 모든 것들을 다 적용해봐. 무한한 권한과 지지를 보낸다"(채널 분석 3판 방안 3) —
+    자동 다시 올리기는 고친 판(remade)만, 최근 7일 max_per_week 편까지. 구조와 수치는 제작 세션의 제안."""
+
+    REP = {"reason": "republish"}
+
+    def _rep_at(self, ep: Path, vid: str, when: dt.datetime) -> None:
+        """when 에 다시 올린 편(지금 판 + 다시 올리기 한 번)."""
+        _record(ep, vid, uploaded=when, previous=[{**self.REP, "video_id": vid + "0", "republished_at": when.isoformat(timespec="seconds")}])
+
+    def test_remade_only_filters_queue_and_flagged(self) -> None:
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            qa = _episode(root, name="10-qa", slug="qa")                        # 대기열, 고침
+            qb = _episode(root, name="11-qb", slug="qb")                        # 대기열, 안 고침
+            fa = _episode(root, name="20-fa", slug="fa")                        # 점검 flagged, 고침
+            _record(fa, "FA", uploaded=_ago(500), sweep={"action": "flagged", "checked_at": "2026-11-13T00:00:00+00:00"})
+            fb = _episode(root, name="21-fb", slug="fb")                        # 점검 flagged, 안 고침
+            _record(fb, "FB", uploaded=_ago(500), sweep={"action": "flagged", "checked_at": "2026-11-12T00:00:00+00:00"})
+            rc = {"start": "2026-11-11", "auto_sweep": SWEEP, "queue": [_rel_repo(qa), _rel_repo(qb)]}
+            self.assertEqual(yu.republish_todo(rc, root), [qa, qb, fb, fa])     # 키가 없으면 예전 그대로
+            self.assertEqual(yu.republish_todo({**rc, "remade_only": False, "remade": [_rel_repo(qa)]}, root), [qa, qb, fb, fa])
+            on = {**rc, "remade_only": True, "remade": [_rel_repo(qa), _rel_repo(fa)]}
+            self.assertEqual(yu.republish_todo(on, root), [qa, fa])
+            q = root / "republish.json"
+            q.write_text(json.dumps(on, ensure_ascii=False), encoding="utf-8")
+            self.assertTrue(yu.republish_pending(qa, q))
+            self.assertFalse(yu.republish_pending(qb, q))                       # 안 고친 편은 다시 올리기 대기가 아니다
+            self.assertFalse(yu.republish_pending(fb, q))
+
+    def test_empty_remade_means_nothing_available(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            old = _episode(root, name="06-a", slug="a")
+            _record(old, "OA", uploaded=dt.datetime(2026, 11, 1, tzinfo=dt.timezone.utc))
+            api.video("OA", "public", 3)
+            q = _republish_cfg(root, old, remade_only=True, remade=[], max_per_week=2)
+            rc = yu.load_republish(q)
+            self.assertEqual(yu.republish_todo(rc, root), [])
+            ok, why = yu.republish_available(rc, dt.date(2026, 11, 28), root)
+            self.assertFalse(ok)
+            self.assertIn("고친 판", why)
+            out = yu.republish_next(cfg, q, root, today=dt.date(2026, 11, 28), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+            self.assertEqual((out["counts"]["uploaded"], api.uploads, api.calls), (0, 0, []))
+            self.assertIn("고친 판", out["note"])
+            # 아침 자리: 새 편이 없어도 안 고친 편은 올리지 않는다
+            daily = root / "daily.json"
+            daily.write_text(json.dumps({"hold_if_private_within_days": 0, "order": []}), encoding="utf-8")
+            with mock.patch.object(yu, "RECENT_HOURS", 0):
+                day = yu.daily_next(cfg, daily, q, root, today=dt.date(2026, 11, 28), dry_run=False, send=api, env=ENV,
+                                    sleep=lambda s: None)
+            self.assertEqual((day["counts"]["uploaded"], api.uploads), (0, 0))
+            self.assertFalse(yu.republished(yu.read_record(old)))
+
+    def test_weekly_cap_blocks_third(self) -> None:
+        api, cfg = FakeApi(), _cfg(channel_id="UC1")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            a, b, c = (_episode(root, name=n, slug=n[3:]) for n in ("06-a", "07-b", "08-c"))
+            self._rep_at(a, "RA", NOW - dt.timedelta(days=1))
+            self._rep_at(b, "RB", NOW - dt.timedelta(days=3))
+            _record(c, "OC", uploaded=dt.datetime(2026, 11, 1, tzinfo=dt.timezone.utc))
+            api.video("OC", "public", 3)
+            q = _republish_cfg(root, c, remade_only=True, remade=[_rel_repo(c)], max_per_week=2)
+            rc = yu.load_republish(q)
+            self.assertEqual(yu.republish_week_count(root, NOW), 2)
+            self.assertEqual(yu.republish_available(rc, NOW.date(), root, NOW), (False, "이번 주 다시 올리기 상한 2편(최근 7일 2편)"))
+            with mock.patch.object(yu, "_utcnow", lambda: NOW):
+                out = yu.republish_next(cfg, q, root, today=NOW.date(), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+            self.assertEqual((out["counts"]["uploaded"], api.uploads), (0, 0))
+            self.assertIn("상한 2편", out["note"])
+            self.assertEqual(yu.republish_available({**rc, "max_per_week": 3}, NOW.date(), root, NOW), (True, ""))
+            self.assertEqual(yu.republish_available({**rc, "max_per_week": None}, NOW.date(), root, NOW), (True, ""))
+            rc_nocap = {k: v for k, v in rc.items() if k != "max_per_week"}
+            self.assertEqual(yu.republish_available(rc_nocap, NOW.date(), root, NOW), (True, ""))   # 키가 없으면 상한 없음
+            with mock.patch.object(yu, "_utcnow", lambda: NOW):                 # 상한 아래면 한 편 올린다
+                q.write_text(json.dumps({**rc, "max_per_week": 3}, ensure_ascii=False), encoding="utf-8")
+                ok = yu.republish_next(cfg, q, root, today=NOW.date(), dry_run=False, send=api, env=ENV, sleep=lambda s: None)
+            self.assertEqual(ok["results"][0]["status"], "uploaded", ok)
+            self.assertTrue(yu.read_record(c).previous[0]["republished_at"])    # 새 다시 올리기도 다음 주간 셈에 들어간다
+
+    def test_cap_window_slides(self) -> None:
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            a, b, c = (_episode(root, name=n, slug=n[3:]) for n in ("06-a", "07-b", "08-c"))
+            self._rep_at(a, "RA", NOW - dt.timedelta(days=7, seconds=1))       # 7일 지남 — 세지 않는다
+            self._rep_at(b, "RB", NOW - dt.timedelta(days=6, hours=23))
+            # 두 번 다시 올린 편: 사건 둘(각 previous 의 republished_at)
+            _record(c, "C2", uploaded=NOW - dt.timedelta(days=2),
+                    previous=[{**self.REP, "video_id": "C1", "republished_at": (NOW - dt.timedelta(days=2)).isoformat()},
+                              {**self.REP, "video_id": "C0", "republished_at": (NOW - dt.timedelta(days=10)).isoformat()},
+                              {"video_id": "P", "reason": "privatize_only"}])
+            self.assertEqual(yu.republish_week_count(root, NOW), 2)
+            self.assertEqual(yu.republish_week_count(root, NOW + dt.timedelta(hours=2)), 1)   # b 가 창 밖으로
+            self.assertEqual(yu.republish_week_count(root, NOW + dt.timedelta(days=6)), 0)
+            self.assertEqual(yu.republish_week_count(root, NOW - dt.timedelta(days=4)), 3)    # 그때는 a·b·c0 이 창 안(c1 은 아직)
+            rc = {"start": "2026-11-11", "remade_only": False, "max_per_week": 2, "queue": [_rel_repo(a)]}
+            self.assertFalse(yu.republish_available(rc, NOW.date(), root, NOW)[0])
+            self.assertTrue(yu.republish_available({**rc, "queue": [_rel_repo(root / "09-x")]}, NOW.date(), root,
+                                                   NOW + dt.timedelta(hours=2))[0])
+            _record(a, "RA", uploaded=NOW - dt.timedelta(days=1), previous=[{**self.REP, "video_id": "RA0"}])   # 시각 없으면 업로드 시각
+            self.assertEqual(yu.republish_week_count(root, NOW), 3)
+
+    def test_validation(self) -> None:
+        self.assertEqual(yu.republish_gate({}), {"remade_only": False, "remade": frozenset(), "max_per_week": None})
+        g = yu.republish_gate({"remade_only": True, "remade": ["finals/22-mushroom-cloud"], "max_per_week": 2})
+        self.assertEqual(g["remade"], frozenset({(yu.REPO / "finals" / "22-mushroom-cloud").resolve()}))
+        for bad in ({"remade_only": "yes"}, {"remade_only": 1}, {"remade": "finals/22-x"}, {"remade": [7]}, {"remade": [""]},
+                    {"remade": None}, {"max_per_week": 0}, {"max_per_week": True}, {"max_per_week": "2"}, {"max_per_week": 1.5}):
+            with self.assertRaises(yu.UploadError, msg=str(bad)):
+                yu.republish_gate(bad)
+            with self.assertRaises(yu.UploadError, msg=str(bad)):
+                yu.republish_todo({"queue": [], **bad})
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:                     # 아침 실행은 아무것도 하기 전에 멈춘다
+            root = Path(d)
+            _episode(root, name="32-radar", slug="radar")
+            daily = root / "daily.json"
+            daily.write_text(json.dumps({"hold_if_private_within_days": 0, "order": [{"number": 32, "topic": "레이더"}]}), encoding="utf-8")
+            api = FakeApi()
+            with self.assertRaises(yu.UploadError):
+                yu.daily_next(_cfg(), daily, _republish_cfg(root, max_per_week=0), root, today=dt.date(2026, 11, 18),
+                              dry_run=False, send=api, env=ENV)
+            self.assertEqual(api.calls, [])
+
+    def test_manual_republish_warns_when_not_remade(self) -> None:
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            ep = _episode(root, name="06-a", slug="a")
+            fixed = _episode(root, name="07-b", slug="b")
+            q = _republish_cfg(root, remade_only=True, remade=[_rel_repo(fixed)], max_per_week=2)
+            cfgf = root / "youtube.json"
+            cfgf.write_text(json.dumps({"privacy_status": "private", "made_for_kids": False}), encoding="utf-8")
+            out, err = io.StringIO(), io.StringIO()
+            with redirect_stdout(out), redirect_stderr(err):
+                code = yu.main([str(ep), str(fixed), "--republish", "--dry-run", "--republish-config", str(q), "--config", str(cfgf)])
+            res = json.loads(out.getvalue().strip().splitlines()[-1])
+            self.assertEqual(code, 0, res)
+            self.assertEqual([r["status"] for r in res["results"]], ["dry-run", "dry-run"])   # 사람이 고른 편은 그대로 다룬다
+            self.assertEqual(len(res["warnings"]), 1)
+            self.assertIn("고친 판 목록", res["warnings"][0])
+            self.assertIn(yu._rel(ep), res["warnings"][0])
+            self.assertTrue(any("고친 판 목록" in w for w in res["results"][0]["warnings"]))
+            self.assertFalse(any("고친 판 목록" in w for w in res["results"][1].get("warnings", [])))
+
+    def test_repo_config_shape(self) -> None:
+        rc = json.loads(yu.DEFAULT_REPUBLISH.read_text(encoding="utf-8"))
+        # 2026-11-16 사용자 "어 너가 생각하는 모든 것들을 다 적용해봐. 무한한 권한과 지지를 보낸다" — 고친 판만, 주 2편(제작 세션의 제안)
+        self.assertIs(rc["remade_only"], True)
+        self.assertEqual(rc["max_per_week"], 2)
+        self.assertIsInstance(rc["remade"], list)
+        for ep in rc["remade"]:
+            self.assertRegex(ep, r"^finals/\d\d-[a-z0-9-]+$")
+            self.assertTrue((yu.REPO / ep).is_dir(), ep)
+        for phrase in ("무한한 권한과 지지를 보낸다", "제작 세션의 제안", "O7", "O8", "첫 5초"):
+            self.assertIn(phrase, rc["_remade_only"])
+        yu.republish_gate(rc)                                                    # 꼴이 맞다
+        gate = yu.republish_gate(rc)
+        self.assertTrue(all(p.resolve() in gate["remade"] for p in yu.republish_todo(rc)))
 
 
 EVENING = {"enabled": True, "ready_by_kst": "18:00"}
@@ -1737,11 +1905,23 @@ class EveningSlotTest(unittest.TestCase):
             yu.daily_next(_cfg(), Path(d) / "daily.json", Path(d) / "none.json", Path(d), today=dt.date(2026, 11, 13),
                           dry_run=True, slot="noon")
 
-    def test_repo_daily_evening_enabled(self) -> None:
+    def test_repo_daily_evening_paused_for_trial(self) -> None:
         daily = yu.load_daily()
-        self.assertIs(daily["evening"]["enabled"], True)                         # 2026-11-13 사용자 "저녁에도 한편 더 올리자."
-        self.assertIn("저녁에도 한편 더 올리자.", daily["_evening"])
-        self.assertIn("제작 세션의 제안", daily["_evening"])                    # 자리 배정·저녁 창은 사용자 결정이 아니다
+        # 2026-11-13 사용자 "저녁에도 한편 더 올리자." 로 켰던 저녁 다시 올리기를, 2026-11-16 사용자 "어 너가 생각하는 모든 것들을
+        # 다 적용해봐. 무한한 권한과 지지를 보낸다" 뒤 한 주 시험(새 편만, 하루 한 편) 동안 끈다 — config/daily.json _trial_2026_11_16.
+        # 저녁 자리의 동작은 위 시험들이 EVENING(합성 설정)으로 그대로 본다.
+        self.assertIs(daily["evening"]["enabled"], False)
+        self.assertIn("evening.enabled true", daily["_trial_2026_11_16"])       # 되돌리는 법
+        self.assertIn("무한한 권한과 지지를 보낸다", daily["_trial_2026_11_16"])
+        self.assertIn("제작 세션의 제안", daily["_trial_2026_11_16"])
+        self.assertIn("저녁에도 한편 더 올리자.", daily["_evening"])            # 옛 결정의 기록은 남는다
+        self.assertIn("제작 세션의 제안", daily["_evening"])
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:                     # 저장소 설정으로 손으로 저녁을 돌려도 쉰다(네트워크 없음)
+            api = FakeApi()
+            out = yu.daily_next(_cfg(), yu.DEFAULT_DAILY, Path(d) / "none.json", Path(d), today=dt.date(2026, 11, 18),
+                                dry_run=False, send=api, env=ENV, slot="evening")
+            self.assertEqual((out["counts"]["uploaded"], api.calls), (0, []))
+            self.assertIn("꺼짐", out["note"])
 
 
 SCHED = {"enabled": True, "morning_kst": "07:00", "evening_kst": "17:00", "min_lead_min": 15}
@@ -1808,12 +1988,24 @@ class ScheduledPublishAtTest(unittest.TestCase):
         self.assertTrue(yu.check_publish_at("bogus", now))
 
     def test_repo_config_scheduled(self) -> None:
-        sp = yu.load_daily()["scheduled_publish"]
+        daily = yu.load_daily()
+        sp = daily["scheduled_publish"]
         # 2026-11-13 사용자: "아침에도 예약공개로 하자", "저녁편 등록 시점을 17시로 바꿀 수 있어?",
-        # "그럼 아침 공개는 06시에 공개로 바뀌게 해줘. 이것도 출근길 노출을 노리는거야"(07:00 제안을 바꿈)
+        # "그럼 아침 공개는 06시에 공개로 바뀌게 해줘. 이것도 출근길 노출을 노리는거야"(07:00 제안을 바꿈) → 06:00·17:00.
+        # 2026-11-16 사용자 "어 너가 생각하는 모든 것들을 다 적용해봐. 무한한 권한과 지지를 보낸다" 뒤 한 주 시험: 목표는 하나,
+        # 자리 이름 morning 이 17:00 에 공개(evening_kst 삭제) — config/daily.json _trial_2026_11_16. 06:00·17:00 두 목표의 동작은
+        # DueTargetsTest·AutoSlotTest 가 SCHED2(합성 설정)로 그대로 본다.
         self.assertIs(sp["enabled"], True)
-        self.assertEqual((sp["morning_kst"], sp["evening_kst"]), ("06:00", "17:00"))
+        self.assertEqual(sp["morning_kst"], "17:00")
+        self.assertNotIn("evening_kst", sp)
+        self.assertIn('morning_kst "06:00", evening_kst "17:00"', daily["_trial_2026_11_16"])   # 되돌리는 법
         self.assertEqual(sp["late_grace_hours"], 4)                              # 제작 세션의 제안
+        st = yu.schedule_settings(daily)
+        self.assertEqual(st["times"], {"morning": (17, 0)})
+        for h in (2, 12, 20):                                                     # 하루 한 목표, 언제나 17:00 KST
+            for t in yu.due_targets(daily, _kst(2026, 11, 17, h, 0)):
+                self.assertEqual((t["slot"], t["target"].hour, t["target"].minute), ("morning", 17, 0))
+        self.assertEqual(yu.slot_label(daily, "morning"), "17:00 공개 편")
         self.assertIn("그럼 아침 공개는 06시에 공개로 바뀌게 해줘", yu.load_daily()["_scheduled_publish"])
         self.assertIn("아침에도 예약공개로 하자", yu.load_daily()["_scheduled_publish"])
         self.assertIn("제작 세션의 제안", yu.load_daily()["_scheduled_publish"])
@@ -2163,6 +2355,28 @@ class AutoSlotTest(unittest.TestCase):
             self.assertEqual([(r["dir"], r["status"], r["publish_at"]) for r in out["results"]],
                              [(yu._rel(old), "dry-run", "2026-11-13T08:45:00Z"), (yu._rel(new), "dry-run", "2026-11-13T21:00:00Z")])
             self.assertIn("예약 공개", out["note"])
+            self.assertEqual([s["label"] for s in out["slots"]], ["17:00 공개 편", "06:00 공개 편"])
+            self.assertTrue(out["note"].startswith("17:00 공개 편(11-13) (늦음): "), out["note"])
+
+    def test_slot_label_follows_publish_time(self) -> None:
+        """2026-11-16 한 주 시험: 자리 이름 morning 이 17:00 에 공개된다 — 알림 글은 '아침'이 아니라 공개 시각을 쓴다."""
+        self.assertEqual(yu.slot_label({"scheduled_publish": SCHED2}, "morning"), "06:00 공개 편")
+        trial = {"scheduled_publish": {"enabled": True, "morning_kst": "17:00", "min_lead_min": 15, "late_grace_hours": 4}}
+        self.assertEqual(yu.slot_label(trial, "morning"), "17:00 공개 편")
+        self.assertEqual(yu.slot_label(trial, "evening"), "저녁")                # 시각이 없는 자리
+        self.assertEqual(yu.slot_label({}, "morning"), "아침")                   # 예약 공개 꺼짐
+        self.assertEqual(yu.slot_label({"scheduled_publish": {"enabled": True, "morning_kst": "6"}}, "morning"), "아침")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            _, new, daily, q = self._setup(root, FakeApi(), sched=trial["scheduled_publish"], evening={"enabled": False},
+                                           queue_old=False)
+            now = _kst(2026, 11, 18, 2, 0)
+            with mock.patch.object(yu, "_utcnow", lambda: now):
+                out = yu.daily_next(_cfg(channel_id="UC1"), daily, q, root, today=now.date(), dry_run=True, slot="auto", now=now)
+            self.assertEqual([(s["key"], s["label"], s["status"]) for s in out["slots"]],
+                             [("2026-11-18-morning", "17:00 공개 편", "dry-run")])
+            self.assertEqual([(r["dir"], r["publish_at"]) for r in out["results"]], [(yu._rel(new), "2026-11-18T08:00:00Z")])
+            self.assertNotIn("아침", out["note"])
 
     def test_invalid_slot(self) -> None:
         with tempfile.TemporaryDirectory(dir=yu.REPO) as d, self.assertRaises(ValueError):
@@ -2257,10 +2471,21 @@ class CliTest(unittest.TestCase):
             self.assertIn("환경 변수 없음", res["results"][0]["error"])
 
     def test_sweep_cli_dry_run_without_secrets(self) -> None:
-        """저장소 설정·기록 그대로 --sweep --dry-run: 비밀값이 없으면 읽지도 쓰지도 않고 그렇다고 말한다."""
+        """저장소 기록으로 --sweep --dry-run: 비밀값이 없으면 읽지도 쓰지도 않고 그렇다고 말한다.
+        2026-11-16 한 주 시험 동안 저장소 설정은 점검이 꺼져 있다(config/republish.json _pause_2026_11_16) — 그대로 돌리면
+        '꺼짐'이라 말하고, 켠 사본(합성 설정)으로 비밀값 없는 경로를 예전처럼 본다."""
         before = {p: p.read_bytes() for p in yu.DEFAULT_FINALS.glob("*/youtube_upload.json")}
         with mock.patch.dict("os.environ", {}, clear=True):
             rc, res = self._main(["--sweep", "--dry-run"])
+        self.assertEqual(rc, 0, res)
+        self.assertEqual(res["kind"], "sweep")
+        self.assertIn("꺼짐", res["note"])
+        rcfg = json.loads(yu.DEFAULT_REPUBLISH.read_text(encoding="utf-8"))
+        rcfg["auto_sweep"] = {**rcfg["auto_sweep"], "enabled": True}
+        with tempfile.TemporaryDirectory() as d, mock.patch.dict("os.environ", {}, clear=True):
+            on = Path(d) / "republish.json"
+            on.write_text(json.dumps(rcfg, ensure_ascii=False), encoding="utf-8")
+            rc, res = self._main(["--sweep", "--dry-run", "--republish-config", str(on)])
         self.assertEqual(rc, 0, res)
         self.assertEqual(res["kind"], "sweep")
         self.assertIn("비밀값이 없어", res["note"])
