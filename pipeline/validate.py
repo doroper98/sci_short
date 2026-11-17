@@ -11,6 +11,9 @@ Expected layout (what run.sh produces):
 --hdr auto (default) checks the HDR version only when the file exists (no file = no HDR rows, so older episodes
 validate as before). require also FAILs when it is missing (new episodes' run.sh passes this); skip adds one WARN row.
 
+Opener: the first sentence must not start with '오늘' or contain '오늘은' (FAIL; 2026-11-17 user rule
+"영상 시작할때 \"오늘은\"을 빼자. 규칙에 넣어"). narrate.py refuses the same script before synthesis.
+
 First moment (pipeline/first_moment.py, config/first_moment.json; docs/CHANNEL_GROWTH.md 9절 방안 2, applied under the
 2026-11-16 user statement "어 너가 생각하는 모든 것들을 다 적용해봐. 무한한 권한과 지지를 보낸다"): how much of the screen changes
 by 1 s / 2 s and when the first sound starts. The result is written as "first_moment" into validate.json and into
@@ -35,6 +38,10 @@ try:
     from pipeline import first_moment as fmod
 except ImportError:          # python pipeline/validate.py (script dir on sys.path, not the repo root)
     import first_moment as fmod
+try:
+    from pipeline.narration import script_schema as narr_schema
+except ImportError:          # python pipeline/validate.py: pipeline/ is on sys.path → narration/ is importable as a package
+    from narration import script_schema as narr_schema
 
 CAPTION_SIZE_PX, CAPTION_MAX_WIDTH_PX = 44, 840  # width + maxChars wrap; keep in sync with pipeline/render/captions.mjs CAPTION_DEFAULTS
 MAX_LINES, MAX_LINE_CHARS = 2, 22
@@ -112,6 +119,22 @@ def hdr_rows(pr: dict | None, sdr_duration: float | None, hdr_path: str, slug: s
         f"hdr {dur if dur is None else f'{dur:.3f}s'} sdr {sdr_duration if sdr_duration is None else f'{sdr_duration:.3f}s'}")
     add("HDR audio stream (aac)", any(s.get("codec_name") == "aac" for s in au), f"{[s.get('codec_name') for s in au]}")
     return rows
+
+
+OPENER_CHECK = "첫 문장에 '오늘은' 없음"
+
+
+def opener_row(tl: dict | None) -> tuple[str, str, str]:
+    """timeline 첫 문장 → 검사 행. '오늘'로 시작하거나 '오늘은'이 있으면 FAIL(2026-11-17 사용자: "영상 시작할때 \"오늘은\"을
+    빼자. 규칙에 넣어"). 옛 편을 다시 만들 때도 같다. Pure function."""
+    sents = (tl or {}).get("sentences") or []
+    if not sents:
+        return (OPENER_CHECK, "WARN", "timeline 에 문장이 없음")
+    s0 = sents[0]
+    probs = narr_schema.opener_problems(s0.get("text"), s0.get("tts"))
+    if probs:
+        return (OPENER_CHECK, "FAIL", probs[0])
+    return (OPENER_CHECK, "PASS", repr((s0.get("text") or "")[:40]))
 
 
 FM_CHECK = "첫 순간 (1초·2초 화면 변화, 첫 소리)"
@@ -231,6 +254,7 @@ def main() -> int:
     stills = sorted((d / "stills").glob("still_*.jpg")) if (d / "stills").exists() else []
     add("review stills + contact sheet", sheet.exists() and len(stills) > 0, f"{len(stills)} stills, contact sheet {'present' if sheet.exists() else 'missing'}")
     if tl:
+        rows.append(opener_row(tl))
         deg = bool(tl.get("degraded"))
         add("timeline not degraded", not deg, f"degraded={deg} voice={tl.get('voice')!r}", warn=True)
     vj = mp4.with_name("validation.json") if mp4 else None
