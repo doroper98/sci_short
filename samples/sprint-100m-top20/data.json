@@ -1,0 +1,36 @@
+{
+  "title": "Men's 100 m — all-time top 20 (best legal mark per athlete)",
+  "source": "World Athletics all-time list, men's 100 m, best by athlete, read 2026-11-17",
+  "note": "Ties are ordered by date, as World Athletics orders them. Wind in m/s; all marks wind-legal (<= +2.0).",
+  "athletes": [
+    {"rank": 1,  "name": "Usain Bolt",         "country": "JAM", "time": 9.58, "year": 2009, "date": "2009-08-16", "city": "Berlin",        "wind": 0.9},
+    {"rank": 2,  "name": "Tyson Gay",          "country": "USA", "time": 9.69, "year": 2009, "date": "2009-09-20", "city": "Shanghai",      "wind": 2.0},
+    {"rank": 2,  "name": "Yohan Blake",        "country": "JAM", "time": 9.69, "year": 2012, "date": "2012-08-23", "city": "Lausanne",      "wind": -0.1},
+    {"rank": 4,  "name": "Asafa Powell",       "country": "JAM", "time": 9.72, "year": 2008, "date": "2008-09-02", "city": "Lausanne",      "wind": 0.2},
+    {"rank": 5,  "name": "Justin Gatlin",      "country": "USA", "time": 9.74, "year": 2015, "date": "2015-05-15", "city": "Doha",          "wind": 0.9},
+    {"rank": 6,  "name": "Kishane Thompson",   "country": "JAM", "time": 9.75, "year": 2025, "date": "2025-06-27", "city": "Kingston",      "wind": 0.8},
+    {"rank": 7,  "name": "Christian Coleman",  "country": "USA", "time": 9.76, "year": 2019, "date": "2019-09-28", "city": "Doha",          "wind": 0.6},
+    {"rank": 7,  "name": "Trayvon Bromell",    "country": "USA", "time": 9.76, "year": 2021, "date": "2021-09-18", "city": "Nairobi",       "wind": 1.2},
+    {"rank": 7,  "name": "Fred Kerley",        "country": "USA", "time": 9.76, "year": 2022, "date": "2022-06-24", "city": "Eugene",        "wind": 1.4},
+    {"rank": 10, "name": "Ferdinand Omanyala", "country": "KEN", "time": 9.77, "year": 2021, "date": "2021-09-18", "city": "Nairobi",       "wind": 1.2},
+    {"rank": 10, "name": "Oblique Seville",    "country": "JAM", "time": 9.77, "year": 2025, "date": "2025-09-14", "city": "Tokyo",         "wind": 0.3},
+    {"rank": 12, "name": "Nesta Carter",       "country": "JAM", "time": 9.78, "year": 2010, "date": "2010-08-29", "city": "Rieti",         "wind": 0.9},
+    {"rank": 13, "name": "Maurice Greene",     "country": "USA", "time": 9.79, "year": 1999, "date": "1999-06-16", "city": "Athens",        "wind": 0.1},
+    {"rank": 13, "name": "Noah Lyles",         "country": "USA", "time": 9.79, "year": 2024, "date": "2024-08-04", "city": "Paris",         "wind": 1.0},
+    {"rank": 13, "name": "Kenny Bednarek",     "country": "USA", "time": 9.79, "year": 2025, "date": "2025-08-01", "city": "Eugene",        "wind": 1.8},
+    {"rank": 16, "name": "Steve Mullings",     "country": "JAM", "time": 9.80, "year": 2011, "date": "2011-06-04", "city": "Eugene",        "wind": 1.3},
+    {"rank": 16, "name": "Marcell Jacobs",     "country": "ITA", "time": 9.80, "year": 2021, "date": "2021-08-01", "city": "Tokyo",         "wind": 0.1},
+    {"rank": 18, "name": "Richard Thompson",   "country": "TTO", "time": 9.82, "year": 2014, "date": "2014-06-21", "city": "Port of Spain", "wind": 1.7},
+    {"rank": 18, "name": "Akani Simbine",      "country": "RSA", "time": 9.82, "year": 2024, "date": "2024-08-04", "city": "Paris",         "wind": 1.0},
+    {"rank": 18, "name": "Bryan Levell",       "country": "JAM", "time": 9.82, "year": 2025, "date": "2025-07-23", "city": "Eisenstadt",    "wind": 1.3}
+  ],
+  "also_tied": [
+    {"rank": 18, "name": "Courtney Lindsey",   "country": "USA", "time": 9.82, "year": 2025, "date": "2025-08-01", "city": "Eugene", "note": "21st name on the list (four men share 18th); not in the race — the video shows the first 20 rows."}
+  ],
+  "pace_profile": {
+    "athlete": "Usain Bolt, 9.58, Berlin 2009-08-16",
+    "source": "IAAF/DLV biomechanics project, Berlin 2009, as widely reported (first 60 m and total checked against secondary sources only)",
+    "reaction_s": 0.146,
+    "cumulative_s_at_10m_steps": [1.89, 2.88, 3.78, 4.64, 5.47, 6.29, 7.10, 7.92, 8.75, 9.58]
+  }
+}
