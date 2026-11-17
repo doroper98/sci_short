@@ -55,6 +55,13 @@ export const speed = (i, tau) => Sp(tau * kOf(i)) * kOf(i);
 /** gap of athlete i behind the line at the instant Bolt finishes */
 export const gapAtBoltFinish = i => 100 - dist(i, T_REF);
 
+/** tag name: surname in capitals; athletes sharing a surname get their first initial ("K. THOMPSON", "R. THOMPSON") */
+const surname = a => a.name.split(' ').slice(1).join(' ');
+export const tagName = i => {
+  const a = ATH[i], sn = surname(a), shared = ATH.filter(b => surname(b) === sn).length > 1;
+  return (shared ? `${a.name[0]}. ` : '') + sn.toUpperCase();
+};
+
 /** rank label as World Athletics prints shared places: "2=", "7=" … */
 export function rankLabel(i) {
   const r = ATH[i].rank, shared = ATH.filter(a => a.rank === r).length > 1 || (DATA.also_tied || []).some(a => a.rank === r);

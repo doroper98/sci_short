@@ -1,6 +1,6 @@
 // The race: pixel picture (draw) + crisp HD type (overlay). All positions, the clock and the board come from model.mjs.
 import {W, H, SCALE, C, clamp, lerp, smooth, ease} from './px.mjs';
-import {ATH, N, TL, T_REF, dist, speed, phase, kOf, raceTime, cameraD, laneOf, rankLabel, phaseLabel, gapAtBoltFinish, videoTimeOf, DATA} from './model.mjs';
+import {ATH, N, TL, T_REF, tagName, dist, speed, phase, kOf, raceTime, cameraD, laneOf, rankLabel, phaseLabel, gapAtBoltFinish, videoTimeOf, DATA} from './model.mjs';
 import {camera, toScreen, drawWorld, drawDistanceBoards} from './world.mjs';
 import {poseFor, drawRunner, drawShadow, KITS, SKINS, BODY_H} from './runner.mjs';
 import {drawFlag} from './flags.mjs';
@@ -51,15 +51,20 @@ export function draw(P, t) {
 const SH = 'rgba(4,7,16,0.65)';
 const GOLD = '#F7C766', AMBER = '#F2A742', OFF = '#F6EFE2', MUTED_GOLD = '#CDAE6A';
 const TAG_H = 28, TAG_DX = 26;
+// tag contents, left to right: flag, SURNAME (off-white), time (clock gold), year (muted)
+const TAG_FONT = {name: 20, year: 19}, TAG_GAP = {pad: 6, flag: 7, name: 9, time: 6, end: 10};
+const YEAR_MUTED = '#A9A397';
 
 /** tag rectangle (screen px) for runner r: right edge TAG_DX px left of his centre, bottom 6 px above his highest head top.
  *  TAG_DX is 26, not the 8 of the brief: with 8 the kicked heel of the runner just behind (up-left) clipped the leader's tag. */
 export function tagGeom(stage, r, wide = false) {
   const a = ATH[r.i];
-  const wt = stage.measure(a.time.toFixed(2), {size: 22, weight: 700}), wy = stage.measure(String(a.year), {size: 20, weight: 500});
-  const w = 6 + 30 + 7 + wt + 7 + wy + 9;
-  const xr = SCALE * r.gx - TAG_DX, yb = SCALE * (r.gy - BODY_H * r.s) - 6;
-  return {x: xr - w, y: yb - TAG_H, w, h: TAG_H, wt, wy};
+  const wn = stage.measure(tagName(r.i), {size: TAG_FONT.name, weight: 700}), wt = stage.measure(a.time.toFixed(2), {size: 22, weight: 700}), wy = stage.measure(String(a.year), {size: TAG_FONT.year, weight: 500});
+  const w = TAG_GAP.pad + 30 + TAG_GAP.flag + wn + TAG_GAP.name + wt + TAG_GAP.time + wy + TAG_GAP.end;
+  // right-anchored TAG_DX left of the runner, but never past x 940 (platform buttons): during the push-in and the early-race
+  // camera lag the far-lane tags slide left by up to ~24 px instead (the nearer runners' heads are >= 42 px below, so this is safe)
+  const xr = Math.min(940, SCALE * r.gx - TAG_DX), yb = SCALE * (r.gy - BODY_H * r.s) - 6;
+  return {x: xr - w, y: yb - TAG_H, w, h: TAG_H, wn, wt, wy};
 }
 
 function pill(ctx, x, y, w, h, fill, stroke = null) {
@@ -76,10 +81,11 @@ function drawTag(T, r, t, alpha = 1) {
   if (won) pill(ctx, g.x, g.y, g.w, g.h, GOLD);
   else pill(ctx, g.x, g.y, g.w, g.h, crossed ? 'rgba(18,24,44,0.86)' : 'rgba(8,12,26,0.74)', crossed ? `rgba(247,199,102,${0.35 + 0.65 * flash})` : null);
   if (flash > 0) { ctx.globalAlpha = 0.55 * flash * alpha; pill(ctx, g.x, g.y, g.w, g.h, '#FFFFFF'); ctx.globalAlpha = alpha; }
-  drawFlag(ctx, a.country, g.x + 6, g.y + 4, 30, 20);
-  const tx = g.x + 6 + 30 + 7, cy = g.y + g.h / 2 + 1;
-  stage.text(a.time.toFixed(2), tx, cy, {size: 22, weight: 700, color: won ? '#1A1408' : '#FFFFFF'});
-  stage.text(String(a.year), tx + g.wt + 7, cy, {size: 20, weight: 500, color: won ? '#3B2C0C' : MUTED_GOLD});
+  drawFlag(ctx, a.country, g.x + TAG_GAP.pad, g.y + 4, 30, 20);
+  const nx = g.x + TAG_GAP.pad + 30 + TAG_GAP.flag, tx = nx + g.wn + TAG_GAP.name, yx = tx + g.wt + TAG_GAP.time, cy = g.y + g.h / 2 + 1;
+  stage.text(tagName(r.i), nx, cy, {size: TAG_FONT.name, weight: 700, color: won ? '#1A1408' : OFF});
+  stage.text(a.time.toFixed(2), tx, cy, {size: 22, weight: 700, color: won ? '#5A1E0E' : GOLD});
+  stage.text(String(a.year), yx, cy, {size: TAG_FONT.year, weight: 500, color: won ? '#3B2C0C' : YEAR_MUTED});
   if (won) {                                                                  // "WR" chip, sitting on the tag's upper-right corner
     const cx = g.x + g.w - 40, cy = g.y - 20;
     ctx.beginPath(); ctx.roundRect(cx, cy, 40, 22, 6); ctx.fillStyle = '#C8202F'; ctx.fill();
@@ -164,7 +170,7 @@ function gapBracket(T, a) {
   ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]);
   ctx.moveTo(p[0] - nx, p[1] - ny); ctx.lineTo(p[0] + nx, p[1] + ny); ctx.moveTo(q[0] - nx, q[1] - ny); ctx.lineTo(q[0] + nx, q[1] + ny); ctx.stroke();
   // label in the empty space past the line, with a thin leader
-  const m = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2], lx = 740, ly = 1165;           // past the finish line: empty track at this instant
+  const m = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2], lx = 770, ly = 1190;           // past the finish line: empty track at this instant
   ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.beginPath(); ctx.moveTo(m[0] + 4, m[1] + 6); ctx.lineTo(lx + 90, ly - 50); ctx.stroke();
   pill(ctx, lx - 170, ly - 50, 340, 104, 'rgba(8,12,26,0.88)', 'rgba(255,255,255,0.6)');
   ctx.restore();

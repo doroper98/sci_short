@@ -1,7 +1,7 @@
 // node --test samples/sprint-100m-top20/test_model.mjs
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {ATH, N, S, Sp, dist, gapAtBoltFinish, raceTime, videoTimeOf, rankLabel, T_REF, TL} from './model.mjs';
+import {ATH, N, S, Sp, dist, gapAtBoltFinish, raceTime, videoTimeOf, rankLabel, tagName, T_REF, TL} from './model.mjs';
 
 test('every athlete is at 100.000 m (±1 mm) at his listed time', () => {
   for (let i = 0; i < N; i++) assert.ok(Math.abs(dist(i, ATH[i].time) - 100) < 0.001, `${ATH[i].name}: ${dist(i, ATH[i].time)}`);
@@ -45,4 +45,15 @@ test('video clock: race time = video time - gun, freeze, slow motion ×0.1, ever
 
 test('rank labels match World Athletics shared places', () => {
   assert.deepEqual(ATH.map((a, i) => rankLabel(i)), ['1', '2=', '2=', '4', '5', '6', '7=', '7=', '7=', '10=', '10=', '12', '13=', '13=', '13=', '16=', '16=', '18=', '18=', '18=']);
+});
+
+test('tag names: unique, surname in capitals from the athlete\'s own name, initial only when a surname is shared', () => {
+  const names = ATH.map((a, i) => tagName(i));
+  assert.equal(new Set(names).size, N);
+  ATH.forEach((a, i) => {
+    const sn = a.name.split(' ').slice(1).join(' ').toUpperCase();
+    assert.ok(names[i] === sn || names[i] === `${a.name[0]}. ${sn}`, names[i]);
+  });
+  assert.equal(names[5], 'K. THOMPSON'); assert.equal(names[17], 'R. THOMPSON'); assert.equal(names[0], 'BOLT');
+  console.log('  ' + names.join(', '));
 });
