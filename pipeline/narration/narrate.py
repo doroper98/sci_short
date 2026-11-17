@@ -34,7 +34,7 @@ from pipeline.narration import forced_align as fa  # noqa: E402
 from pipeline.narration import prosody, synth  # noqa: E402
 from pipeline.narration import trim as trim_mod  # noqa: E402
 from pipeline.narration.pronounce import PronounceError, TtsLintError, auto_tts, lint_tts  # noqa: E402
-from pipeline.narration.script_schema import Script, ScriptError, load_script  # noqa: E402
+from pipeline.narration.script_schema import Script, ScriptError, load_script, script_opener_problems  # noqa: E402
 from pipeline.narration.timeline import place_sentences, scene_bounds  # noqa: E402
 from pipeline.narration.voice_config import (  # noqa: E402
     SOURCE_COMMIT, VoiceConfig, load_voice_config, models_dir, sha256_file,
@@ -202,6 +202,9 @@ def build(args: argparse.Namespace) -> int:
     vc = load_voice_config()
     mdir = models_dir(args.models_dir)
     script = load_script(Path(args.script))
+    opener = script_opener_problems(script)       # 2026-11-17 사용자 규칙: 영상 시작에 '오늘은'을 쓰지 않는다 — 합성 전에 막는다
+    if opener:
+        raise ScriptError(opener)
     out = Path(args.out).resolve()
     raw_dir, cor_dir = out / "raw", out / "corrected"
     raw_dir.mkdir(parents=True, exist_ok=True)

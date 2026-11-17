@@ -6,6 +6,8 @@
 - 모르는 키는 오류(오타가 조용히 무시되지 않게). 주석이 필요하면 "notes"(문자열) 를 쓴다.
 - id·scene 은 파일 이름에 들어가므로 [A-Za-z0-9_-] 만. id 는 유일, 같은 scene 의 문장은 연속해야 한다.
 - lead_sec·tail_sec·scene_lead_sec·default_gap_sec 는 생략하면 1.0·0.8·0.4·0.6.
+- 첫 문장은 '오늘'로 시작하지 않고 '오늘은'을 담지 않는다(opener_problems, 2026-11-17 사용자 "영상 시작할때 \"오늘은\"을 빼자.
+  규칙에 넣어"). 형식 검증(validate_script)과 따로 두어 옛 대본도 읽을 수는 있게 하고, 합성(narrate)과 완성본 검사(validate)가 막는다.
 """
 
 from __future__ import annotations
@@ -122,6 +124,31 @@ def validate_script(d: object) -> Script:
     if errs:
         raise ScriptError(errs)
     return Script(title=title.strip(), language="ko", sentences=tuple(sents), **nums)  # type: ignore[arg-type]
+
+
+# 2026-11-17 사용자: "영상 시작할때 \"오늘은\"을 빼자. 규칙에 넣어". 2026-11-13 결정("1,2다 적용해")으로 첫 문장은 이미
+# 그 편의 물음이지만, 손으로 막는 것이 없었다. '오늘날'은 다른 말이라 막지 않는다.
+OPENER_BANNED_START = re.compile(r"^\s*[\"'“‘(]*\s*오늘(?!날)")
+OPENER_BANNED_WORD = "오늘은"
+
+
+def opener_problems(first_text: str | None, first_tts: str | None = None) -> list[str]:
+    """첫 문장(표시 text 와 발음 tts)에서 '오늘' 시작·'오늘은'을 찾는다. 문제가 없으면 []. Pure function."""
+    out = []
+    for kind, t in (("text", first_text), ("tts", first_tts)):
+        if not t:
+            continue
+        if OPENER_BANNED_START.match(t) or OPENER_BANNED_WORD in t:
+            out.append(f"첫 문장 {kind} 에 '오늘은'이 있다({t[:40]!r}) — 영상 시작에 '오늘은'을 쓰지 않는다"
+                       " (2026-11-17 사용자 규칙). 그 편의 물음으로 바로 시작한다(SKILL.md 2단계)")
+    return out
+
+
+def script_opener_problems(script: "Script") -> list[str]:
+    if not script.sentences:
+        return []
+    s = script.sentences[0]
+    return opener_problems(s.text, s.tts)
 
 
 def load_script(path: Path) -> Script:
