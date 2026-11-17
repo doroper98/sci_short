@@ -27,10 +27,12 @@ export const theme = 'noturno';   // 'noturno' (default) | 'slate' | 'graphite' 
 // Visual-only events (sound events live in sound.json; both are merged into ctx.events).
 export const events = [];
 
-// Caption position per scene (baseline of the last caption line). Default ≈ 1480 for 1920 height.
+// Caption position per scene (baseline of the last caption line). Default = stage.safe.captionBase = 1380 for 1920 height
+// (raised from 1480 on 2026-11-17 so captions clear YouTube's channel-name row). A 2-line caption starts at ~1260: keep key
+// content above ~1240, or move the caption for that scene.
 export const captionLayout = {
   // default: {plate: true},          // square backing plate for every scene (default is shadowed text, no plate)
-  // phenomenon: {y: 1480, plate: true},
+  // phenomenon: {y: 1380, plate: true},
 };
 
 export const titles = {

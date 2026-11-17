@@ -14,6 +14,12 @@ export const FONT_DIR = process.env.SCISHORT_FONT_DIR || path.join(REPO_ROOT, 'a
 // bottom: platform UI (channel name, description, music ticker) -> no critical content
 // right: action buttons (like/comment/share) -> keep labels and key objects out
 export const SAFE_ZONES = Object.freeze({top: 200, bottom: 420, right: 140, left: 60});
+// Caption lift (2026-11-17 user: "유튜브 상에서 이렇게 자막있는 부분이 좀 살짝 아래에 위치해 있거든? 조금 위로 올리면 좋겠네" —
+// a phone screenshot of 28 tides showed the caption line sitting on the channel-name row). The baseline of the LAST caption
+// line is this far above the platform-UI zone (safe.y1 = 1500): 120 -> y = 1380. It was 20 (y = 1480) until 2026-11-16.
+// The size of the lift (100 px) is the production session's proposal. Measured on that screenshot (video px): the owner
+// view's channel row starts at ~1430, so a caption ending at ~1394 clears it by ~35 px; ordinary viewers' UI starts lower.
+export const CAPTION_LIFT = 120;
 
 const SYS = {
   cjk: ['/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc', '/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc', '/System/Library/Fonts/AppleSDGothicNeo.ttc', '/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc'],
@@ -81,8 +87,10 @@ export function createStage({width = 1080, height = 1920, fps = 30, fonts = {}, 
   const k = height / 1920;
   const safe = {top: SAFE_ZONES.top * k, bottom: SAFE_ZONES.bottom * k, right: SAFE_ZONES.right * k, left: SAFE_ZONES.left * k};
   Object.assign(safe, {x0: safe.left, x1: width - safe.right, y0: safe.top, y1: height - safe.bottom, cx: width / 2});   // centre of the frame: a left-shifted stage reads as off-centre on phones; the right margin only limits text width
-  // Top of a default 2-line caption plate (captions.mjs defaults). Keep key content above captionTop - 20.
-  safe.captionTop = safe.y1 - 140 * k;
+  // Default caption position (captions.mjs): captionBase = baseline of the last line, captionTop = top of a 2-line caption
+  // plate (44 px, line height 1.34, padY 16 -> 117 px above the baseline). Keep key content above captionTop - 20.
+  safe.captionBase = safe.y1 - CAPTION_LIFT * k;
+  safe.captionTop = safe.captionBase - 120 * k;
 
   const applyFont = (o = {}) => {
     const role = o.role || (o.display ? 'display' : 'body');
