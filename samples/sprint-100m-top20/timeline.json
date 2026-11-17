@@ -1,0 +1,26 @@
+{
+ "_": "Video-time constants shared by run.mjs (picture) and sound.py (sound). Seconds of video time.",
+ "fps": 30,
+ "duration": 18.5,
+ "push_in": [
+  0.0,
+  0.7
+ ],
+ "push_in_from_m": -2.5,
+ "gun": 1.0,
+ "freeze": [
+  10.58,
+  11.18
+ ],
+ "slowmo_rate": 0.1,
+ "slowmo_end": 13.58,
+ "runout_rate_to": 0.45,
+ "runout_ramp_s": 0.6,
+ "board_in": [
+  14.1,
+  14.7
+ ],
+ "row_stagger": 0.03,
+ "fade_out_s": 0.3,
+ "_changes": "Brief: freeze 10.58-10.98, slow motion to 13.38, board 13.9-14.5. Freeze lengthened to 0.6 s so the 2.8 m gap can be read; later events shift by 0.2 s; total length unchanged."
+}
