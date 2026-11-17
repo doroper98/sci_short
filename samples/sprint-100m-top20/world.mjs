@@ -6,7 +6,7 @@
 // The camera only translates along the track by whole buffer pixels: off = round(4 * dcam), shift = (off, 2 off).
 import {W, H, C, bayer, ih, shade} from './px.mjs';
 
-export const LANES = 20, ANCHOR = [76, 478], ANCHOR_U = 19.5;          // lane 19 centre sits at buffer (76, 478) = screen (228, 1434); brief said ~(216, 1434), moved 12 px right so the leader's tag clears the left edge
+export const LANES = 20, ANCHOR = [93, 478], ANCHOR_U = 19.5;          // lane 19 centre at buffer (93, 478) = screen (279, 1434). Brief: ~(216, 1434); +12 px so the leader's tag cleared the left edge, then +51 px (17 buffer px, the smallest whole-pixel shift >= the measured 48.7 px) when the tags got surnames
 export function camera(dcam) {
   const off = Math.round(4 * dcam);
   // world point (dcam, ANCHOR_U) = (4 dcam - 12 u, 8 dcam + 12 u) must land on ANCHOR; 4 dcam is replaced by the whole number off

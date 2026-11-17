@@ -54,7 +54,7 @@ if (mode === 'video') {
   fs.writeFileSync(p, JSON.stringify(ev, null, 1) + '\n'); console.log('events', p);
 } else if (mode === 'check') {
   const ov = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
-  const L = scene.LAYOUT, problems = [], stats = {minTagGap: Infinity, minTagBody: Infinity};
+  const L = scene.LAYOUT, problems = [], stats = {minTagGap: Infinity, minTagBody: Infinity, minTagLeft: Infinity, maxBodyRight: -Infinity, widest: 0};
   const topBlock = {x: 0, y: 0, w: 1080, h: L.sub + 18};
   const n = Math.round(TL.duration * TL.fps);
   for (let k = 0; k < n; k++) {
@@ -62,14 +62,16 @@ if (mode === 'video') {
     frame(t);
     const tags = lastTags.map(g => ({i: g.i, x: g.x, y: g.y, w: g.w, h: g.h}));
     const bodies = scene.lastBodies.flatMap(b => b.bb.segs.map(q => ({i: b.i, x: q[0] * SCALE, y: q[1] * SCALE, w: (q[2] - q[0]) * SCALE, h: (q[3] - q[1]) * SCALE})));
+    for (const b of bodies) stats.maxBodyRight = Math.max(stats.maxBodyRight, b.x + b.w);
     for (const a of tags) {
+      if (a.x < stats.minTagLeft) { stats.minTagLeft = a.x; stats.minAt = `tag ${a.i} t=${t.toFixed(2)}`; } if (a.x + a.w > (stats.maxRight ?? -1)) { stats.maxRight = a.x + a.w; stats.maxAt = `tag ${a.i} t=${t.toFixed(2)}`; } stats.widest = Math.max(stats.widest, a.w);
       if (a.x < 40 || a.x + a.w > 940 || a.y < 120 || a.y + a.h > 1500) problems.push(`t=${t.toFixed(3)} tag ${a.i} outside safe area (${a.x.toFixed(0)},${a.y.toFixed(0)},${(a.x + a.w).toFixed(0)},${(a.y + a.h).toFixed(0)})`);
       if (ov(a, topBlock) && a.x + a.w > 200) problems.push(`t=${t.toFixed(3)} tag ${a.i} meets top block (y=${a.y.toFixed(0)})`);
       for (const b of tags) if (b.i > a.i) { if (ov(a, b)) problems.push(`t=${t.toFixed(3)} tags ${a.i}/${b.i} overlap`); stats.minTagGap = Math.min(stats.minTagGap, Math.max(b.y - (a.y + a.h), a.y - (b.y + b.h), b.x - (a.x + a.w), a.x - (b.x + b.w))); }
       for (const b of bodies) { if (ov(a, b)) problems.push(`t=${t.toFixed(3)} tag ${a.i} overlaps body ${b.i}`); stats.minTagBody = Math.min(stats.minTagBody, Math.max(b.y - (a.y + a.h), a.y - (b.y + b.h), b.x - (a.x + a.w), a.x - (b.x + b.w))); }
     }
   }
-  console.log(`checked frames up to the board; min tag-tag gap ${stats.minTagGap.toFixed(1)} px, min tag-body gap ${stats.minTagBody.toFixed(1)} px`);
+  console.log(`checked frames up to the board; min tag-tag gap ${stats.minTagGap.toFixed(1)} px, min tag-body gap ${stats.minTagBody.toFixed(1)} px, min tag left edge ${stats.minTagLeft.toFixed(1)} px, widest tag ${stats.widest.toFixed(1)} px, max body right edge ${stats.maxBodyRight.toFixed(1)} px (limb boxes incl. outline); leftmost tag edge at ${stats.minAt}, rightmost tag edge ${stats.maxRight.toFixed(1)} at ${stats.maxAt}`);
   // summarise: one line per kind of problem with its first/last time and count
   const kinds = new Map();
   for (const pr of problems) { const [, t, rest] = pr.match(/^t=([\d.]+) (.*?)(?: \(.*)?$/); const k = rest.replace(/\(.*$/, ''); const e = kinds.get(k) || {n: 0, t0: t, t1: t}; e.n++; e.t1 = t; kinds.set(k, e); }
