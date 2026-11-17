@@ -10,7 +10,7 @@ export const CAPTION_DEFAULTS = Object.freeze({
   maxChars: 22,      // per line, spaces included (validate.py uses the same limit)
   hold: 0.15,        // keep a cue up to 0.15 s after speech ends unless the next cue starts
   fade: 0.08,
-  y: null,           // baseline of the LAST line; default = H - safe.bottom - 20 (≈1480 for 1920)
+  y: null,           // baseline of the LAST line; default = stage.safe.captionBase (1380 for 1920 — raised 100 px on 2026-11-17, see CAPTION_LIFT in stage.mjs)
   x: null,           // centre x; default = centre of the safe column (keeps clear of action buttons)
   plate: false,      // false = text with a soft shadow only (default); true or 'square' = backing plate (square corners); 'round' = radius 18
   padX: 26, padY: 16, radius: 0,
@@ -86,7 +86,7 @@ export function drawCaptionText(stage, text, opts = {}) {
   const L = layoutCaption(stage, text, opt);
   if (L.overflow && !warned.has(text)) { warned.add(text); console.warn(`caption exceeds ${opt.maxLines} lines (${L.lines.length}): "${stripMarked(text)}" — split the cue in the script`); }
   const lh = L.size * opt.lineHeight;
-  const yLast = opt.y ?? stage.H - stage.safe.bottom - 20;
+  const yLast = opt.y ?? stage.safe.captionBase ?? stage.H - stage.safe.bottom - 120;
   const x = opt.x ?? stage.safe.cx;
   const top = yLast - (L.lines.length - 1) * lh - L.size * 0.95 - opt.padY, bottom = yLast + L.size * 0.32 + opt.padY;
   const box = {x: x - L.width / 2 - opt.padX, y: top, w: L.width + opt.padX * 2, h: bottom - top};
