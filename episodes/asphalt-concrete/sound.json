@@ -3,7 +3,7 @@
  "notes": "설명용 합성음입니다(녹음 아님). 각 사건은 scenes.mjs의 ctx.events와 같은 시각을 씁니다.",
  "events": [
   {
-   "id": "truck",
+   "id": "truck1",
    "at": 0.3,
    "kind": "noise",
    "params": {
@@ -16,7 +16,7 @@
    "means": "시간 압축한 여름 — 트럭이 Z=10 m 를 지나는 순간(화면의 트럭 위치와 같은 식)"
   },
   {
-   "id": "truck",
+   "id": "truck2",
    "at": 0.62,
    "kind": "noise",
    "params": {
@@ -29,7 +29,7 @@
    "means": "시간 압축한 여름 — 트럭이 Z=10 m 를 지나는 순간(화면의 트럭 위치와 같은 식)"
   },
   {
-   "id": "truck",
+   "id": "truck3",
    "at": 0.95,
    "kind": "noise",
    "params": {
@@ -42,7 +42,7 @@
    "means": "시간 압축한 여름 — 트럭이 Z=10 m 를 지나는 순간(화면의 트럭 위치와 같은 식)"
   },
   {
-   "id": "truck",
+   "id": "truck4",
    "at": 1.28,
    "kind": "noise",
    "params": {
@@ -55,7 +55,7 @@
    "means": "시간 압축한 여름 — 트럭이 Z=10 m 를 지나는 순간(화면의 트럭 위치와 같은 식)"
   },
   {
-   "id": "truck",
+   "id": "truck5",
    "at": 1.6,
    "kind": "noise",
    "params": {
@@ -68,7 +68,7 @@
    "means": "시간 압축한 여름 — 트럭이 Z=10 m 를 지나는 순간(화면의 트럭 위치와 같은 식)"
   },
   {
-   "id": "truck",
+   "id": "truck6",
    "at": 1.93,
    "kind": "noise",
    "params": {
@@ -86,8 +86,8 @@
    "kind": "whoosh",
    "params": {
     "dur": 0.8,
-    "f_start": 2200,
-    "f_end": 300,
+    "f_start": 640,
+    "f_end": 180,
     "gain_db": -26
    },
    "means": "여름 전으로 되감기"
@@ -139,7 +139,7 @@
    "means": "s02 여름 한 철의 트럭 흐름"
   },
   {
-   "id": "pour",
+   "id": "pour1",
    "at": [
     "s04",
     0.3
@@ -148,14 +148,14 @@
    "params": {
     "dur": 0.5,
     "low": 120,
-    "high": 900,
+    "high": 660,
     "gain_db": -24,
     "release": 0.3
    },
    "means": "판테온 둥근 지붕의 한 고리를 붓는 순간"
   },
   {
-   "id": "pour",
+   "id": "pour2",
    "at": [
     "s04",
     1.4000000000000001
@@ -164,14 +164,14 @@
    "params": {
     "dur": 0.5,
     "low": 120,
-    "high": 900,
+    "high": 660,
     "gain_db": -24,
     "release": 0.3
    },
    "means": "판테온 둥근 지붕의 한 고리를 붓는 순간"
   },
   {
-   "id": "pour",
+   "id": "pour3",
    "at": [
     "s04",
     2.5
@@ -180,14 +180,14 @@
    "params": {
     "dur": 0.5,
     "low": 120,
-    "high": 900,
+    "high": 660,
     "gain_db": -24,
     "release": 0.3
    },
    "means": "판테온 둥근 지붕의 한 고리를 붓는 순간"
   },
   {
-   "id": "pour",
+   "id": "pour4",
    "at": [
     "s04",
     3.6
@@ -196,14 +196,14 @@
    "params": {
     "dur": 0.5,
     "low": 120,
-    "high": 900,
+    "high": 660,
     "gain_db": -24,
     "release": 0.3
    },
    "means": "판테온 둥근 지붕의 한 고리를 붓는 순간"
   },
   {
-   "id": "pour",
+   "id": "pour5",
    "at": [
     "s04",
     4.7
@@ -212,14 +212,14 @@
    "params": {
     "dur": 0.5,
     "low": 120,
-    "high": 900,
+    "high": 660,
     "gain_db": -24,
     "release": 0.3
    },
    "means": "판테온 둥근 지붕의 한 고리를 붓는 순간"
   },
   {
-   "id": "pour",
+   "id": "pour6",
    "at": [
     "s04",
     5.8
@@ -228,63 +228,63 @@
    "params": {
     "dur": 0.5,
     "low": 120,
-    "high": 900,
+    "high": 660,
     "gain_db": -24,
     "release": 0.3
    },
    "means": "판테온 둥근 지붕의 한 고리를 붓는 순간"
   },
   {
-   "id": "brick",
+   "id": "brick1",
    "at": [
     "s05",
     0.4
    ],
    "kind": "tick",
    "params": {
-    "freq": 700,
+    "freq": 440,
     "decay": 0.09,
     "gain_db": -20
    },
    "means": "벽돌 한 줄을 역청 위에 놓는 순간"
   },
   {
-   "id": "brick",
+   "id": "brick2",
    "at": [
     "s05",
     1.7000000000000002
    ],
    "kind": "tick",
    "params": {
-    "freq": 700,
+    "freq": 440,
     "decay": 0.09,
     "gain_db": -20
    },
    "means": "벽돌 한 줄을 역청 위에 놓는 순간"
   },
   {
-   "id": "brick",
+   "id": "brick3",
    "at": [
     "s05",
     3.0
    ],
    "kind": "tick",
    "params": {
-    "freq": 700,
+    "freq": 440,
     "decay": 0.09,
     "gain_db": -20
    },
    "means": "벽돌 한 줄을 역청 위에 놓는 순간"
   },
   {
-   "id": "brick",
+   "id": "brick4",
    "at": [
     "s05",
     4.300000000000001
    ],
    "kind": "tick",
    "params": {
-    "freq": 700,
+    "freq": 440,
     "decay": 0.09,
     "gain_db": -20
    },
@@ -359,7 +359,7 @@
    ],
    "kind": "tick",
    "params": {
-    "freq": 900,
+    "freq": 520,
     "decay": 0.08,
     "gain_db": -20
    },
@@ -390,7 +390,7 @@
    "params": {
     "dur": 1.0,
     "low": 400,
-    "high": 2200,
+    "high": 660,
     "gain_db": -28,
     "release": 0.5
    },
@@ -421,7 +421,7 @@
    ],
    "kind": "tick",
    "params": {
-    "freq": 2400,
+    "freq": 660,
     "decay": 0.03,
     "gain_db": -30,
     "repeat": 12,
@@ -437,7 +437,7 @@
    ],
    "kind": "tick",
    "params": {
-    "freq": 1200,
+    "freq": 600,
     "decay": 0.12,
     "gain_db": -20
    },
@@ -453,7 +453,7 @@
    "params": {
     "dur": 1.4,
     "low": 200,
-    "high": 1200,
+    "high": 660,
     "gain_db": -28,
     "release": 0.6
    },
@@ -475,7 +475,7 @@
    "means": "노면이 60도로 달궈짐"
   },
   {
-   "id": "wheel",
+   "id": "wheel1",
    "at": [
     "s23",
     0.4
@@ -491,7 +491,7 @@
    "means": "바퀴 한 번(×500)이 두 단면을 누름"
   },
   {
-   "id": "wheel",
+   "id": "wheel2",
    "at": [
     "s23",
     1.2000000000000002
@@ -507,7 +507,7 @@
    "means": "바퀴 한 번(×500)이 두 단면을 누름"
   },
   {
-   "id": "wheel",
+   "id": "wheel3",
    "at": [
     "s23",
     2.0
@@ -523,7 +523,7 @@
    "means": "바퀴 한 번(×500)이 두 단면을 누름"
   },
   {
-   "id": "wheel",
+   "id": "wheel4",
    "at": [
     "s23",
     2.8000000000000003
@@ -539,7 +539,7 @@
    "means": "바퀴 한 번(×500)이 두 단면을 누름"
   },
   {
-   "id": "wheel",
+   "id": "wheel5",
    "at": [
     "s23",
     3.6
@@ -555,7 +555,7 @@
    "means": "바퀴 한 번(×500)이 두 단면을 누름"
   },
   {
-   "id": "wheel",
+   "id": "wheel6",
    "at": [
     "s23",
     4.4
@@ -571,7 +571,7 @@
    "means": "바퀴 한 번(×500)이 두 단면을 누름"
   },
   {
-   "id": "wheel",
+   "id": "wheel7",
    "at": [
     "s23",
     5.200000000000001
@@ -587,7 +587,7 @@
    "means": "바퀴 한 번(×500)이 두 단면을 누름"
   },
   {
-   "id": "wheel",
+   "id": "wheel8",
    "at": [
     "s23",
     6.000000000000001
@@ -603,14 +603,14 @@
    "means": "바퀴 한 번(×500)이 두 단면을 누름"
   },
   {
-   "id": "crack",
+   "id": "crack1",
    "at": [
     "s25",
     4.0
    ],
    "kind": "tick",
    "params": {
-    "freq": 1500,
+    "freq": 640,
     "decay": 0.06,
     "gain_db": -18,
     "repeat": 3,
@@ -619,14 +619,14 @@
    "means": "줄눈에서 금이 벌어짐"
   },
   {
-   "id": "crack",
+   "id": "crack2",
    "at": [
     "s25",
     4.6
    ],
    "kind": "tick",
    "params": {
-    "freq": 1500,
+    "freq": 640,
     "decay": 0.06,
     "gain_db": -18,
     "repeat": 3,

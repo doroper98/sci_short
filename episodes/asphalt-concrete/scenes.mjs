@@ -37,7 +37,7 @@ const fmt = (x, d = 0) => (+x.toFixed(d)).toString();
 const fadeIn = (t, t0, d = 0.4) => smooth((t - t0) / d);
 const fadeOut = (t, t1, d = 0.4) => 1 - smooth((t - t1) / d);
 const at = (ctx, ref, off = 0) => ctx.tl.at(ref, off);
-const ev = (ctx, id) => ctx.events.all(id).map(e => e.time);
+const ev = (ctx, id) => ctx.events.filter(e => new RegExp(`^${id}\\d+$`).test(e.id)).map(e => e.time).sort((a, b) => a - b);   // numbered events: truck1, truck2, …
 
 // =====================================================================================================
 // Road in perspective (hook, close)
@@ -149,7 +149,7 @@ function hookTau(t) { return t < REW[0] ? t : Math.max(0, REW[0] - (t - REW[0]) 
 function hookTrucks(t, ctx) {
   const tau = hookTau(t), real = Math.max(0, t - REW[1]);
   // trucks come towards the camera; each passes Z = 10 m at its sound event. At 0 s they are all still up the road.
-  const times = ctx.events.all('truck').map(e => e.time);
+  const times = ev(ctx, 'truck');
   return times.map((te, i) => ({lane: i % 2, Z: 10 - TL_V * (tau - te) - REAL_V * real}));
 }
 function streamTrucks(t, t0, t1) {
