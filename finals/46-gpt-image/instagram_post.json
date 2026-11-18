@@ -1,0 +1,28 @@
+{
+ "media_id": "18117310043038417",
+ "permalink": "https://www.instagram.com/reel/Df5ixY3CHSG/",
+ "posted_at": "2026-11-18T22:09:54+00:00",
+ "ig_user_id": "17841457693338876",
+ "username": "_scishorts",
+ "video_file": "gpt-image.mp4",
+ "video_bytes": 26775268,
+ "video_md5": "5ef058c9acc59201cdd799107ac24558",
+ "caption_chars": 509,
+ "hashtags": [
+  "#GPT",
+  "#챗GPT",
+  "#이미지생성",
+  "#달리",
+  "#과학"
+ ],
+ "container_id": "17985529976923112",
+ "shortcode": "Df5ixY3CHSG",
+ "transfer": "url",
+ "ai_label": true,
+ "number": 46,
+ "slug": "gpt-image",
+ "status": "posted",
+ "note": "",
+ "source": "api",
+ "schema_version": 1
+}
