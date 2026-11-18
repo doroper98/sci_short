@@ -1,0 +1,677 @@
+{
+ "version": 1,
+ "notes": "설명용 합성음입니다(녹음 아님). 각 사건은 scenes.mjs의 ctx.events와 같은 시각을 씁니다.",
+ "events": [
+  {
+   "id": "truck1",
+   "at": 0.3,
+   "kind": "noise",
+   "params": {
+    "dur": 0.22,
+    "low": 60,
+    "high": 520,
+    "gain_db": -15,
+    "release": 0.15
+   },
+   "means": "시간 압축한 여름 — 트럭이 Z=10 m 를 지나는 순간(화면의 트럭 위치와 같은 식)"
+  },
+  {
+   "id": "truck2",
+   "at": 0.62,
+   "kind": "noise",
+   "params": {
+    "dur": 0.22,
+    "low": 60,
+    "high": 520,
+    "gain_db": -15,
+    "release": 0.15
+   },
+   "means": "시간 압축한 여름 — 트럭이 Z=10 m 를 지나는 순간(화면의 트럭 위치와 같은 식)"
+  },
+  {
+   "id": "truck3",
+   "at": 0.95,
+   "kind": "noise",
+   "params": {
+    "dur": 0.22,
+    "low": 60,
+    "high": 520,
+    "gain_db": -15,
+    "release": 0.15
+   },
+   "means": "시간 압축한 여름 — 트럭이 Z=10 m 를 지나는 순간(화면의 트럭 위치와 같은 식)"
+  },
+  {
+   "id": "truck4",
+   "at": 1.28,
+   "kind": "noise",
+   "params": {
+    "dur": 0.22,
+    "low": 60,
+    "high": 520,
+    "gain_db": -15,
+    "release": 0.15
+   },
+   "means": "시간 압축한 여름 — 트럭이 Z=10 m 를 지나는 순간(화면의 트럭 위치와 같은 식)"
+  },
+  {
+   "id": "truck5",
+   "at": 1.6,
+   "kind": "noise",
+   "params": {
+    "dur": 0.22,
+    "low": 60,
+    "high": 520,
+    "gain_db": -15,
+    "release": 0.15
+   },
+   "means": "시간 압축한 여름 — 트럭이 Z=10 m 를 지나는 순간(화면의 트럭 위치와 같은 식)"
+  },
+  {
+   "id": "truck6",
+   "at": 1.93,
+   "kind": "noise",
+   "params": {
+    "dur": 0.22,
+    "low": 60,
+    "high": 520,
+    "gain_db": -15,
+    "release": 0.15
+   },
+   "means": "시간 압축한 여름 — 트럭이 Z=10 m 를 지나는 순간(화면의 트럭 위치와 같은 식)"
+  },
+  {
+   "id": "rewind",
+   "at": 2.2,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.8,
+    "f_start": 640,
+    "f_end": 180,
+    "gain_db": -26
+   },
+   "means": "여름 전으로 되감기"
+  },
+  {
+   "id": "drive",
+   "at": 3.05,
+   "kind": "noise",
+   "params": {
+    "dur": 1.8,
+    "low": 50,
+    "high": 300,
+    "gain_db": -24,
+    "attack": 0.2,
+    "release": 0.8
+   },
+   "means": "트럭이 제 속도로 떠남"
+  },
+  {
+   "id": "summer2",
+   "at": [
+    "s02",
+    0.2
+   ],
+   "kind": "env_noise",
+   "params": {
+    "points": [
+     [
+      0,
+      0
+     ],
+     [
+      0.4,
+      0.6
+     ],
+     [
+      4.2,
+      0.6
+     ],
+     [
+      4.6,
+      0
+     ]
+    ],
+    "low": 60,
+    "high": 400,
+    "gain_db": -18
+   },
+   "means": "s02 여름 한 철의 트럭 흐름"
+  },
+  {
+   "id": "pour1",
+   "at": [
+    "s04",
+    0.3
+   ],
+   "kind": "noise",
+   "params": {
+    "dur": 0.5,
+    "low": 120,
+    "high": 660,
+    "gain_db": -24,
+    "release": 0.3
+   },
+   "means": "판테온 둥근 지붕의 한 고리를 붓는 순간"
+  },
+  {
+   "id": "pour2",
+   "at": [
+    "s04",
+    1.4000000000000001
+   ],
+   "kind": "noise",
+   "params": {
+    "dur": 0.5,
+    "low": 120,
+    "high": 660,
+    "gain_db": -24,
+    "release": 0.3
+   },
+   "means": "판테온 둥근 지붕의 한 고리를 붓는 순간"
+  },
+  {
+   "id": "pour3",
+   "at": [
+    "s04",
+    2.5
+   ],
+   "kind": "noise",
+   "params": {
+    "dur": 0.5,
+    "low": 120,
+    "high": 660,
+    "gain_db": -24,
+    "release": 0.3
+   },
+   "means": "판테온 둥근 지붕의 한 고리를 붓는 순간"
+  },
+  {
+   "id": "pour4",
+   "at": [
+    "s04",
+    3.6
+   ],
+   "kind": "noise",
+   "params": {
+    "dur": 0.5,
+    "low": 120,
+    "high": 660,
+    "gain_db": -24,
+    "release": 0.3
+   },
+   "means": "판테온 둥근 지붕의 한 고리를 붓는 순간"
+  },
+  {
+   "id": "pour5",
+   "at": [
+    "s04",
+    4.7
+   ],
+   "kind": "noise",
+   "params": {
+    "dur": 0.5,
+    "low": 120,
+    "high": 660,
+    "gain_db": -24,
+    "release": 0.3
+   },
+   "means": "판테온 둥근 지붕의 한 고리를 붓는 순간"
+  },
+  {
+   "id": "pour6",
+   "at": [
+    "s04",
+    5.8
+   ],
+   "kind": "noise",
+   "params": {
+    "dur": 0.5,
+    "low": 120,
+    "high": 660,
+    "gain_db": -24,
+    "release": 0.3
+   },
+   "means": "판테온 둥근 지붕의 한 고리를 붓는 순간"
+  },
+  {
+   "id": "brick1",
+   "at": [
+    "s05",
+    0.4
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.09,
+    "gain_db": -20
+   },
+   "means": "벽돌 한 줄을 역청 위에 놓는 순간"
+  },
+  {
+   "id": "brick2",
+   "at": [
+    "s05",
+    1.7000000000000002
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.09,
+    "gain_db": -20
+   },
+   "means": "벽돌 한 줄을 역청 위에 놓는 순간"
+  },
+  {
+   "id": "brick3",
+   "at": [
+    "s05",
+    3.0
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.09,
+    "gain_db": -20
+   },
+   "means": "벽돌 한 줄을 역청 위에 놓는 순간"
+  },
+  {
+   "id": "brick4",
+   "at": [
+    "s05",
+    4.300000000000001
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.09,
+    "gain_db": -20
+   },
+   "means": "벽돌 한 줄을 역청 위에 놓는 순간"
+  },
+  {
+   "id": "glue",
+   "at": {
+    "sentence": "s07",
+    "word": "풀로"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 220,
+    "dur": 1.2,
+    "gain_db": -26,
+    "attack": 0.3,
+    "release": 0.6
+   },
+   "means": "두 단면에 풀이 차오름"
+  },
+  {
+   "id": "bar",
+   "at": [
+    "s08",
+    0.4
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "glide_to": 495,
+    "dur": 1.6,
+    "gain_db": -28
+   },
+   "means": "무게 막대가 차오름"
+  },
+  {
+   "id": "heat",
+   "at": [
+    "s12",
+    0.3
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 170,
+    "glide_to": 340,
+    "dur": 2.4,
+    "gain_db": -26
+   },
+   "means": "온도 오름(음높이 = 온도)"
+  },
+  {
+   "id": "cool",
+   "at": [
+    "s13",
+    0.2
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 340,
+    "glide_to": 170,
+    "dur": 3.0,
+    "gain_db": -26
+   },
+   "means": "식음"
+  },
+  {
+   "id": "lock",
+   "at": [
+    "s13",
+    3.3
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 520,
+    "decay": 0.08,
+    "gain_db": -20
+   },
+   "means": "돌이 붙잡힘"
+  },
+  {
+   "id": "reheat",
+   "at": [
+    "s14",
+    1.6
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 170,
+    "glide_to": 340,
+    "dur": 2.4,
+    "gain_db": -26
+   },
+   "means": "다시 데움"
+  },
+  {
+   "id": "water",
+   "at": [
+    "s15",
+    1.4
+   ],
+   "kind": "noise",
+   "params": {
+    "dur": 1.0,
+    "low": 400,
+    "high": 660,
+    "gain_db": -28,
+    "release": 0.5
+   },
+   "means": "물이 가루에 닿음"
+  },
+  {
+   "id": "kiln",
+   "at": [
+    "s16",
+    0.2
+   ],
+   "kind": "noise",
+   "params": {
+    "dur": 2.6,
+    "low": 80,
+    "high": 400,
+    "gain_db": -28,
+    "attack": 0.4,
+    "release": 1.0
+   },
+   "means": "가마의 불"
+  },
+  {
+   "id": "grow",
+   "at": [
+    "s17",
+    0.6
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 660,
+    "decay": 0.03,
+    "gain_db": -30,
+    "repeat": 12,
+    "interval": 0.42
+   },
+   "means": "새 물질이 자라는 동안"
+  },
+  {
+   "id": "day28",
+   "at": [
+    "s20",
+    5.0
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 600,
+    "decay": 0.12,
+    "gain_db": -20
+   },
+   "means": "28일째"
+  },
+  {
+   "id": "submerge",
+   "at": [
+    "s21",
+    0.2
+   ],
+   "kind": "noise",
+   "params": {
+    "dur": 1.4,
+    "low": 200,
+    "high": 660,
+    "gain_db": -28,
+    "release": 0.6
+   },
+   "means": "물속에 담금"
+  },
+  {
+   "id": "temp",
+   "at": [
+    "s22",
+    0.3
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 200,
+    "glide_to": 330,
+    "dur": 3.0,
+    "gain_db": -28
+   },
+   "means": "노면이 60도로 달궈짐"
+  },
+  {
+   "id": "wheel1",
+   "at": [
+    "s23",
+    0.4
+   ],
+   "kind": "noise",
+   "params": {
+    "dur": 0.3,
+    "low": 60,
+    "high": 320,
+    "gain_db": -18,
+    "release": 0.2
+   },
+   "means": "바퀴 한 번(×500)이 두 단면을 누름"
+  },
+  {
+   "id": "wheel2",
+   "at": [
+    "s23",
+    1.2000000000000002
+   ],
+   "kind": "noise",
+   "params": {
+    "dur": 0.3,
+    "low": 60,
+    "high": 320,
+    "gain_db": -18,
+    "release": 0.2
+   },
+   "means": "바퀴 한 번(×500)이 두 단면을 누름"
+  },
+  {
+   "id": "wheel3",
+   "at": [
+    "s23",
+    2.0
+   ],
+   "kind": "noise",
+   "params": {
+    "dur": 0.3,
+    "low": 60,
+    "high": 320,
+    "gain_db": -18,
+    "release": 0.2
+   },
+   "means": "바퀴 한 번(×500)이 두 단면을 누름"
+  },
+  {
+   "id": "wheel4",
+   "at": [
+    "s23",
+    2.8000000000000003
+   ],
+   "kind": "noise",
+   "params": {
+    "dur": 0.3,
+    "low": 60,
+    "high": 320,
+    "gain_db": -18,
+    "release": 0.2
+   },
+   "means": "바퀴 한 번(×500)이 두 단면을 누름"
+  },
+  {
+   "id": "wheel5",
+   "at": [
+    "s23",
+    3.6
+   ],
+   "kind": "noise",
+   "params": {
+    "dur": 0.3,
+    "low": 60,
+    "high": 320,
+    "gain_db": -18,
+    "release": 0.2
+   },
+   "means": "바퀴 한 번(×500)이 두 단면을 누름"
+  },
+  {
+   "id": "wheel6",
+   "at": [
+    "s23",
+    4.4
+   ],
+   "kind": "noise",
+   "params": {
+    "dur": 0.3,
+    "low": 60,
+    "high": 320,
+    "gain_db": -18,
+    "release": 0.2
+   },
+   "means": "바퀴 한 번(×500)이 두 단면을 누름"
+  },
+  {
+   "id": "wheel7",
+   "at": [
+    "s23",
+    5.200000000000001
+   ],
+   "kind": "noise",
+   "params": {
+    "dur": 0.3,
+    "low": 60,
+    "high": 320,
+    "gain_db": -18,
+    "release": 0.2
+   },
+   "means": "바퀴 한 번(×500)이 두 단면을 누름"
+  },
+  {
+   "id": "wheel8",
+   "at": [
+    "s23",
+    6.000000000000001
+   ],
+   "kind": "noise",
+   "params": {
+    "dur": 0.3,
+    "low": 60,
+    "high": 320,
+    "gain_db": -18,
+    "release": 0.2
+   },
+   "means": "바퀴 한 번(×500)이 두 단면을 누름"
+  },
+  {
+   "id": "crack1",
+   "at": [
+    "s25",
+    4.0
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 640,
+    "decay": 0.06,
+    "gain_db": -18,
+    "repeat": 3,
+    "interval": 0.05
+   },
+   "means": "줄눈에서 금이 벌어짐"
+  },
+  {
+   "id": "crack2",
+   "at": [
+    "s25",
+    4.6
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 640,
+    "decay": 0.06,
+    "gain_db": -18,
+    "repeat": 3,
+    "interval": 0.07
+   },
+   "means": "줄눈 없는 판에 아무 데나 금"
+  },
+  {
+   "id": "end",
+   "at": [
+    "s27",
+    0.1
+   ],
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     220,
+     330,
+     440
+    ],
+    "dur": 2.4,
+    "gain_db": -28
+   },
+   "means": "결론"
+  }
+ ],
+ "ambient": {
+  "enabled": false,
+  "kind": "pad",
+  "seed": 7,
+  "gain_db": -32,
+  "root_hz": 110,
+  "intervals": [
+   0,
+   7,
+   12,
+   16
+  ]
+ },
+ "music": {
+  "id": "zabriskie_patriarch",
+  "enabled": false,
+  "under_db": 12,
+  "duck_db": 6,
+  "start_sec": 0,
+  "note": "기본 꺼짐"
+ }
+}

@@ -1,0 +1,29 @@
+{
+  "file": "asphalt-concrete.hdr.mp4",
+  "bytes": 11942855,
+  "sha256": "2d0992bba8719f4341016aeb40ea0099eddfa2c1b90b7a0b015ac42a35f3872a",
+  "created": "2026-11-18T11:49:18+00:00",
+  "codec": "hevc Main 10",
+  "pix_fmt": "yuv420p10le",
+  "color": "bt2020 / smpte2084 (PQ) / bt2020nc",
+  "duration": 164.133,
+  "settings": {
+    "sdr_white_nits": 203,
+    "peak_boost": 4,
+    "gate": [
+      0.4,
+      0.7
+    ],
+    "crf": 18,
+    "preset": "medium",
+    "max_cll": 812,
+    "max_fall": 300
+  },
+  "frames": 4924,
+  "lit_frames": 2141,
+  "sdr_white_code": 573,
+  "peak_code": 671,
+  "peak_nits_estimate": 582,
+  "encode_seconds": 245.5,
+  "note": "peak_nits_estimate 는 무채색으로 보고 luma 코드에서 어림한 값"
+}
