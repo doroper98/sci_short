@@ -76,8 +76,14 @@ DEFAULT_FM_BASELINE = Path(__file__).resolve().parents[1] / "reports" / "first_m
 # 기본 노출 표(9-5 첫 줄): 최근 EXPOSURE_DAYS 일 안에 공개한 편, 조회수 EXPOSURE_VIEWS 회 이상 = 받음.
 EXPOSURE_DAYS = 14
 EXPOSURE_VIEWS = 800
-# 방안 1 한 주 시험(새 편만·하루 한 편·17:00 KST 공개). 공개 KST 날짜가 이 구간인 새 편, 공개 48시간 뒤부터 센다.
-TRIAL = {"start": "2026-11-18", "end": "2026-11-24", "hours": 48, "views": EXPOSURE_VIEWS, "n": 7, "pass": 5}
+# 방안 1 한 주 시험(새 편만·하루 한 편). 처음에는 17:00 KST 공개였고 11-18·11-19 두 편이 그렇게 나갔다.
+# 2026-11-19 사용자: "내 생각에 아침07시가 맞을거 같아 왜냐면 하루종일 노출되는 윈도우가 저녁보다 더 길기 때문이야" → 07:00 KST.
+# 판정 구간을 07:00 으로 나가는 7편(11-20~11-26)으로 옮긴 것은 제작 세션의 제안이다(config/daily.json _morning_2026_11_19).
+# 공개 KST 날짜가 이 구간이고 낮 12시 전에 공개된 새 편을 공개 48시간 뒤부터 센다(늦게 올린 편은 11:15 까지 나갈 수 있다).
+TRIAL = {"start": "2026-11-20", "end": "2026-11-26", "hours": 48, "views": EXPOSURE_VIEWS, "n": 7, "pass": 5, "at": "07:00"}
+# 17:00 으로 나간 새 편(견줄 기준, 판정 없음). 전환 때 옛 설정의 실행이 먼저 올린 편은 11-20 17:00 에 나갈 수 있어 그날까지 본다.
+TRIAL_PM = {"start": "2026-11-18", "end": "2026-11-20", "at": "17:00"}
+NOON = 12
 KST = dt.timezone(dt.timedelta(hours=9))
 
 
@@ -738,7 +744,7 @@ def first_moment_md(pub: list[VideoRow], fm: dict[str, dict[str, Any]], has_a: b
 
 
 def exposure_md(pub: list[VideoRow], now: dt.datetime) -> list[str]:
-    """기본 노출(9-5 첫 줄): 최근 14일 공개 편이 800회를 넘었는가, 그리고 방안 1 한 주 시험 줄."""
+    """기본 노출(9-5 첫 줄): 최근 14일 공개 편이 800회를 넘었는가, 그리고 방안 1 한 주 시험 줄(17:00 두 편 · 07:00 일곱 편)."""
     hours = TRIAL["hours"]
     rs = sorted([r for r in pub if _kst(r) and now - _kst(r) < dt.timedelta(days=EXPOSURE_DAYS)],
                 key=lambda r: (_kst(r), r.video_id))
@@ -762,16 +768,24 @@ def exposure_md(pub: list[VideoRow], now: dt.datetime) -> list[str]:
         kind = " (다시 올림)" if r.republished else ""
         out.append(f"| {r.episode or r.video_id}{kind} | {_kst_label(r)} | {src} | {age:.0f}시간 | {r.views:,} | {mark} |")
     out += ["", f"- 공개 {hours}시간이 지난 **{judged}편 중 {got}편**이 {EXPOSURE_VIEWS:,}회 이상입니다."]
-    # 방안 1 한 주 시험(새 편만, 하루 한 편, 17:00 KST)
-    trial = [r for r in pub if _kst(r) and TRIAL["start"] <= _kst(r).date().isoformat() <= TRIAL["end"] and r.republished is not True]
-    tj = [r for r in trial if (now - _kst(r)).total_seconds() / 3600 >= hours]
+    # 방안 1 한 주 시험(새 편만, 하루 한 편). 17:00 으로 나간 편(견줄 기준) → 07:00 으로 나가는 7편(판정).
+    def judged_new(span: dict[str, Any], morning: bool) -> list[VideoRow]:
+        return [r for r in pub if _kst(r) and span["start"] <= _kst(r).date().isoformat() <= span["end"]
+                and (_kst(r).hour < NOON) is morning and r.republished is not True
+                and (now - _kst(r)).total_seconds() / 3600 >= hours]
+
+    pm = judged_new(TRIAL_PM, False)
+    if pm:
+        out.append(f"- {TRIAL_PM['at']} 으로 공개한 새 편({TRIAL_PM['start'][5:]}~, 하루 한 편, 견줄 기준): 공개 {hours}시간이 지난 "
+                   f"{len(pm)}편 중 {sum(r.views >= TRIAL['views'] for r in pm)}편이 {TRIAL['views']:,}회 이상.")
+    tj = judged_new(TRIAL, True)
     if tj:
         tg = sum(r.views >= TRIAL["views"] for r in tj)
-        line = (f"- 한 주 시험({TRIAL['start'][5:]}~{TRIAL['end'][5:]} 공개, 새 편만·하루 한 편·17:00): 공개 {hours}시간이 지난 "
+        line = (f"- 한 주 시험({TRIAL['start'][5:]}~{TRIAL['end'][5:]} 공개, 새 편만·하루 한 편·{TRIAL['at']}): 공개 {hours}시간이 지난 "
                 f"{len(tj)}편 중 {tg}편이 {TRIAL['views']:,}회 이상 — 기준 {TRIAL['n']}편 중 {TRIAL['pass']}편 이상.")
         if len(tj) >= TRIAL["n"]:
-            line += (" 판정: 기준을 채웠습니다(06:00 공개·하루 여러 편 쪽 원인)." if tg >= TRIAL["pass"]
-                     else " 판정: 기준에 못 미칩니다(주제·형식 쪽을 먼저 봅니다, 9-4 방안 1).")
+            line += (" 판정: 기준을 채웠습니다(하루 여러 편 쪽 원인 — 아침 공개는 걸림돌이 아닙니다)." if tg >= TRIAL["pass"]
+                     else f" 판정: 기준에 못 미칩니다(주제·형식 또는 아침 공개 쪽 — {TRIAL_PM['at']} 편과 견줍니다, 9-8).")
         out.append(line)
     return out
 

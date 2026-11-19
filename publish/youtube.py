@@ -1326,7 +1326,8 @@ SLOT_KO = {"morning": "아침", "evening": "저녁"}
 
 def slot_label(daily: dict[str, Any], slot: str) -> str:
     """사람이 읽는 자리 이름(알림·요약용). 예약 공개 시각이 걸려 있으면 그 시각으로 '17:00 공개 편', 없으면 '아침'·'저녁'.
-    2026-11-16 한 주 시험부터 자리 이름 morning 이 17:00 에 공개되므로(config/daily.json _trial_2026_11_16) 글은 시각을 따른다.
+    2026-11-16 한 주 시험에서 자리 이름 morning 이 17:00 에 공개됐으므로(config/daily.json _trial_2026_11_16) 글은 시각을 따른다
+    (2026-11-19 사용자 결정으로 07:00 — _morning_2026_11_19).
     자리 키(slot_key)·동작은 바꾸지 않는다."""
     try:
         st = schedule_settings(daily)

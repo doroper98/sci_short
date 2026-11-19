@@ -1995,17 +1995,23 @@ class ScheduledPublishAtTest(unittest.TestCase):
         # 2026-11-16 사용자 "어 너가 생각하는 모든 것들을 다 적용해봐. 무한한 권한과 지지를 보낸다" 뒤 한 주 시험: 목표는 하나,
         # 자리 이름 morning 이 17:00 에 공개(evening_kst 삭제) — config/daily.json _trial_2026_11_16. 06:00·17:00 두 목표의 동작은
         # DueTargetsTest·AutoSlotTest 가 SCHED2(합성 설정)로 그대로 본다.
+        # 2026-11-19 사용자: "내 생각에 아침07시가 맞을거 같아 왜냐면 하루종일 노출되는 윈도우가 저녁보다 더 길기 때문이야"
+        # → 17:00 을 07:00 으로. 목표는 여전히 하나(하루 한 편, evening_kst 없음) — config/daily.json _morning_2026_11_19.
         self.assertIs(sp["enabled"], True)
-        self.assertEqual(sp["morning_kst"], "17:00")
+        self.assertEqual(sp["morning_kst"], "07:00")
         self.assertNotIn("evening_kst", sp)
-        self.assertIn('morning_kst "06:00", evening_kst "17:00"', daily["_trial_2026_11_16"])   # 되돌리는 법
+        self.assertIn('morning_kst "06:00", evening_kst "17:00"', daily["_trial_2026_11_16"])   # 시험 전 일정으로 되돌리는 법
+        self.assertIn("내 생각에 아침07시가 맞을거 같아", daily["_morning_2026_11_19"])
+        self.assertIn("제작 세션의 제안", daily["_morning_2026_11_19"])           # 옮겨 쓴 판정 구간·잣대는 사용자 결정이 아니다
         self.assertEqual(sp["late_grace_hours"], 4)                              # 제작 세션의 제안
         st = yu.schedule_settings(daily)
-        self.assertEqual(st["times"], {"morning": (17, 0)})
-        for h in (2, 12, 20):                                                     # 하루 한 목표, 언제나 17:00 KST
-            for t in yu.due_targets(daily, _kst(2026, 11, 17, h, 0)):
-                self.assertEqual((t["slot"], t["target"].hour, t["target"].minute), ("morning", 17, 0))
-        self.assertEqual(yu.slot_label(daily, "morning"), "17:00 공개 편")
+        self.assertEqual(st["times"], {"morning": (7, 0)})
+        for h in (2, 12, 20):                                                     # 하루 한 목표, 언제나 07:00 KST
+            for t in yu.due_targets(daily, _kst(2026, 11, 20, h, 0)):
+                self.assertEqual((t["slot"], t["target"].hour, t["target"].minute), ("morning", 7, 0))
+        self.assertEqual([(t["key"], t["late"]) for t in yu.due_targets(daily, _kst(2026, 11, 19, 15, 0))],
+                         [("2026-11-20-morning", False)])                        # 전환: 11-19 낮 실행은 11-20 07:00 을 맡는다
+        self.assertEqual(yu.slot_label(daily, "morning"), "07:00 공개 편")
         self.assertIn("그럼 아침 공개는 06시에 공개로 바뀌게 해줘", yu.load_daily()["_scheduled_publish"])
         self.assertIn("아침에도 예약공개로 하자", yu.load_daily()["_scheduled_publish"])
         self.assertIn("제작 세션의 제안", yu.load_daily()["_scheduled_publish"])
