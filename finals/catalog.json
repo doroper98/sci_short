@@ -547,7 +547,7 @@
     {
       "number": 35,
       "slug": "asphalt-concrete",
-      "title": "",
+      "title": "아스팔트와 콘크리트 — 식어서 굳는 풀, 물과 반응해 굳는 풀",
       "status": "final",
       "folder": "finals/35-asphalt-concrete",
       "video": "finals/35-asphalt-concrete/asphalt-concrete.mp4",
@@ -556,7 +556,7 @@
       "height": 1920,
       "bytes": 15772835,
       "sha256": "edd8f7d23e3ac88a81998545ccba8b88b765a7422f09775ab9aa1fff2e7ba765",
-      "video_date": "uncommitted",
+      "video_date": "2026-11-18",
       "episode_code": "episodes/asphalt-concrete",
       "upload_info": "finals/35-asphalt-concrete/upload.md",
       "thumbnail": "0초 프레임(원근으로 내려다본 두 차로의 길 — 왼쪽 검은 아스팔트, 오른쪽 줄눈이 있는 회색 콘크리트, 멀리 다가오는 트럭들. 흰 물음 두 줄 \"60도로 달궈진 여름 길, / 왜 다르게 버틸까?\"와 그 아래 가장 큰 주황 주제어 \"아스팔트와 / 콘크리트\". 답은 쓰지 않음)",
@@ -664,6 +664,25 @@
       "episode_code": "episodes/gpt-image",
       "upload_info": "finals/46-gpt-image/upload.md",
       "thumbnail": "0초 프레임(주문 글 조각 \"불을 뿜는 아기 용\", 위에서부터 칸이 채워지는 바둑판 그림과 무늬 뽑기 띠, 흰 질문 한 줄 \"그림을 어떻게 그릴까?\"와 그 아래 가장 큰 호박색 주제어 \"GPT\", 그 아래 줄에 흰 글 \"4 of 4\"(시리즈 4번째, 가운데 정렬, 물음보다 조금 작게). 2026-11-13 사용자 지시로 큰 글을 답에서 주제어로 바꾸고, 같은 날 시리즈 표시를 \"GPT #4\"에서 아래 줄 \"4 of 4\"로 바꾸어 그림만 다시 렌더함)"
+    },
+    {
+      "number": 47,
+      "slug": "ram-memory",
+      "title": "RAM — 램은 어떻게 기억할까",
+      "status": "final",
+      "folder": "finals/47-ram-memory",
+      "video": "finals/47-ram-memory/ram-memory.mp4",
+      "duration_sec": 166.0,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 13362493,
+      "sha256": "2defe7739ccefba6b8bb85151bb92e9d87a7fe8867f2983405e2e127945496d7",
+      "video_date": "uncommitted",
+      "episode_code": "episodes/ram-memory",
+      "upload_info": "finals/47-ram-memory/upload.md",
+      "thumbnail": "0초 프레임(위에서 본 램의 칸 배열 — 칸마다 담긴 전하가 산과 해 그림을 이룸. 흰 물음 두 줄 \"1초에 15번 넘게 다시 채워야 하는 / 램은 어떻게 기억할까?\"와 그 아래 가장 큰 주황 주제어 \"RAM\". 답은 쓰지 않음)",
+      "hdr": "finals/47-ram-memory/hdr/ram-memory.hdr.mp4",
+      "hdr_bytes": 10936779
     },
     {
       "number": 58,

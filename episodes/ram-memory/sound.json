@@ -1,61 +1,938 @@
 {
-  "version": 1,
-  "notes": "설명용 합성음입니다(녹음 아님). 각 사건은 scenes.mjs의 ctx.events와 같은 시각을 씁니다. at 문법은 pipeline/README.md 참고.",
-  "events": [
-    {
-      "id": "bond",
-      "at": {
-        "sentence": "s03",
-        "word": "수소 결합"
-      },
-      "kind": "tick",
+ "version": 1,
+ "notes": "설명용 합성음입니다(녹음 아님). 각 사건은 scenes.mjs의 ctx.events와 같은 시각을 씁니다. 기본음은 모두 700 Hz 아래(사용자 규칙).",
+ "events": [
+  {
+   "id": "off1",
+   "at": 0.0,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "noise",
       "params": {
-        "freq": 1760,
-        "gain_db": -20,
-        "decay": 0.12,
-        "repeat": 3,
-        "interval": 0.09
-      },
-      "means": "수소 결합이 이어지는 순간 — 화면의 결합선 번쩍임과 같은 시각"
-    },
-    {
-      "id": "float",
-      "at": [
-        "s05",
-        0.15
-      ],
-      "kind": "swell",
+       "dur": 0.25,
+       "low": 50,
+       "high": 260,
+       "release": 0.18
+      }
+     },
+     {
+      "kind": "tone",
       "params": {
-        "freqs": [
-          220,
-          330,
-          440
-        ],
-        "dur": 1.6,
-        "gain_db": -24
-      },
-      "means": "얼음이 떠오르는 결론 — 화면의 수면 고리와 같은 시각"
-    }
-  ],
-  "ambient": {
-    "enabled": false,
-    "kind": "pad",
-    "seed": 7,
-    "gain_db": -32,
-    "root_hz": 110,
-    "intervals": [
-      0,
-      7,
-      12,
-      16
-    ]
+       "freq": 90,
+       "dur": 0.35,
+       "release": 0.25
+      }
+     }
+    ],
+    "gain_db": -12
+   },
+   "means": "전원이 꺼짐(결과 먼저 0초) — 화면의 전원 표시와 같은 시각"
   },
-  "music": {
-    "id": "zabriskie_patriarch",
-    "enabled": false,
-    "under_db": 12,
-    "duck_db": 6,
-    "start_sec": 0,
-    "note": "기본 꺼짐(2026-10-31 사용자 결정). 켜려면 enabled true. assets/music/registry.json 의 id. NO_MUSIC=1 이면 생략"
+  {
+   "id": "leaktone1",
+   "at": 0.05,
+   "kind": "chirp",
+   "params": {
+    "points": [
+     [
+      0,
+      300,
+      0.5
+     ],
+     [
+      1.8,
+      110,
+      0.05
+     ]
+    ],
+    "gain_db": -24
+   },
+   "means": "칸들의 전하가 새어 나감(설명용, 음높이가 내려감)"
+  },
+  {
+   "id": "rew1",
+   "at": 2.2,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.8,
+    "f_start": 600,
+    "f_end": 150,
+    "gain_db": -22
+   },
+   "means": "되감기 — 전원을 끄기 전으로"
+  },
+  {
+   "id": "on1",
+   "at": 3.0,
+   "kind": "tone",
+   "params": {
+    "freq": 220,
+    "dur": 0.25,
+    "gain_db": -18
+   },
+   "means": "전원 켜짐"
+  },
+  {
+   "id": "hsweep1",
+   "at": 3.0,
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -26
+   },
+   "means": "리프레시가 배열의 첫 줄부터 다시 훑기 시작(화면: 차가운 색 줄)"
+  },
+  {
+   "id": "hsweep2",
+   "at": 4.0,
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -26
+   },
+   "means": "리프레시가 배열의 첫 줄부터 다시 훑기 시작(화면: 차가운 색 줄)"
+  },
+  {
+   "id": "hsweep3",
+   "at": 5.0,
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -26
+   },
+   "means": "리프레시가 배열의 첫 줄부터 다시 훑기 시작(화면: 차가운 색 줄)"
+  },
+  {
+   "id": "off2",
+   "at": {
+    "sentence": "s02",
+    "word": "꺼지면"
+   },
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.25,
+       "low": 50,
+       "high": 260,
+       "release": 0.18
+      }
+     },
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 90,
+       "dur": 0.35,
+       "release": 0.25
+      }
+     }
+    ],
+    "gain_db": -12
+   },
+   "means": "s02 '꺼지면' — 전원 표시가 꺼지고 리프레시가 멈춤"
+  },
+  {
+   "id": "leaktone2",
+   "at": [
+    {
+     "sentence": "s02",
+     "word": "꺼지면"
+    },
+    0.3
+   ],
+   "kind": "chirp",
+   "params": {
+    "points": [
+     [
+      0,
+      300,
+      0.4
+     ],
+     [
+      4.2,
+      110,
+      0.05
+     ]
+    ],
+    "gain_db": -26
+   },
+   "means": "칸들이 차례로 비어 감"
+  },
+  {
+   "id": "seek1",
+   "at": {
+    "sentence": "s03",
+    "word": "테이프와"
+   },
+   "kind": "env_noise",
+   "params": {
+    "points": [
+     [
+      0,
+      0.6
+     ],
+     [
+      0.35,
+      0.6
+     ]
+    ],
+    "low": 80,
+    "high": 400,
+    "gain_db": -20
+   },
+   "means": "테이프가 3번 자리까지 감김(0.35초)"
+  },
+  {
+   "id": "addr1",
+   "at": {
+    "sentence": "s03",
+    "word": "테이프와"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 520,
+    "gain_db": -16
+   },
+   "means": "램: 가로·세로 주소가 칸에 곧바로 닿음"
+  },
+  {
+   "id": "seek2",
+   "at": {
+    "sentence": "s03",
+    "word": "어느"
+   },
+   "kind": "env_noise",
+   "params": {
+    "points": [
+     [
+      0,
+      0.6
+     ],
+     [
+      2.4,
+      0.6
+     ]
+    ],
+    "low": 80,
+    "high": 400,
+    "gain_db": -20
+   },
+   "means": "테이프가 43번 자리까지 감김(2.4초)"
+  },
+  {
+   "id": "addr2",
+   "at": {
+    "sentence": "s03",
+    "word": "어느"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 520,
+    "gain_db": -16
+   },
+   "means": "램: 먼 칸도 곧바로"
+  },
+  {
+   "id": "join1",
+   "at": {
+    "sentence": "s04",
+    "word": "축전기"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.08,
+    "gain_db": -14
+   },
+   "means": "트랜지스터와 축전기가 맞물림"
+  },
+  {
+   "id": "fill1",
+   "at": [
+    {
+     "sentence": "s04",
+     "word": "내놓았습니다"
+    },
+    -0.2
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 196,
+    "glide_to": 294,
+    "dur": 0.9,
+    "gain_db": -20
+   },
+   "means": "축전기에 전하가 참"
+  },
+  {
+   "id": "fill2",
+   "at": {
+    "sentence": "s06",
+    "word": "전하를"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 196,
+    "glide_to": 294,
+    "dur": 0.9,
+    "gain_db": -20
+   },
+   "means": "그릇에 전하가 참"
+  },
+  {
+   "id": "drain1",
+   "at": {
+    "sentence": "s07",
+    "word": "비어"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "glide_to": 196,
+    "dur": 0.7,
+    "gain_db": -20
+   },
+   "means": "전하가 빠짐 = 0"
+  },
+  {
+   "id": "fill3",
+   "at": [
+    "s07:end",
+    -0.3
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 196,
+    "glide_to": 294,
+    "dur": 0.6,
+    "gain_db": -22
+   },
+   "means": "다시 참 = 1"
+  },
+  {
+   "id": "leaktone3",
+   "at": [
+    "s08",
+    0.3
+   ],
+   "kind": "chirp",
+   "params": {
+    "points": [
+     [
+      0,
+      260,
+      0.35
+     ],
+     [
+      3.6,
+      150,
+      0.25
+     ],
+     [
+      4.5,
+      140,
+      0.0
+     ]
+    ],
+    "gain_db": -26
+   },
+   "means": "그릇이 새어 수위가 내려감(음높이 = 수위)"
+  },
+  {
+   "id": "refill1",
+   "at": [
+    "s09",
+    1.4
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -18
+   },
+   "means": "수위가 문턱에 닿기 전에 다시 채움(그래프의 톱니 꼭대기)"
+  },
+  {
+   "id": "refill2",
+   "at": [
+    "s09",
+    2.6
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -18
+   },
+   "means": "수위가 문턱에 닿기 전에 다시 채움(그래프의 톱니 꼭대기)"
+  },
+  {
+   "id": "refill3",
+   "at": [
+    "s09",
+    3.8
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -18
+   },
+   "means": "수위가 문턱에 닿기 전에 다시 채움(그래프의 톱니 꼭대기)"
+  },
+  {
+   "id": "refill4",
+   "at": [
+    "s09",
+    5.0
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -18
+   },
+   "means": "수위가 문턱에 닿기 전에 다시 채움(그래프의 톱니 꼭대기)"
+  },
+  {
+   "id": "gate1",
+   "at": {
+    "sentence": "s10",
+    "word": "가로줄이"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 400,
+    "gain_db": -15
+   },
+   "means": "가로줄 신호가 문(게이트)에 닿음 — 문이 열림"
+  },
+  {
+   "id": "bitup1",
+   "at": {
+    "sentence": "s11",
+    "word": "높이면"
+   },
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.9,
+    "f_start": 150,
+    "f_end": 450,
+    "gain_db": -20
+   },
+   "means": "세로줄 높음 → 전하가 흘러듦"
+  },
+  {
+   "id": "bitdn1",
+   "at": {
+    "sentence": "s11",
+    "word": "낮추면"
+   },
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.9,
+    "f_start": 450,
+    "f_end": 150,
+    "gain_db": -20
+   },
+   "means": "세로줄 낮음 → 전하가 빠져나감"
+  },
+  {
+   "id": "bitup2",
+   "at": [
+    "s11:end",
+    -0.3
+   ],
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.9,
+    "f_start": 150,
+    "f_end": 450,
+    "gain_db": -22
+   },
+   "means": "다시 높음 → 1 로 남김"
+  },
+  {
+   "id": "gate2",
+   "at": [
+    {
+     "sentence": "s12",
+     "word": "닫으면"
+    },
+    0.3
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.08,
+    "gain_db": -15
+   },
+   "means": "가로줄 신호가 꺼지고 문이 닫힘"
+  },
+  {
+   "id": "rowon1",
+   "at": {
+    "sentence": "s13",
+    "word": "열어"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 247,
+    "dur": 0.4,
+    "gain_db": -16
+   },
+   "means": "가로줄 하나가 그 줄의 문을 모두 엶 — 전하가 세로줄로 퍼짐"
+  },
+  {
+   "id": "amp1",
+   "at": {
+    "sentence": "s15",
+    "word": "키워"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 165,
+    "glide_to": 330,
+    "dur": 0.6,
+    "gain_db": -14
+   },
+   "means": "감지 증폭기가 작은 차이를 끝까지 키움"
+  },
+  {
+   "id": "wback1",
+   "at": {
+    "sentence": "s16",
+    "word": "다시"
+   },
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.8,
+    "f_start": 200,
+    "f_end": 500,
+    "gain_db": -20
+   },
+   "means": "키운 값이 칸으로 되돌아가 다시 써짐"
+  },
+  {
+   "id": "colsel1",
+   "at": {
+    "sentence": "s17",
+    "word": "세로줄"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "gain_db": -16
+   },
+   "means": "세로줄 번호로 한 칸을 고름"
+  },
+  {
+   "id": "out1",
+   "at": {
+    "sentence": "s17",
+    "word": "내보내니"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 600,
+    "decay": 0.04,
+    "gain_db": -18
+   },
+   "means": "그 칸의 값이 밖으로 나감"
+  },
+  {
+   "id": "rowoff1",
+   "at": [
+    "s17:end",
+    -0.3
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "gain_db": -22
+   },
+   "means": "가로줄이 닫힘"
+  },
+  {
+   "id": "sweep1",
+   "at": [
+    "refresh",
+    0.5
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -24
+   },
+   "means": "리프레시 한 바퀴(64 ms)의 시작 — 화면: 커서가 첫 줄로"
+  },
+  {
+   "id": "sweep2",
+   "at": [
+    "refresh",
+    2.9
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -24
+   },
+   "means": "리프레시 한 바퀴(64 ms)의 시작 — 화면: 커서가 첫 줄로"
+  },
+  {
+   "id": "sweep3",
+   "at": [
+    "refresh",
+    5.3
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -24
+   },
+   "means": "리프레시 한 바퀴(64 ms)의 시작 — 화면: 커서가 첫 줄로"
+  },
+  {
+   "id": "sweep4",
+   "at": [
+    "refresh",
+    7.7
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -24
+   },
+   "means": "리프레시 한 바퀴(64 ms)의 시작 — 화면: 커서가 첫 줄로"
+  },
+  {
+   "id": "sweep5",
+   "at": [
+    "refresh",
+    10.1
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -24
+   },
+   "means": "리프레시 한 바퀴(64 ms)의 시작 — 화면: 커서가 첫 줄로"
+  },
+  {
+   "id": "sweep6",
+   "at": [
+    "refresh",
+    12.5
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -24
+   },
+   "means": "리프레시 한 바퀴(64 ms)의 시작 — 화면: 커서가 첫 줄로"
+  },
+  {
+   "id": "sweep7",
+   "at": [
+    "refresh",
+    14.9
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -24
+   },
+   "means": "리프레시 한 바퀴(64 ms)의 시작 — 화면: 커서가 첫 줄로"
+  },
+  {
+   "id": "sweep8",
+   "at": [
+    "refresh",
+    17.3
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -24
+   },
+   "means": "리프레시 한 바퀴(64 ms)의 시작 — 화면: 커서가 첫 줄로"
+  },
+  {
+   "id": "sweep9",
+   "at": [
+    "refresh",
+    19.7
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -24
+   },
+   "means": "리프레시 한 바퀴(64 ms)의 시작 — 화면: 커서가 첫 줄로"
+  },
+  {
+   "id": "sweep10",
+   "at": [
+    "refresh",
+    22.1
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -24
+   },
+   "means": "리프레시 한 바퀴(64 ms)의 시작 — 화면: 커서가 첫 줄로"
+  },
+  {
+   "id": "off3",
+   "at": {
+    "sentence": "s21",
+    "word": "꺼지면"
+   },
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.25,
+       "low": 50,
+       "high": 260,
+       "release": 0.18
+      }
+     },
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 90,
+       "dur": 0.35,
+       "release": 0.25
+      }
+     }
+    ],
+    "gain_db": -12
+   },
+   "means": "전원이 꺼짐 — 리프레시가 멈춤"
+  },
+  {
+   "id": "leaktone4",
+   "at": [
+    {
+     "sentence": "s21",
+     "word": "꺼지면"
+    },
+    0.3
+   ],
+   "kind": "chirp",
+   "params": {
+    "points": [
+     [
+      0,
+      300,
+      0.4
+     ],
+     [
+      4.2,
+      110,
+      0.05
+     ]
+    ],
+    "gain_db": -26
+   },
+   "means": "칸들이 문턱 아래로"
+  },
+  {
+   "id": "off4",
+   "at": {
+    "sentence": "s22",
+    "word": "전원"
+   },
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.25,
+       "low": 50,
+       "high": 260,
+       "release": 0.18
+      }
+     },
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 90,
+       "dur": 0.35,
+       "release": 0.25
+      }
+     }
+    ],
+    "gain_db": -12
+   },
+   "means": "전원이 꺼짐 — 램 칸은 새고 플래시 칸은 그대로"
+  },
+  {
+   "id": "rw1",
+   "at": {
+    "sentence": "s22",
+    "word": "읽고"
+   },
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 330,
+       "dur": 0.12
+      }
+     },
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 196,
+       "dur": 1.6,
+       "release": 0.2
+      }
+     }
+    ],
+    "gain_db": -20
+   },
+   "means": "읽고 쓰기 막대가 함께 출발: 램은 곧바로, SSD 는 오래(설명용 눈금)"
+  },
+  {
+   "id": "on2",
+   "at": [
+    "s23",
+    -0.4
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 220,
+    "dur": 0.25,
+    "gain_db": -18
+   },
+   "means": "전원이 다시 켜짐 — 컴퓨터가 일함"
+  },
+  {
+   "id": "load1",
+   "at": {
+    "sentence": "s23",
+    "word": "오래"
+   },
+   "kind": "whoosh",
+   "params": {
+    "dur": 2.0,
+    "f_start": 400,
+    "f_end": 200,
+    "gain_db": -26
+   },
+   "means": "SSD 에서 램으로 천천히 옮김"
+  },
+  {
+   "id": "csweep1",
+   "at": [
+    "close",
+    0.0
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -28
+   },
+   "means": "리프레시가 계속 돈다"
+  },
+  {
+   "id": "csweep2",
+   "at": [
+    "close",
+    1.0
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -28
+   },
+   "means": "리프레시가 계속 돈다"
+  },
+  {
+   "id": "csweep3",
+   "at": [
+    "close",
+    2.0
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -28
+   },
+   "means": "리프레시가 계속 돈다"
+  },
+  {
+   "id": "csweep4",
+   "at": [
+    "close",
+    3.0
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -28
+   },
+   "means": "리프레시가 계속 돈다"
+  },
+  {
+   "id": "csweep5",
+   "at": [
+    "close",
+    4.0
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -28
+   },
+   "means": "리프레시가 계속 돈다"
+  },
+  {
+   "id": "csweep6",
+   "at": [
+    "close",
+    5.0
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.05,
+    "gain_db": -28
+   },
+   "means": "리프레시가 계속 돈다"
   }
+ ],
+ "ambient": {
+  "enabled": false
+ }
 }

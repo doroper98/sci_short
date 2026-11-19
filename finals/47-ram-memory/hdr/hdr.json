@@ -1,0 +1,29 @@
+{
+  "file": "ram-memory.hdr.mp4",
+  "bytes": 10936779,
+  "sha256": "3c8aca22e4300cf3a138953f43f6121dc6ed4657779ddc166f258efeccce062b",
+  "created": "2026-11-19T12:06:13+00:00",
+  "codec": "hevc Main 10",
+  "pix_fmt": "yuv420p10le",
+  "color": "bt2020 / smpte2084 (PQ) / bt2020nc",
+  "duration": 166.033,
+  "settings": {
+    "sdr_white_nits": 203,
+    "peak_boost": 4,
+    "gate": [
+      0.4,
+      0.7
+    ],
+    "crf": 18,
+    "preset": "medium",
+    "max_cll": 812,
+    "max_fall": 300
+  },
+  "frames": 4981,
+  "lit_frames": 4481,
+  "sdr_white_code": 573,
+  "peak_code": 678,
+  "peak_nits_estimate": 626,
+  "encode_seconds": 238.5,
+  "note": "peak_nits_estimate 는 무채색으로 보고 luma 코드에서 어림한 값"
+}
