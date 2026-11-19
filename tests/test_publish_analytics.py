@@ -380,6 +380,8 @@ class AnalyticsTest(unittest.TestCase):
         ("T2", "시험 둘째 편 | 나", "2026-11-19", "public", 500),
         ("R1", "다시 올린 편 | 다", "2026-11-19", "public", 950),
         ("T3", "시험 셋째 편 | 라", "2026-11-20", "public", 1000),
+        ("M1", "아침 첫 편 | 바", "2026-11-20", "public", 850),
+        ("M2", "아침 둘째 편 | 사", "2026-11-21", "public", 300),
         ("OLD", "오래된 편 | 마", "2026-11-01", "public", 1300),
     ]
 
@@ -388,9 +390,13 @@ class AnalyticsTest(unittest.TestCase):
         _ep(root, "60-a", "시험 첫 편 | 가", "가는 왜 그럴까요?", "T1")
         _ep(root, "61-b", "시험 둘째 편 | 나", "나는 왜 그럴까요?", "T2")
         _ep(root, "07-c", "다시 올린 편 | 다", "다는 왜 그럴까요?", "R1")
+        _ep(root, "62-m", "아침 첫 편 | 바", "바는 왜 그럴까요?", "M1")
+        _ep(root, "63-n", "아침 둘째 편 | 사", "사는 왜 그럴까요?", "M2")
         for name, patch in (("60-a", {"publish_at": "2026-11-18T08:00:00Z"}),
                             ("61-b", {"sweep": {"action": "watching", "published_at": "2026-11-19T08:01:30Z"}}),
-                            ("07-c", {"previous": [{"video_id": "R0"}], "publish_at": "2026-11-19T08:00:00Z"})):
+                            ("07-c", {"previous": [{"video_id": "R0"}], "publish_at": "2026-11-19T08:00:00Z"}),
+                            ("62-m", {"publish_at": "2026-11-19T22:00:00Z"}),          # 11-20 07:00 KST (2026-11-19 사용자 결정 뒤)
+                            ("63-n", {"publish_at": "2026-11-20T22:00:00Z"})):         # 11-21 07:00 KST
             p = root / name / "youtube_upload.json"
             rec = json.loads(p.read_text(encoding="utf-8"))
             rec.update(patch)
@@ -408,13 +414,26 @@ class AnalyticsTest(unittest.TestCase):
         self.assertIn("| 07-c (다시 올림) | 11-19 17:00 | 예약 시각 | 52시간 | 950 | 받음 |", sec)
         self.assertIn("| T3 | 11-20 19:00 | Data API | 26시간 | 1,000 | 받음 |", sec)       # 기록 없는 편은 Data API 시각
         self.assertNotIn("OLD", sec)                                                      # 14일 넘은 편
+        self.assertIn("| 62-m | 11-20 07:00 | 예약 시각 | 38시간 | 850 | 받음 |", sec)       # 07:00 공개(2026-11-19 사용자 결정)
+        self.assertIn("| 63-n | 11-21 07:00 | 예약 시각 | 14시간 | 300 | 아직(48시간 전) |", sec)
         self.assertIn("공개 48시간이 지난 **3편 중 2편**이 800회 이상입니다.", sec)
-        self.assertIn("- 한 주 시험(11-18~11-24 공개, 새 편만·하루 한 편·17:00): 공개 48시간이 지난 2편 중 1편이 800회 이상 "
-                      "— 기준 7편 중 5편 이상.", sec)                                     # 다시 올린 편은 빼고 센다
+        self.assertIn("- 17:00 으로 공개한 새 편(11-18~, 하루 한 편, 견줄 기준): 공개 48시간이 지난 2편 중 1편이 800회 이상.",
+                      sec)                                                                # 다시 올린 편은 빼고 센다
+        self.assertNotIn("한 주 시험(", sec)                                              # 07:00 편은 아직 48시간 전
         self.assertNotIn("판정:", sec)
         by = {v["video_id"]: v for v in snap["videos"]}
         self.assertEqual((by["T1"]["publish_src"], by["T1"]["republished"]), ("publish_at", False))
         self.assertEqual(by["R1"]["republished"], True)
+        # 2026-11-19 사용자 결정(07:00 공개) 뒤: 판정 구간은 11-20~11-26 에 낮 12시 전에 공개된 새 편이다.
+        now = dt.datetime(2026, 11, 23, 0, 0, tzinfo=dt.timezone.utc)                     # 11-23 09:00 KST
+        with mock.patch(f"{__name__}.VIDEOS", self.TRIAL_VIDEOS):
+            md, _ = an.run(FakeYT(), "AT", today=now.date(), finals=root, prev=None, now=now)
+        sec = md.split("## 기본 노출 (최근 14일 공개)")[1].split("\n## ")[0]
+        self.assertIn("- 17:00 으로 공개한 새 편(11-18~, 하루 한 편, 견줄 기준): 공개 48시간이 지난 3편 중 2편이 800회 이상.",
+                      sec)                                                                # 11-20 19:00 에 나간 T3 도 저녁 쪽
+        self.assertIn("- 한 주 시험(11-20~11-26 공개, 새 편만·하루 한 편·07:00): 공개 48시간이 지난 2편 중 1편이 800회 이상 "
+                      "— 기준 7편 중 5편 이상.", sec)
+        self.assertNotIn("판정:", sec)
 
     def test_trial_line_waits_for_48h(self) -> None:
         root = self._trial_finals()
@@ -424,13 +443,25 @@ class AnalyticsTest(unittest.TestCase):
         self.assertIn("| 60-a | 11-18 17:00 | 예약 시각 | 28시간 | 900 | 받음 |", md)
         self.assertIn("| 61-b | 11-19 17:01 | 점검 기록 | 4시간 | 500 | 아직(48시간 전) |", md)
         self.assertNotIn("한 주 시험", md)
+        self.assertNotIn("견줄 기준", md)
 
     def test_trial_verdict_after_seven(self) -> None:
-        vids = [(f"W{i}", f"주간 {i} | 가", f"2026-11-{18 + i}", "public", 900 if i < 5 else 100) for i in range(7)]
-        now = dt.datetime(2026, 11, 28, 0, 0, tzinfo=dt.timezone.utc)
-        with mock.patch(f"{__name__}.VIDEOS", vids):
-            md, _ = an.run(FakeYT(), "AT", today=now.date(), finals=self.finals, prev=None, now=now)
-        self.assertIn("공개 48시간이 지난 7편 중 5편이 800회 이상 — 기준 7편 중 5편 이상. 판정: 기준을 채웠습니다", md)
+        now = dt.datetime(2026, 11, 28, 0, 0, tzinfo=dt.timezone.utc)                     # 11-28 09:00 KST, 마지막 편 공개 50시간 뒤
+        for good, verdict in ((5, "판정: 기준을 채웠습니다(하루 여러 편 쪽 원인 — 아침 공개는 걸림돌이 아닙니다)."),
+                              (4, "판정: 기준에 못 미칩니다(주제·형식 또는 아침 공개 쪽 — 17:00 편과 견줍니다, 9-8).")):
+            root = self.finals / f"week{good}"
+            vids = [(f"W{good}{i}", f"주간 {good}-{i} | 가", f"2026-11-{20 + i}", "public", 900 if i < good else 100) for i in range(7)]
+            for i, v in enumerate(vids):                                                  # 11-20 ~ 11-26, 날마다 07:00 KST
+                _ep(root, f"7{i}-w", v[1], "가는 왜 그럴까요?", v[0])
+                p = root / f"7{i}-w" / "youtube_upload.json"
+                rec = json.loads(p.read_text(encoding="utf-8"))
+                rec["publish_at"] = f"2026-11-{19 + i}T22:00:00Z"
+                p.write_text(json.dumps(rec, ensure_ascii=False), encoding="utf-8")
+            with mock.patch(f"{__name__}.VIDEOS", vids):
+                md, _ = an.run(FakeYT(), "AT", today=now.date(), finals=root, prev=None, now=now)
+            self.assertIn(f"- 한 주 시험(11-20~11-26 공개, 새 편만·하루 한 편·07:00): 공개 48시간이 지난 7편 중 {good}편이 800회 이상 "
+                          f"— 기준 7편 중 5편 이상. {verdict}", md)
+            self.assertNotIn("견줄 기준", md)                                             # 17:00 으로 나간 편이 없는 표본
 
     def test_real_benchmark_config_loads(self) -> None:
         cfg = json.loads((yu.REPO / "config" / "benchmark.json").read_text(encoding="utf-8"))
