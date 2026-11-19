@@ -677,12 +677,12 @@
       "height": 1920,
       "bytes": 13362493,
       "sha256": "2defe7739ccefba6b8bb85151bb92e9d87a7fe8867f2983405e2e127945496d7",
-      "video_date": "uncommitted",
+      "video_date": "2026-11-19",
       "episode_code": "episodes/ram-memory",
       "upload_info": "finals/47-ram-memory/upload.md",
       "thumbnail": "0초 프레임(위에서 본 램의 칸 배열 — 칸마다 담긴 전하가 산과 해 그림을 이룸. 흰 물음 두 줄 \"1초에 15번 넘게 다시 채워야 하는 / 램은 어떻게 기억할까?\"와 그 아래 가장 큰 주황 주제어 \"RAM\". 답은 쓰지 않음)",
       "hdr": "finals/47-ram-memory/hdr/ram-memory.hdr.mp4",
-      "hdr_bytes": 10936779
+      "hdr_bytes": 10907580
     },
     {
       "number": 58,

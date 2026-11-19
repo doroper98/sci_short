@@ -16,7 +16,7 @@
 //  - Retention: most cells hold far longer than 64 ms (RAIDR); a few weak cells set the 64 ms interval. Leak rates here are
 //    illustrative. Hook / refresh / storage decays are time-compressed (declared in the kicker).
 import {
-  progressBar, rgba, mix, clamp, lerp, smooth, easeInOut, rand, poly, line, circle, ring, rect, withAlpha, arrow, lit, TAU,
+  progressBar, rgba, mix, clamp, lerp, smooth, easeInOut, rand, poly, line, circle, ring, rect, withAlpha, arrow, lit, ensureGain, TAU,
 } from '../../pipeline/render/index.mjs';
 
 export const theme = 'noturno';
@@ -38,6 +38,18 @@ const fadeOut = (t, t1, d = 0.4) => 1 - smooth((t - t1) / d);
 const evAll = (ctx, id) => ctx.events.filter(e => new RegExp(`^${id}\\d+$`).test(e.id)).map(e => e.time).sort((a, b) => a - b);
 const evT = (ctx, id) => ctx.events.get(id).time;
 const S = (ctx, id) => ctx.tl.sentence(id);
+// Text laid over glowing (lit) things: blank the gain map under it so the HDR grade does not brighten the white text
+// together with the light below (pipeline/render/hdr.mjs, docs/HDR.md — same idea as the pixel episodes' `unlit`).
+// Only the gain map changes; the SDR picture is untouched. `a` = how much of the light to remove (the text's opacity).
+function unlitRect(stage, x, y, w, h, a = 1) {
+  const g = ensureGain(stage), gc = g.ctx;
+  if (a <= 0 || !g.dirty) return;          // nothing lit yet in this frame: the map is already black there
+  gc.save();
+  gc.setTransform(g.scale, 0, 0, g.scale, 0, 0); gc.globalAlpha = clamp(a); gc.globalCompositeOperation = 'source-over';
+  gc.fillStyle = '#000'; gc.fillRect(x, y, w, h);
+  gc.restore();
+  g.dirty = true;
+}
 
 // =====================================================================================================
 // The stored picture (mountains and a sun) — what the array "remembers"
@@ -179,6 +191,7 @@ function drawCell(stage, t, cx, cy, k, st = {}) {
 const POSTER = {q: ['1초에 15번 넘게 다시 채워야 하는', '램은 어떻게 기억할까?'], a: 'RAM', qy: 590, ay: 830, QS: 56, AS: 220};
 function posterTitle(stage, q) {
   const c = stage.ctx, yTop = POSTER.qy - 110, yBot = POSTER.ay + POSTER.AS * 0.62 + 70;
+  unlitRect(stage, 0, yTop, W, yBot - yTop, 1 - smooth(q / 0.8));
   withAlpha(c, 1 - smooth(q / 0.8), () => {
     const g = c.createLinearGradient(0, yTop, 0, yBot);
     g.addColorStop(0, 'rgba(0,10,16,0)'); g.addColorStop(0.18, 'rgba(0,10,16,0.62)'); g.addColorStop(0.85, 'rgba(0,10,16,0.62)'); g.addColorStop(1, 'rgba(0,10,16,0)');
@@ -209,6 +222,7 @@ function titleList(id, ctx) {
 }
 function head(stage, kicker, title, aK, aT) {
   const c = stage.ctx, so = {shadow: 'rgba(0,0,0,0.9)', shadowBlur: 18};
+  unlitRect(stage, 0, 118, W, 146, Math.max(kicker ? aK : 0, title ? aT : 0));
   if (kicker) withAlpha(c, aK, () => { stage.text(kicker, 540, 146, {role: 'display', weight: 500, size: 30, color: PAL.warm, align: 'center', tracking: 1.5, maxWidth: 880, ...so}); line(c, [[505, 174], [575, 174]], PAL.warm, 3, {cap: 'butt'}); });
   if (title) withAlpha(c, aT, () => stage.text(title, 540, 228, {role: 'display', weight: 700, size: 56, color: PAL.ink, align: 'center', maxWidth: 900, ...so}));
 }
@@ -271,7 +285,7 @@ export const scenes = {
     // gauge during s02: seconds since power off (one example) and the share of '1' cells still read as 1
     const ga = fadeIn(t, off2 - 0.5) * fadeOut(t, ctx.scene.end - 0.35);
     if (ga > 0) withAlpha(c, ga, () => {
-      const x0 = 70, y0 = 296; panel(c, x0, y0, 420, 190);
+      const x0 = 70, y0 = 296; panel(c, x0, y0, 420, 190); unlitRect(stage, x0, y0, 420, 190, ga);
       const sec = 60 * clamp((t - off2) / (span + 0.4));
       stage.text(`전원 끈 뒤 ${fmt(sec)}초`, x0 + 24, y0 + 46, {role: 'display', weight: 700, size: 38, color: PAL.ink});
       stage.text('한 예 · 기계마다 다름', x0 + 24, y0 + 90, {size: 24, color: PAL.muted});
@@ -504,7 +518,7 @@ export const scenes = {
       if (q >= 1) stage.text('밖으로', 1030, y + 30, {size: 24, weight: 500, color: PAL.ink, align: 'right'});
     }
     if (t > ctx.tl.at('s17', 3.4)) withAlpha(c, fadeIn(t, ctx.tl.at('s17', 3.4)), () => {
-      rect(c, 300, 902, 480, 64, 12, rgba(PAL.plate, 0.94), rgba(PAL.border, 1), 2);
+      rect(c, 300, 902, 480, 64, 12, rgba(PAL.plate, 0.94), rgba(PAL.border, 1), 2); unlitRect(stage, 300, 902, 480, 64, fadeIn(t, ctx.tl.at('s17', 3.4)));
       stage.text(`주소 = 가로 ${R}, 세로 ${SEL}`, 540, 935, {role: 'display', weight: 700, size: 38, color: PAL.ink, align: 'center'});
     });
     if (t < s14.start + 0.4 && t > ron + 0.3) withAlpha(c, fadeIn(t, ron + 0.3) * fadeOut(t, s14.start), () => stage.text('한 줄이 한꺼번에', X(COLS - 1) + 100, Yr(R) - 92, {size: 26, weight: 500, color: PAL.ink, align: 'right'}));
@@ -538,14 +552,15 @@ export const scenes = {
     const tr = (q, col, w, glowIt) => { const pts = []; for (let i = 0; i <= 160; i++) { const tt = t - win + win * i / 160; if (tt < ctx.scene.start + 0.2) continue; pts.push([Xs(tt), Y(levAt(q, tt))]); } if (pts.length < 2) return; if (glowIt) lit(stage, cc => line(cc, pts, col, w), {gain: 0.45}); else line(c, pts, col, w); };
     tr(typC, rgba(PAL.muted, 0.95), 3, false);
     tr(weakC, rgba(PAL.warm, 0.95), 4, true);
+    unlitRect(stage, gx0 + 2, Y(0.5) - 34, 64, 32);                 // the threshold label sits on the scope's light
     stage.text('빨리 새는 칸', gx1, gy1 - 26, {size: 24, weight: 500, color: PAL.warm, align: 'right'});
     stage.text('보통 칸', gx1 - 190, gy1 - 26, {size: 24, weight: 500, color: PAL.muted, align: 'right'});
     // one pass = 64 ms: the passes counted, then the big number
     const done = sweeps.filter(x => x + RP <= Math.min(t, off)).length;
     const bn = fadeIn(t, ctx.tl.at('s19', 2.6), 0.5) * fadeOut(t, s20.start + 0.2, 0.4);
-    if (bn > 0) withAlpha(c, bn, () => { rect(c, 120, 350, 400, 140, 14, rgba(PAL.plate, 0.95), rgba(PAL.border, 1), 2); stage.text('1초에 15.6번', 320, 400, {role: 'display', weight: 700, size: 54, color: PAL.ink, align: 'center'}); stage.text('1000 ÷ 64 ms', 320, 458, {size: 26, color: PAL.muted, align: 'center'}); });
+    if (bn > 0) withAlpha(c, bn, () => { rect(c, 120, 350, 400, 140, 14, rgba(PAL.plate, 0.95), rgba(PAL.border, 1), 2); unlitRect(stage, 120, 350, 400, 140, bn); stage.text('1초에 15.6번', 320, 400, {role: 'display', weight: 700, size: 54, color: PAL.ink, align: 'center'}); stage.text('1000 ÷ 64 ms', 320, 458, {size: 26, color: PAL.muted, align: 'center'}); });
     stage.text(`한 바퀴 = 64 ms`, gx1 - 10, gy0 - 16, {size: 24, color: PAL.muted, align: 'right'});
-    if (t > off) { let flip = 0; for (const q of G.cells) if (q.one && L[q.k] < 0.5) flip++; withAlpha(c, fadeIn(t, off + 0.3), () => { rect(c, 120, 350, 400, 110, 14, rgba(PAL.plate, 0.95), rgba(PAL.border, 1), 2); stage.text(`1 → 0  ${flip}칸`, 320, 405, {role: 'display', weight: 700, size: 46, color: PAL.ink, align: 'center'}); }); }
+    if (t > off) { let flip = 0; for (const q of G.cells) if (q.one && L[q.k] < 0.5) flip++; withAlpha(c, fadeIn(t, off + 0.3), () => { rect(c, 120, 350, 400, 110, 14, rgba(PAL.plate, 0.95), rgba(PAL.border, 1), 2); unlitRect(stage, 120, 350, 400, 110, fadeIn(t, off + 0.3)); stage.text(`1 → 0  ${flip}칸`, 320, 405, {role: 'display', weight: 700, size: 46, color: PAL.ink, align: 'center'}); }); }
   },
 
   // chain: RAM cell (open bowl) beside a flash cell (charge locked inside an insulating shell) → power off: the RAM cell
@@ -603,6 +618,7 @@ export const scenes = {
     const dim = 0.68 * smooth((t - s24.start + 0.6) / 0.8);
     c.fillStyle = rgba(PAL.deep, dim); c.fillRect(0, 160, W, 1100);
     const ea = smooth((t - s24.start + 0.4) / 0.6);
+    unlitRect(stage, 30, 585, W - 60, 325, ea);
     if (ea > 0) withAlpha(c, ea, () => {
       const so = {shadow: 'rgba(0,0,0,0.9)', shadowBlur: 18};
       stage.text('새어 나가는 전하를,', 540, 640, {role: 'display', weight: 700, size: 62, color: PAL.ink, align: 'center', ...so});
