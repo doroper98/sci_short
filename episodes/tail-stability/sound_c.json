@@ -1,0 +1,369 @@
+{
+ "events": [
+  {
+   "id": "c_flip1",
+   "at": "yaw",
+   "kind": "custom",
+   "params": {
+    "gain_db": -24,
+    "layers": [
+     {
+      "kind": "whoosh",
+      "params": {
+       "dur": 0.4,
+       "f_start": 300,
+       "f_end": 600,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "whoosh",
+      "params": {
+       "dur": 0.4,
+       "f_start": 600,
+       "f_end": 300,
+       "gain_db": 0
+      },
+      "offset": 0.4
+     }
+    ]
+   },
+   "means": "yaw 첫 0.8초 — 카드 뒤집기(옆모습 → 평면도)"
+  },
+  {
+   "id": "c_kick_y",
+   "at": {
+    "sentence": "s18",
+    "word": "옆으로"
+   },
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.3,
+    "f_start": 180,
+    "f_end": 560,
+    "gain_db": -17
+   },
+   "means": "옆 돌풍이 기수에 닿음(평면도, 3배 느리게) — 기수가 옆으로 10° 틀어지기 시작"
+  },
+  {
+   "id": "c_release_y",
+   "at": {
+    "sentence": "s18",
+    "word": "밀려"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "decay": 0.1,
+    "gain_db": -24
+   },
+   "means": "멈춤이 풀림 — 수직 꼬리날개가 밀려 기수가 돌아오기 시작"
+  },
+  {
+   "id": "c_turn",
+   "at": {
+    "sentence": "s19",
+    "word": "바람이"
+   },
+   "kind": "whoosh",
+   "params": {
+    "dur": 1.0,
+    "f_start": 200,
+    "f_end": 420,
+    "gain_db": -22
+   },
+   "means": "바람 방향이 12° 바뀜(연기 줄 전체가 1초에 걸쳐 기욺)"
+  },
+  {
+   "id": "c_turnback",
+   "at": {
+    "sentence": "s19",
+    "word": "원리입니다"
+   },
+   "kind": "whoosh",
+   "params": {
+    "dur": 1.6,
+    "f_start": 420,
+    "f_end": 200,
+    "gain_db": -27
+   },
+   "means": "바람 방향이 천천히 0° 로 돌아옴(다음 장면은 바람이 → 방향)"
+  },
+  {
+   "id": "c_detach",
+   "at": [
+    "tailless",
+    0.15
+   ],
+   "kind": "custom",
+   "params": {
+    "gain_db": -20,
+    "layers": [
+     {
+      "kind": "tick",
+      "params": {
+       "freq": 300,
+       "decay": 0.08
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 200,
+       "high": 600,
+       "release": 0.08
+      }
+     }
+    ]
+   },
+   "means": "평면도에서 꼬리날개(수평·수직)를 떼어 냄"
+  },
+  {
+   "id": "c_kick_b",
+   "at": {
+    "sentence": "s21",
+    "word": "컴퓨터가",
+    "offset": 0.4
+   },
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.3,
+    "f_start": 180,
+    "f_end": 520,
+    "gain_db": -20
+   },
+   "means": "전익기 기수에 옆 돌풍 — 기수가 3° 틀어짐"
+  },
+  {
+   "id": "c_flap1",
+   "at": {
+    "sentence": "s21",
+    "word": "컴퓨터가",
+    "offset": 0.75
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 600,
+    "decay": 0.04,
+    "gain_db": -22
+   },
+   "means": "날개 끝의 판이 벌어짐 1번째(신호 점이 닿는 순간, 좌우 번갈아)"
+  },
+  {
+   "id": "c_flap2",
+   "at": {
+    "sentence": "s21",
+    "word": "컴퓨터가",
+    "offset": 1.2
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 600,
+    "decay": 0.04,
+    "gain_db": -22
+   },
+   "means": "날개 끝의 판이 벌어짐 2번째(신호 점이 닿는 순간, 좌우 번갈아)"
+  },
+  {
+   "id": "c_flap3",
+   "at": {
+    "sentence": "s21",
+    "word": "컴퓨터가",
+    "offset": 1.65
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 600,
+    "decay": 0.04,
+    "gain_db": -22
+   },
+   "means": "날개 끝의 판이 벌어짐 3번째(신호 점이 닿는 순간, 좌우 번갈아)"
+  },
+  {
+   "id": "c_flap4",
+   "at": {
+    "sentence": "s21",
+    "word": "컴퓨터가",
+    "offset": 2.1
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 600,
+    "decay": 0.04,
+    "gain_db": -22
+   },
+   "means": "날개 끝의 판이 벌어짐 4번째(신호 점이 닿는 순간, 좌우 번갈아)"
+  },
+  {
+   "id": "c_flap5",
+   "at": {
+    "sentence": "s21",
+    "word": "컴퓨터가",
+    "offset": 2.55
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 600,
+    "decay": 0.04,
+    "gain_db": -22
+   },
+   "means": "날개 끝의 판이 벌어짐 5번째(신호 점이 닿는 순간, 좌우 번갈아)"
+  },
+  {
+   "id": "c_flap6",
+   "at": {
+    "sentence": "s21",
+    "word": "컴퓨터가",
+    "offset": 3.0
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 600,
+    "decay": 0.04,
+    "gain_db": -22
+   },
+   "means": "날개 끝의 판이 벌어짐 6번째(신호 점이 닿는 순간, 좌우 번갈아)"
+  },
+  {
+   "id": "c_flip2",
+   "at": [
+    "s22",
+    -0.85
+   ],
+   "kind": "custom",
+   "params": {
+    "gain_db": -24,
+    "layers": [
+     {
+      "kind": "whoosh",
+      "params": {
+       "dur": 0.4,
+       "f_start": 300,
+       "f_end": 600,
+       "gain_db": 0
+      }
+     },
+     {
+      "kind": "whoosh",
+      "params": {
+       "dur": 0.4,
+       "f_start": 600,
+       "f_end": 300,
+       "gain_db": 0
+      },
+      "offset": 0.4
+     }
+    ]
+   },
+   "means": "카드 뒤집기(평면도 → 옆모습, 종이비행기)"
+  },
+  {
+   "id": "c_fold1",
+   "at": {
+    "sentence": "s22",
+    "word": "여러"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.07,
+    "gain_db": -20
+   },
+   "means": "종이비행기 앞쪽 1번째 겹이 포개짐 — 무게중심이 앞으로"
+  },
+  {
+   "id": "c_fold2",
+   "at": {
+    "sentence": "s22",
+    "word": "여러",
+    "offset": 0.35
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.07,
+    "gain_db": -20
+   },
+   "means": "종이비행기 앞쪽 2번째 겹이 포개짐 — 무게중심이 앞으로"
+  },
+  {
+   "id": "c_fold3",
+   "at": {
+    "sentence": "s22",
+    "word": "여러",
+    "offset": 0.7
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 340,
+    "decay": 0.07,
+    "gain_db": -20
+   },
+   "means": "종이비행기 앞쪽 3번째 겹이 포개짐 — 무게중심이 앞으로"
+  },
+  {
+   "id": "c_bend",
+   "at": {
+    "sentence": "s22",
+    "word": "뒤끝을"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.08,
+    "gain_db": -21
+   },
+   "means": "날개 뒤끝이 위로 15° 꺾임"
+  },
+  {
+   "id": "c_kick_pp",
+   "at": {
+    "sentence": "s22",
+    "word": "올려",
+    "offset": 0.24
+   },
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.3,
+    "f_start": 180,
+    "f_end": 560,
+    "gain_db": -18
+   },
+   "means": "종이비행기에 돌풍(3배 느리게) — 10° 들렸다 돌아옴"
+  },
+  {
+   "id": "c_kick_c",
+   "at": {
+    "sentence": "s23",
+    "word": "틀어질수록"
+   },
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.3,
+    "f_start": 180,
+    "f_end": 560,
+    "gain_db": -17
+   },
+   "means": "처음과 같은 돌풍이 두 모형의 기수를 10° 듦"
+  },
+  {
+   "id": "c_end",
+   "at": [
+    "s24",
+    0.2
+   ],
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     220,
+     330,
+     440
+    ],
+    "dur": 2.2,
+    "gain_db": -24
+   },
+   "means": "맺음 — 결론 글"
+  }
+ ]
+}
