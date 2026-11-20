@@ -388,7 +388,7 @@ function b2Frame(stage, t, P, {flipped = false} = {}) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------
-// TAILLESS — 종이비행기(옆모습). 기수 왼쪽, 기수 끝 = (PAPER.nx, PAPER.ny), 길이 700 px. 무광 종이색.
+// TAILLESS — 종이비행기(옆모습). 기수 왼쪽, 기수 끝 = (PAPER.nx, PAPER.ny), 모형 700 u × 1.25 = 화면 875 px. 무광 종이색.
 // ---------------------------------------------------------------------------------------------------------------
 const FOLD = [{L: 250, D: 62}, {L: 190, D: 50}, {L: 136, D: 40}];
 const CG_FR = [0.53, 0.475, 0.43, 0.385], AC_FR = 0.45, BEND = {x0: 610, deg: 15};
@@ -539,7 +539,7 @@ function closeScene(stage, t, p, ctx) {
     const st = tx(mU, ...K.SIDE_PTS.stab), ghostLen = Math.min(0.6, M.dLt(thU)) * K.FORCE_PX;
     if (ghostLen > 3) {
       K.forceArrow(stage, st[0], st[1], ghostLen, null, {dashed: true, alpha: upA});
-      stage.text('없음', st[0] - 22, st[1] - ghostLen - 6, {size: 26, weight: 500, color: PAL.muted, align: 'right', alpha: upA, shadow: 'rgba(0,0,0,0.9)', shadowBlur: 8});
+      stage.text('없음', st[0] - 22, st[1] - ghostLen - 6, {size: 26, weight: 500, color: PAL.muted, align: 'right', alpha: upA * (1 - smooth((thU - 20 * D) / (10 * D))), shadow: 'rgba(0,0,0,0.9)', shadowBlur: 8});
     }
   }
   // 큰 숫자 둘(모형에서 읽음) — 두 모형 사이, 각자의 이름과 함께
