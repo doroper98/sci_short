@@ -1,0 +1,29 @@
+{
+  "file": "gpu-compute.hdr.mp4",
+  "bytes": 12577580,
+  "sha256": "582f396c386adee32419702490e2f8b23acf280665ed904b355e46f34a9134db",
+  "created": "2026-11-20T12:05:59+00:00",
+  "codec": "hevc Main 10",
+  "pix_fmt": "yuv420p10le",
+  "color": "bt2020 / smpte2084 (PQ) / bt2020nc",
+  "duration": 165.902,
+  "settings": {
+    "sdr_white_nits": 203,
+    "peak_boost": 4,
+    "gate": [
+      0.4,
+      0.7
+    ],
+    "crf": 18,
+    "preset": "medium",
+    "max_cll": 812,
+    "max_fall": 300
+  },
+  "frames": 4977,
+  "lit_frames": 4785,
+  "sdr_white_code": 573,
+  "peak_code": 703,
+  "peak_nits_estimate": 814,
+  "encode_seconds": 274.4,
+  "note": "peak_nits_estimate 는 무채색으로 보고 luma 코드에서 어림한 값"
+}

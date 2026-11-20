@@ -91,7 +91,7 @@ function shadeAt(x, y, th, B = BALL) {
   return {b: 0.07, ball: false, back: true};
 }
 function pixColor(s) { return s.ball ? mix(PAL.lo, PAL.hi, Math.pow(clamp(s.b), 0.7)) : s.back ? PAL.backdrop : mix('#0A1D25', '#7C6A55', clamp(s.b)); }
-function lightPos(th, B = BALL) { return [B.cx + Math.sin(th) * B.r * 1.32, B.cy - B.r * 0.95 + (1 - Math.cos(th)) * 18]; }
+function lightPos(th, B = BALL) { return [B.cx + Math.sin(th) * B.r * 1.06, B.cy - B.r * 0.86 + (1 - Math.cos(th)) * 18 * B.r / 440]; }
 function drawLight(stage, th, a = 1, B = BALL) {
   const [x, y] = lightPos(th, B), behind = Math.cos(th) < -0.15 && Math.abs(x - B.cx) < B.r * 0.95;
   if (behind || a <= 0) return;

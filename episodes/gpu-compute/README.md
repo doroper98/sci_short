@@ -18,5 +18,5 @@ SCISHORT_ROOT=$PWD node episodes/gpu-compute/render.mjs --stills --safe   # 플�
 
 HDR 판(2026-11-15): 빛나는 것(에너지·신호)은 `scenes.mjs` 에서 `lit(stage, c => …)` 안에서 그립니다. `hdr` 단계가 `outputs/gpu-compute/final/hdr/gpu-compute.hdr.mp4` 를 만듭니다. 규칙은 [docs/HDR.md](../../docs/HDR.md).
 
-`scenes.mjs`의 장면 id는 `script.json`의 `scene` 값과 같아야 합니다. 예시는 "얼음은 왜 물에 뜰까"이며 내용은 바꿉니다.
+`scenes.mjs`의 장면 id(hook · origin · essence · cores · branch · ai · close)는 `script.json`의 `scene` 값과 같아야 합니다. 48 GPU 편: 화소 화면 속 공(같은 식, 다른 데이터) → 점 16개 확대 → CPU 코어 4개와 워프 32칸 → 조건에 따른 갈림 → 행렬 곱셈. 기획·출처·검증은 `brief.md`.
 자세한 순서와 API는 [pipeline/README.md](../../pipeline/README.md).

@@ -69,10 +69,11 @@
 | 45 | GPT는 문맥을 어떻게 읽을까 — 낱말마다 앞의 낱말들을 살펴, 같은 글자도 문맥에 맞는 뜻으로 바뀐다 | 164.3초 | [45-gpt-transformer/](45-gpt-transformer/) | [upload.md](45-gpt-transformer/upload.md) | 2026-11-13 |
 | 46 | GPT는 그림을 어떻게 그릴까 — 그림을 조각으로 바꾸면, 글을 쓸 때처럼 그림도 한 조각씩 이어 그릴 수 있다 | 165.3초 | [46-gpt-image/](46-gpt-image/) | [upload.md](46-gpt-image/upload.md) | 2026-11-13 |
 | 47 | RAM — 램은 어떻게 기억할까 | 166.0초 | [47-ram-memory/](47-ram-memory/) | [upload.md](47-ram-memory/upload.md) | 2026-11-19 |
+| 48 | GPU — GPU는 어떻게 계산할까 | 165.9초 | [48-gpu-compute/](48-gpu-compute/) | [upload.md](48-gpu-compute/upload.md) | uncommitted |
 | 58 | 쓰나미는 어떻게 생기고, 어떻게 바다를 건널까 — 바닥까지 물 전체가 움직이는 파도라서, 깊은 바다에서는 낮고 빠르고 얕은 해안에서는 느려지고 높아진다 | 164.9초 | [58-tsunami/](58-tsunami/) | [upload.md](58-tsunami/upload.md) | 2026-11-15 |
 | 64 | 기상 레이더는 비구름을 어떻게 볼까 — 구름을 찍지 않는다. 전파를 쏘고, 빗방울이 돌려보낸 메아리의 시간과 세기를 잰다 | 164.8초 | [64-weather-radar/](64-weather-radar/) | [upload.md](64-weather-radar/upload.md) | 2026-11-15 |
 
-합계 42편, 116.8분, 892 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
+합계 43편, 119.6분, 910 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
 <!-- catalog:end -->
 
 ## 이전 작품 (`legacy/`)
