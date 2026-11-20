@@ -1,5 +1,7 @@
 # 66 꼬리날개 — 구현 계획서 (제작 세션 → 구현 작업자)
 
+> **상태: 초안 — 한 번도 구현·렌더해 보지 않았습니다.** 2026-11-20 제작을 멈추기 전에 써 둔 계획입니다(사용자: "아 대기열에 추가 하란 뜻이었어"). 좌표·수치·첫 순간 수치(1초 10%, 2초 20%)는 어림이며 재지 않았습니다. 문장 id 는 검수 전 대본(`script.json` 24문장) 기준이라, 대본이 바뀌면 5절의 id 를 다시 맞춥니다.
+
 이 문서는 장면·소리를 구현하는 작업자가 그대로 따라 하도록 쓴 것입니다.
 읽을 순서: 이 문서 → `brief.md`(인과 사슬 표·사실·단순화) → `script.json` → `outputs/tail-stability/narration/timeline.json`(실제 문장 시각) → 본보기 코드 `episodes/asphalt-concrete/scenes.mjs`(포스터·머리글·끝 한 줄·`lit()`·번호 붙인 사건) → `pipeline/render/README.md`(계약) → `docs/ANIMATION_QUALITY.md` 맨 위 '2026-11-10' 절 → `docs/HDR.md`.
 무광 옆모습 비행기의 화풍 본보기는 `samples/look-proposal-radar/scenes.mjs` 의 `bodyPath`·`drawAircraft`, 기준 화면은 `samples/look-proposal-radar/stills.jpg`.
