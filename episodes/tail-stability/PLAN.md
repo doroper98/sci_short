@@ -1,6 +1,6 @@
 # 66 꼬리날개 — 구현 계획서 (제작 세션 → 구현 작업자)
 
-> **상태(2026-11-20): 1단계(운동 모형 `model.mjs`·공통 부품 `kit.mjs`) 구현됨. 대본은 Fable 검수를 받아 확정(23문장·798음절, s20 은 s21 에 합쳐 번호를 비움). 2단계(장면)는 9절의 계약으로 세 모듈이 나눠 맡는다.** 이 문서의 좌표는 어림이며, 1단계에서 실제로 맞춘 값은 `tools/kit_demo.mjs` 에 있다(9.3절).
+> **상태(2026-11-20): 완성 — `finals/66-tail-stability/`.** 이 문서는 구현 전에 쓴 계획과 2단계 계약이다. 실제 구현은 계획과 다른 곳이 있다(되감기 없음, 페노의 비행은 실제 빠르기, wing 은 오르는 동안 16배 느리게, 사건 id 는 `a_`·`b_`·`c_`·`gen_` 으로 시작). 기준은 코드(`scenes_a`·`scenes_b`·`scenes_c`·`kit`·`model`)와 `brief.md`·완성본 README 다.
 
 이 문서는 장면·소리를 구현하는 작업자가 그대로 따라 하도록 쓴 것입니다.
 읽을 순서: 이 문서 → `brief.md`(인과 사슬 표·사실·단순화) → `script.json` → `outputs/tail-stability/narration/timeline.json`(실제 문장 시각) → 본보기 코드 `episodes/asphalt-concrete/scenes.mjs`(포스터·머리글·끝 한 줄·`lit()`·번호 붙인 사건) → `pipeline/render/README.md`(계약) → `docs/ANIMATION_QUALITY.md` 맨 위 '2026-11-10' 절 → `docs/HDR.md`.
