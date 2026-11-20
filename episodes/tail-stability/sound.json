@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "notes": "설명용 합성음입니다(녹음 아님). 각 사건은 scenes.mjs의 ctx.events와 같은 시각을 씁니다. at 문법은 pipeline/README.md 참고.",
+  "events": [
+    {
+      "id": "bond",
+      "at": {
+        "sentence": "s03",
+        "word": "수소 결합"
+      },
+      "kind": "tick",
+      "params": {
+        "freq": 1760,
+        "gain_db": -20,
+        "decay": 0.12,
+        "repeat": 3,
+        "interval": 0.09
+      },
+      "means": "수소 결합이 이어지는 순간 — 화면의 결합선 번쩍임과 같은 시각"
+    },
+    {
+      "id": "float",
+      "at": [
+        "s05",
+        0.15
+      ],
+      "kind": "swell",
+      "params": {
+        "freqs": [
+          220,
+          330,
+          440
+        ],
+        "dur": 1.6,
+        "gain_db": -24
+      },
+      "means": "얼음이 떠오르는 결론 — 화면의 수면 고리와 같은 시각"
+    }
+  ],
+  "ambient": {
+    "enabled": false,
+    "kind": "pad",
+    "seed": 7,
+    "gain_db": -32,
+    "root_hz": 110,
+    "intervals": [
+      0,
+      7,
+      12,
+      16
+    ]
+  },
+  "music": {
+    "id": "zabriskie_patriarch",
+    "enabled": false,
+    "under_db": 12,
+    "duck_db": 6,
+    "start_sec": 0,
+    "note": "기본 꺼짐(2026-10-31 사용자 결정). 켜려면 enabled true. assets/music/registry.json 의 id. NO_MUSIC=1 이면 생략"
+  }
+}
