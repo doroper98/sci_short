@@ -1,0 +1,22 @@
+{
+ "notes": "모듈 A(hook, wing, tail)의 소리 사건. 장면 코드(scenes_a.mjs)가 ctx.events 로 같은 시각을 읽는다. 바람(gen_wind_*)과 각도를 따르는 음(a_tone*)은 tools/export_sound.mjs 가 모형에서 뽑아 sound_gen.json 에 쓴다. 기본음은 모두 700 Hz 아래.",
+ "events": [
+  {"id": "a_detach0", "at": 0.05, "kind": "custom", "params": {"gain_db": -16, "layers": [{"kind": "tick", "params": {"freq": 300, "decay": 0.06}}, {"kind": "noise", "params": {"dur": 0.12, "low": 200, "high": 650, "release": 0.08, "gain_db": -8}}]}, "means": "0초 프레임에 떠 있던 꼬리날개 조각이 풀려 바람에 실려 감"},
+  {"id": "a_kick0", "at": 0.25, "kind": "whoosh", "params": {"dur": 0.3, "f_start": 180, "f_end": 560, "gain_db": -17, "offset": -0.15}, "means": "결과 먼저: 같은 돌풍이 두 기수에 닿음(소리는 닿기 0.15초 전부터 올라옴)"},
+  {"id": "a_mark1", "at": {"sentence": "s01", "word": "떼면"}, "kind": "tick", "params": {"freq": 380, "decay": 0.08, "gain_db": -21}, "means": "'떼면' — 위 모형의 점선 꼬리날개 자리가 0.5초 동안 한 번 밝아짐"},
+  {"id": "a_pivot1", "at": {"sentence": "s02", "word": "무게중심을"}, "kind": "tick", "params": {"freq": 520, "decay": 0.08, "gain_db": -20}, "means": "위 모형의 축(무게중심) 고리"},
+  {"id": "a_pivot2", "at": {"sentence": "s02", "word": "무게중심을", "offset": 0.5}, "kind": "tick", "params": {"freq": 520, "decay": 0.08, "gain_db": -20}, "means": "아래 모형의 축(무게중심) 고리"},
+  {"id": "a_kick1", "at": {"sentence": "s03", "word": "돌풍이"}, "kind": "whoosh", "params": {"dur": 0.3, "f_start": 180, "f_end": 560, "gain_db": -17, "offset": -0.15}, "means": "'돌풍이' — 같은 돌풍이 두 기수에 닿음"},
+  {"id": "a_detachW", "at": ["wing", 0.05], "kind": "custom", "params": {"gain_db": -18, "layers": [{"kind": "tick", "params": {"freq": 300, "decay": 0.06}}, {"kind": "noise", "params": {"dur": 0.12, "low": 200, "high": 650, "release": 0.08, "gain_db": -8}}]}, "means": "wing 시작: 꼬리날개를 뗌"},
+  {"id": "a_slow0", "at": {"sentence": "s11", "word": "기수가", "offset": -1.6}, "kind": "tone", "params": {"freq": 330, "glide_to": 165, "dur": 0.5, "gain_db": -26}, "means": "8배 느리게 보기 시작(돌풍이 닿기 0.2 모형초 전)"},
+  {"id": "a_kick_w", "at": {"sentence": "s11", "word": "기수가"}, "kind": "whoosh", "params": {"dur": 0.9, "f_start": 160, "f_end": 420, "gain_db": -19, "offset": -0.3}, "means": "8배 느린 돌풍이 기수에 닿음 — 오르는 동안은 16배 느리게"},
+  {"id": "a_freeze0", "at": {"sentence": "s11", "word": "기수가", "offset": 2.88}, "kind": "tick", "params": {"freq": 260, "decay": 0.2, "gain_db": -20}, "means": "멈춤 — 기수 10°(돌풍이 들어 올리는 0.18 모형초 × 16: 오르는 동안만 16배 느리게)"},
+  {"id": "a_lens0", "at": {"sentence": "s12", "word": "앞쪽에"}, "kind": "tick", "params": {"freq": 440, "decay": 0.08, "gain_db": -24}, "means": "렌즈: 양력이 걸리는 자리와 무게중심"},
+  {"id": "a_release0", "at": {"sentence": "s12", "word": "조금", "offset": 0.4}, "kind": "tick", "params": {"freq": 330, "decay": 0.15, "gain_db": -20}, "means": "멈춤이 풀림 — 다시 8배 느리게"},
+  {"id": "a_attach1", "at": ["tail", 0.6], "kind": "tick", "params": {"freq": 420, "decay": 0.12, "gain_db": -18}, "means": "tail 시작: 꼬리날개가 날아와 붙음"},
+  {"id": "a_slow1", "at": {"sentence": "s14", "word": "기수가", "offset": -1.6}, "kind": "tone", "params": {"freq": 330, "glide_to": 165, "dur": 0.5, "gain_db": -26}, "means": "8배 느리게 보기 시작"},
+  {"id": "a_kick_t", "at": {"sentence": "s14", "word": "기수가"}, "kind": "whoosh", "params": {"dur": 0.9, "f_start": 160, "f_end": 420, "gain_db": -19, "offset": -0.3}, "means": "8배 느린 돌풍이 기수에 닿음(꼬리날개 있는 모형)"},
+  {"id": "a_freeze1", "at": {"sentence": "s14", "word": "기수가", "offset": 1.44}, "kind": "tick", "params": {"freq": 260, "decay": 0.2, "gain_db": -20}, "means": "멈춤 — 기수 10°, 렌즈가 꼬리날개로"},
+  {"id": "a_release1", "at": {"sentence": "s16", "word": "내려옵니다", "offset": -0.5}, "kind": "tick", "params": {"freq": 330, "decay": 0.15, "gain_db": -20}, "means": "효과 막대가 다 찬 프레임에 멈춤이 풀림 — 기수가 내려옴"}
+ ]
+}

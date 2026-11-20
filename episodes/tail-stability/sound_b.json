@@ -1,0 +1,31 @@
+{
+ "notes": "모듈 B(origin, essence)의 소리 사건. 장면 scenes_b.mjs 가 ctx.events 에서 같은 id 의 시각을 읽는다(같은 시계). 기본음은 모두 700 Hz 아래.",
+ "events": [
+  {"id": "b_wind1", "at": "origin", "kind": "env_noise", "params": {"points": [[0, 0.0], [0.3, 0.5], [25.8, 0.5], [26.06, 0.0]], "low": 120, "high": 600, "gain_db": -30}, "means": "풍동의 바람(실제 빠르기 — origin 에는 느리게 보는 구간이 없다)"},
+  {"id": "b_kick_a1", "at": {"sentence": "s04", "word": "곧게"}, "kind": "whoosh", "params": {"dur": 0.3, "f_start": 180, "f_end": 560, "gain_db": -17}, "means": "돌풍이 화살의 촉을 위로 듦"},
+  {"id": "b_kick_a2", "at": {"sentence": "s04", "word": "오래전부터"}, "kind": "whoosh", "params": {"dur": 0.3, "f_start": 180, "f_end": 560, "gain_db": -17}, "means": "돌풍이 화살의 촉을 아래로 누름"},
+  {"id": "b_morph1", "at": "s05", "kind": "whoosh", "params": {"dur": 0.6, "f_start": 260, "f_end": 420, "gain_db": -26}, "means": "화살이 비행기 모형으로 바뀜(깃털 → 꼬리날개)"},
+  {"id": "b_word", "at": {"sentence": "s05", "word": "영어"}, "kind": "tick", "params": {"freq": 330, "decay": 0.12, "gain_db": -24}, "means": "낱말 empennage 가 뜸"},
+  {"id": "b_etym", "at": {"sentence": "s05", "word": "화살에"}, "kind": "tick", "params": {"freq": 392, "decay": 0.12, "gain_db": -24}, "means": "어원 줄(empenner · 화살에 깃털을 달다)이 뜸"},
+  {"id": "b_morph2", "at": "s06", "kind": "whoosh", "params": {"dur": 0.6, "f_start": 260, "f_end": 420, "gain_db": -26}, "means": "비행기 모형이 페노의 모형으로 바뀜"},
+  {"id": "b_year", "at": {"sentence": "s06", "word": "천팔백칠십일년"}, "kind": "tick", "params": {"freq": 262, "decay": 0.15, "gain_db": -22}, "means": "큰 숫자 1871"},
+  {"id": "b_prop", "at": {"sentence": "s06", "word": "천팔백칠십일년", "offset": 0.3}, "kind": "tone", "params": {"freq": 96, "glide_to": 62, "dur": 11.0, "wave": "tri", "attack": 0.15, "decay": 20.0, "sustain": 1.0, "release": 0.25, "gain_db": -31}, "means": "고무줄이 풀리며 프로펠러가 돈다(실제 비행 11초 동안, 풀릴수록 낮아짐)"},
+  {"id": "b_mark40", "at": {"sentence": "s06", "word": "사십미터"}, "kind": "tick", "params": {"freq": 440, "decay": 0.1, "gain_db": -24}, "means": "거리 자에 40 m 금이 들어옴"},
+  {"id": "b_kick_p1", "at": {"sentence": "s07", "word": "조종하는", "offset": 0.1}, "kind": "whoosh", "params": {"dur": 0.3, "f_start": 180, "f_end": 520, "gain_db": -20}, "means": "작은 돌풍(위로) — 페노의 모형"},
+  {"id": "b_kick_p2", "at": {"sentence": "s07", "word": "자세를"}, "kind": "whoosh", "params": {"dur": 0.3, "f_start": 180, "f_end": 520, "gain_db": -20}, "means": "작은 돌풍(아래로) — 페노의 모형"},
+  {"id": "b_propstop", "at": {"sentence": "s06", "word": "천팔백칠십일년", "offset": 11.3}, "kind": "tick", "params": {"freq": 200, "decay": 0.2, "gain_db": -20}, "means": "40 m · 11초 — 고무줄이 다 풀려 프로펠러가 섬(b_prop + 11초)"},
+  {"id": "b_morph3", "at": ["origin:end", -0.95], "kind": "whoosh", "params": {"dur": 0.6, "f_start": 260, "f_end": 420, "gain_db": -27}, "means": "페노의 모형이 오늘의 비행기 모형으로 바뀜"},
+  {"id": "b_wind2", "at": "essence", "kind": "env_noise", "params": {"points": [[0, 0.5], [22.4, 0.5], [22.62, 0.0]], "low": 120, "high": 600, "gain_db": -30}, "means": "풍동의 바람(실제 빠르기)"},
+  {"id": "b_kick_e1", "at": ["s08", 0.15], "kind": "whoosh", "params": {"dur": 0.25, "f_start": 180, "f_end": 480, "gain_db": -21}, "means": "작은 돌풍 — 기수가 위로 6°"},
+  {"id": "b_kick_e2", "at": {"sentence": "s08", "word": "기수가"}, "kind": "whoosh", "params": {"dur": 0.25, "f_start": 180, "f_end": 480, "gain_db": -21}, "means": "작은 돌풍 — 기수가 아래로 6°"},
+  {"id": "b_flip1", "at": {"sentence": "s08", "word": "수직", "offset": -0.4}, "kind": "whoosh", "params": {"dur": 0.5, "f_start": 300, "f_end": 600, "gain_db": -24}, "means": "카드 뒤집기: 옆모습 → 평면도"},
+  {"id": "b_kick_e3", "at": {"sentence": "s08", "word": "좌우로"}, "kind": "whoosh", "params": {"dur": 0.25, "f_start": 180, "f_end": 480, "gain_db": -21}, "means": "작은 옆 돌풍 — 기수가 화면 위로 6°"},
+  {"id": "b_kick_e4", "at": {"sentence": "s08", "word": "바로잡습니다"}, "kind": "whoosh", "params": {"dur": 0.25, "f_start": 180, "f_end": 480, "gain_db": -21}, "means": "작은 옆 돌풍 — 기수가 화면 아래로 6°"},
+  {"id": "b_flip2", "at": "s09", "kind": "whoosh", "params": {"dur": 0.5, "f_start": 600, "f_end": 300, "gain_db": -24}, "means": "카드 뒤집기: 평면도 → 옆모습"},
+  {"id": "b_slide", "at": {"sentence": "s09", "word": "멀리"}, "kind": "tone", "params": {"freq": 180, "glide_to": 330, "dur": 2.6, "wave": "sine", "attack": 0.05, "decay": 9.0, "sustain": 1.0, "release": 0.2, "gain_db": -27}, "means": "작은 추가 받침에서 멀어진다(거리 1 → 4.2)"},
+  {"id": "b_balance", "at": {"sentence": "s09", "word": "멀리", "offset": 2.4375}, "kind": "tone", "params": {"freq": 330, "dur": 0.4, "wave": "sine", "attack": 0.01, "decay": 0.3, "sustain": 0.3, "release": 0.1, "gain_db": -24}, "means": "거리 4 — 4×1 = 1×4, 시소가 수평(b_slide 의 등속 미끄러짐에서 계산한 시각)"},
+  {"id": "b_ruler", "at": {"sentence": "s10", "word": "멀리"}, "kind": "tick", "params": {"freq": 300, "decay": 0.1, "gain_db": -25}, "means": "무게중심 ↔ 꼬리날개 거리의 자"},
+  {"id": "b_inset", "at": {"sentence": "s10", "word": "작은 날개여서"}, "kind": "tick", "params": {"freq": 392, "decay": 0.1, "gain_db": -25}, "means": "넓이 끼움 그림(1 : 1/4)"},
+  {"id": "b_kick_e5", "at": {"sentence": "s10", "word": "작은 힘으로도"}, "kind": "whoosh", "params": {"dur": 0.3, "f_start": 180, "f_end": 560, "gain_db": -18}, "means": "돌풍 — 기수 10°, 꼬리날개의 작은 힘이 되돌림(실시간)"}
+ ]
+}
