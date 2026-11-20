@@ -61,17 +61,19 @@
 | 32 | 레이더 — 전파의 메아리로 보고, 메아리를 줄여 숨는다 | 164.3초 | [32-radar/](32-radar/) | [upload.md](32-radar/upload.md) | 2026-11-08 |
 | 33 | 합성개구레이더(SAR) — 움직이며 받은 메아리를 이어 붙여, 거대한 안테나를 만든다 | 169.9초 | [33-sar/](33-sar/) | [upload.md](33-sar/upload.md) | 2026-11-10 |
 | 34 | 망원경의 종류 — 빛을 모으는 방법 | 158.6초 | [34-telescope-types/](34-telescope-types/) | [upload.md](34-telescope-types/upload.md) | 2026-11-13 |
-| 35 |  | 164.1초 | [35-asphalt-concrete/](35-asphalt-concrete/) | [upload.md](35-asphalt-concrete/upload.md) | uncommitted |
+| 35 | 아스팔트와 콘크리트 — 식어서 굳는 풀, 물과 반응해 굳는 풀 | 164.1초 | [35-asphalt-concrete/](35-asphalt-concrete/) | [upload.md](35-asphalt-concrete/upload.md) | 2026-11-18 |
 | 36 | 강착원반 — 별이 블랙홀 둘레에서 원반이 되는 이유 | 174.4초 | [36-accretion-disk/](36-accretion-disk/) | [upload.md](36-accretion-disk/upload.md) | 2026-11-10 |
 | 38 | 잠수함은 어떻게 찾을까 — 바다는 모습을 가려도, 소리와 자기장의 흔적까지 다 가리지는 못한다 | 170.6초 | [38-submarine-detection/](38-submarine-detection/) | [upload.md](38-submarine-detection/upload.md) | 2026-11-12 |
 | 43 | GPT는 대답을 어떻게 쓸까 — 다음 조각 하나를 뽑는 일을 되풀이해서, 한 조각씩 써 내려간다 | 159.4초 | [43-gpt-generative/](43-gpt-generative/) | [upload.md](43-gpt-generative/upload.md) | 2026-11-13 |
 | 44 | GPT는 어떻게 배웠을까 — 다음 조각 맞히기를 되풀이하며, 틀린 만큼 속의 숫자를 고쳤다 | 162.3초 | [44-gpt-pretrained/](44-gpt-pretrained/) | [upload.md](44-gpt-pretrained/upload.md) | 2026-11-13 |
 | 45 | GPT는 문맥을 어떻게 읽을까 — 낱말마다 앞의 낱말들을 살펴, 같은 글자도 문맥에 맞는 뜻으로 바뀐다 | 164.3초 | [45-gpt-transformer/](45-gpt-transformer/) | [upload.md](45-gpt-transformer/upload.md) | 2026-11-13 |
 | 46 | GPT는 그림을 어떻게 그릴까 — 그림을 조각으로 바꾸면, 글을 쓸 때처럼 그림도 한 조각씩 이어 그릴 수 있다 | 165.3초 | [46-gpt-image/](46-gpt-image/) | [upload.md](46-gpt-image/upload.md) | 2026-11-13 |
+| 47 | RAM — 램은 어떻게 기억할까 | 166.0초 | [47-ram-memory/](47-ram-memory/) | [upload.md](47-ram-memory/upload.md) | 2026-11-19 |
+| 48 | GPU — GPU는 어떻게 계산할까 | 165.9초 | [48-gpu-compute/](48-gpu-compute/) | [upload.md](48-gpu-compute/upload.md) | uncommitted |
 | 58 | 쓰나미는 어떻게 생기고, 어떻게 바다를 건널까 — 바닥까지 물 전체가 움직이는 파도라서, 깊은 바다에서는 낮고 빠르고 얕은 해안에서는 느려지고 높아진다 | 164.9초 | [58-tsunami/](58-tsunami/) | [upload.md](58-tsunami/upload.md) | 2026-11-15 |
 | 64 | 기상 레이더는 비구름을 어떻게 볼까 — 구름을 찍지 않는다. 전파를 쏘고, 빗방울이 돌려보낸 메아리의 시간과 세기를 잰다 | 164.8초 | [64-weather-radar/](64-weather-radar/) | [upload.md](64-weather-radar/upload.md) | 2026-11-15 |
 
-합계 41편, 114.0분, 878 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
+합계 43편, 119.6분, 910 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
 <!-- catalog:end -->
 
 ## 이전 작품 (`legacy/`)

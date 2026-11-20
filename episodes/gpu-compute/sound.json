@@ -1,0 +1,464 @@
+{
+ "version": 1,
+ "notes": "설명용 합성음입니다(녹음 아님). 각 사건은 scenes.mjs 의 ctx.events 와 같은 시각을 씁니다. 기본음은 모두 700 Hz 아래(사용자 규칙). 되풀이 사건은 repeat/interval 하나로 적고 scenes.mjs 가 같은 값으로 박자를 셉니다.",
+ "ambient": {
+  "enabled": false
+ },
+ "events": [
+  {
+   "id": "hframe",
+   "at": 0.0,
+   "kind": "tick",
+   "params": {
+    "freq": 200,
+    "decay": 0.04,
+    "gain_db": -24,
+    "repeat": 20,
+    "interval": 0.1
+   },
+   "means": "0~2초 실제 속도: 6프레임마다 한 번(1초에 60장을 다 들려주면 너무 빨라 설명용으로 줄임) — 화면 전체가 다시 칠해짐"
+  },
+  {
+   "id": "sweep",
+   "at": 0.0,
+   "kind": "whoosh",
+   "params": {
+    "dur": 2.0,
+    "f_start": 180,
+    "f_end": 520,
+    "q": 1.5,
+    "gain_db": -26
+   },
+   "means": "광원이 공 둘레를 돎(결과 먼저)"
+  },
+  {
+   "id": "rew",
+   "at": 2.2,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.8,
+    "f_start": 600,
+    "f_end": 150,
+    "gain_db": -22
+   },
+   "means": "되감기 — 첫 프레임으로"
+  },
+  {
+   "id": "chip",
+   "at": [
+    "origin",
+    0.4
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 165,
+    "dur": 0.5,
+    "release": 0.35,
+    "gain_db": -18
+   },
+   "means": "화면 아래에 GPU 칩이 자리 잡음"
+  },
+  {
+   "id": "y1999",
+   "at": [
+    "s04",
+    0.2
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -18
+   },
+   "means": "1999 이름표"
+  },
+  {
+   "id": "eone",
+   "at": {
+    "sentence": "s06",
+    "word": "밝기를"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 262,
+    "dur": 0.3,
+    "release": 0.2,
+    "gain_db": -18
+   },
+   "means": "빛이 점 하나에 닿아 밝기가 정해짐"
+  },
+  {
+   "id": "eseq",
+   "at": {
+    "sentence": "s07",
+    "word": "똑같고"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.05,
+    "gain_db": -22,
+    "repeat": 16,
+    "interval": 0.3
+   },
+   "means": "점 16개를 차례로 하나씩 계산(16박자)"
+  },
+  {
+   "id": "eshuf",
+   "at": [
+    "s08",
+    0.4
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 349,
+    "decay": 0.05,
+    "gain_db": -22,
+    "repeat": 16,
+    "interval": 0.25
+   },
+   "means": "순서를 섞어 계산해도 같은 그림(서로 기다리지 않음)"
+  },
+  {
+   "id": "ecmd",
+   "at": {
+    "sentence": "s09",
+    "word": "한꺼번에"
+   },
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 196,
+       "dur": 0.35,
+       "release": 0.25
+      }
+     },
+     {
+      "kind": "tick",
+      "params": {
+       "freq": 392,
+       "decay": 0.08
+      }
+     }
+    ],
+    "gain_db": -14
+   },
+   "means": "명령 하나가 점 16개에 한꺼번에 내려감(1박자)"
+  },
+  {
+   "id": "ecmd2",
+   "at": {
+    "sentence": "s10",
+    "word": "한꺼번에"
+   },
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 196,
+       "dur": 0.35,
+       "release": 0.25
+      }
+     },
+     {
+      "kind": "tick",
+      "params": {
+       "freq": 392,
+       "decay": 0.08
+      }
+     }
+    ],
+    "gain_db": -14
+   },
+   "means": "광원이 옮겨 가고 16개가 함께 다시 계산됨"
+  },
+  {
+   "id": "ccpu",
+   "at": {
+    "sentence": "s11",
+    "word": "차례로"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.03,
+    "gain_db": -24,
+    "repeat": 16,
+    "interval": 0.2
+   },
+   "means": "CPU 코어 4개가 한 박자에 한 점씩(빠른 박자)"
+  },
+  {
+   "id": "cgpu",
+   "at": {
+    "sentence": "s13",
+    "word": "같은"
+   },
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 196,
+       "dur": 0.3,
+       "release": 0.2
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 200,
+       "high": 650,
+       "release": 0.1
+      }
+     }
+    ],
+    "gain_db": -15,
+    "repeat": 2,
+    "interval": 0.45
+   },
+   "means": "명령 하나 → 계산기 32개가 함께(느린 박자, 32점씩)"
+  },
+  {
+   "id": "ccpu2",
+   "at": {
+    "sentence": "s13",
+    "word": "같은"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.03,
+    "gain_db": -26,
+    "repeat": 16,
+    "interval": 0.2
+   },
+   "means": "같은 때 CPU 코어 4개도 다시 시작 — 한 박자에 4점(경주)"
+  },
+  {
+   "id": "zoom",
+   "at": [
+    "s14",
+    -0.3
+   ],
+   "kind": "whoosh",
+   "params": {
+    "dur": 1.0,
+    "f_start": 500,
+    "f_end": 160,
+    "gain_db": -22
+   },
+   "means": "워프 하나에서 칩 전체로 물러남"
+  },
+  {
+   "id": "total",
+   "at": {
+    "sentence": "s15",
+    "word": "모두"
+   },
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     131,
+     196,
+     262
+    ],
+    "dur": 1.4,
+    "gain_db": -22
+   },
+   "means": "모두 합한 계산 수"
+  },
+  {
+   "id": "bra",
+   "at": {
+    "sentence": "s16",
+    "word": "한쪽이"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 220,
+    "dur": 0.3,
+    "release": 0.2,
+    "gain_db": -16
+   },
+   "means": "A 갈래: 계산기 16개만 계산, 16개 멈춤"
+  },
+  {
+   "id": "brb",
+   "at": {
+    "sentence": "s16",
+    "word": "다른"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 175,
+    "dur": 0.3,
+    "release": 0.2,
+    "gain_db": -16
+   },
+   "means": "B 갈래: 나머지 16개 — 박자가 두 배"
+  },
+  {
+   "id": "bchain",
+   "at": [
+    "s17",
+    0.3
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 294,
+    "decay": 0.05,
+    "gain_db": -22,
+    "repeat": 16,
+    "interval": 0.3
+   },
+   "means": "앞의 답이 다음으로 — 한 번에 계산기 하나"
+  },
+  {
+   "id": "tokc",
+   "at": {
+    "sentence": "s18",
+    "word": "조건에"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "갈리는 일 → CPU"
+  },
+  {
+   "id": "tokg",
+   "at": {
+    "sentence": "s18",
+    "word": "같은"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "되풀이하는 일 → GPU"
+  },
+  {
+   "id": "cuda",
+   "at": [
+    "s19",
+    0.2
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 247,
+    "dur": 0.4,
+    "release": 0.3,
+    "gain_db": -18
+   },
+   "means": "CUDA 2006 이름표"
+  },
+  {
+   "id": "mrow",
+   "at": {
+    "sentence": "s21",
+    "word": "칸마다"
+   },
+   "kind": "whoosh",
+   "params": {
+    "dur": 1.1,
+    "f_start": 250,
+    "f_end": 600,
+    "gain_db": -24
+   },
+   "means": "A의 한 줄과 B의 한 열이 C의 한 칸으로 모임"
+  },
+  {
+   "id": "mall",
+   "at": {
+    "sentence": "s21",
+    "word": "화면의"
+   },
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 196,
+       "dur": 0.35,
+       "release": 0.25
+      }
+     },
+     {
+      "kind": "tick",
+      "params": {
+       "freq": 392,
+       "decay": 0.08
+      }
+     }
+    ],
+    "gain_db": -14
+   },
+   "means": "명령 하나로 C의 16칸이 한꺼번에 — 화면 장면과 같은 소리"
+  },
+  {
+   "id": "win",
+   "at": {
+    "sentence": "s22",
+    "word": "크게"
+   },
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     196,
+     247,
+     294
+    ],
+    "dur": 1.2,
+    "gain_db": -22
+   },
+   "means": "2012 결과 막대가 자람"
+  },
+  {
+   "id": "rack",
+   "at": [
+    "s23",
+    -0.2
+   ],
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     131,
+     165,
+     196
+    ],
+    "dur": 1.6,
+    "gain_db": -24
+   },
+   "means": "여러 칩이 행렬을 계산"
+  },
+  {
+   "id": "cframe",
+   "at": [
+    "close",
+    0.0
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 200,
+    "decay": 0.04,
+    "gain_db": -28,
+    "repeat": 12,
+    "interval": 0.4
+   },
+   "means": "정리: 화면이 매 장면 다시 칠해짐(설명용 간격)"
+  }
+ ]
+}
