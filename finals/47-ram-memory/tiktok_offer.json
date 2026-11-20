@@ -1,0 +1,12 @@
+{
+ "offered_at": "2026-11-20T21:19:32+00:00",
+ "video_file": "ram-memory.mp4",
+ "video_md5": "d62ebd0e69dcafe36a7be0c85898b267",
+ "video_url": "https://raw.githubusercontent.com/doroper98/sci_short/5213d58774ac78d5fd15ee06feb371f15ade5232/finals/47-ram-memory/ram-memory.mp4",
+ "title": "1초에 15번 넘게 다시 채워야 하는 램은 어떻게 기억할까? | 새어 나가는 전하를 다시 채우는 RAM #램 #반도체 #과학",
+ "caption": "<1초에 15번 넘게 다시 채워야 하는 램은 어떻게 기억할까?>\n\n램의 대부분인 디램은, 한 칸이 전하를 담는 아주 작은 축전기예요.\n전하가 차 있으면 1, 비어 있으면 0이에요.\n그런데 이 전하는 가만두면 조금씩 새어 나가요.\n\n그래서 램은 64밀리초마다 모든 줄을 차례로 열어 다시 채워요.\n1초에 15번이 넘어요.\n\"램은 새어 나가는 전하를, 사라지기 전에 다시 채워서 기억해요\"\n\n읽기만 하면 칸은 그대로일까요?\n아니에요. 읽는 동안 전하가 흩어져서, 읽은 값을 칸에 다시 써 넣어요.\n\n전원을 끄면 다시 채우기도 멈춰서, 램은 금세 거의 다 잊어버려요.\n\n#램 #RAM #반도체 #컴퓨터 #과학",
+ "number": 47,
+ "slug": "ram-memory",
+ "account": "shortform_science",
+ "note": "안내만 했다. 게시는 사람이 틱톡 앱에서 한다."
+}
