@@ -23,10 +23,10 @@ const SPEC_BY = new Map(SPEC.map(e => [e.id, e]));
 // ---------------------------------------------------------------------------------------------------------------
 const WT = {x: 410, y: 520, s: 3.0};                       // tail 이 넘겨주는 옆모습(WT 자세)
 const TOPV = {x: 400, y: 600, s: 2.2};                     // 평면도(yaw)
-const FLYV = {x: 430, y: 612, s: 1.9};                     // 전익기(날개 폭 약 680 px)
+const FLYV = {x: 430, y: 626, s: 1.9};                     // 전익기(날개 폭 약 680 px)
 const UP = {x: 400, y: 470, s: 2.9}, DN = {x: 400, y: 1110, s: 2.9};   // hook 배치(close)
 const VANE = {x: 540, y: 1122};                            // 풍향계 받침(계기 자리)
-const PAPER = {nx: 130, ny: 640, L: 700};                  // 종이비행기: 기수 끝 화면 위치, 길이 px
+const PAPER = {nx: 62, ny: 585, L: 700, sc: 1.25};         // 종이비행기: 기수 끝 화면 위치, 모형 길이(u), 배율(화면 길이 875 px)
 const SLOW = 1 / 3;
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -77,6 +77,7 @@ function plan(tl, ev) {
   // ---- tailless: 종이비행기
   P.folds = [1, 2, 3].map(k => at('c_fold' + k));
   P.bend = at('c_bend');
+  P.cgSlide0 = P.folds[2] + 0.28; P.cgSlide1 = P.cgSlide0 + 1.2;   // 세 번 접은 뒤 ⊕ 가 앞으로 미끄러짐
   P.kickP = at('c_kick_pp');
   P.slowP0 = P.kickP - 0.25 / SLOW;                         // 돌풍 덩어리가 올라오기 시작하는 때(모형 시간 0.25초 전)
   P.segP = [{t0: P.slowP0, t1: tls.end, rate: SLOW}];
@@ -260,6 +261,13 @@ function yawScene(stage, t, p, ctx) {
 
   const th = P.thYaw(t), m = {...TOPV, theta: th};
   const kickRun = P.runY, tauK = M.tau(kickRun, t);
+  // 계기 바닥의 기록선(옆 돌풍의 run, 모형 시간 — 멈춤에서는 선도 멈춘다). 풍향계가 나오기 전에 스스로 사라진다.
+  const ta = ramp(t, P.flip1End, 0.3) * (1 - smooth((t - (P.vaneIn - 0.5)) / 0.5));
+  if (ta > 0) {
+    K.traceGauge(stage, {x: 130, y: 1052, w: 600, h: 140, t0: 0, span: 2.5, yMin: -6, yMax: 14, ticks: [-5, 0, 10], alpha: ta},
+      tauK > 0 ? [{fn: tt => M.theta('vane', tt), col: PAL.warm, upTo: tauK, width: 3}] : []);
+    stage.text('기수 각도 · 좌우', 750, 1122, {size: 26, weight: 500, color: PAL.muted, align: 'left', alpha: ta});
+  }
   const drawTopWorld = st => {
     for (const g of M.strobe(kickRun, 'vane', t)) K.drawTop(st, {...TOPV, theta: g.theta, ghost: g.a});
     K.drawTop(st, {...m, tail: 'on', hl: {trackFin: win(t, P.finTrack, P.s18.end, 0.3)}});
@@ -382,25 +390,25 @@ function b2Frame(stage, t, P, {flipped = false} = {}) {
 // ---------------------------------------------------------------------------------------------------------------
 // TAILLESS — 종이비행기(옆모습). 기수 왼쪽, 기수 끝 = (PAPER.nx, PAPER.ny), 길이 700 px. 무광 종이색.
 // ---------------------------------------------------------------------------------------------------------------
-const FOLD = [{L: 240, D: 46}, {L: 184, D: 38}, {L: 132, D: 30}];
+const FOLD = [{L: 250, D: 62}, {L: 190, D: 50}, {L: 136, D: 40}];
 const CG_FR = [0.53, 0.475, 0.43, 0.385], AC_FR = 0.45, BEND = {x0: 610, deg: 15};
 function paperState(P, t) {
-  let fr = CG_FR[0];
-  P.folds.forEach((f, k) => { fr += (CG_FR[k + 1] - CG_FR[k]) * smooth((t - f) / 0.28); });
+  // 앞쪽 겹이 다 포개진 뒤 무게중심이 한 번에 앞으로 미끄러진다(1.2초, 접는 프레임 바로 뒤)
+  const fr = lerp(CG_FR[0], CG_FR[3], smooth((t - P.cgSlide0) / (P.cgSlide1 - P.cgSlide0)));
   const th = M.runTheta(P.runP, 'paper', t);
   const cg = [fr * PAPER.L, 12];
   return {cg, th, bend: smooth((t - P.bend) / 0.35)};
 }
 function paperModel(stage, t, P, {labels = true} = {}) {
-  const c = stage.ctx, S = paperState(P, t), L = PAPER.L;
-  const cgS = [PAPER.nx + S.cg[0], PAPER.ny + S.cg[1]];
-  const toS = (u, v) => { const dx = u - S.cg[0], dy = v - S.cg[1], cs = Math.cos(S.th), sn = Math.sin(S.th); return [cgS[0] + dx * cs - dy * sn, cgS[1] + dx * sn + dy * cs]; };
-  c.save(); c.translate(cgS[0], cgS[1]); c.rotate(S.th); c.translate(-S.cg[0], -S.cg[1]);
+  const c = stage.ctx, S = paperState(P, t), L = PAPER.L, SC = PAPER.sc;
+  const cgS = [PAPER.nx + S.cg[0] * SC, PAPER.ny + S.cg[1] * SC];
+  const toS = (u, v) => { const dx = (u - S.cg[0]) * SC, dy = (v - S.cg[1]) * SC, cs = Math.cos(S.th), sn = Math.sin(S.th); return [cgS[0] + dx * cs - dy * sn, cgS[1] + dx * sn + dy * cs]; };
+  c.save(); c.translate(cgS[0], cgS[1]); c.rotate(S.th); c.scale(SC, SC); c.translate(-S.cg[0], -S.cg[1]);
   // 용골(아래로 접힌 몸통): 기수에서 뒤로 깊어지는 긴 삼각형
-  c.beginPath(); pathPts(c, [[2, 3], [L, 3], [L - 8, 62], [L - 96, 66]]);
-  const gk = c.createLinearGradient(0, 0, 0, 66); gk.addColorStop(0, PAL.paper); gk.addColorStop(1, PAL.paperLo);
+  c.beginPath(); pathPts(c, [[2, 3], [L, 3], [L - 10, 96], [L - 120, 102]]);
+  const gk = c.createLinearGradient(0, 0, 0, 102); gk.addColorStop(0, PAL.paper); gk.addColorStop(1, PAL.paperLo);
   c.fillStyle = gk; c.fill(); c.strokeStyle = rgba('#5E5644', 0.7); c.lineWidth = 1.5; c.stroke();
-  line(c, [[40, 7], [L - 30, 36]], rgba('#5E5644', 0.35), 1.5);                    // 접힌 금
+  line(c, [[40, 8], [L - 40, 52]], rgba('#5E5644', 0.35), 1.5);                    // 접힌 금
   // 앞쪽 겹(접기): 위로 선 모서리가 윗선을 축으로 아래로 넘어와 포개진다
   FOLD.forEach((f, k) => {
     const tf = P.folds[k], up = smooth((t - (tf - 0.22)) / 0.2), dn = smooth((t - tf) / 0.28);
@@ -430,21 +438,33 @@ function paperModel(stage, t, P, {labels = true} = {}) {
   const acA = ramp(t, P.folds[0] - 0.2, 0.3);
   const ac = toS(AC_FR * L, 0);
   withAlpha(c, acA, () => { circle(c, ac[0], ac[1], 9, PAL.deep); circle(c, ac[0], ac[1], 6, PAL.cool); });
-  K.cgMark(c, cgS[0], cgS[1], 14, S.th);
   const tagOut = 1 - smooth((t - (P.tls.end - 0.45)) / 0.4);
-  tag(stage, '양력이 걸리는 자리', ac[0] + 60, PAPER.ny - 110, ac[0], ac[1] - 10, la * acA * tagOut);
-  tag(stage, '무게중심', cgS[0] - 40, PAPER.ny + 150, cgS[0], cgS[1] + 18, la * ramp(t, P.folds[0] - 0.2, 0.3) * tagOut);
+  // 옛 자리의 흐린 잔상(점선 원): 미끄러지기 시작할 때 남고, 뒤끝을 꺾을 때 사라진다
+  const old = toS(CG_FR[0] * L, 12), oa = la * win(t, P.cgSlide0, P.bend, 0.3) * clamp(Math.abs(old[0] - cgS[0]) / 6);
+  if (oa > 0) withAlpha(c, oa, () => { c.save(); c.setLineDash([5, 5]); c.beginPath(); c.arc(old[0], old[1], 14, 0, TAU); c.strokeStyle = rgba(PAL.ink, 0.6); c.lineWidth = 2; c.stroke(); c.restore();
+    line(c, [[old[0] - 18, old[1] - 26], [cgS[0] + 20, old[1] - 26]], rgba(PAL.ink, 0.45), 2, {dash: [3, 6]}); });
+  K.cgMark(c, cgS[0], cgS[1], 14, S.th);
+  tag(stage, '양력이 걸리는 자리', ac[0] + 70, PAPER.ny - 130, ac[0], ac[1] - 10, la * acA * tagOut);
+  tag(stage, '무게중심', cgS[0] - 40, PAPER.ny + 200, cgS[0], cgS[1] + 18, la * ramp(t, P.folds[0] - 0.2, 0.3) * tagOut);
+  // 가로 치수선: ⊕ 가 양력이 걸리는 자리보다 앞(미끄러짐이 끝난 뒤, 뒤끝을 꺾기 전까지)
+  const da = la * win(t, P.cgSlide1 - 0.2, P.bend - 0.3, 0.3);
+  if (da > 0) withAlpha(c, da, () => {
+    const y = Math.min(ac[1], cgS[1]) - 44, xa = cgS[0], xb = ac[0];
+    line(c, [[xa, y - 10], [xa, y + 10]], PAL.ink, 2); line(c, [[xb, y - 10], [xb, y + 10]], PAL.ink, 2); line(c, [[xa, y], [xb, y]], PAL.ink, 2.5);
+    line(c, [[xa, y + 12], [xa, cgS[1] - 16]], rgba(PAL.ink, 0.4), 1.5, {dash: [3, 4]}); line(c, [[xb, y + 12], [xb, ac[1] - 10]], rgba(PAL.ink, 0.4), 1.5, {dash: [3, 4]});
+    stage.text('무게중심이 더 앞', xa - 14, y, {size: 28, weight: 700, color: PAL.ink, align: 'right', shadow: 'rgba(0,0,0,0.9)', shadowBlur: 12});
+  });
   // 뒤끝: 각도 호와 이름표, 아래로 짧은 난색 화살표(꺾인 뒤끝을 바람이 아래로 민다 → 기수를 드는 쪽)
   const pv = toS(BEND.x0, 0), tipS = toS(BEND.x0 + (L - BEND.x0) * Math.cos(BEND.deg * D * S.bend), -(L - BEND.x0) * Math.sin(BEND.deg * D * S.bend));
   if (S.bend > 0.02) withAlpha(c, la * S.bend * tagOut, () => {
-    const pts = []; for (let i = 0; i <= 12; i++) { const a = -BEND.deg * D * S.bend * i / 12 + S.th; pts.push([pv[0] + 70 * Math.cos(a), pv[1] + 70 * Math.sin(a)]); }
+    const pts = []; for (let i = 0; i <= 12; i++) { const a = -BEND.deg * D * S.bend * i / 12 + S.th; pts.push([pv[0] + 88 * Math.cos(a), pv[1] + 88 * Math.sin(a)]); }
     line(c, pts, rgba(PAL.ink, 0.7), 2);
   });
-  tag(stage, '뒤끝 15° 위로', tipS[0] - 20, PAPER.ny - 110, tipS[0] - 4, tipS[1] - 12, la * S.bend * tagOut);
+  tag(stage, '뒤끝 15° 위로', tipS[0] - 30, PAPER.ny - 130, tipS[0] - 4, tipS[1] - 12, la * S.bend * tagOut);
   const mid = toS(BEND.x0 + (L - BEND.x0) * 0.55 * Math.cos(BEND.deg * D), -(L - BEND.x0) * 0.55 * Math.sin(BEND.deg * D) + 6);
   K.forceArrow(stage, mid[0], mid[1] + 8, -46, PAL.warm, {alpha: la * ramp(t, P.bend + 0.3, 0.3)});
   // 돌풍(기수 밑에서 위로, 모형 시간)
-  const gp = [PAPER.nx + 40, PAPER.ny + 22];
+  const gp = [PAPER.nx + 70, PAPER.ny + 34];
   if (labels) K.gustPuff(stage, gp[0], gp[1], M.tau(P.runP, t) + 0.25);
   return S;
 }
@@ -452,9 +472,9 @@ function paperModel(stage, t, P, {labels = true} = {}) {
 function taillessScene(stage, t, p, ctx) {
   const P = plan(ctx.tl, ctx.events), c = stage.ctx, ph = ctx.clock.phase(t), sc = ctx.scene;
   const q2 = clamp((t - P.flip2) / 0.8), e2 = easeInOut(q2);
-  K.smokeField(stage, ph, {y0: lerp(260, 0, e2), y1: lerp(1000, 1920, e2)});
-  const floorA = 1 - e2;
-  withAlpha(c, floorA, () => K.gaugeFloor(stage, 1000, 1240));
+  const yF = lerp(1000, PFLOOR, e2);                       // 종이비행기 쪽은 풍동 창 260~900, 그 아래 계기 바닥
+  K.smokeField(stage, ph, {y0: 260, y1: yF});
+  K.gaugeFloor(stage, yF, 1240);
   if (q2 <= 0) b2Frame(stage, t, P);
   else if (q2 < 1) K.flipView(stage, q2, st => b2Frame(st, t, P, {flipped: true}), st => paperModel(st, t, P, {labels: false}), {cy: q2 < 0.5 ? FLYV.y : PAPER.ny});
   else paperModel(stage, t, P);
@@ -471,6 +491,16 @@ function taillessScene(stage, t, p, ctx) {
   // 종이비행기의 돌풍: 큰 숫자
   const pa = ramp(t, P.slowP0, 0.3) * (1 - smooth((t - (sc.end - 0.45)) / 0.4));
   if (pa > 0) K.bigAngle(stage, 940, 318, M.runTheta(P.runP, 'paper', t), {warm: true, align: 'right', alpha: pa});
+  paperTrace(stage, t, P, ramp(t, P.flip2End, 0.4) * (1 - smooth((t - (sc.end - 0.45)) / 0.4)));
+}
+const PFLOOR = 900;
+/** 종이비행기의 기수 각도 기록선(모형 시간 — 3배 느리게 구간이면 선도 느리게). 돌풍 전에는 눈금만. */
+function paperTrace(stage, t, P, a) {
+  if (a <= 0) return;
+  const tau = M.tau(P.runP, t);
+  K.traceGauge(stage, {x: 130, y: 968, w: 620, h: 150, t0: 0, span: 2.0, yMin: -6, yMax: 14, ticks: [-5, 0, 10], alpha: a},
+    tau > 0 ? [{fn: tt => M.theta('paper', tt), col: PAL.warm, upTo: tau, width: 3}] : []);
+  stage.text('기수 각도 · 위아래', 770, 1043, {size: 26, weight: 500, color: PAL.muted, align: 'left', alpha: a});
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -482,7 +512,12 @@ function closeScene(stage, t, p, ctx) {
   const run = P.runC;
   const mU = {...UP, theta: M.runTheta(run, 'tailless', t)}, mD = {...DN, theta: M.runTheta(run, 'tailed', t)};
   K.smokeField(stage, ph, {wake: [K.wakeOf(mU)]});
-  if (xq < 1) withAlpha(c, 1 - xq, () => paperModel(stage, t, P, {labels: false}));
+  if (xq < 1) withAlpha(c, 1 - xq, () => {
+    c.fillStyle = PAL.bg; c.fillRect(0, 0, K.W, 260);           // 앞 장면의 풍동 창 위쪽(연기 없음)
+    K.gaugeFloor(stage, PFLOOR, 1240);
+    paperTrace(stage, t, P, 1);
+    paperModel(stage, t, P, {labels: false});
+  });
   withAlpha(c, xq, () => {
     for (const g of M.strobe(run, 'tailed', t)) K.drawSide(stage, {...mD, theta: g.theta, ghost: g.a});
     for (const g of M.strobe(run, 'tailless', t)) K.drawSide(stage, {...mU, theta: g.theta, ghost: g.a, tail: 'ghost'});
@@ -498,26 +533,34 @@ function closeScene(stage, t, p, ctx) {
   const thU = mU.theta, thD = mD.theta, upA = endA * (1 - smooth((thU - 50 * D) / (25 * D)));
   if (t > P.kickC) {
     const sb = tx(mD, ...K.SIDE_PTS.stab); K.forceArrow(stage, sb[0], sb[1], M.dLt(thD) * K.FORCE_PX, PAL.warm, {alpha: endA});
-    const ac = tx(mU, ...K.SIDE_PTS.ac); K.forceArrow(stage, ac[0], ac[1], Math.min(2, M.dLw(thU)) * K.FORCE_PX, PAL.cool, {alpha: upA});
+    // 한색 화살표: 끝이 머리글 아래(y 275)를 넘지 않게 자른다
+    const ac = tx(mU, ...K.SIDE_PTS.ac), lenU = Math.min(Math.min(2, M.dLw(thU)) * K.FORCE_PX, ac[1] - 275);
+    if (lenU > 0) K.forceArrow(stage, ac[0], ac[1], lenU, PAL.cool, {alpha: upA});
     const st = tx(mU, ...K.SIDE_PTS.stab), ghostLen = Math.min(0.6, M.dLt(thU)) * K.FORCE_PX;
     if (ghostLen > 3) {
       K.forceArrow(stage, st[0], st[1], ghostLen, null, {dashed: true, alpha: upA});
-      stage.text('없음', st[0] + 20, st[1] - ghostLen / 2, {size: 26, weight: 500, color: PAL.muted, alpha: upA});
+      stage.text('없음', st[0] - 22, st[1] - ghostLen - 6, {size: 26, weight: 500, color: PAL.muted, align: 'right', alpha: upA, shadow: 'rgba(0,0,0,0.9)', shadowBlur: 8});
     }
   }
   // 큰 숫자 둘(모형에서 읽음) — 두 모형 사이, 각자의 이름과 함께
   const na = ramp(t, sc.start + 0.4, 0.4) * endA;
   if (na > 0) {
     withAlpha(c, na, () => {
-      stage.text('꼬리날개 없음', 940, 838, {size: 26, weight: 500, color: PAL.muted, align: 'right', shadow: 'rgba(0,0,0,0.85)', shadowBlur: 10});
+      stage.text('꼬리날개 없음', 940, 622, {size: 26, weight: 500, color: PAL.muted, align: 'right', shadow: 'rgba(0,0,0,0.85)', shadowBlur: 10});
       stage.text('꼬리날개 있음', 80, 930, {size: 26, weight: 500, color: PAL.muted, align: 'left', shadow: 'rgba(0,0,0,0.85)', shadowBlur: 10});
     });
-    K.bigAngle(stage, 940, 886, thU, {warm: false, size: 60, align: 'right', alpha: na});
+    K.bigAngle(stage, 940, 670, thU, {warm: false, size: 60, align: 'right', alpha: na});
     K.bigAngle(stage, 80, 978, thD, {warm: true, size: 60, align: 'left', alpha: na});
   }
   // s24: 어두워지고 결론 글, 끝 한 줄(마지막 문장이 시작한 뒤에만)
   const dim = 0.55 * smooth((t - (s24.start - 0.6)) / 0.8);
-  if (dim > 0) { c.fillStyle = `rgba(0,8,12,${dim})`; c.fillRect(0, 0, K.W, K.H); }
+  if (dim > 0) {
+    c.fillStyle = `rgba(0,8,12,${dim})`; c.fillRect(0, 0, K.W, K.H);
+    // 결론 글 뒤의 띠(알파 0.45 이하 — 뒤의 모형이 비쳐 보인다)
+    const b = 0.45 * dim / 0.55, g = c.createLinearGradient(0, 520, 0, 940);
+    g.addColorStop(0, 'rgba(0,8,12,0)'); g.addColorStop(0.2, `rgba(0,8,12,${b})`); g.addColorStop(0.8, `rgba(0,8,12,${b})`); g.addColorStop(1, 'rgba(0,8,12,0)');
+    c.fillStyle = g; c.fillRect(0, 520, K.W, 420);
+  }
   K.conclusion(stage, smooth((t - (s24.start - 0.4)) / 0.6));
   if (t >= s24.start) K.endLine(stage, smooth((t - s24.start) / 0.5));
 }
@@ -525,27 +568,13 @@ function closeScene(stage, t, p, ctx) {
 export const scenes = {yaw: yawScene, tailless: taillessScene, close: closeScene};
 
 // ---------------------------------------------------------------------------------------------------------------
-// 소리 표(모형에서 뽑음): 바람의 세기(그 장면의 rate 를 따름)와 각도를 따르는 음. tools/export_sound.mjs 가 모아 sound_gen.json 에 쓴다.
-// 음높이 220 × 2^(θ/60°) Hz, 660 에서 자름, 0.05초 간격. 바람: 실시간 0.5, 3배 느리게 0.28, 멈춤 0.04.
+// 소리 표(모형에서 뽑음): 각도를 따르는 음. tools/export_sound.mjs 가 모아 sound_gen.json 에 쓴다.
+// 음높이 220 × 2^(θ/60°) Hz, 660 에서 자름, 0.05초 간격.
 // ---------------------------------------------------------------------------------------------------------------
 export function genSound(tl, ev) {
   const P = plan(tl, ev), out = [];
-  const rateAll = t => M.rateAt([...P.segY, ...P.segP], t);
-  const windAmp = r => (r === 0 ? 0.04 : r < 0.5 ? 0.28 : 0.5);
   const r3 = x => Math.round(x * 1000) / 1000;
-  for (const [id, sc] of [['c_wind_yaw', P.yaw], ['c_wind_tailless', P.tls], ['c_wind_close', P.cl]]) {
-    // 계단: rate 가 바뀌는 자리마다 0.1초에 걸쳐 옮겨 간다(장면 경계에서는 앞뒤 조각이 0.1초 겹침)
-    const pts = [[0, 0]];
-    let prev = null;
-    for (let t = sc.start; t < sc.end - 1e-6; t += 0.01) {
-      const a = windAmp(rateAll(t));
-      if (prev === null) pts.push([0.1, a]);
-      else if (a !== prev) { pts.push([r3(t - sc.start), prev], [r3(t - sc.start + 0.1), a]); }
-      prev = a;
-    }
-    pts.push([r3(sc.end - sc.start), prev], [r3(sc.end - sc.start + 0.1), 0]);
-    out.push({id, at: r3(sc.start), kind: 'env_noise', params: {points: pts, low: 120, high: 600, gain_db: -30}, means: `바람(연기 줄) — 그 장면의 시간 배율을 따름(${sc.id})`});
-  }
+  // 바람(env_noise)은 tools/export_sound.mjs 가 rateSegs 에서 장면마다 gen_wind_<장면> 으로 만든다 — 여기서는 각도의 음만.
   const pitch = th => Math.min(660, 220 * Math.pow(2, (th * M.R2D) / 60));
   const tone = (id, t0, t1, fn, gain, means, fadeAt = null) => {
     const pts = [];
@@ -563,4 +592,4 @@ export function genSound(tl, ev) {
   tone('c_tone_close_dn', P.kickC - 0.1, P.kickC + 2.4, t => M.runTheta(P.runC, 'tailed', t), -27, '꼬리날개 있는 모형의 기수 각도 — 음이 제자리로');
   return out;
 }
-export const _plan = plan;
+export const _plan = plan;   // 점검용(도구에서 모형 값을 읽을 때)
