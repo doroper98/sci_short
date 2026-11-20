@@ -92,11 +92,11 @@ function plan(tl, ev) {
 // ---------------------------------------------------------------------------------------------------------------
 // B-2 의 작은 모형(설명 모형): 꼬리날개가 없으면 기수가 옆으로 틀어진 만큼 더 틀어진다(약한 불안정) — θ'' = λ²θ − cθ' + u.
 // 되먹임 제어: 컴퓨터가 0.45초마다(c_flap 사건) 기수 각도를 재고, 틀어진 쪽의 반대 날개 끝의 판을 벌린다(끌림 → 기수를 되돌리는 회전).
-// 판을 얼마나 벌릴지는 다음 잴 때 기수가 반대쪽으로 지금의 0.55 배가 되도록 고른다(조금 지나치게 고침 → 좌우가 번갈아 든다).
+// 끝은 좌우를 번갈아 쓰고, 얼마나 벌릴지는 다음 잴 때 기수가 반대쪽으로 지금의 0.55 배에 거의 멈춰 있도록 고른다(조금 지나치게 고침).
 // 실제 B-2 의 제어 법칙·수치가 아니다(brief 단순화: 날개 끝의 판이 벌어져 좌우를 잡는 모습만).
 // ---------------------------------------------------------------------------------------------------------------
-const B2 = {lam: 1.0, c: 0.5, lead: 0.15, dur: 0.4, ratio: 0.55, umax: 2.4, uref: 1.6, th0: 3 * D};
-const flapShape = a => (a < 0 || a > B2.dur ? 0 : Math.min(1, a / 0.08) * Math.min(1, (B2.dur - a) / 0.12));
+const B2 = {lam: 1.0, c: 0.5, lead: 0.15, dur: 0.22, ratio: 0.45, umax: 14, aim: 0.0, wOm: 0.0, uref: 1.6, th0: 3 * D};
+const flapShape = a => (a < 0 || a > B2.dur ? 0 : Math.min(1, a / 0.05) * Math.min(1, (B2.dur - a) / 0.08));
 function simB2(P) {
   const t0 = P.kickB + M.RISE, tEnd = P.flip2End + 0.5, dt = 1 / 1000;
   const flaps = P.flaps.slice();
@@ -114,13 +114,16 @@ function simB2(P) {
   for (let k = 0; k < flaps.length; k++) {
     const sk = flaps[k] - B2.lead;
     [th, om] = run(U, th, om, tc, sk); tc = sk;
-    const sNext = k + 1 < flaps.length ? flaps[k + 1] - B2.lead : sk + 0.45, target = -B2.ratio * th;
-    let lo = -B2.umax, hi = B2.umax;
-    for (let it = 0; it < 40; it++) {
-      const mid = (lo + hi) / 2, [thN] = run([...U, mid], th, om, sk, sNext);
-      if (thN > target) hi = mid; else lo = mid;
+    const sNext = (k + 1 < flaps.length ? flaps[k + 1] : flaps[k] + 0.45) + B2.aim, target = -B2.ratio * run(U, th, om, sk, flaps[k])[0];   // 판이 벌어질 때의 각을 미리 셈
+    // 다음 잴 때 기수가 반대쪽으로 지금의 0.55 배에 있고, 그때 거의 멈춰 있도록(각속도 작게) — 한 값 U 를 훑어 가장 맞는 것
+    let best = 0, bestJ = Infinity;
+    const sg = (k % 2 ? 1 : -1) * Math.sign(B2.th0);          // 좌우 끝을 번갈아(첫 판은 틀어진 쪽의 반대 끝)
+    for (let i = 0; i <= 160; i++) {
+      const u = sg * B2.umax * i / 160, [thN, omN] = run([...U, u], th, om, sk, sNext);
+      const J = (thN - target) ** 2 + (B2.wOm * omN) ** 2;
+      if (J < bestJ) { bestJ = J; best = u; }
     }
-    U.push((lo + hi) / 2);
+    U.push(best);
   }
   // 표로 남긴다(벽시계 = 모형 시간, rate 1)
   const n = Math.ceil((tEnd - t0) / dt), tab = new Float64Array(n + 1);
@@ -137,7 +140,7 @@ function simB2(P) {
     return tab[i] + (tab[i + 1] - tab[i]) * (x - i);
   };
   // 판: 음의 U(기수를 화면 아래로 = θ 를 줄임)는 화면 아래 날개 끝(+y)의 판, 양의 U 는 위 날개 끝(−y)의 판
-  const flapOpen = (t, side) => { let a = 0; for (let j = 0; j < U.length; j++) if (Math.sign(-U[j]) === side) a += Math.min(1, Math.abs(U[j]) / B2.uref) * flapShape(t - flaps[j]); return clamp(a); };
+  const flapOpen = (t, side) => { let a = 0; for (let j = 0; j < U.length; j++) if (Math.sign(-U[j]) === side) a += Math.min(1, Math.sqrt(Math.abs(U[j]) / B2.uref)) * flapShape(t - flaps[j]); return clamp(a); };
   return {theta, flaps, U, flapOpen, side: j => Math.sign(-U[j]) || 1};
 }
 
@@ -330,9 +333,8 @@ function drawComputer(stage, m, a) {
   const c = stage.ctx;
   withAlpha(c, a, () => {
     c.save(); const [x, y] = tx(m, ...COMP); c.translate(x, y); c.rotate(m.theta);
-    rect(c, -30, -22, 60, 44, 6, null);
     const g = c.createLinearGradient(0, -22, 0, 22); g.addColorStop(0, '#5C7883'); g.addColorStop(1, '#22383F');
-    c.beginPath(); c.roundRect(-30, -22, 60, 44, 6); c.fillStyle = g; c.fill(); c.strokeStyle = rgba(PAL.ink, 0.55); c.lineWidth = 1.5; c.stroke();
+    rect(c, -30, -22, 60, 44, 6, g, rgba(PAL.ink, 0.55), 1.5);
     line(c, [[-26, -18], [26, -18]], rgba('#FFFFFF', 0.3), 1.5);
     for (let k = 0; k < 3; k++) rect(c, -18 + k * 13, -6, 9, 12, 2, '#0E1D23');
     c.restore();
@@ -532,12 +534,16 @@ export function genSound(tl, ev) {
   const windAmp = r => (r === 0 ? 0.04 : r < 0.5 ? 0.28 : 0.5);
   const r3 = x => Math.round(x * 1000) / 1000;
   for (const [id, sc] of [['c_wind_yaw', P.yaw], ['c_wind_tailless', P.tls], ['c_wind_close', P.cl]]) {
-    const pts = [];
-    for (let t = sc.start; t <= sc.end + 1e-6; t += 0.05) {
-      const a = windAmp(rateAll(t)), last = pts[pts.length - 1];
-      if (!last || Math.abs(last[1] - a) > 1e-6 || t + 0.05 > sc.end) pts.push([r3(t - sc.start), a]);
-      else if (pts.length >= 2 && pts[pts.length - 2][1] === a) last[0] = r3(t - sc.start); else pts.push([r3(t - sc.start), a]);
+    // 계단: rate 가 바뀌는 자리마다 0.1초에 걸쳐 옮겨 간다(장면 경계에서는 앞뒤 조각이 0.1초 겹침)
+    const pts = [[0, 0]];
+    let prev = null;
+    for (let t = sc.start; t < sc.end - 1e-6; t += 0.01) {
+      const a = windAmp(rateAll(t));
+      if (prev === null) pts.push([0.1, a]);
+      else if (a !== prev) { pts.push([r3(t - sc.start), prev], [r3(t - sc.start + 0.1), a]); }
+      prev = a;
     }
+    pts.push([r3(sc.end - sc.start), prev], [r3(sc.end - sc.start + 0.1), 0]);
     out.push({id, at: r3(sc.start), kind: 'env_noise', params: {points: pts, low: 120, high: 600, gain_db: -30}, means: `바람(연기 줄) — 그 장면의 시간 배율을 따름(${sc.id})`});
   }
   const pitch = th => Math.min(660, 220 * Math.pow(2, (th * M.R2D) / 60));
@@ -557,3 +563,4 @@ export function genSound(tl, ev) {
   tone('c_tone_close_dn', P.kickC - 0.1, P.kickC + 2.4, t => M.runTheta(P.runC, 'tailed', t), -27, '꼬리날개 있는 모형의 기수 각도 — 음이 제자리로');
   return out;
 }
+export const _plan = plan;

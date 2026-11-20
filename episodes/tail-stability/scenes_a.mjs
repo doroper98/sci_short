@@ -63,7 +63,7 @@ function plan(tl, ev) {
       lens: T('a_lens0'), garrows: T('a_lens0') + 1.55, dim: w('s12', '무게중심보다'), brackets: w('s12', '무게중심보다') + 0.5,
       bars: w('s12', '무게중심보다') + 1.1},
     tail: {sc: tail, att: T('a_attach1'), slow1, kt, fr1, rel1, resetT, run: runT, t0x,
-      track: w('s14', '수평'), lens: fr1 + 0.05, links: tl.sentence('s14').end - 0.4, pulse: w('s15', '꼬리날개는'),
+      track: w('s14', '수평'), lens: fr1 + 1.0, links: tl.sentence('s14').end - 0.4, pulse: w('s15', '꼬리날개는'),
       arrows: w('s15', '사분의'), flabels: w('s15', '힘은'), brackets: w('s15', '거리는'), bars: tl.sentence('s15').end + 0.1,
       fill: w('s16', '곱하면')},
     segs: [...hookSegs, ...wingSegs, ...tailSegs],
@@ -258,7 +258,7 @@ function tailScene(stage, t, p, ctx) {
   const aEnd = fout(t, end - 0.4, 0.35);
   const arrowA = (1 - smooth((t - T.resetT) / 0.3));
   const drawModel = st => {
-    K.drawSide(st, {...m, tail: tailOn ? 'on' : 'ghost', hl: {ac: fin(t, T.kt, 0.4) * aEnd, tail: Math.max(at.flash, pulseOf(t, T.pulse)), track: win(t, T.track, T.lens + 0.3, 0.3)}});
+    K.drawSide(st, {...m, tail: tailOn ? 'on' : 'ghost', hl: {ac: fin(t, T.kt, 0.4) * aEnd, tail: Math.max(at.flash, pulseOf(t, T.pulse)), track: win(t, T.track, T.lens, 0.3)}});
     const ac = K.toScreen(m, ...K.SIDE_PTS.ac), sb = K.toScreen(m, ...K.SIDE_PTS.stab);
     K.forceArrow(st, ac[0], ac[1], M.dLw(th) * K.FORCE_PX, PAL.cool, {alpha: arrowA});
     if (tailOn) K.forceArrow(st, sb[0], sb[1], M.dLt(th) * K.FORCE_PX, PAL.warm, {alpha: arrowA});
@@ -286,7 +286,7 @@ function tailScene(stage, t, p, ctx) {
   const aF = fin(t, T.flabels, 0.4) * fout(t, T.rel1, 0.4);
   if (aF > 0) {
     label(stage, `힘 ${frac(M.dLw(th))}`, g.wingPt[0] - 24, g.wingPt[1] - 66, {a: aF, align: 'right', size: 28, color: PAL.cool});
-    label(stage, `힘 ${frac(M.dLt(th))}`, g.tailPt[0] - 24, g.tailPt[1] - 40, {a: aF, align: 'right', size: 28, color: PAL.warm});
+    label(stage, `힘 ${frac(M.dLt(th))}`, g.tailPt[0] - 24, g.tailPt[1] - 40, {a: aF * fin(t, T.flabels + 1.0, 0.4), align: 'right', size: 28, color: PAL.warm});
   }
   // 기록선: 앞 장면(꼬리날개 없음)의 결과를 점선 잔상으로
   K.traceGauge(stage, {...WT.trace, alpha: propA}, [
