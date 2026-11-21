@@ -1,8 +1,8 @@
 {
   "file": "clouds.hdr.mp4",
-  "bytes": 13262169,
-  "sha256": "314f27ee345c77d4504730c57df1d59ddc6bb9d0ebd767e35e23ef2ee396b15f",
-  "created": "2026-11-21T12:07:15+00:00",
+  "bytes": 13149728,
+  "sha256": "292f77145759af418682285d502cdffc5d9ce19c9f290c6d897580c058e30c2e",
+  "created": "2026-11-21T12:25:25+00:00",
   "codec": "hevc Main 10",
   "pix_fmt": "yuv420p10le",
   "color": "bt2020 / smpte2084 (PQ) / bt2020nc",
@@ -22,8 +22,8 @@
   "frames": 4981,
   "lit_frames": 3657,
   "sdr_white_code": 573,
-  "peak_code": 687,
-  "peak_nits_estimate": 688,
-  "encode_seconds": 247.2,
+  "peak_code": 684,
+  "peak_nits_estimate": 667,
+  "encode_seconds": 239.8,
   "note": "peak_nits_estimate 는 무채색으로 보고 luma 코드에서 어림한 값"
 }

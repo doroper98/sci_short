@@ -1,8 +1,8 @@
 {
   "file": "clouds.mp4",
-  "bytes": 16638458,
-  "sha256": "8c6f205a137d59ac7a96bdde7a2b65cc28b82f0655e755f54b799166f1a657f3",
-  "created": "2026-11-21T12:01:46+00:00",
+  "bytes": 16532101,
+  "sha256": "45a9c5d70b1ec96eb1ef1110a96fcf6e46ca88b9e4c5839ec6b7dc8197e1690a",
+  "created": "2026-11-21T12:20:07+00:00",
   "title": "구름 — 구름은 왜 하얗고 왜 떠 있을까",
   "timeline_duration": 166.044,
   "max_sec": 180.0,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2550272,
         "duration": "166.033333",
-        "bit_rate": "626448",
+        "bit_rate": "621320",
         "bits_per_raw_sample": "8",
         "nb_frames": "4981",
         "extradata_size": 50,
@@ -133,8 +133,8 @@
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "166.044000",
-      "size": "16638458",
-      "bit_rate": "801640",
+      "size": "16532101",
+      "bit_rate": "796516",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -188,7 +188,7 @@
     "changed_pct": {
       "0.5": 12.3,
       "1.0": 20.9,
-      "1.5": 24.2,
+      "1.5": 24.3,
       "2.0": 25.5,
       "3.0": 1.7
     },

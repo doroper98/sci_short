@@ -135,7 +135,7 @@ function heightRuler(stage, a = 1) {
     line(c, [[54, GY], [54, GY - 2 * K]], rgba(PAL.muted, 0.7), 2);
     for (let k = 0; k <= 2; k++) {
       const y = GY - k * K; line(c, [[46, y], [66, y]], rgba(PAL.muted, 0.9), 2);
-      stage.text(`${k} km`, 74, y + (k === 0 ? -16 : 0), {size: 22, color: PAL.muted, weight: 500});
+      stage.text(`${k} km`, 74, y + (k === 0 ? -16 : 0), {size: 24, color: PAL.muted, weight: 500});
     }
     for (let k = 1; k < 4; k += 2) { const y = GY - k * K / 2; line(c, [[48, y], [60, y]], rgba(PAL.muted, 0.6), 2); }
   });
@@ -146,7 +146,7 @@ function risingAir(stage, t, xs, {top = BASE_Y + 10, a = 1, speed = 120, bottom 
   withAlpha(c, a, () => {
     xs.forEach((x0, i) => {
       for (let y = bottom; y > top; y -= 8) {
-        const ph = ((bottom - y) + t * speed + i * 23) % 56;
+        const ph = ((((bottom - y) - t * speed + i * 23) % 56) + 56) % 56;   // fixed phase: y = bottom − C − t·speed → dashes rise
         if (ph > 26) continue;
         const x = x0 + 9 * Math.sin((y + i * 40) * 0.025 + t * 1.3);
         const x2 = x0 + 9 * Math.sin((y - 8 + i * 40) * 0.025 + t * 1.3);
@@ -290,43 +290,42 @@ function logRuler(stage, {mark = null, win = null, a = 1} = {}) {
     panel(c, 70, 1040, 940, 150); unlitRect(stage, 70, 1040, 940, 150, a);
     line(c, [[LR.x0, LR.y], [LR.x1, LR.y]], rgba(PAL.muted, 0.8), 2);
     for (let d = LR.lo; d <= LR.hi; d++) { const x = lx(10 ** d); line(c, [[x, LR.y - 8], [x, LR.y + 8]], rgba(PAL.muted, 0.8), 2); }
-    stage.text('1 nm', lx(1e-6), LR.y + 30, {size: 20, color: PAL.muted, align: 'center'});
-    stage.text('1 µm', lx(1e-3), LR.y + 30, {size: 20, color: PAL.muted, align: 'center'});
-    stage.text('1 mm', lx(1), LR.y + 30, {size: 20, color: PAL.muted, align: 'center'});
+    stage.text('1 nm', lx(1e-6), LR.y + 30, {size: 24, color: PAL.muted, align: 'center'});
+    stage.text('1 mm', lx(1), LR.y + 30, {size: 24, color: PAL.muted, align: 'center'});
     // light band
     const bx0 = lx(4e-4), bx1 = lx(7e-4), g = c.createLinearGradient(bx0, 0, bx1, 0);
     g.addColorStop(0, PAL.B); g.addColorStop(0.5, PAL.G); g.addColorStop(1, PAL.R);
     rect(c, bx0, LR.y - 10, bx1 - bx0, 20, 4, g);
-    const m = (x, s, col, up = true) => { circle(c, x, LR.y, 7, col); stage.text(s, x, LR.y + (up ? -34 : 54), {size: 22, weight: 700, color: col, align: 'center'}); };
+    const m = (x, s, col, up = true) => { circle(c, x, LR.y, 7, col); stage.text(s, x, LR.y + (up ? -34 : 54), {size: 24, weight: 700, color: col, align: 'center'}); };
     m(lx(3e-7), '공기 분자', PAL.muted);
     m((bx0 + bx1) / 2, '빛의 파장', PAL.ink, false);
     m(lx(0.02), '구름 물방울', PAL.coolHi);
     m(lx(2), '빗방울', PAL.cool);
     if (mark != null) { const x = lx(mark); ring(c, x, LR.y, 14, PAL.warm, 3); }
     if (win) { const x0 = lx(win[0]), x1 = lx(win[1]); rect(c, x0, LR.y - 22, x1 - x0, 44, 6, null, rgba(PAL.ink, 0.9), 2); }
-    stage.text('크기(지름) · 눈금 하나에 10배', 990, 1172, {size: 20, color: PAL.muted, align: 'right'});
+    stage.text('크기(지름) · 눈금 하나에 10배', 990, 1172, {size: 24, color: PAL.muted, align: 'right'});
   });
 }
 
 // =====================================================================================================
 // Speed gauge (float, rain): log scale 0.1 … 1000 cm/s, vertical at the right
 // =====================================================================================================
-const SG = {x: 790, y0: 1110, y1: 340, lo: -1, hi: 3};
+const SG = {x: 790, y0: 1110, y1: 350, lo: -1, hi: 3};
 const sy = cms => lerp(SG.y0, SG.y1, (Math.log10(Math.max(cms, 0.1)) - SG.lo) / (SG.hi - SG.lo));
 function speedGauge(stage, {v = null, ghost = null, band = null, rain = null, a = 1} = {}) {
   const c = stage.ctx;
   withAlpha(c, a, () => {
-    panel(c, 680, 280, 260, 880); unlitRect(stage, 680, 280, 260, 880, a);
-    stage.text('떨어지는 빠르기', 810, 304, {size: 22, weight: 700, color: PAL.muted, align: 'center'});
+    panel(c, 652, 280, 288, 880); unlitRect(stage, 652, 280, 288, 880, a);
+    stage.text('떨어지는 빠르기', 796, 306, {size: 24, weight: 700, color: PAL.muted, align: 'center'});
     line(c, [[SG.x, SG.y0], [SG.x, SG.y1]], rgba(PAL.muted, 0.8), 3);
     for (let d = SG.lo; d <= SG.hi; d++) {
       const y = sy(10 ** d); line(c, [[SG.x - 10, y], [SG.x + 10, y]], rgba(PAL.muted, 0.9), 2);
-      stage.text(d >= 2 ? `${10 ** (d - 2)} m/s` : `${10 ** d} cm/s`, SG.x - 18, y, {size: 20, color: PAL.muted, align: 'right'});
+      stage.text(d >= 2 ? `${10 ** (d - 2)} m/s` : `${10 ** d} cm/s`, SG.x - 18, y, {size: 24, color: PAL.muted, align: 'right'});
     }
-    if (band) { const y0 = sy(band[0]), y1 = sy(band[1]); rect(c, SG.x + 16, y1, 26, y0 - y1, 6, rgba(PAL.warm, 0.85)); stage.text('오르는', SG.x + 60, (y0 + y1) / 2 - 14, {size: 20, weight: 700, color: PAL.warm}); stage.text('공기', SG.x + 60, (y0 + y1) / 2 + 12, {size: 20, weight: 700, color: PAL.warm}); }
+    if (band) { const y0 = sy(band[0]), y1 = sy(band[1]); rect(c, SG.x + 16, y1, 26, y0 - y1, 6, rgba(PAL.warm, 0.85)); stage.text('오르는', SG.x + 52, (y0 + y1) / 2 - 15, {size: 24, weight: 700, color: PAL.warm}); stage.text('공기', SG.x + 52, (y0 + y1) / 2 + 15, {size: 24, weight: 700, color: PAL.warm}); }
     if (ghost != null) { const y = sy(ghost); line(c, [[SG.x - 6, y], [SG.x + 40, y]], rgba(PAL.ink, 0.75), 3, {dash: [5, 5]}); }
-    if (rain != null) { const y = sy(rain); poly3(c, SG.x + 4, y, PAL.cool); stage.text(`${fmt(rain / 100, 1)} m/s`, SG.x + 44, y, {size: 22, weight: 700, color: PAL.cool}); }
-    if (v != null) { const y = sy(v); poly3(c, SG.x + 4, y, PAL.coolHi); stage.text(v < 10 ? `${fmt(v, 1)} cm/s` : `${fmt(v)} cm/s`, SG.x + 44, y, {size: 22, weight: 700, color: PAL.coolHi}); }
+    if (rain != null) { const y = sy(rain); poly3(c, SG.x + 4, y, PAL.cool); stage.text(`${fmt(rain / 100, 1)} m/s`, SG.x + 38, y, {size: 24, weight: 700, color: PAL.cool}); }
+    if (v != null) { const y = sy(v); poly3(c, SG.x + 4, y, PAL.coolHi); stage.text(v < 10 ? `${fmt(v, 1)} cm/s` : `${fmt(v)} cm/s`, SG.x + 38, y, {size: 24, weight: 700, color: PAL.coolHi}); }
   });
 }
 function poly3(c, x, y, col) { c.beginPath(); c.moveTo(x, y); c.lineTo(x + 30, y - 12); c.lineTo(x + 30, y + 12); c.closePath(); c.fillStyle = col; c.fill(); }
@@ -506,7 +505,7 @@ export const scenes = {
             const alt = (GY - 40 - y) / K + 0.08, temp = 25 - 10 * alt;
             panel(c, P.x + 70, y - 34, 150, 60); unlitRect(stage, P.x + 70, y - 34, 150, 60, 1);
             stage.text(`${fmt(temp, 0)} °C`, P.x + 145, y - 4, {role: 'display', size: 32, weight: 700, color: after > 0 ? PAL.coolHi : PAL.warm, align: 'center'});
-            if (after > 0) withAlpha(c, fadeIn(after, 0, 0.4), () => stage.text('이슬점 · 맺힘', P.x + 145, y - 54, {size: 22, weight: 700, color: PAL.coolHi, align: 'center', ...so}));
+            if (after > 0) withAlpha(c, fadeIn(after, 0, 0.4), () => stage.text('이슬점 · 맺힘', P.x + 145, y - 54, {size: 24, weight: 700, color: PAL.coolHi, align: 'center', ...so}));
           }
           c.restore();
         });
@@ -636,9 +635,9 @@ export const scenes = {
       const ga = fadeIn(t, hitM - 0.3, 0.4);
       if (ga > 0) withAlpha(c, ga, () => {
         panel(c, 70, 1050, 940, 140); unlitRect(stage, 70, 1050, 940, 140, ga);
-        stage.text('흩어지는 빛의 세기', 100, 1078, {size: 22, weight: 700, color: PAL.muted});
+        stage.text('흩어지는 빛의 세기', 100, 1078, {size: 24, weight: 700, color: PAL.muted});
         const w = isDrop ? (t >= hitD ? 0.8 : 0) : (t >= hitM ? 1 : 0), ws = isDrop ? {B: w, G: w, R: w} : {B: RAY.B * w, G: RAY.G * w, R: RAY.R * w};
-        ['B', 'G', 'R'].forEach((k, j) => { const y = 1110 + j * 30; stage.text(k === 'B' ? '파랑' : k === 'G' ? '초록' : '빨강', 140, y, {size: 22, weight: 700, color: PAL[k], align: 'right'}); hbar(stage, 160, y, 820, ws[k], {col: PAL[k], ghost: isDrop ? RAY[k] : null, h: 18}); });
+        ['B', 'G', 'R'].forEach((k, j) => { const y = 1110 + j * 30; stage.text(k === 'B' ? '파랑' : k === 'G' ? '초록' : '빨강', 140, y, {size: 24, weight: 700, color: PAL[k], align: 'right'}); hbar(stage, 160, y, 820, ws[k], {col: PAL[k], ghost: isDrop ? RAY[k] : null, h: 18}); });
       });
     } else {
       // s15: thick cloud — rays enter the top, bounce inside, leave by the top and sides; few reach the base
@@ -687,7 +686,7 @@ export const scenes = {
   //        droplets that leave the cloud shrink and vanish → (s21) new droplets keep forming in the rising air
   float(stage, t, p, ctx) {
     const c = stage.ctx, s16 = S(ctx, 's16'), s17 = S(ctx, 's17'), s18 = S(ctx, 's18'), s19 = S(ctx, 's19'), s20 = S(ctx, 's20'), s21 = S(ctx, 's21');
-    const COL = {x: 80, y: 300, w: 560, h: 860, cx: 360};
+    const COL = {x: 70, y: 300, w: 545, h: 860, cx: 342};
     const big = 30, small = 1.2;
     const rel = evT(ctx, 'release'), shr = evT(ctx, 'shrink');
     const inLens = t < s19.start - 0.5;
@@ -714,16 +713,18 @@ export const scenes = {
             stage.text('공기 저항', X + 30, Y - r - 40, {size: 26, weight: 700, color: PAL.warm});
           }
           // diameter dial
-          unlitRect(stage, COL.x, COL.y + COL.h - 70, COL.w, 70, 1);
-          stage.text(`지름 ${fmt(d, 2)} mm`, COL.x + 24, COL.y + COL.h - 34, {role: 'display', size: 34, weight: 700, color: PAL.ink});
+          unlitRect(stage, COL.x, COL.y + COL.h - 116, COL.w, 116, 1);
+          stage.text(`지름 ${fmt(d, 2)} mm`, COL.x + 24, COL.y + COL.h - 40, {role: 'display', size: 34, weight: 700, color: PAL.ink});
+          // weight ∝ d³ and drag ∝ d·v: the drag ratio below is AT THE SAME SPEED (stated in the label), not the drag drawn now
           if (t > shr) withAlpha(c, fadeIn(t, shr + 0.6, 0.4), () => {
-            stage.text(`무게 ${fmt(1 / ((d / 0.1) ** 3), 0)}분의 1`, COL.x + COL.w - 24, COL.y + COL.h - 52, {size: 22, weight: 700, color: PAL.cool, align: 'right'});
-            stage.text(`저항 ${fmt(1 / (d / 0.1), 0)}분의 1`, COL.x + COL.w - 24, COL.y + COL.h - 22, {size: 22, weight: 700, color: PAL.warm, align: 'right'});
+            stage.text('같은 빠르기에서', COL.x + COL.w - 24, COL.y + COL.h - 88, {size: 24, weight: 500, color: PAL.muted, align: 'right'});
+            stage.text(`무게 ${fmt(1 / ((d / 0.1) ** 3), 0)}분의 1`, COL.x + COL.w - 24, COL.y + COL.h - 56, {size: 26, weight: 700, color: PAL.cool, align: 'right'});
+            stage.text(`저항 ${fmt(1 / (d / 0.1), 0)}분의 1`, COL.x + COL.w - 24, COL.y + COL.h - 24, {size: 26, weight: 700, color: PAL.warm, align: 'right'});
           });
         } else {
           // real speed: 1 cm = 60 px on the ruler; the droplet moves 1.2 cm/s
           const t0 = s18.start - 0.4, y = COL.y + 120 + (t - t0) * small * 60, X = COL.cx;
-          for (let k = 0; k <= 12; k++) { const yy = COL.y + 120 + k * 60; line(c, [[COL.x + 40, yy], [COL.x + (k % 5 === 0 ? 120 : 90), yy]], rgba(PAL.muted, 0.9), 3); if (k % 5 === 0) stage.text(`${k} cm`, COL.x + 132, yy, {size: 22, color: PAL.muted}); }
+          for (let k = 0; k <= 12; k++) { const yy = COL.y + 120 + k * 60; line(c, [[COL.x + 40, yy], [COL.x + (k % 5 === 0 ? 120 : 90), yy]], rgba(PAL.muted, 0.9), 3); if (k % 5 === 0) stage.text(`${k} cm`, COL.x + 132, yy, {size: 24, color: PAL.muted}); }
           circle(c, X, y, 14, PAL.dropLo); circle(c, X - 2, y - 2, 10, PAL.drop); circle(c, X - 5, y - 5, 5, PAL.dropHi);
           arrow(c, [X, y + 22], [X, y + 70], PAL.cool, 5, {head: 16});
           withAlpha(c, fadeIn(t, W0(ctx, 's18', '한시간') - 0.2, 0.4), () => {
