@@ -18,5 +18,5 @@ SCISHORT_ROOT=$PWD node episodes/clouds/render.mjs --stills --safe   # 플랫폼
 
 HDR 판(2026-11-15): 빛나는 것(에너지·신호)은 `scenes.mjs` 에서 `lit(stage, c => …)` 안에서 그립니다. `hdr` 단계가 `outputs/clouds/final/hdr/clouds.hdr.mp4` 를 만듭니다. 규칙은 [docs/HDR.md](../../docs/HDR.md).
 
-`scenes.mjs`의 장면 id는 `script.json`의 `scene` 값과 같아야 합니다. 예시는 "얼음은 왜 물에 뜰까"이며 내용은 바꿉니다.
+`scenes.mjs`의 장면 id(hook · origin · essence · white · float · rain · close)는 `script.json`의 `scene` 값과 같아야 합니다. 54 구름 편: 하늘 단면의 뭉게구름(오르는 공기, 평평한 밑면) → 렌즈(수증기 / 물방울) → 크기 자(빛의 파장 · 구름 물방울 · 빗방울) → 빛의 흩어짐(공기 분자 대 물방울) → 떨어지는 물방울(무게와 저항, 빠르기 계기) → 합쳐져 빗방울. 기획·출처·검증은 `brief.md`.
 자세한 순서와 API는 [pipeline/README.md](../../pipeline/README.md).

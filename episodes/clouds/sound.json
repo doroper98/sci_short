@@ -1,61 +1,445 @@
 {
-  "version": 1,
-  "notes": "설명용 합성음입니다(녹음 아님). 각 사건은 scenes.mjs의 ctx.events와 같은 시각을 씁니다. at 문법은 pipeline/README.md 참고.",
-  "events": [
-    {
-      "id": "bond",
-      "at": {
-        "sentence": "s03",
-        "word": "수소 결합"
-      },
-      "kind": "tick",
-      "params": {
-        "freq": 1760,
-        "gain_db": -20,
-        "decay": 0.12,
-        "repeat": 3,
-        "interval": 0.09
-      },
-      "means": "수소 결합이 이어지는 순간 — 화면의 결합선 번쩍임과 같은 시각"
-    },
-    {
-      "id": "float",
-      "at": [
-        "s05",
-        0.15
-      ],
-      "kind": "swell",
-      "params": {
-        "freqs": [
-          220,
-          330,
-          440
-        ],
-        "dur": 1.6,
-        "gain_db": -24
-      },
-      "means": "얼음이 떠오르는 결론 — 화면의 수면 고리와 같은 시각"
-    }
-  ],
-  "ambient": {
-    "enabled": false,
-    "kind": "pad",
-    "seed": 7,
-    "gain_db": -32,
-    "root_hz": 110,
-    "intervals": [
+ "version": 1,
+ "notes": "설명용 합성음입니다(녹음 아님). 각 사건은 scenes.mjs 의 ctx.events 와 같은 시각을 씁니다. 기본음은 모두 700 Hz 아래(사용자 규칙). 되풀이 사건은 repeat/interval 하나로 적고 scenes.mjs 가 같은 값으로 셉니다.",
+ "ambient": {
+  "enabled": false
+ },
+ "events": [
+  {
+   "id": "rise",
+   "at": 0.0,
+   "kind": "env_noise",
+   "params": {
+    "points": [
+     [
       0,
-      7,
-      12,
-      16
-    ]
+      0.5
+     ],
+     [
+      1.0,
+      0.9
+     ],
+     [
+      2.0,
+      0.7
+     ],
+     [
+      2.3,
+      0.0
+     ]
+    ],
+    "low": 120,
+    "high": 600,
+    "gain_db": -20
+   },
+   "means": "0~2초 데워진 공기가 올라 구름이 자람(결과 먼저)"
   },
-  "music": {
-    "id": "zabriskie_patriarch",
-    "enabled": false,
-    "under_db": 12,
-    "duck_db": 6,
-    "start_sec": 0,
-    "note": "기본 꺼짐(2026-10-31 사용자 결정). 켜려면 enabled true. assets/music/registry.json 의 id. NO_MUSIC=1 이면 생략"
+  {
+   "id": "grow",
+   "at": 0.05,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     110,
+     165
+    ],
+    "dur": 2.0,
+    "attack": 0.6,
+    "gain_db": -26
+   },
+   "means": "구름이 부풀어 오름"
+  },
+  {
+   "id": "rew",
+   "at": 2.2,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.8,
+    "f_start": 520,
+    "f_end": 160,
+    "q": 1.5,
+    "gain_db": -24
+   },
+   "means": "되감기"
+  },
+  {
+   "id": "ton",
+   "at": {
+    "sentence": "s02",
+    "word": "오백톤"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 98,
+    "dur": 0.9,
+    "decay": 0.7,
+    "harmonics": [
+     1,
+     0.4,
+     0.15
+    ],
+    "gain_db": -16
+   },
+   "means": "1 km 상자 속 물 500톤"
+  },
+  {
+   "id": "names",
+   "at": {
+    "scene": "origin",
+    "offset": 1.0
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.08,
+    "gain_db": -22,
+    "repeat": 3,
+    "interval": 0.6
+   },
+   "means": "구름 이름표 셋(cirrus, stratus, cumulus)"
+  },
+  {
+   "id": "cond1",
+   "at": {
+    "sentence": "s06",
+    "word": "물방울"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.12,
+    "gain_db": -16
+   },
+   "means": "공기 덩어리가 이슬점에 이르러 물방울이 맺힘"
+  },
+  {
+   "id": "cond2",
+   "at": [
+    "s07",
+    0.8
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.12,
+    "gain_db": -18,
+    "repeat": 4,
+    "interval": 0.7
+   },
+   "means": "여러 곳의 공기 덩어리가 같은 높이에서 맺힘"
+  },
+  {
+   "id": "zoom",
+   "at": [
+    "s09",
+    -0.6
+   ],
+   "kind": "whoosh",
+   "params": {
+    "dur": 2.6,
+    "f_start": 160,
+    "f_end": 620,
+    "q": 1.4,
+    "gain_db": -26
+   },
+   "means": "물방울 속으로 100배 확대"
+  },
+  {
+   "id": "scatB",
+   "at": {
+    "sentence": "s11",
+    "word": "파란빛",
+    "offset": -0.6
+   },
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 392,
+       "dur": 1.0,
+       "gain_db": -16
+      }
+     },
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 294,
+       "dur": 1.0,
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 220,
+       "dur": 1.0,
+       "gain_db": -32
+      }
+     }
+    ]
+   },
+   "means": "공기 분자가 빛을 흩음: 파랑(높은 음)이 크게, 빨강(낮은 음)이 작게"
+  },
+  {
+   "id": "scatW",
+   "at": {
+    "sentence": "s13",
+    "word": "모든",
+    "offset": -0.3
+   },
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 392,
+       "dur": 1.0,
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 294,
+       "dur": 1.0,
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 220,
+       "dur": 1.0,
+       "gain_db": -20
+      }
+     }
+    ]
+   },
+   "means": "물방울이 빛을 흩음: 세 음이 같은 크기"
+  },
+  {
+   "id": "white",
+   "at": {
+    "sentence": "s14",
+    "word": "흰색",
+    "offset": -0.2
+   },
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     220,
+     294,
+     392
+    ],
+    "dur": 1.4,
+    "attack": 0.3,
+    "gain_db": -24
+   },
+   "means": "섞인 빛이 눈에 → 흰색"
+  },
+  {
+   "id": "bounce",
+   "at": [
+    "s15",
+    0.8
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 520,
+    "decay": 0.04,
+    "gain_db": -26,
+    "repeat": 10,
+    "interval": 0.35
+   },
+   "means": "두꺼운 구름 속에서 빛이 여러 번 튕김"
+  },
+  {
+   "id": "release",
+   "at": [
+    "s16",
+    0.3
+   ],
+   "kind": "whoosh",
+   "params": {
+    "dur": 1.6,
+    "f_start": 140,
+    "f_end": 380,
+    "q": 1.6,
+    "gain_db": -24
+   },
+   "means": "물방울이 떨어지기 시작, 저항이 커짐"
+  },
+  {
+   "id": "shrink",
+   "at": {
+    "sentence": "s17",
+    "word": "작을수록"
+   },
+   "kind": "chirp",
+   "params": {
+    "points": [
+     [
+      0,
+      330,
+      0.25
+     ],
+     [
+      2.4,
+      165,
+      0.2
+     ],
+     [
+      3.4,
+      110,
+      0.0
+     ]
+    ]
+   },
+   "means": "지름을 줄임 → 떨어지는 빠르기가 내려감"
+  },
+  {
+   "id": "cm",
+   "at": [
+    "s18",
+    0.433
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.06,
+    "gain_db": -22,
+    "repeat": 7,
+    "interval": 0.833
+   },
+   "means": "실제 빠르기: 물방울이 1 cm 눈금을 지날 때마다"
+  },
+  {
+   "id": "updraft",
+   "at": [
+    "s19",
+    -0.4
+   ],
+   "kind": "env_noise",
+   "params": {
+    "points": [
+     [
+      0,
+      0.0
+     ],
+     [
+      0.8,
+      0.6
+     ],
+     [
+      5.5,
+      0.6
+     ],
+     [
+      6.5,
+      0.2
+     ]
+    ],
+    "low": 120,
+    "high": 500,
+    "gain_db": -22
+   },
+   "means": "구름 속에서 오르는 공기"
+  },
+  {
+   "id": "evap",
+   "at": [
+    "s20",
+    -0.2
+   ],
+   "kind": "noise",
+   "params": {
+    "dur": 1.2,
+    "low": 200,
+    "high": 650,
+    "attack": 0.3,
+    "release": 0.8,
+    "gain_db": -30
+   },
+   "means": "구름 밖으로 나간 물방울이 증발"
+  },
+  {
+   "id": "form",
+   "at": [
+    "s21",
+    -0.2
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.1,
+    "gain_db": -24,
+    "repeat": 4,
+    "interval": 0.5
+   },
+   "means": "오르는 공기 속에서 새 물방울이 맺힘"
+  },
+  {
+   "id": "merge",
+   "at": [
+    "s22",
+    0.3
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.08,
+    "gain_db": -20,
+    "repeat": 12,
+    "interval": 0.25
+   },
+   "means": "물방울이 부딪쳐 합쳐짐(한 번이 여러 번을 대표)"
+  },
+  {
+   "id": "rainhit",
+   "at": [
+    "s23",
+    1.6
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 150,
+    "decay": 0.1,
+    "gain_db": -16,
+    "repeat": 16,
+    "interval": 0.25
+   },
+   "means": "빗방울이 땅에 닿음"
+  },
+  {
+   "id": "calm",
+   "at": [
+    "s24",
+    -0.5
+   ],
+   "kind": "env_noise",
+   "params": {
+    "points": [
+     [
+      0,
+      0.4
+     ],
+     [
+      3.0,
+      0.25
+     ],
+     [
+      7.0,
+      0.0
+     ]
+    ],
+    "low": 120,
+    "high": 500,
+    "gain_db": -26
+   },
+   "means": "오르는 공기가 잦아듦"
   }
+ ]
 }
