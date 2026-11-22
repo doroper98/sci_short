@@ -1,6 +1,8 @@
-// 질감 층(look): 숯색 바탕 + 빛나는 것 둘레의 은은한 번짐 + 약한 비네트 + 흑백 그레인. 후처리 공통 도구.
+// 질감 층(look): 숯색 바탕 + 빛나는 것 둘레의 은은한 번짐 + 약한 비네트 + 종이 같은 고정 질감(흑백 그레인). 후처리 공통 도구.
 // 2026-11-22 사용자(참고 릴스를 보내며): "내가 말한 영상미는 이런거야. 그레인이 조금 가미 되었으면서, 적당한 빛(절대 과하지는
 // 않은) 혹은 광원 효과같은게 있는 느낌? 색감이나 질감을 참고 하고."
+// 같은 날 사용자 확인: "그레인 효과라는건 약간 종이같은 그런 질감인거 맞지?" — 그래서 그레인은 매 프레임 바뀌는 필름 잡음이 아니라
+// 영상 내내 멈춰 있는 고운 결 + 조금 굵은 얼룩(mottle)이다(grain.hold_frames 0). 참고 릴스의 무늬도 거의 멈춰 있었다(제작 세션 측정).
 // 영상미 문법 "빛은 조금만"은 그대로다: 번짐은 lit() 로 표시한 것(에너지·신호)에만 걸리고 화면 전체에는 걸리지 않는다.
 // 수치(config/look.json)는 모두 제작 세션의 제안이며 사용자가 정한 값이 아니다. 견본은 samples/look-proposal-grain/.
 //
@@ -138,39 +140,68 @@ function vignette(stage, o) {
   ctx.restore();
 }
 
-// ---------- ③ 그레인 ----------
+// ---------- ③ 그레인(종이 같은 질감) ----------
 const TILE_CACHE = new Map();
-/** tiles 장의 tile×tile 잡음(가우시안 백색잡음 → 감아 도는 가우시안 흐림 σ → 표준편차 1). */
+function gaussNoise(rnd, N) {   // Box–Muller
+  const a = new Float32Array(N);
+  for (let i = 0; i < N; i += 2) {
+    const u = Math.max(1e-12, rnd()), v = rnd(), r = Math.sqrt(-2 * Math.log(u));
+    a[i] = r * Math.cos(2 * Math.PI * v); if (i + 1 < N) a[i + 1] = r * Math.sin(2 * Math.PI * v);
+  }
+  return a;
+}
+/** n×n 잡음 a 에 가로·세로 분리 가우시안 흐림(σ, 가장자리는 감아 돎)을 걸고 평균 0·표준편차 1 로 맞춘다(a 를 바꿔 돌려줌). */
+function blurNorm(a, n, sigma) {
+  const N = n * n;
+  if (sigma > 0) {
+    const R = Math.max(1, Math.ceil(sigma * 3)), ker = new Float32Array(2 * R + 1);
+    let ks = 0; for (let i = -R; i <= R; i++) ks += ker[i + R] = Math.exp(-(i * i) / (2 * sigma * sigma));
+    for (let i = 0; i < ker.length; i++) ker[i] /= ks;
+    const idx = new Int32Array(n + 2 * R); for (let i = 0; i < idx.length; i++) idx[i] = (((i - R) % n) + n) % n;   // 감아 도는 색인
+    const b = new Float32Array(N), row = new Float32Array(n + 2 * R);
+    for (let y = 0; y < n; y++) {
+      const o = y * n; for (let i = 0; i < row.length; i++) row[i] = a[o + idx[i]];
+      for (let x = 0; x < n; x++) { let s = 0; for (let j = 0; j < ker.length; j++) s += ker[j] * row[x + j]; b[o + x] = s; }
+    }
+    const acc = new Float32Array(n);
+    for (let y = 0; y < n; y++) {   // 세로: 행 단위로 더해 캐시를 아낀다
+      acc.fill(0);
+      for (let j = 0; j < ker.length; j++) { const o = idx[y + j] * n, k = ker[j]; for (let x = 0; x < n; x++) acc[x] += k * b[o + x]; }
+      a.set(acc, y * n);
+    }
+  }
+  let m = 0; for (let i = 0; i < N; i++) m += a[i]; m /= N;
+  let v = 0; for (let i = 0; i < N; i++) v += (a[i] - m) ** 2; const sd = Math.sqrt(v / N) || 1;
+  for (let i = 0; i < N; i++) a[i] = (a[i] - m) / sd;
+  return a;
+}
+/**
+ * tiles 장의 tile×tile 잡음. 한 장 = sqrt(1−m)·고운 잡음(σ = size) + sqrt(m)·굵은 얼룩(σ = mottle_size), 각각 표준편차 1 로 맞춰 섞고
+ * 다시 표준편차 1 로. m = mottle(0 이면 고운 잡음만 — 얼룩을 더하기 전과 같은 값). σ 는 1080 폭 기준이라 화면 폭에 비례한다.
+ */
 function grainTiles(o, W) {
-  const sigma = o.size * (W / 1080), key = JSON.stringify([o.seed, o.tiles, o.tile, sigma]);
+  const k1080 = W / 1080, sigma = o.size * k1080, m = Math.max(0, Math.min(1, o.mottle || 0)), ms = (o.mottle_size || 0) * k1080;
+  const key = JSON.stringify([o.seed, o.tiles, o.tile, sigma, m, ms]);
   let T = TILE_CACHE.get(key);
   if (T) return T;
   const n = o.tile, rnd = mulberry32(o.seed), N = n * n;
-  const R = Math.max(1, Math.ceil(sigma * 3)), ker = new Float32Array(2 * R + 1);
-  let ks = 0; for (let i = -R; i <= R; i++) ks += ker[i + R] = sigma > 0 ? Math.exp(-(i * i) / (2 * sigma * sigma)) : (i === 0 ? 1 : 0);
-  for (let i = 0; i < ker.length; i++) ker[i] /= ks;
-  const wrap = i => ((i % n) + n) % n;
   T = [];
   for (let k = 0; k < o.tiles; k++) {
-    const a = new Float32Array(N), b = new Float32Array(N);
-    for (let i = 0; i < N; i += 2) {   // Box–Muller
-      const u = Math.max(1e-12, rnd()), v = rnd(), r = Math.sqrt(-2 * Math.log(u));
-      a[i] = r * Math.cos(2 * Math.PI * v); if (i + 1 < N) a[i + 1] = r * Math.sin(2 * Math.PI * v);
+    const a = blurNorm(gaussNoise(rnd, N), n, sigma);
+    if (m > 0) {
+      const c = blurNorm(gaussNoise(rnd, N), n, ms), f1 = Math.sqrt(1 - m), f2 = Math.sqrt(m);
+      for (let i = 0; i < N; i++) a[i] = f1 * a[i] + f2 * c[i];
+      blurNorm(a, n, 0);
     }
-    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) { let s = 0; for (let j = -R; j <= R; j++) s += ker[j + R] * a[y * n + wrap(x + j)]; b[y * n + x] = s; }
-    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) { let s = 0; for (let j = -R; j <= R; j++) s += ker[j + R] * b[wrap(y + j) * n + x]; a[y * n + x] = s; }
-    let m = 0; for (let i = 0; i < N; i++) m += a[i]; m /= N;
-    let v = 0; for (let i = 0; i < N; i++) v += (a[i] - m) ** 2; const sd = Math.sqrt(v / N) || 1;
-    for (let i = 0; i < N; i++) a[i] = (a[i] - m) / sd;
     T.push(a);
   }
   TILE_CACHE.set(key, T);
   return T;
 }
 
-/** 그 프레임의 잡음 무늬: {k, tile, ox, oy, fx, fy}. 같은 k(= floor(frame / hold_frames), hold_frames 0 이면 늘 0) 면 같은 무늬. */
+/** 그 프레임의 잡음 무늬: {k, tile, ox, oy, fx, fy}. 같은 k(= floor(frame / hold_frames); hold_frames ≤ 0 이면 늘 0) 면 같은 무늬. */
 export function grainParams(frameIndex, look = loadLook()) {
-  const o = look.grain, hold = o.hold_frames | 0, k = hold <= 0 ? 0 : Math.floor(frameIndex / hold);   // hold_frames 0 = 무늬가 바뀌지 않음(정지 그레인)
+  const o = look.grain, hold = o.hold_frames | 0, k = hold <= 0 ? 0 : Math.floor(frameIndex / hold);   // hold_frames ≤ 0 = 영상 내내 같은 무늬(종이 같은 고정 질감)
   const h1 = hash32(k ^ Math.imul(o.seed | 0, 0x9E3779B1)), h2 = hash32(h1 + 0x68E31DA4), h3 = hash32(h2 + 0x1B56C4E9);
   const tiles = Math.max(1, o.tiles | 0);
   return {k, tile: ((k % tiles) + tiles) % tiles, ox: h1 % o.tile, oy: h2 % o.tile, fx: (h3 & 1) === 1, fy: (h3 & 2) === 2};   // 이웃한 k 는 늘 다른 타일
