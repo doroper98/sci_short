@@ -87,8 +87,12 @@ samples/look-proposal-grain/yt_sim.sh outputs/look-proposal-grain/clips/cat_film
 | 새 질감, 고정 무늬, crf 18 | 4.61 MB | 3071 kbps | 1.84 | **48.5 MB(실제 전체 렌더, 한도 45 MB 초과)** |
 | 새 질감, 고정 무늬, **crf 20** | 3.65 MB | 2430 kbps | 1.46 | **39.7 MB(실제 전체 렌더)** |
 | 새 질감, 움직이는 무늬(hold 2), crf 18 | 16.92 MB | 11283 kbps | 6.77 | 약 150 MB(추정) |
+| HDR 판(유튜브용, `pipeline/hdr.py`, 새 질감 crf 20 그림 + 원래 빛 지도) | — | — | — | **31.3 MB(실제)** — 지금 66번 HDR 판 18.3 MB |
 
-- crf 20 에서도 질감은 그대로 남습니다(1080 고주파 1.39, 유튜브 흉내 뒤 1.41 / 1.28~1.33 — crf 18 과 같음). **이 질감을 쓰는 편은 `renderVideo({crf: 20})` 를 제안합니다**(에피소드 `render.mjs` 한 곳). crf 18 그대로면 amount 를 과녁 아래로 낮춰야 45 MB 안에 듭니다.
+- HDR 판: 최대 코드 705 ≈ 832 nit(지금 판 686 ≈ 681 nit). 질감이 가장 밝은 화소를 조금 더 밀어 올려 `config/hdr.json` 의 `max_cll`(812)을 어림값으로 약간 넘습니다 — 설정은 고치지 않았습니다. 빛 지도(`outputs/tail-stability/gain.mp4`, 5074 프레임)는 질감과 무관해 원래 것을 그대로 썼고 프레임 수가 같습니다. HDR 화면에서 보지 못했습니다.
+- HDR 판의 빛나는 곳 질감(1:55, '내리는 효과' 막대 안쪽 10×180, 3×3 평균을 뺀 나머지): SDR 판 0.69(8비트 코드, 평균의 0.52%), HDR 판 0.97(10비트 PQ 코드, 평균의 0.22% — 8비트로 치면 약 0.24). 밝아진 곳에서 질감이 커지지 않습니다. 빈 바탕은 SDR 0.90(8비트) / HDR 4.42(10비트, 8비트로 약 1.1).
+- **틀(`episodes/_template/render.mjs`)은 질감 층이 켜진 편을 crf 20 으로 렌더합니다**(끄면 18).
+- crf 20 에서도 질감은 그대로 남습니다(1080 고주파 1.39, 유튜브 흉내 뒤 1.41 / 1.28~1.33 — crf 18 과 같음). **이 질감을 쓰는 편은 `renderVideo({crf: 20})` 를 제안합니다**(에피소드 `render.mjs` 한 곳 — 새 편 틀에는 반영함). crf 18 그대로면 amount 를 과녁 아래로 낮춰야 45 MB 안에 듭니다.
 - 팔레트·바탕·비네트·번짐만(질감 0) 바꿔도 12초 견본은 지금의 약 1.23배였습니다(디더 바탕과 밝아진 연기 줄).
 
 ### 번짐 — 화소로 잰 둘레 밝기(심 밝기 대비, 질감·비네트 끔)
@@ -127,4 +131,4 @@ samples/look-proposal-grain/yt_sim.sh outputs/look-proposal-grain/clips/cat_film
 - `episodes/tail-stability/scenes_c.mjs`: 231(`#3E5B66`·`#1A2E36`), 344(`#5C7883`·`#22383F`), 347(`#0E1D23`), 558·561(`rgba(0,8,12,…)`)
 - 단색 판: `scenes_c.mjs` 516(`PAL.bg` 로 위 260 px 를 0.5초 덮음), `kit.mjs` 508 렌즈 안 `PAL.bg` — 그라디언트 바탕 위에서 경계가 생길 수 있습니다(정지화면에서는 눈에 띄지 않음).
 - 테마: `noturno` 의 `border`(진행 막대 트랙)·`plate` 도 청록 — 이 견본은 테마의 바탕 계열 색을 팔레트에 맞췄습니다.
-- `renderVideo(gain:false)` 는 빛 지도를 비우지 않아(`encode.mjs`), 번짐을 쓰는 프레임은 첫머리에 `clearGain(stage)` 를 직접 부릅니다(견본 `render.mjs`).
+- `renderVideo(gain:false)` 가 빛 지도를 비우지 않던 문제는 `encode.mjs` 에서 고쳤습니다(2026-11-22). 견본 `render.mjs` 의 손수 `clearGain(stage)` 는 해가 없어 남겨 두었습니다.
