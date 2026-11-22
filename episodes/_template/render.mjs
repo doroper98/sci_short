@@ -30,7 +30,9 @@ function frame(t) {
 fs.mkdirSync(out, {recursive: true});
 fs.writeFileSync(path.join(out, 'events.json'), JSON.stringify({duration: tl.duration, events}, null, 1));
 if (process.argv.includes('--video')) {
-  await kit.renderVideo({stage, duration: tl.duration, frame, out: path.join(out, 'visual.mp4')});
+  // 고정 질감은 비트레이트를 올린다 — 66번 전체 기준 crf 18 은 48.5 MB, crf 20 은 39.7 MB 이고 질감 수치는 같다(samples/look-proposal-grain/README.md).
+  // 완성본 mp4 는 Git 에 들어가므로 50 MB 를 넘기지 않는다: 질감 층이 켜진 편만 crf 20, 끄면 기본 18.
+  await kit.renderVideo({stage, duration: tl.duration, frame, out: path.join(out, 'visual.mp4'), ...(useLook ? {crf: 20} : {})});
 } else {
   const times = tl.scenes.flatMap(s => [{t: s.start + Math.min(0.6, (s.end - s.start) / 3), label: s.id + '-start'}, {t: (s.start + s.end) / 2, label: s.id + '-mid'}])
     .concat(events.map(e => ({t: Math.min(tl.duration - 0.01, e.time + 0.12), label: 'event-' + e.id}))).sort((a, b) => a.t - b.t);

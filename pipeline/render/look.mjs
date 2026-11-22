@@ -10,7 +10,7 @@
 //   clearGain(stage)                // renderVideo(gain:false) 는 빛 지도를 비우지 않는다 — 번짐을 쓰면 프레임 첫머리에 직접 비운다
 //   filmBackground(stage)           // 바탕(띠 없는 방사형 그라디언트, 한 번 만들어 캐시)
 //   …장면 → overlays → 자막…
-//   filmLook(stage, t)              // 맨 마지막: ① 번짐(lit 만) → ② 비네트 → ③ 그레인
+//   filmLook(stage, t)              // 맨 마지막: ① 번짐(lit 만) → ② 비네트 → ③ 그레인 (화소 연산 한 번)
 //
 // 결정성: 같은 (프레임 번호, look) 이면 결과가 비트 단위로 같다(Math.random() 없음). 영상과 정지화면이 같고, 다시 렌더해도 같다.
 // 빛 지도(stage.gain.canvas)는 읽기만 한다 — HDR 판이 그대로 쓴다.
@@ -103,11 +103,12 @@ function blurInto(BL, px) {
   }
   b.restore();
 }
-function bloom(stage, o) {
+/** 번짐 층(1/4 해상도 RGB, 0~255)을 만들어 돌려준다. 이 프레임에 lit() 이 없거나 세기가 0 이면 null. */
+function bloomLayer(stage, o) {
   const g = stage.gain;
-  if (!g || !g.dirty) return;                       // 이 프레임에 lit() 이 없었다
+  if (!g || !g.dirty) return null;                  // 이 프레임에 lit() 이 없었다
   const steps = [[o.tight_px, o.tight_alpha], [o.wide_px, o.wide_alpha]].filter(([px, al]) => al > 0 && px > 0);
-  if (!steps.length) return;
+  if (!steps.length) return null;
   const BL = bloomBuffers(stage.W, stage.H);
   if (BL.filterOK === null) BL.filterOK = filterWorks();
   const {a, w, h} = BL;
@@ -117,27 +118,32 @@ function bloom(stage, o) {
   a.globalCompositeOperation = 'multiply'; a.drawImage(g.canvas, 0, 0, w, h);
   a.restore();
   // 두 흐림을 작은 버퍼 C 에서 먼저 합친다: screen 은 결합 법칙이 서고 screen(바닥, α·s) = 바닥 위에 s 를 알파 α 로 screen 한 것과 같아
-  // 결과는 두 번 따로 얹는 것과 같고, 큰 화면에 키워 그리는 일(프레임에서 가장 비싼 단계)은 한 번뿐이다.
+  // 결과는 두 번 따로 얹는 것과 같다. 큰 화면에 얹는 일은 아래 화소 연산 한 번에서 한다.
   const cc = BL.c;
   cc.save(); cc.setTransform(1, 0, 0, 1, 0, 0); cc.filter = 'none'; cc.globalAlpha = 1; cc.globalCompositeOperation = 'copy';
   cc.fillStyle = '#000'; cc.fillRect(0, 0, w, h); cc.globalCompositeOperation = 'screen';
   for (const [px, al] of steps) { blurInto(BL, px * (stage.W / 1080) / Q); cc.globalAlpha = al; cc.drawImage(BL.B, 0, 0); }
   cc.restore();
-  const ctx = stage.ctx;
-  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.filter = 'none'; ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'screen'; ctx.imageSmoothingEnabled = true;
-  ctx.drawImage(BL.C, 0, 0, w, h, 0, 0, stage.W, stage.H);
-  ctx.restore();
+  const d = cc.getImageData(0, 0, w, h).data, rowHas = new Uint8Array(h);   // 행마다 번짐이 있는가(없는 행은 건너뛴다)
+  for (let y = 0; y < h; y++) { let any = 0; for (let i = y * w * 4, e = i + w * 4; i < e; i += 4) if (d[i] | d[i + 1] | d[i + 2]) { any = 1; break; } rowHas[y] = any; }
+  return {d, w, h, rowHas};
 }
 
 // ---------- ② 비네트 ----------
-function vignette(stage, o) {
-  if (!(o.strength > 0)) return;
-  const {ctx, W, H} = stage, cx = W / 2, cy = H * 0.46;
-  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.filter = 'none';
-  const gr = ctx.createRadialGradient(cx, cy, o.r0 * H, cx, cy, o.r1 * H);
-  gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, `rgba(0,0,0,${o.strength})`);
-  ctx.fillStyle = gr; ctx.fillRect(0, 0, W, H);
-  ctx.restore();
+// 중심 (W/2, 0.46H), 반지름 r0·H 에서 0 → r1·H 에서 strength 로 선형인 검정 덮개(= 화소에 곱하는 1 − a). 한 번 계산해 캐시.
+let VIG = null, VIG_KEY = '';
+function vignetteMap(W, H, o) {
+  if (!(o.strength > 0)) return null;
+  const key = JSON.stringify([W, H, o.strength, o.r0, o.r1]);
+  if (key !== VIG_KEY) {
+    const m = new Float32Array(W * H), cx = W / 2, cy = H * 0.46, r0 = o.r0 * H, span = Math.max(1e-6, (o.r1 - o.r0) * H);
+    for (let y = 0, i = 0; y < H; y++) for (let x = 0; x < W; x++, i++) {
+      const q = (Math.hypot(x + 0.5 - cx, y + 0.5 - cy) - r0) / span;
+      m[i] = 1 - o.strength * (q <= 0 ? 0 : q >= 1 ? 1 : q);
+    }
+    VIG = m; VIG_KEY = key;
+  }
+  return VIG;
 }
 
 // ---------- ③ 그레인(종이 같은 질감) ----------
@@ -207,39 +213,67 @@ export function grainParams(frameIndex, look = loadLook()) {
   return {k, tile: ((k % tiles) + tiles) % tiles, ox: h1 % o.tile, oy: h2 % o.tile, fx: (h3 & 1) === 1, fy: (h3 & 2) === 2};   // 이웃한 k 는 늘 다른 타일
 }
 
-let LUT = null, LUT_KEY = '', COLS = null, ROWS = null;
-function grain(stage, frameIndex, look) {
-  const o = look.grain;
-  if (!(o.amount > 0)) return;
-  const {ctx, W, H} = stage, n = o.tile, pow2 = (n & (n - 1)) === 0, mask = n - 1;
-  const T = grainTiles(o, W), P = grainParams(frameIndex, look), noise = T[P.tile];
-  const lk = `${o.amount}|${o.highlight}`;
-  if (lk !== LUT_KEY) {
-    LUT = new Float32Array(256);
-    for (let L = 0; L < 256; L++) LUT[L] = o.amount * (L <= 128 ? 1 : 1 + (o.highlight - 1) * (L - 128) / 127);
-    LUT_KEY = lk;
+let LUT = null, LUT_KEY = '', COLS = null, ROWS = null, BX = null;
+/**
+ * 프레임을 다 그린 맨 마지막에 부른다. ① 번짐(lit 만) → ② 비네트 → ③ 그레인. look.enabled 가 false 면 아무것도 안 한다.
+ * 셋은 화면을 한 번 읽고(getImageData) 한 번 쓰는(putImageData) 화소 연산 하나로 한다 — 캔버스 합성을 세 번 하는 것보다 빠르다.
+ */
+export function filmLook(stage, t, look = loadLook()) {
+  if (!look.enabled) return;
+  const {ctx, W, H} = stage, frameIndex = Math.round(t * stage.FPS);
+  const B = look.bloom ? bloomLayer(stage, look.bloom) : null;
+  const V = look.vignette ? vignetteMap(W, H, look.vignette) : null;
+  const o = look.grain, G = o && o.amount > 0;
+  if (!B && !V && !G) return;
+  let noise = null, lut = null;
+  if (G) {
+    const n = o.tile, pow2 = (n & (n - 1)) === 0, mask = n - 1;
+    const T = grainTiles(o, W), P = grainParams(frameIndex, look);
+    noise = T[P.tile];
+    const lk = `${o.amount}|${o.highlight}`;
+    if (lk !== LUT_KEY) {
+      LUT = new Float32Array(256);
+      for (let L = 0; L < 256; L++) LUT[L] = o.amount * (L <= 128 ? 1 : 1 + (o.highlight - 1) * (L - 128) / 127);
+      LUT_KEY = lk;
+    }
+    lut = LUT;
+    if (!COLS || COLS.length !== W) COLS = new Int32Array(W);
+    if (!ROWS || ROWS.length !== H) ROWS = new Int32Array(H);
+    const wrap = pow2 ? i => i & mask : i => ((i % n) + n) % n;
+    for (let x = 0; x < W; x++) COLS[x] = wrap((P.fx ? -x : x) + P.ox);
+    for (let y = 0; y < H; y++) ROWS[y] = wrap((P.fy ? -y : y) + P.oy) * n;
   }
-  if (!COLS || COLS.length !== W) COLS = new Int32Array(W);
-  if (!ROWS || ROWS.length !== H) ROWS = new Int32Array(H);
-  const wrap = pow2 ? i => i & mask : i => ((i % n) + n) % n;
-  for (let x = 0; x < W; x++) COLS[x] = wrap((P.fx ? -x : x) + P.ox);
-  for (let y = 0; y < H; y++) ROWS[y] = wrap((P.fy ? -y : y) + P.oy) * n;
-  const img = ctx.getImageData(0, 0, W, H), d = img.data, lut = LUT;
-  for (let y = 0, i = 0; y < H; y++) {
-    const rb = ROWS[y];
-    for (let x = 0; x < W; x++, i += 4) {
-      const r = d[i], g = d[i + 1], b = d[i + 2];
-      const v = noise[rb + COLS[x]] * lut[(54 * r + 183 * g + 19 * b) >> 8];
-      d[i] = r + v; d[i + 1] = g + v; d[i + 2] = b + v;   // Uint8ClampedArray 가 반올림·자르기
+  if (B && (!BX || BX.W !== W || BX.w !== B.w)) {   // 번짐 층을 키울 때의 가로 색인·무게(쌍선형, 화소 중심 맞춤)
+    const x0 = new Int32Array(W), x1 = new Int32Array(W), fx = new Float32Array(W), sc = B.w / W;
+    for (let x = 0; x < W; x++) { const sx = Math.min(B.w - 1, Math.max(0, (x + 0.5) * sc - 0.5)), a = Math.floor(sx); x0[x] = a * 4; x1[x] = Math.min(B.w - 1, a + 1) * 4; fx[x] = sx - a; }
+    BX = {W, w: B.w, x0, x1, fx};
+  }
+  const img = ctx.getImageData(0, 0, W, H), d = img.data;
+  const fr = new Float32Array(3);
+  for (let y = 0, i = 0, p = 0; y < H; y++) {
+    let r0 = -1, r1 = -1, fy = 0;
+    if (B) {
+      const sy = Math.min(B.h - 1, Math.max(0, (y + 0.5) * (B.h / H) - 0.5)), a = Math.floor(sy), b = Math.min(B.h - 1, a + 1);
+      if (B.rowHas[a] || B.rowHas[b]) { r0 = a * B.w * 4; r1 = b * B.w * 4; fy = sy - a; }
+    }
+    const rb = G ? ROWS[y] : 0;
+    for (let x = 0; x < W; x++, i += 4, p++) {
+      let r = d[i], g = d[i + 1], b = d[i + 2];
+      if (r0 >= 0) {   // ① screen: c + s − c·s/255
+        const bd = B.d, a0 = r0 + BX.x0[x], a1 = r0 + BX.x1[x], b0 = r1 + BX.x0[x], b1 = r1 + BX.x1[x], u = BX.fx[x];
+        for (let ch = 0; ch < 3; ch++) {
+          const top = bd[a0 + ch] + (bd[a1 + ch] - bd[a0 + ch]) * u, bot = bd[b0 + ch] + (bd[b1 + ch] - bd[b0 + ch]) * u;
+          fr[ch] = top + (bot - top) * fy;
+        }
+        r += fr[0] * (1 - r / 255); g += fr[1] * (1 - g / 255); b += fr[2] * (1 - b / 255);
+      }
+      if (V) { const m = V[p]; r *= m; g *= m; b *= m; }   // ②
+      if (G) {   // ③ 흑백 그레인: 밝기에 따른 세기(흰색으로 갈수록 약하게)
+        const L = (54 * r + 183 * g + 19 * b) >> 8, v = noise[rb + COLS[x]] * lut[L > 255 ? 255 : L];
+        r += v; g += v; b += v;
+      }
+      d[i] = r; d[i + 1] = g; d[i + 2] = b;   // Uint8ClampedArray 가 반올림·자르기
     }
   }
   ctx.putImageData(img, 0, 0);
-}
-
-/** 프레임을 다 그린 맨 마지막에 부른다. ① 번짐 → ② 비네트 → ③ 그레인. look.enabled 가 false 면 아무것도 안 한다. */
-export function filmLook(stage, t, look = loadLook()) {
-  if (!look.enabled) return;
-  if (look.bloom) bloom(stage, look.bloom);
-  if (look.vignette) vignette(stage, look.vignette);
-  if (look.grain) grain(stage, Math.round(t * stage.FPS), look);
 }

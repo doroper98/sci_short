@@ -55,6 +55,13 @@ class TemplateRenderOrderTest(unittest.TestCase):
 
 
 @unittest.skipUnless(HAS_NODE, "node 또는 pipeline/render/node_modules 없음")
+class TemplateCrfTest(unittest.TestCase):
+    def test_film_look_renders_at_crf_20(self) -> None:
+        src = (TEMPLATE / "render.mjs").read_text(encoding="utf-8")
+        line = next(l for l in src.splitlines() if "kit.renderVideo(" in l)
+        self.assertIn("...(useLook ? {crf: 20} : {})", line, "질감 층이 켜진 편만 crf 20(전체 편 50 MB 아래)")
+
+
 class ThemeTest(unittest.TestCase):
     def test_resolve_film_and_default_unchanged(self) -> None:
         js = ("import {resolveTheme, DEFAULT_THEME} from './index.mjs';"

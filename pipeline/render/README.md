@@ -21,7 +21,7 @@ npm test                                   # node --test tests/test_*.mjs
 | `chrome.mjs` | `THEMES`(noturno 기본·slate·graphite·navy·film — 새 편 틀은 film), `resolveTheme`, `background`, `header`, `progressBar`, `sourceLine`, `endCard`. 모두 선택 사항 |
 | `encode.mjs` | `renderVideo({stage, duration, frame, out})` → visual.mp4(무음) + 빛 지도 `gain.mp4`·`gain.json`, `renderStills({stage, times, frame, outDir})` → JPG + `contact-sheet.jpg`(+ 빛 지도 `contact-sheet-hdr.jpg`). `frame(t)` 는 `async` 여도 된다(`await` 한다 — 2026-11-15, 헤드리스 브라우저에서 3D 층을 받아 오는 편) |
 | `hdr.mjs` | `lit(stage, c => …, {gain})` — 빛나는 것을 화면에 그리면서 빛 지도에 흰색으로 찍는다(HDR 판에서 그곳만 흰색보다 밝아진다). `ensureGain`, `clearGain`, `whiteContext`, `cssAlpha`. 규칙은 [docs/HDR.md](../../docs/HDR.md) |
-| `look.mjs` | 질감 층(2026-11-22): `loadLook`, `filmBackground(stage)`(숯색 방사형 바탕, 디더), `filmLook(stage, t)`(프레임 맨 마지막: `lit()` 둘레 은은한 번짐 → 약한 비네트 → 흑백 그레인, 결정적), `grainParams`. 설정 `config/look.json`, 기준 [docs/ANIMATION_QUALITY.md](../../docs/ANIMATION_QUALITY.md) 2026-11-22 절 |
+| `look.mjs` | 질감 층(2026-11-22): `loadLook`, `filmBackground(stage)`(숯색 방사형 바탕, 디더), `filmLook(stage, t)`(프레임 맨 마지막: `lit()` 둘레 은은한 번짐 → 약한 비네트 → 종이 같은 고정 질감(흑백 그레인, 무늬는 영상 내내 같음), 결정적), `grainParams`. 설정 `config/look.json`, 기준 [docs/ANIMATION_QUALITY.md](../../docs/ANIMATION_QUALITY.md) 2026-11-22 절 |
 | `fetch_fonts.py` | 글꼴 내려받기·변환, `assets/fonts/fonts-manifest.json`에 sha256 기록 |
 
 `index.mjs`가 전부 다시 내보냅니다: `import {createStage, …} from '../../pipeline/render/index.mjs'`.

@@ -2,7 +2,11 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
-import {createStage, lit, clearGain, circle, loadLook, filmLook, filmBackground, grainParams} from '../index.mjs';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {execFileSync} from 'node:child_process';
+import {createStage, lit, clearGain, circle, loadLook, filmLook, filmBackground, grainParams, renderVideo} from '../index.mjs';
 
 const stage = createStage();
 const fill = (s, v) => { const c = s.ctx; c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1; c.globalCompositeOperation = 'source-over'; c.fillStyle = `rgb(${v},${v},${v})`; c.fillRect(0, 0, s.W, s.H); };
@@ -115,4 +119,20 @@ test('filmBackground: centre brighter than corners, no 8-bit banding steps along
   const d = stage.ctx.getImageData(540, 900, 1, 900).data, avg = [];
   for (let y = 0; y + 64 <= 900; y += 64) { let s = 0; for (let j = y; j < y + 64; j++) s += d[j * 4 + 1]; avg.push(s / 64); }
   for (let i = 1; i < avg.length; i++) assert.ok(avg[i] <= avg[i - 1] + 0.35, `row means ${avg.map(v => v.toFixed(2)).join(' ')}`);
+});
+
+const HAS_FFMPEG = (() => { try { execFileSync('ffmpeg', ['-version'], {stdio: 'ignore'}); return true; } catch { return false; } })();
+test('renderVideo(gain:false) still clears the light map every frame (bloom must not pile up)', {skip: !HAS_FFMPEG && 'ffmpeg 없음'}, async () => {
+  const s = createStage({width: 64, height: 128}), dir = fs.mkdtempSync(path.join(os.tmpdir(), 'look-'));
+  const seen = [];
+  try {
+    await renderVideo({stage: s, duration: 2 / 30, fps: 30, gain: false, preset: 'ultrafast', out: path.join(dir, 'v.mp4'), onProgress: () => {},
+      frame: t => {
+        s.ctx.fillStyle = '#000'; s.ctx.fillRect(0, 0, 64, 128);
+        if (t === 0) lit(s, c => circle(c, 32, 64, 8, '#fff'));
+        seen.push(!!s.gain?.dirty);
+      }});
+  } finally { fs.rmSync(dir, {recursive: true, force: true}); }
+  assert.deepEqual(seen, [true, false], 'frame 1 lit, frame 2 starts from a cleared light map');
+  assert.equal(s.gain.dirty, false);
 });
