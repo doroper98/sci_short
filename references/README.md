@@ -21,11 +21,14 @@
 | 12 | [DLP 프로젝터](videos/12-dlp-projector.mp4) | [장면 모음](contact-sheets/12-dlp-projector.jpg) |
 | 13 | [LIGO 간섭계](videos/13-ligo-interferometer.mp4) | [장면 모음](contact-sheets/13-ligo-interferometer.jpg) |
 | 15 | [픽셀 일러스트 화풍의 제작사 소개 영상](videos/15-pixel-illustration-reel.mp4) | [장면 모음](contact-sheets/15-pixel-illustration-reel.jpg) |
+| 16 | [물리학 14갈래 릴스(영상미의 참고)](videos/16-physics-branches-reel.mp4) | [장면 모음](contact-sheets/16-physics-branches-reel.jpg) |
 
 8번은 2026-10-20 추가 첨부이며 원본 바이트를 그대로 보존했습니다.
 9~13번은 2026-10-30 추가 첨부한 장치 해부도 계열(Chiong Lab)이며 역시 바이트 그대로 보존했습니다. 분석은 [참고 영상 분석](../docs/REFERENCE_ANALYSIS.md#장치-해부도-계열-chiong-lab-9-13번)에 있습니다. 함께 첨부된 석영 영상은 `finals/legacy/quartz/quartz-growth-ko.mp4`와 SHA-256이 같아 따로 보관하지 않았습니다. 설명 원리의 적용 제안은 [애니메이션 품질 기준](../docs/ANIMATION_QUALITY.md)에 있습니다.
 
 15번은 2026-11-15 추가 첨부이며 바이트 그대로 보존했습니다(사용자: "어떤 과학 크리에이터 계정의 일종의 포트폴리오"). 과학 설명 영상이 아니라 화풍의 참고입니다 — 그리는 방식만 참고하고 장면·색·문구는 베끼지 않습니다. 분석과 시안은 [samples/look-proposal-pixel](../samples/look-proposal-pixel/README.md), 14번은 아래 '참고 이미지'에 있습니다.
+
+16번은 2026-11-22 추가 첨부이며 바이트 그대로 보존했습니다(사용자: "내가 말한 영상미는 이런거야. 그레인이 조금 가미 되었으면서, 적당한 빛(절대 과하지는 않은) 혹은 광원 효과같은게 있는 느낌? 색감이나 질감을 참고 하고."). **색감과 질감의 참고**입니다 — 숯색 바탕, 흑백 그레인, 빛나는 선·점 둘레의 은은한 번짐만 참고하고 화면·문구·구성·글꼴은 베끼지 않습니다. 함께 올라온 휴대전화 화면 갈무리 13장은 같은 영상의 장면이라 따로 보관하지 않고 해시만 [manifest.json](manifest.json)에 적었습니다. 직접 잰 값과 적용은 [참고 영상 분석](../docs/REFERENCE_ANALYSIS.md)의 16번 항목과 [samples/look-proposal-grain](../samples/look-proposal-grain/README.md)에 있습니다. 전체 비교 이미지에는 들어 있지 않습니다.
 
 [전체 비교 이미지](contact-sheets/overview.jpg)는 각 영상의 초반·중반·후반을 세로로 놓았습니다.
 

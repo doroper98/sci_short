@@ -493,6 +493,150 @@
       "issues": [],
       "analysis": "samples/look-proposal-pixel/README.md",
       "style_family": "pixel illustration + cinematic camera (studio reel)"
+    },
+    {
+      "id": "ref-16",
+      "title_ko": "물리학 14갈래를 39초에: 숯색 바탕·필름 그레인·은은히 빛나는 선(영상미의 참고)",
+      "recorded_date": "2026-11-22",
+      "path": "references/videos/16-physics-branches-reel.mp4",
+      "original_filename": "ClipDown.app_AQOKIBxwIgx9xSPGxaH-T0c6Z2_OhqF-xuZIDM2525kXriMenP9FY3kLHCaY--7AGdZMj3m9PyFv1u0f8xBldQZrHQnrP9AglevwSd79yA",
+      "upload_name": "490b85e6-ClipDown.app_AQOKIBxwIgx9xSPGxaH-T0c6Z2_OhqF-xuZIDM2525kXriMenP9FY3kLHCaY--7AGdZMj3m9PyFv1u0f8xBldQZrHQnrP9AglevwSd79yA",
+      "bytes": 5187156,
+      "sha256": "9a67c929c9d403c17ec4fed9e70837f775c9234de6aa911663ea173fc21b2b4f",
+      "duration_seconds": 39.265011,
+      "streams": [
+        {
+          "codec_type": "video",
+          "codec_name": "h264",
+          "width": 716,
+          "height": 1274,
+          "r_frame_rate": "30/1",
+          "sample_rate": null,
+          "channels": null,
+          "duration": "39.200000"
+        },
+        {
+          "codec_type": "audio",
+          "codec_name": "aac",
+          "width": null,
+          "height": null,
+          "r_frame_rate": "0/0",
+          "sample_rate": "44100",
+          "channels": 2,
+          "duration": "39.265011"
+        }
+      ],
+      "source": "user attachment (2026-11-22)",
+      "issues": [],
+      "analysis": "docs/REFERENCE_ANALYSIS.md#16-물리학-14갈래-릴스--영상미색감질감의-참고",
+      "style_family": "charcoal background + film grain + thin luminous lines (physics explainer reel)",
+      "note": "사용자가 2026-11-22 에 화면 갈무리 13장과 함께 올린 인스타그램 릴스(계정 thespinor, 화면에 \"made with Claude (AI)\", \"animated in code · equations in KaTeX\" 표기). 사용자 말: \"내가 말한 영상미는 이런거야. 그레인이 조금 가미 되었으면서, 적당한 빛(절대 과하지는 않은) 혹은 광원 효과같은게 있는 느낌? 색감이나 질감을 참고 하고.\" 색감·질감만 참고하고 화면·문구·구성·상표는 베끼지 않는다. 갈무리 13장은 같은 영상의 장면이라 따로 보관하지 않고 해시만 적는다.",
+      "screenshots_not_kept": [
+        {
+          "original_filename": "IMG_2120.jpeg",
+          "upload_name": "b59864f8-image.jpg",
+          "bytes": 327992,
+          "sha256": "af1cc95dd30581ac4321cbfa6b35c715f7e22865ff7787f5fbfbb5c197eb5a8d",
+          "width": 1184,
+          "height": 2576
+        },
+        {
+          "original_filename": "IMG_2121.jpeg",
+          "upload_name": "773d2fa4-image.jpg",
+          "bytes": 348491,
+          "sha256": "ff280b09839a4e350352eb3c9d82ef1ea3eb6c0cd510658f59bad0324d5f8628",
+          "width": 1184,
+          "height": 2576
+        },
+        {
+          "original_filename": "IMG_2122.jpeg",
+          "upload_name": "771c8e4a-image.jpg",
+          "bytes": 323362,
+          "sha256": "2aa9ee10f8e8946c97f3c7c4c492d65f9b6d6cac6dca9eb22ea913572afe0e63",
+          "width": 1184,
+          "height": 2576
+        },
+        {
+          "original_filename": "IMG_2123.jpeg",
+          "upload_name": "30823e69-image.jpg",
+          "bytes": 326828,
+          "sha256": "083079db910a31a6dfe0d6c6b87372c1c6e218abb5c1041068285c943d920bae",
+          "width": 1184,
+          "height": 2576
+        },
+        {
+          "original_filename": "IMG_2124.jpeg",
+          "upload_name": "7fb035b8-image.jpg",
+          "bytes": 331674,
+          "sha256": "2e9d73a50f4516fd4490d4be654e56ca25160336f00b12223ccfe82f6a0cfb3c",
+          "width": 1184,
+          "height": 2576
+        },
+        {
+          "original_filename": "IMG_2125.jpeg",
+          "upload_name": "03c31887-image.jpg",
+          "bytes": 345510,
+          "sha256": "67df7c0b2f272f93a0097033a3607b2076df87b140ecca5e042ffe07eb79bbcf",
+          "width": 1184,
+          "height": 2576
+        },
+        {
+          "original_filename": "IMG_2126.jpeg",
+          "upload_name": "01daf76c-image.jpg",
+          "bytes": 342854,
+          "sha256": "4b23cd3bede5b4929458446041ca5054a529261786f78240899eefc1b50473ee",
+          "width": 1184,
+          "height": 2576
+        },
+        {
+          "original_filename": "IMG_2127.jpeg",
+          "upload_name": "021e11cd-image.jpg",
+          "bytes": 349287,
+          "sha256": "157a6da383d1ba17d2b0be56e2fd87a923d4071b31d238cf59f3bf21662ecf79",
+          "width": 1184,
+          "height": 2576
+        },
+        {
+          "original_filename": "IMG_2128.jpeg",
+          "upload_name": "071388e9-image.jpg",
+          "bytes": 322855,
+          "sha256": "8a7e24be3ed7e18fa2b2fdd2fca01ade87aede68dca58243d2a4fb2d6e6d52b1",
+          "width": 1184,
+          "height": 2576
+        },
+        {
+          "original_filename": "IMG_2129.jpeg",
+          "upload_name": "660953bd-image.jpg",
+          "bytes": 319264,
+          "sha256": "7749cee8fa4fda090829bd6b966f0108435c0c95b234d50571427331c2f25425",
+          "width": 1184,
+          "height": 2576
+        },
+        {
+          "original_filename": "IMG_2130.jpeg",
+          "upload_name": "76252c55-image.jpg",
+          "bytes": 325552,
+          "sha256": "c67d8242ab7355c7d9ac3464a585b3f60498b47d661fd164d51b8212e8a6865e",
+          "width": 1184,
+          "height": 2576
+        },
+        {
+          "original_filename": "IMG_2131.jpeg",
+          "upload_name": "df38bc96-image.jpg",
+          "bytes": 317738,
+          "sha256": "e117da074ce98ba77855bb95e42aa55d7a10909d2e367c72bbe2e89d9b59c8db",
+          "width": 1184,
+          "height": 2576
+        },
+        {
+          "original_filename": "IMG_2132.jpeg",
+          "upload_name": "7828f34d-image.jpg",
+          "bytes": 403382,
+          "sha256": "993ece3f44371e1e55e7f36afe1af96576874a6d0ef413d77feb0c2a1596219b",
+          "width": 1184,
+          "height": 2576
+        }
+      ]
     }
   ],
   "contact_sheets": [
@@ -510,7 +654,8 @@
     "references/contact-sheets/11-magnetron.jpg",
     "references/contact-sheets/12-dlp-projector.jpg",
     "references/contact-sheets/13-ligo-interferometer.jpg",
-    "references/contact-sheets/15-pixel-illustration-reel.jpg"
+    "references/contact-sheets/15-pixel-illustration-reel.jpg",
+    "references/contact-sheets/16-physics-branches-reel.jpg"
   ],
   "images": [
     {

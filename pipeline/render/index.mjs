@@ -7,3 +7,4 @@ export * from './captions.mjs';
 export * from './chrome.mjs';
 export * from './encode.mjs';
 export * from './hdr.mjs';
+export * from './look.mjs';

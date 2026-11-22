@@ -2,7 +2,8 @@
 // Nothing here is mandatory; an episode may draw its own frame entirely.
 import {rgba, clamp, line, rect, glow, smooth, easeOut} from './draw.mjs';
 
-// All themes are dark technical palettes. noturno is the default (from the reportage report template).
+// All themes are dark technical palettes. noturno is DEFAULT_THEME (from the reportage report template; old episodes rely on it);
+// new episodes from episodes/_template start on film (charcoal, used with the look layer pipeline/render/look.mjs).
 export const THEMES = Object.freeze({
   noturno: {name: 'noturno', bg: '#001621', deep: '#000E16', plate: '#06222E', border: '#1C3A45', ink: '#EFE3D4', muted: '#8AA0A6',
     accent: '#FF4103', accent2: '#8AC0A0', up: '#8AC0A0', down: '#FF8A5C', light: '#FFE2C4'},
@@ -10,6 +11,9 @@ export const THEMES = Object.freeze({
     accent: '#5FD3C8', accent2: '#E9BC78', up: '#7FD6A4', down: '#F08A6B', light: '#D8FFF9'},
   graphite: {name: 'graphite', bg: '#18191B', deep: '#0C0D0E', plate: '#222326', border: '#3A3B3F', ink: '#F1EDE6', muted: '#A09A90',
     accent: '#F2A93B', accent2: '#7FB8D8', up: '#9CCB86', down: '#F07F5E', light: '#FFF1D6'},
+  // 2026-11-22: 질감 층(look.mjs filmBackground·filmLook)과 함께 쓰는 숯색 테마. 값은 제작 세션의 제안.
+  film: {name: 'film', bg: '#1A1A1D', deep: '#0E0E10', plate: '#232327', border: '#3A3B40', ink: '#F1EDE6', muted: '#A3A19B',
+    accent: '#FF6B1A', accent2: '#5BA8F0', up: '#9CCB86', down: '#F07F5E', light: '#FFF1D6'},
   navy: {name: 'navy', bg: '#0B1530', deep: '#050B1C', plate: '#121F40', border: '#2A3A62', ink: '#EEF1F8', muted: '#98A3BE',
     accent: '#FF6F91', accent2: '#7CC4FF', up: '#86D3B0', down: '#FF9A7A', light: '#E4ECFF'},
 });
