@@ -2,6 +2,8 @@
 //   node samples/look-proposal-grain/compose.mjs before-after <png 폴더> <out.jpg> t1 t2 t3
 //   node samples/look-proposal-grain/compose.mjs crop <png 폴더> <out.jpg> t x1,y1 x2,y2       # 540×540 조각 둘, 100% 크기
 //   node samples/look-proposal-grain/compose.mjs sheet <png 폴더> <out.jpg> t1 t2 …            # 새 질감만, 4열
+//   node samples/look-proposal-grain/compose.mjs levels - <out.jpg> t1,t2 폴더:이름표 …         # 단계 비교: 시각마다 2×2(540×960 칸), 폭 1080
+//   node samples/look-proposal-grain/compose.mjs levelcrop - <out.jpg> t x,y 폴더:이름표 …      # 단계 비교: 같은 540×540 조각(100%)을 2×2
 import fs from 'node:fs'; import path from 'node:path'; import {fileURLToPath, pathToFileURL} from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const kit = await import(pathToFileURL(path.join(ROOT, 'pipeline/render/index.mjs')));
@@ -49,6 +51,25 @@ if (mode === 'before-after') {
     const x = pad + (i % cols) * (w + pad), y = pad + Math.floor(i / cols) * (h + cap + pad);
     c.drawImage(await img('film', t), x, y, w, h);
     label(c, `새 질감 · ${fmt(t)}`, x + 2, y + h + 8, 20, INK);
+  }
+} else if (mode === 'levels' || mode === 'levelcrop') {
+  const [ts, ...more] = rest, crop = mode === 'levelcrop' ? more.shift().split(',').map(Number) : null;
+  const items = more.map(x => { const i = x.indexOf(':'); return {dir: x.slice(0, i), label: x.slice(i + 1)}; });
+  const times = mode === 'levels' ? ts.split(',').map(Number) : [+ts];
+  const w = 540, h = crop ? 540 : 960, gap = 0, head = mode === 'levels' ? 40 : 0;
+  cv = createCanvas(2 * w, times.length * (head + 2 * h));
+  const c = cv.getContext('2d'); c.fillStyle = BG; c.fillRect(0, 0, cv.width, cv.height);
+  for (const [r, t] of times.entries()) {
+    const y0 = r * (head + 2 * h);
+    if (head) label(c, `${fmt(t)} · 빛 효과 네 단계`, 12, y0 + 8, 24, MUTED);
+    for (const [k, it] of items.slice(0, 4).entries()) {
+      const x = (k % 2) * w, y = y0 + head + Math.floor(k / 2) * h;
+      const im = await loadImage(fs.readFileSync(path.join(it.dir, `film_${t.toFixed(2)}.png`)));
+      if (crop) c.drawImage(im, crop[0], crop[1], w, h, x, y, w, h); else c.drawImage(im, x, y, w, h);
+      c.fillStyle = 'rgba(0,0,0,0.6)'; c.fillRect(x, y, Math.min(w, 24 + it.label.length * 22), 40);
+      label(c, it.label, x + 10, y + 7, 24, INK);
+      c.strokeStyle = '#000'; c.lineWidth = 2; c.strokeRect(x + 1, y + 1, w - 2, h - 2);
+    }
   }
 } else throw new Error(`모르는 모드 ${mode}`);
 fs.writeFileSync(out, await cv.encode('jpeg', 92));
