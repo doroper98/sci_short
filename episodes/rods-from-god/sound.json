@@ -1,0 +1,795 @@
+{
+ "version": 1,
+ "notes": "설명용 합성음입니다(녹음 아님). 각 사건은 scenes.mjs 의 ctx.events 와 같은 시각을 씁니다. 기본음·잡음 대역은 모두 700 Hz 아래(사용자 규칙). 속도를 따르는 음높이는 110 + 60·속도(km/s) Hz.",
+ "ambient": {
+  "enabled": false
+ },
+ "events": [
+  {
+   "id": "impact0",
+   "at": 0.0,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.9,
+       "decay": 0.6,
+       "harmonics": [
+        1,
+        0.5,
+        0.2
+       ],
+       "gain_db": -12
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.5,
+       "low": 80,
+       "high": 420,
+       "release": 0.35,
+       "gain_db": -16
+      }
+     }
+    ]
+   },
+   "means": "결과 먼저: 막대가 땅에 닿음(0초)"
+  },
+  {
+   "id": "grind0",
+   "at": 0.05,
+   "kind": "env_noise",
+   "params": {
+    "points": [
+     [
+      0,
+      0.9
+     ],
+     [
+      1.4,
+      0.7
+     ],
+     [
+      2.0,
+      0.2
+     ],
+     [
+      2.15,
+      0
+     ]
+    ],
+    "low": 60,
+    "high": 320,
+    "gain_db": -18
+   },
+   "means": "막대가 닳으며 파고듦(남은 길이에 따라 잦아듦)"
+  },
+  {
+   "id": "rew",
+   "at": 2.2,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.8,
+    "f_start": 520,
+    "f_end": 160,
+    "q": 1.5,
+    "gain_db": -24
+   },
+   "means": "되감기"
+  },
+  {
+   "id": "descend",
+   "at": 3.7,
+   "kind": "env_noise",
+   "params": {
+    "points": [
+     [
+      0,
+      0
+     ],
+     [
+      1.0,
+      0.4
+     ],
+     [
+      8.5,
+      0.6
+     ],
+     [
+      9.0,
+      0
+     ]
+    ],
+    "low": 150,
+    "high": 500,
+    "gain_db": -28
+   },
+   "means": "충돌 직전, 달궈진 공기 줄을 끌며 내려오는 막대(아주 느리게)"
+  },
+  {
+   "id": "year1",
+   "at": {
+    "sentence": "s03",
+    "word": "천구백오십년대"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.1,
+    "gain_db": -20
+   },
+   "means": "연표: 1950년대 구상"
+  },
+  {
+   "id": "year2",
+   "at": {
+    "sentence": "s04",
+    "word": "계획서"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.1,
+    "gain_db": -20
+   },
+   "means": "연표: 2003 계획서 한 줄"
+  },
+  {
+   "id": "dimL",
+   "at": {
+    "sentence": "s05",
+    "word": "육미터"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.12,
+    "gain_db": -20
+   },
+   "means": "치수선 6.1 m"
+  },
+  {
+   "id": "dimD",
+   "at": {
+    "sentence": "s05",
+    "word": "지름"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.12,
+    "gain_db": -20
+   },
+   "means": "치수선 0.3 m"
+  },
+  {
+   "id": "fill",
+   "at": {
+    "sentence": "s06",
+    "word": "철",
+    "offset": -0.3
+   },
+   "kind": "chirp",
+   "params": {
+    "points": [
+     [
+      0,
+      110,
+      0.0
+     ],
+     [
+      0.2,
+      110,
+      0.5
+     ],
+     [
+      2.2,
+      196,
+      0.6
+     ],
+     [
+      2.4,
+      196,
+      0
+     ]
+    ],
+    "gain_db": -24
+   },
+   "means": "텅스텐이 채워지며 무게 막대가 오름"
+  },
+  {
+   "id": "ton",
+   "at": {
+    "sentence": "s06",
+    "word": "팔톤"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 98,
+    "dur": 0.9,
+    "decay": 0.7,
+    "harmonics": [
+     1,
+     0.4,
+     0.15
+    ],
+    "gain_db": -16
+   },
+   "means": "8톤 넘게"
+  },
+  {
+   "id": "vel1",
+   "at": "energy",
+   "kind": "chirp",
+   "params": {
+    "points": [
+     [
+      0,
+      110,
+      0.0
+     ],
+     [
+      0.2,
+      113,
+      0.4
+     ],
+     [
+      1.4,
+      170,
+      0.5
+     ],
+     [
+      1.6,
+      170,
+      0
+     ]
+    ],
+    "gain_db": -24
+   },
+   "means": "속도 0→1 km/s, 음높이 = 110 + 60·속도"
+  },
+  {
+   "id": "vel2",
+   "at": {
+    "sentence": "s07",
+    "word": "속도가"
+   },
+   "kind": "chirp",
+   "params": {
+    "points": [
+     [
+      0,
+      170,
+      0.0
+     ],
+     [
+      0.15,
+      172,
+      0.5
+     ],
+     [
+      1.6,
+      230,
+      0.6
+     ],
+     [
+      1.8,
+      230,
+      0
+     ]
+    ],
+    "gain_db": -24
+   },
+   "means": "속도 1→2 km/s(에너지 네 배)"
+  },
+  {
+   "id": "vel3",
+   "at": [
+    "s08",
+    0.0
+   ],
+   "kind": "chirp",
+   "params": {
+    "points": [
+     [
+      0,
+      230,
+      0.0
+     ],
+     [
+      0.2,
+      232,
+      0.5
+     ],
+     [
+      2.0,
+      284,
+      0.6
+     ],
+     [
+      2.2,
+      284,
+      0
+     ]
+    ],
+    "gain_db": -24
+   },
+   "means": "속도 2→2.9 km/s"
+  },
+  {
+   "id": "tnt",
+   "at": {
+    "sentence": "s08",
+    "word": "티엔티",
+    "offset": 0.1
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.15,
+    "gain_db": -16
+   },
+   "means": "곡선이 TNT 1 kg 선을 넘음(2.9 km/s)"
+  },
+  {
+   "id": "air",
+   "at": [
+    "s10",
+    -0.2
+   ],
+   "kind": "env_noise",
+   "params": {
+    "points": [
+     [
+      0,
+      0.05
+     ],
+     [
+      1.0,
+      0.5
+     ],
+     [
+      3.0,
+      0.9
+     ],
+     [
+      4.6,
+      0.6
+     ],
+     [
+      5.4,
+      0
+     ]
+    ],
+    "low": 150,
+    "high": 520,
+    "gain_db": -22
+   },
+   "means": "공기층: 달궈지고 느려짐"
+  },
+  {
+   "id": "mark34",
+   "at": {
+    "sentence": "s11",
+    "word": "초속"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 294,
+    "decay": 0.12,
+    "gain_db": -20
+   },
+   "means": "흔히 드는 값 3.4 표식"
+  },
+  {
+   "id": "hit",
+   "at": [
+    "s12",
+    0.3
+   ],
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.9,
+       "decay": 0.6,
+       "harmonics": [
+        1,
+        0.5,
+        0.2
+       ],
+       "gain_db": -16
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.5,
+       "low": 80,
+       "high": 420,
+       "release": 0.35,
+       "gain_db": -20
+      }
+     }
+    ]
+   },
+   "means": "땅에 닿음"
+  },
+  {
+   "id": "e11",
+   "at": {
+    "sentence": "s12",
+    "word": "에너지"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 98,
+    "dur": 0.9,
+    "decay": 0.7,
+    "harmonics": [
+     1,
+     0.4,
+     0.15
+    ],
+    "gain_db": -18
+   },
+   "means": "TNT 11톤 남짓"
+  },
+  {
+   "id": "impact1",
+   "at": [
+    "s13",
+    -0.3
+   ],
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.9,
+       "decay": 0.6,
+       "harmonics": [
+        1,
+        0.5,
+        0.2
+       ],
+       "gain_db": -14
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.5,
+       "low": 80,
+       "high": 420,
+       "release": 0.35,
+       "gain_db": -18
+      }
+     }
+    ]
+   },
+   "means": "단면 충돌(아주 느리게) 시작"
+  },
+  {
+   "id": "grind1",
+   "at": [
+    "s13",
+    -0.25
+   ],
+   "kind": "env_noise",
+   "params": {
+    "points": [
+     [
+      0,
+      0.9
+     ],
+     [
+      4,
+      0.8
+     ],
+     [
+      8,
+      0.6
+     ],
+     [
+      11,
+      0.3
+     ],
+     [
+      12.5,
+      0
+     ]
+    ],
+    "low": 60,
+    "high": 300,
+    "gain_db": -22
+   },
+   "means": "막대가 닳으며 파고듦(남은 막대와 함께 잦아듦)"
+  },
+  {
+   "id": "column",
+   "at": {
+    "sentence": "s15",
+    "word": "바위",
+    "offset": -0.4
+   },
+   "kind": "chirp",
+   "params": {
+    "points": [
+     [
+      0,
+      110,
+      0
+     ],
+     [
+      0.2,
+      112,
+      0.5
+     ],
+     [
+      2.6,
+      262,
+      0.6
+     ],
+     [
+      2.8,
+      262,
+      0
+     ]
+    ],
+    "gain_db": -24
+   },
+   "means": "같은 질량의 바위 기둥이 아래로 자람"
+  },
+  {
+   "id": "newton",
+   "at": {
+    "sentence": "s16",
+    "word": "육미터"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 131,
+    "dur": 0.8,
+    "decay": 0.6,
+    "harmonics": [
+     1,
+     0.3
+    ],
+    "gain_db": -18
+   },
+   "means": "뉴턴의 어림셈 43 m 표식"
+  },
+  {
+   "id": "simA",
+   "at": [
+    "s17",
+    -0.2
+   ],
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.9,
+       "decay": 0.6,
+       "harmonics": [
+        1,
+        0.5,
+        0.2
+       ],
+       "gain_db": -18
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.5,
+       "low": 80,
+       "high": 420,
+       "release": 0.35,
+       "gain_db": -22
+      }
+     }
+    ]
+   },
+   "means": "시뮬레이션 A 다시 재생(닿음)"
+  },
+  {
+   "id": "hydro",
+   "at": {
+    "sentence": "s17",
+    "word": "십육미터"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.12,
+    "gain_db": -20
+   },
+   "means": "닳는 모형 16 m 표식"
+  },
+  {
+   "id": "lenCmp",
+   "at": [
+    "s18",
+    0.2
+   ],
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.9,
+       "decay": 0.6,
+       "harmonics": [
+        1,
+        0.5,
+        0.2
+       ],
+       "gain_db": -16
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.5,
+       "low": 80,
+       "high": 420,
+       "release": 0.35,
+       "gain_db": -20
+      }
+     }
+    ]
+   },
+   "means": "두 막대(6 m·12 m)가 같은 속도로 닿음"
+  },
+  {
+   "id": "bar1",
+   "at": [
+    "limits",
+    0.2
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.12,
+    "gain_db": -22
+   },
+   "means": "에너지 막대: 이 막대"
+  },
+  {
+   "id": "bar2",
+   "at": {
+    "sentence": "s20",
+    "word": "히로시마",
+    "offset": -0.2
+   },
+   "kind": "chirp",
+   "params": {
+    "points": [
+     [
+      0,
+      110,
+      0
+     ],
+     [
+      0.2,
+      112,
+      0.5
+     ],
+     [
+      1.6,
+      220,
+      0.5
+     ],
+     [
+      1.8,
+      220,
+      0
+     ]
+    ],
+    "gain_db": -26
+   },
+   "means": "에너지 막대: 히로시마(로그 눈금)"
+  },
+  {
+   "id": "spd",
+   "at": [
+    "s21",
+    0.0
+   ],
+   "kind": "chirp",
+   "params": {
+    "points": [
+     [
+      0,
+      110,
+      0
+     ],
+     [
+      0.2,
+      112,
+      0.5
+     ],
+     [
+      2.0,
+      578,
+      0.5
+     ],
+     [
+      2.2,
+      578,
+      0
+     ]
+    ],
+    "gain_db": -28
+   },
+   "means": "빠르기 막대가 7.8 km/s 까지(음높이 = 110 + 60·속도)"
+  },
+  {
+   "id": "treaty",
+   "at": {
+    "sentence": "s22",
+    "word": "우주조약"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.1,
+    "gain_db": -22
+   },
+   "means": "1967 우주조약"
+  },
+  {
+   "id": "closeHit",
+   "at": [
+    "close",
+    0.2
+   ],
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.9,
+       "decay": 0.6,
+       "harmonics": [
+        1,
+        0.5,
+        0.2
+       ],
+       "gain_db": -18
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.5,
+       "low": 80,
+       "high": 420,
+       "release": 0.35,
+       "gain_db": -22
+      }
+     }
+    ]
+   },
+   "means": "두 막대가 같은 속도로 닿음(정리)"
+  }
+ ]
+}
