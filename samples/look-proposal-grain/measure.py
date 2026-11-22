@@ -96,7 +96,7 @@ def main() -> int:
     with tempfile.TemporaryDirectory() as td:
         items = []
         for p in a.inputs:
-            if p.endswith(".mp4"):
+            if p.endswith((".mp4", ".webm")):
                 items += frames_from_mp4(p, [float(t) for t in a.times.split(",")], Path(td))
             else:
                 items.append((p, np.asarray(Image.open(p).convert("RGB"))))

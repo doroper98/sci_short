@@ -2,7 +2,7 @@
 //   node samples/look-proposal-grain/render.mjs --look off  --stills 0,1,2 --out outputs/look-proposal-grain/off
 //   node samples/look-proposal-grain/render.mjs --look film --stills 0,1,2 --out outputs/look-proposal-grain/film
 //   node samples/look-proposal-grain/render.mjs --look film --from 0 --to 6 --out outputs/look-proposal-grain/a.mp4
-//   [--hold N] [--amount A] [--size S]   config/look.json 의 grain 값을 이번 실행만 바꾼다(측정용)
+//   [--hold N] [--amount A] [--size S] [--mottle M] [--mottle-size P]   config/look.json 의 grain 값을 이번 실행만 바꾼다(측정용)
 //   [--crf N]                            영상 crf(기본 18 = 에피소드와 같음)
 //   [--bloom K]                          번짐 세기 배율(0 = 끔, 비교용)
 //   node samples/look-proposal-grain/render.mjs --look film --png 0,110 --out DIR   # 무손실 PNG
@@ -58,7 +58,7 @@ const theme0 = kit.resolveTheme(ep.theme);   // noturno — film 에서는 바�
 const theme = LOOK === 'film' ? {...theme0, ...Object.fromEntries(['bg', 'deep', 'plate', 'border', 'ink', 'muted'].map(k => [k, FILM_PAL[k]]))} : theme0;
 const stage = kit.createStage({theme});
 const g = {};
-for (const k of ['hold_frames', 'amount', 'size']) { const v = arg('--' + (k === 'hold_frames' ? 'hold' : k)); if (v != null) g[k] = +v; }
+for (const k of ['hold_frames', 'amount', 'size', 'mottle', 'mottle_size']) { const v = arg('--' + (k === 'hold_frames' ? 'hold' : k.replace('_', '-'))); if (v != null) g[k] = +v; }
 const L0 = kit.loadLook(), bk = +arg('--bloom', 1);   // --bloom k: 번짐 세기 배율(0 = 끔, 비교용)
 const look = kit.loadLook({grain: g, bloom: {tight_alpha: L0.bloom.tight_alpha * bk, wide_alpha: L0.bloom.wide_alpha * bk}});
 const timing = argv.includes('--timing'), spent = [];
