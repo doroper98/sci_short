@@ -3,6 +3,7 @@
 //   node samples/look-proposal-grain/render.mjs --look film --stills 0,1,2 --out outputs/look-proposal-grain/film
 //   node samples/look-proposal-grain/render.mjs --look film --from 0 --to 6 --out outputs/look-proposal-grain/a.mp4
 //   [--hold N] [--amount A] [--size S]   config/look.json 의 grain 값을 이번 실행만 바꾼다(측정용)
+//   [--crf N]                            영상 crf(기본 18 = 에피소드와 같음)
 //   [--bloom K]                          번짐 세기 배율(0 = 끔, 비교용)
 //   node samples/look-proposal-grain/render.mjs --look film --png 0,110 --out DIR   # 무손실 PNG
 //   [--timing]                           filmLook 에 걸린 시간을 재서 찍는다
@@ -97,5 +98,5 @@ if (arg('--stills')) {
 }
 const from = Math.max(0, +arg('--from', 0)), to = Math.min(tl.duration, +arg('--to', from + 6));
 const out = path.resolve(arg('--out', path.join(ROOT, `outputs/look-proposal-grain/${LOOK}_${from}-${to}.mp4`)));
-await kit.renderVideo({stage, duration: to - from, start: from, frame, out, gain: false, crf: 18, preset: 'medium'});
+await kit.renderVideo({stage, duration: to - from, start: from, frame, out, gain: false, crf: +arg('--crf', 18), preset: 'medium'});
 report();

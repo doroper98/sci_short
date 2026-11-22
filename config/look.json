@@ -7,7 +7,7 @@
   "_grain": "종이 같은 고정 질감(흑백). 같은 날 사용자 확인: \"그레인 효과라는건 약간 종이같은 그런 질감인거 맞지?\" amount = 어두운 곳·중간 밝기의 밝기 잡음 표준편차(0~255, 1080 원본 기준). size = 고운 결의 가우시안 흐림 σ(px, 1080 폭 기준). mottle = 조금 굵은 얼룩이 차지하는 분산 비율(0~1, 0 이면 고운 결만), mottle_size = 얼룩의 σ(px, 1080 폭 기준). hold_frames = 같은 무늬를 몇 프레임 유지하는가 — 0 이하면 영상 내내 같은 무늬(기본, 참고 릴스처럼 멈춘 결), 1·2… 는 움직이는 필름 잡음(파일이 수십 배 커져 지금 인코딩 설정으로는 45 MB 를 넘는다 — samples/look-proposal-grain/README.md). highlight = 흰색(255)에서의 잡음 배율(128 위에서 1 → highlight 로 선형). tiles × tile² 잡음을 seed 로 처음 한 번 만든다(2048 = 화면을 한 장으로 덮어 반복이 없다).",
   "grain": {"amount": 1.5, "size": 1.1, "mottle": 0.15, "mottle_size": 5, "hold_frames": 0, "highlight": 0.35, "tiles": 1, "tile": 2048, "seed": 20261122},
   "_bloom": "lit() 로 표시한 것(빛 지도)에만 거는 번짐. 화면 × 빛 지도를 1/4 해상도로 흐려 screen 합성. *_px 는 1080 폭 기준 흐림 반지름, *_alpha 는 세기(0 이면 그 단계 생략). 화면 전체 번짐이 아니다.",
-  "bloom": {"tight_px": 6, "tight_alpha": 0.30, "wide_px": 28, "wide_alpha": 0.28},
+  "bloom": {"tight_px": 6, "tight_alpha": 0.48, "wide_px": 28, "wide_alpha": 0.45},
   "_vignette": "중심 (W/2, 0.46H) 에서 r0·H 까지 투명, r1·H 에서 검정 strength. strength 0 이면 생략.",
   "vignette": {"strength": 0.10, "r0": 0.30, "r1": 0.82}
 }
