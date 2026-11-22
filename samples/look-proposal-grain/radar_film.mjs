@@ -135,5 +135,30 @@ if (argv.includes('--video')) {
   await kit.renderVideo({stage, duration: tl.duration, frame, out, gain: false, crf: +arg('--crf', 20), preset: 'medium'});
   process.exit(0);
 }
-console.error('--png t1,t2,… 또는 --video 를 주세요');
+// 묶음: --compose stills <png 폴더> <out.jpg> t:설명 …        세로 행마다 [예전 | 새 질감], 칸 540×960
+//       --compose crop   <png 폴더> <out.jpg> t:x,y:설명 …    행마다 [예전 | 새 질감] 540×540 100% 조각
+if (arg('--compose')) {
+  const mode = arg('--compose'), i0 = argv.indexOf('--compose'), [dir, out, ...items] = argv.slice(i0 + 2);
+  const {createCanvas, loadImage} = await import(pathToFileURL(path.join(ROOT, 'pipeline/render/node_modules/@napi-rs/canvas/index.js')));
+  kit.registerFonts({quiet: true});
+  const BG = '#0B0B0C', INK = '#EDEAE4', MUTED = '#9A9893', pad = 16, cap = 44;
+  const label = (c, s, x, y, size, col, align = 'left') => { c.font = kit.fontString('body', size, 500); c.fillStyle = col; c.textAlign = align; c.textBaseline = 'top'; c.fillText(s, x, y); };
+  const img = async (look, t) => loadImage(fs.readFileSync(path.join(dir, `${look}_${(+t).toFixed(2)}.png`)));
+  const rows = items.map(s => s.split(':')), crop = mode === 'crop', w = 540, h = crop ? 540 : 960;
+  const cv = createCanvas(pad + 2 * (w + pad), pad + rows.length * (h + cap + pad)), c = cv.getContext('2d');
+  c.fillStyle = BG; c.fillRect(0, 0, cv.width, cv.height);
+  for (const [r, row] of rows.entries()) {
+    const t = +row[0], xy = crop ? row[1].split(',').map(Number) : null, desc = crop ? row[2] : row[1], y = pad + r * (h + cap + pad);
+    for (const [k, look] of ['off', 'film'].entries()) {
+      const x = pad + k * (w + pad), im = await img(look, t);
+      if (crop) c.drawImage(im, xy[0], xy[1], w, h, x, y + cap, w, h); else c.drawImage(im, x, y + cap, w, h);
+      label(c, (look === 'off' ? '예전' : '새 질감') + (crop ? ' · 100%' : ''), x + 2, y + 8, 26, look === 'off' ? MUTED : INK);
+      label(c, `${t.toFixed(2)}초 · ${desc}`, x + w - 2, y + 12, 20, MUTED, 'right');
+    }
+  }
+  fs.writeFileSync(out, await cv.encode('jpeg', 92));
+  console.log(`${mode}: ${out} (${cv.width}×${cv.height})`);
+  process.exit(0);
+}
+console.error('--png t1,t2,… 또는 --video 또는 --compose 를 주세요');
 process.exit(2);
