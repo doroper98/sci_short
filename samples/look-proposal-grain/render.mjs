@@ -3,6 +3,7 @@
 //   node samples/look-proposal-grain/render.mjs --look film --stills 0,1,2 --out outputs/look-proposal-grain/film
 //   node samples/look-proposal-grain/render.mjs --look film --from 0 --to 6 --out outputs/look-proposal-grain/a.mp4
 //   [--hold N] [--amount A] [--size S]   config/look.json 의 grain 값을 이번 실행만 바꾼다(측정용)
+//   [--bloom K]                          번짐 세기 배율(0 = 끔, 비교용)
 //   node samples/look-proposal-grain/render.mjs --look film --png 0,110 --out DIR   # 무손실 PNG
 //   [--timing]                           filmLook 에 걸린 시간을 재서 찍는다
 // --look off : 66번 render.mjs 의 frame 과 같은 순서(배경 → 장면 → overlays → 자막).
@@ -57,7 +58,8 @@ const theme = LOOK === 'film' ? {...theme0, ...Object.fromEntries(['bg', 'deep',
 const stage = kit.createStage({theme});
 const g = {};
 for (const k of ['hold_frames', 'amount', 'size']) { const v = arg('--' + (k === 'hold_frames' ? 'hold' : k)); if (v != null) g[k] = +v; }
-const look = kit.loadLook({grain: g});
+const L0 = kit.loadLook(), bk = +arg('--bloom', 1);   // --bloom k: 번짐 세기 배율(0 = 끔, 비교용)
+const look = kit.loadLook({grain: g, bloom: {tight_alpha: L0.bloom.tight_alpha * bk, wide_alpha: L0.bloom.wide_alpha * bk}});
 const timing = argv.includes('--timing'), spent = [];
 
 function frame(t) {

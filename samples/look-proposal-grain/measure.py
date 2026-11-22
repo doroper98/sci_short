@@ -8,7 +8,8 @@
   평균 RGB        조각의 채널 평균(0~255).
   고주파 std      밝기(Y = 0.2126R + 0.7152G + 0.0722B)에서 5×5 상자 평균을 뺀 나머지의 표준편차(0~255 단위).
                   그라디언트 바탕의 완만한 변화는 빠지고 알갱이만 남는다. 참고 릴스(716 폭, 인스타 압축본)는 1.0~1.5.
-  lag1            같은 나머지의 가로 자기상관(이웃 화소). 알갱이가 클수록 1 에 가깝다. 참고 릴스 0.47(716 폭).
+  lag1, lag4      같은 나머지의 가로 자기상관(1·4 화소 떨어진 이웃). 알갱이가 클수록 1 에 가깝다. 참고 릴스 lag1 0.47, lag2~4 0.13~0.17(716 폭).
+                  (5×5 평균을 빼므로 lag4 는 굵은 얼룩을 일부 덜어 낸 값이다.)
   --box x,y,w,h   잴 조각(화면 화소). 폭이 1080 이 아니면 1080 기준 좌표를 비율로 옮긴다.
   --changed       pipeline/first_moment.py 와 같은 법: 270×480 회색조(ffmpeg gray)로 줄인 0초 프레임과 t 초 프레임의 밝기 차가
                   16/255 를 넘는 화소 비율(%).
@@ -43,10 +44,10 @@ def measure(rgb: np.ndarray, box: tuple[int, int, int, int]) -> dict:
     lum = patch @ np.array([0.2126, 0.7152, 0.0722])
     res = (lum - box_mean(lum))[2:-2, 2:-2]
     res = res - res.mean()
-    a, b = res[:, :-1].ravel(), res[:, 1:].ravel()
-    lag1 = float((a * b).mean() / max(1e-12, res.var()))
+    lag = lambda k: float((res[:, :-k] * res[:, k:]).mean() / max(1e-12, res.var()))
+    lag1, lag4 = lag(1), lag(4)
     return {"size": f"{w}x{h}", "mean_rgb": [round(float(v), 1) for v in patch.reshape(-1, 3).mean(0)],
-            "hf_std": round(float(res.std()), 2), "lag1": round(lag1, 2)}
+            "hf_std": round(float(res.std()), 2), "lag1": round(lag1, 2), "lag4": round(lag4, 2)}
 
 
 def frames_from_mp4(mp4: str, times: list[float], tmp: Path) -> list[tuple[str, np.ndarray]]:
@@ -90,7 +91,7 @@ def main() -> int:
                 items.append((p, np.asarray(Image.open(p).convert("RGB"))))
         for name, rgb in items:
             m = measure(rgb, box)
-            print(f"{name}\t{m['size']}\tmean {m['mean_rgb']}\thf_std {m['hf_std']}\tlag1 {m['lag1']}")
+            print(f"{name}\t{m['size']}\tmean {m['mean_rgb']}\thf_std {m['hf_std']}\tlag1 {m['lag1']}\tlag4 {m['lag4']}")
     return 0
 
 
