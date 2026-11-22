@@ -1,0 +1,28 @@
+{
+ "media_id": "17900926029682245",
+ "permalink": "https://www.instagram.com/reel/DgD5Bn6mW4s/",
+ "posted_at": "2026-11-22T22:36:47+00:00",
+ "ig_user_id": "17841457693338876",
+ "username": "_scishorts",
+ "video_file": "gpu-compute.mp4",
+ "video_bytes": 17898827,
+ "video_md5": "f3255979c46148ff1eb8f05a78ff0d0c",
+ "caption_chars": 427,
+ "hashtags": [
+  "#GPU",
+  "#반도체",
+  "#그래픽카드",
+  "#컴퓨터",
+  "#과학"
+ ],
+ "container_id": "17986631486923112",
+ "shortcode": "DgD5Bn6mW4s",
+ "transfer": "url",
+ "ai_label": true,
+ "number": 48,
+ "slug": "gpu-compute",
+ "status": "posted",
+ "note": "",
+ "source": "api",
+ "schema_version": 1
+}

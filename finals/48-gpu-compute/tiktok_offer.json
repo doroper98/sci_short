@@ -1,0 +1,12 @@
+{
+ "offered_at": "2026-11-22T22:36:56+00:00",
+ "video_file": "gpu-compute.mp4",
+ "video_md5": "f3255979c46148ff1eb8f05a78ff0d0c",
+ "video_url": "https://raw.githubusercontent.com/doroper98/sci_short/5cf3732746a9ac0448190149303a55e937f6d96c/finals/48-gpu-compute/gpu-compute.mp4",
+ "title": "1초에 점 5억 개 가까이 칠하는 GPU는 어떻게 계산할까? | 같은 명령 하나로 수많은 데이터를 한꺼번에 #GPU #반도체 #과학",
+ "caption": "<1초에 점 5억 개 가까이 칠하는 GPU는 어떻게 계산할까?>\n\n4K 화면을 1초에 60번 새로 그리면, 색을 정할 점이 5억 개 가까이 돼요.\n그런데 점마다 쓰는 식은 모두 같고, 넣는 숫자만 달라요.\n게다가 한 점은 이웃한 점의 답을 기다릴 필요가 없어요.\n\n그래서 GPU는 명령 하나를 계산기 수천, 수만 개에 한꺼번에 내려요.\n\"GPU는 같은 명령 하나로, 수많은 데이터를 한꺼번에 계산해요\"\n\nGPU가 CPU보다 무엇이든 빠를까요?\n아니에요. 조건에 따라 계산이 갈리거나 순서가 중요한 일은 CPU가 더 잘해요.\n\n숫자 표를 곱하는 신경망 계산도 같은 꼴이라, 지금은 GPU가 신경망을 학습시키는 계산기예요.\n\n#GPU #반도체 #그래픽카드 #컴퓨터 #과학",
+ "number": 48,
+ "slug": "gpu-compute",
+ "account": "shortform_science",
+ "note": "안내만 했다. 게시는 사람이 틱톡 앱에서 한다."
+}
