@@ -284,7 +284,7 @@ export const scenes = {
     depthRuler(stage, {sy, ppm: HK.ppm, max: 30, every: 1, label: 5, top: 300, alpha: fadeIn(t, 0.2, 0.3)});
     // 시간 배율(0초 프레임에는 없음 — 0.3초부터 결과 먼저 구간 동안)
     const ka = fadeIn(t, 0.3, 0.3) * fadeOut(t, 2.2, 0.3);
-    if (ka > 0) { unlitRect(stage, 200, 575, 680, 50, ka); stage.text('실제 0.01초를 2초로 · 설명 모형', 540, 600, {size: 30, weight: 500, color: PAL.ink, align: 'center', alpha: ka, ...so}); }
+    if (ka > 0) { if (ka > 0.01) unlitRect(stage, 200, 575, 680, 50, 1); stage.text('실제 0.01초를 2초로 · 설명 모형', 540, 600, {size: 30, weight: 500, color: PAL.ink, align: 'center', alpha: ka, ...so}); }
   },
 
   origin(stage, t, p, ctx) {
@@ -444,7 +444,7 @@ export const scenes = {
       panel(c, 250, 380, 580, 170);
       stage.text('TNT 11톤 남짓', 540, 445, {role: 'display', size: 64, weight: 700, color: PAL.warm, align: 'center'});
       stage.text('운동에너지 약 48 GJ', 540, 510, {size: 28, weight: 500, color: PAL.muted, align: 'center'});
-      unlitRect(stage, 250, 380, 580, 170, eA);
+      if (eA > 0.01) unlitRect(stage, 250, 380, 580, 170, 1);
     });
   },
 
@@ -622,7 +622,7 @@ export const scenes = {
     stage.text('12 m 막대', xC + 22, sy - 60, {size: 28, weight: 700, color: PAL.ink, ...so});
     const ea = fadeIn(t, s24.start - 0.3, 0.6);
     if (ea > 0) {
-      unlitRect(stage, 30, 330, W - 60, 340, ea);
+      if (ea > 0.01) unlitRect(stage, 30, 330, W - 60, 340, 1);
       withAlpha(c, ea, () => {
         const g = c.createLinearGradient(0, 320, 0, 680); g.addColorStop(0, 'rgba(9,9,11,0)'); g.addColorStop(0.15, 'rgba(9,9,11,0.6)'); g.addColorStop(0.85, 'rgba(9,9,11,0.6)'); g.addColorStop(1, 'rgba(9,9,11,0)');
         c.fillStyle = g; c.fillRect(0, 320, W, 360);
