@@ -1,8 +1,8 @@
 {
   "file": "tail-stability.hdr.mp4",
-  "bytes": 18325607,
-  "sha256": "991d0ba751238685734d9d4e956ed86eb266f154ef315bed5f58d5b2bcff81d3",
-  "created": "2026-11-20T15:30:40+00:00",
+  "bytes": 30191279,
+  "sha256": "afcb111df7ef149b1210fd111a255eba761a3e9525bc062d0f7c21707ed37793",
+  "created": "2026-11-22T09:13:13+00:00",
   "codec": "hevc Main 10",
   "pix_fmt": "yuv420p10le",
   "color": "bt2020 / smpte2084 (PQ) / bt2020nc",
@@ -22,8 +22,8 @@
   "frames": 5074,
   "lit_frames": 2904,
   "sdr_white_code": 573,
-  "peak_code": 686,
-  "peak_nits_estimate": 681,
-  "encode_seconds": 283.8,
+  "peak_code": 715,
+  "peak_nits_estimate": 923,
+  "encode_seconds": 226.0,
   "note": "peak_nits_estimate 는 무채색으로 보고 luma 코드에서 어림한 값"
 }

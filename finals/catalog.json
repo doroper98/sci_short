@@ -768,14 +768,14 @@
       "duration_sec": 169.1,
       "width": 1080,
       "height": 1920,
-      "bytes": 25678182,
-      "sha256": "fcf3329da9a8854d7dd7428282b7db6668c6b1240559590b295a40c5727cb258",
-      "video_date": "2026-11-20",
+      "bytes": 39434719,
+      "sha256": "c950332169428b0c9c706e54a9aacef661c53c95b3c99b45645bbfdda6f26fbd",
+      "video_date": "2026-11-22",
       "episode_code": "episodes/tail-stability",
       "upload_info": "finals/66-tail-stability/upload.md",
       "thumbnail": "0초 프레임(연기 줄이 흐르는 풍동 속의 옆모습 비행기 모형 둘 — 아래 모형은 주황 꼬리날개가 달려 있고, 위 모형은 꼬리날개 자리가 점선이며 떼어 낸 조각이 바람에 실려 가는 중. 흰 물음 두 줄 \"주날개의 4분의 1 크기인데, / 떼면 왜 뒤집힐까?\"와 그 아래 가장 큰 주황 주제어 \"꼬리날개\". 답은 쓰지 않음)",
       "hdr": "finals/66-tail-stability/hdr/tail-stability.hdr.mp4",
-      "hdr_bytes": 18325607
+      "hdr_bytes": 30191279
     }
   ],
   "legacy": [

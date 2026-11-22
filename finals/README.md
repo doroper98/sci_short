@@ -73,7 +73,7 @@
 | 54 | 구름 — 구름은 왜 하얗고 왜 떠 있을까 | 166.0초 | [54-clouds/](54-clouds/) | [upload.md](54-clouds/upload.md) | uncommitted |
 | 58 | 쓰나미는 어떻게 생기고, 어떻게 바다를 건널까 — 바닥까지 물 전체가 움직이는 파도라서, 깊은 바다에서는 낮고 빠르고 얕은 해안에서는 느려지고 높아진다 | 164.9초 | [58-tsunami/](58-tsunami/) | [upload.md](58-tsunami/upload.md) | 2026-11-15 |
 | 64 | 기상 레이더는 비구름을 어떻게 볼까 — 구름을 찍지 않는다. 전파를 쏘고, 빗방울이 돌려보낸 메아리의 시간과 세기를 잰다 | 164.8초 | [64-weather-radar/](64-weather-radar/) | [upload.md](64-weather-radar/upload.md) | 2026-11-15 |
-| 66 | 꼬리날개 — 멀리 있는 작은 날개가 비행기를 되돌린다 | 169.1초 | [66-tail-stability/](66-tail-stability/) | [upload.md](66-tail-stability/upload.md) | 2026-11-20 |
+| 66 | 꼬리날개 — 멀리 있는 작은 날개가 비행기를 되돌린다 | 169.1초 | [66-tail-stability/](66-tail-stability/) | [upload.md](66-tail-stability/upload.md) | 2026-11-22 |
 
 합계 45편, 125.2분, 952 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
 <!-- catalog:end -->
