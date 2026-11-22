@@ -30,6 +30,7 @@ import {
 
 export const theme = 'film';   // 'film' (default for new episodes: charcoal + look layer) | 'noturno' | 'slate' | 'graphite' | 'navy' | {base:'film', accent:'#…'}
 // export const look = false;   // film 테마에서 질감 층(그레인·번짐·비네트)만 끈다
+// export const look = {background: {cy: 0.30}};  // 밝은 곳을 무대 자리로(편별 덮어쓰기 — 세기는 config/look.json)
 
 // Visual-only events (sound events live in sound.json; both are merged into ctx.events).
 export const events = [];

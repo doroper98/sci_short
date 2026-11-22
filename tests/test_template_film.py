@@ -60,6 +60,12 @@ class TemplateCrfTest(unittest.TestCase):
         line = next(l for l in src.splitlines() if "kit.renderVideo(" in l)
         self.assertIn("...(useLook ? {crf: 20} : {})", line, "질감 층이 켜진 편만 crf 20(전체 편 50 MB 아래)")
 
+    def test_per_episode_look_override(self) -> None:
+        src = (TEMPLATE / "render.mjs").read_text(encoding="utf-8")
+        self.assertIn("kit.loadLook(ep.look", src)
+        self.assertIn("kit.filmLook(stage, t, lookOpt)", src)
+        self.assertIn("kit.filmBackground(s, lookOpt)", src)
+
 
 @unittest.skipUnless(HAS_NODE, "node 또는 pipeline/render/node_modules 없음")
 class ThemeTest(unittest.TestCase):
