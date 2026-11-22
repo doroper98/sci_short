@@ -11,8 +11,9 @@ push(병합)에서는 게시하지 않는다.
     python -m publish.instagram finals/<NN>-<slug>             # 실제 게시 (즉시 공개)
     python -m publish.instagram finals/<NN>-<slug> --auto      # push 자동 실행용: auto_from_number 이상 새 편만
     python -m publish.instagram --whoami                        # 토큰이 가리키는 인스타 계정(ID·사용자 이름) 확인
-    python -m publish.instagram --next morning --prefer finals/<ep>   # 아침 한 편: 오늘 유튜브에 올린 편 먼저, 없으면 옛 편
-    python -m publish.instagram --next evening                  # 17시 한 편: 아직 인스타에 없는 옛 편(따라잡았으면 쉼)
+    python -m publish.instagram --next morning --prefer finals/<ep>   # 아침 한 편: 유튜브에 공개된(곧 공개될) 새 편 먼저, 없으면 옛 편
+    python -m publish.instagram --next evening                  # 17시 한 편: 밀린 새 편, 그다음 옛 편(따라잡았으면 쉼)
+    (아침 대기열 편은 유튜브 공개 시각이 지금 + max_lead_hours 안일 때만 — 유튜브보다 먼저 나가지 않는다, 2026-11-22)
     python -m publish.instagram finals/<ep> --mark-posted <미디어 ID 또는 게시물 주소>   # 손으로 올린 편 기록
 
 흐름(메타 공식 문서 Content Publishing):
@@ -51,7 +52,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from publish.youtube import (DEFAULT_FINALS, DEFAULT_REPUBLISH, MB, REPO, RETRY_STATUS, UPLOAD_MD_NAME, Response, Transport,
-                             TransportError, UploadError, _rel, episode_dirs, load_env_file, load_episode, load_meta, md5_file,
+                             TransportError, UploadError, _parse_time, _rel, episode_dirs, load_env_file, load_episode, load_meta, md5_file,
                              morning_numbers, parse_dir_name, parse_upload_md, republish_pending, republished, urllib_transport)
 from publish.youtube import read_record as youtube_record
 
@@ -77,6 +78,10 @@ REEL_MAX_COLUMNS = 1920
 REEL_FPS = (23.0, 60.0)
 REEL_VIDEO_CODECS = {"h264", "hevc"}
 
+# 2026-11-22: 아침 대기열 편은 유튜브 공개 시각이 지금 + 이 여유 안일 때만 인스타·틱톡 대상(유튜브보다 먼저 나가지 않게).
+# 3시간 = 05시대 아침 실행이 그날 07:00 공개분을 같은 아침에 올릴 수 있는 폭(제작 세션의 판단). config 의 max_lead_hours 가 우선.
+DEFAULT_MAX_LEAD_HOURS = 3.0
+
 TOKEN_HINT = ("인스타 토큰이 만료·무효입니다(오류 190). 인스타그램 로그인 토큰은 60일이면 만료됩니다. "
               "docs/INSTAGRAM_AUTO_POST.md '토큰' 절차대로 다시 발급해 IG_ACCESS_TOKEN 을 바꾸십시오")
 
@@ -98,6 +103,7 @@ class IgConfig:
     ai_label: bool = True                     # is_ai_generated(메타 'AI 정보' 표시). 유튜브 합성 표시와 같은 결정 대기
     hashtags_max: int = 5                     # 2026-11-07 사용자 규칙: 해시태그 5개 이내
     youtube_link: str | None = None           # 2026-11-08 사용자: 설명 마지막 태그 앞에 유튜브 프로필 링크(게시할 때 붙인다)
+    max_lead_hours: float = DEFAULT_MAX_LEAD_HOURS   # 2026-11-22: 유튜브 공개 시각이 지금 + 이 시간 안인 아침 대기열 편만 대상
     poll_sec: float = 30
     wait_sec: float = 900
     timeout_sec: float = 300
@@ -123,6 +129,8 @@ def load_config(path: Path = DEFAULT_CONFIG) -> IgConfig:
         raise UploadError(f"api_host 는 graph.facebook.com 또는 graph.instagram.com 입니다(현재 {cfg.api_host!r})")
     if cfg.api_host == "graph.instagram.com" and cfg.transfer == "upload":
         raise UploadError("인스타그램 로그인(graph.instagram.com)은 파일 직접 전송(rupload)이 문서에 없습니다 — transfer 를 url 로")
+    if isinstance(cfg.max_lead_hours, bool) or not isinstance(cfg.max_lead_hours, (int, float)) or not 0 <= cfg.max_lead_hours <= 48:
+        raise UploadError(f"max_lead_hours 는 0~48 사이 숫자(시간)입니다(현재 {cfg.max_lead_hours!r})")
     if not re.fullmatch(r"v\d+\.\d+", cfg.api_version):
         raise UploadError(f"api_version 형식 오류: {cfg.api_version!r} (예: v27.0)")
     return cfg
@@ -659,19 +667,72 @@ def process_episode(dir_: Path, cfg: IgConfig, *, dry_run: bool, auto: bool = Fa
         return res
 
 
-def on_youtube(dir_: Path, morning: set[int]) -> bool:
-    """유튜브에 올라간 편인가. 아침 업로드 대기열 편은 유튜브 기록이 생긴 뒤부터(그 전에는 아직 밤에 만든 것뿐이다).
+YT_RECORD_NAME = "youtube_upload.json"
+_UNKNOWN_TIME = dt.datetime.min.replace(tzinfo=dt.timezone.utc)
+
+
+def youtube_public_at(dir_: Path) -> dt.datetime | None:
+    """유튜브 공개 시각(UTC). 예약 공개면 기록의 publish_at, 예약 없이 올린 편이면 uploaded_at(그때부터 유튜브에 있다고 본다).
+    기록이 없으면 None. 기록은 있는데 두 시각 모두 읽지 못하면(옛 형식·깨진 기록) 지금까지처럼 '유튜브에 있다'로 보고
+    가장 이른 시각(_UNKNOWN_TIME)을 돌려준다 — 미래 공개분인지 모르는 편을 막기보다 예전 동작을 지키는 쪽을 골랐다."""
+    if not (dir_ / YT_RECORD_NAME).is_file():
+        return None
+    try:
+        rec = youtube_record(dir_)
+    except (UploadError, OSError):
+        rec = None
+    if rec is not None:
+        for s in (rec.publish_at, rec.uploaded_at):
+            t = _parse_time(s)
+            if t is not None:
+                return t
+    return _UNKNOWN_TIME
+
+
+def _utcnow() -> dt.datetime:
+    return dt.datetime.now(dt.timezone.utc)
+
+
+def on_youtube(dir_: Path, morning: set[int], *, now: dt.datetime | None = None, lead_hours: float = 0.0) -> bool:
+    """인스타·틱톡에 내도 되는 편인가(유튜브보다 먼저 나가지 않는다).
+    아침 업로드 대기열 편: 유튜브 기록이 있고 유튜브 공개 시각 ≤ 지금 + lead_hours 일 때만. 예약 공개는 미리 비공개로
+    올려 두므로 기록만으로는 부족하다 — 2026-11-22 54 구름이 유튜브 공개(11-23 07:00)보다 하루 먼저 인스타에 나갔다.
     그 밖의 편은 모두 유튜브에 있다(01~21 일부는 손으로 올려 기록이 없다)."""
     n = parse_dir_name(dir_)[0]
-    return (dir_ / "youtube_upload.json").is_file() if n in morning else True
+    if n not in morning:
+        return True
+    t = youtube_public_at(dir_)
+    return t is not None and t <= (now or _utcnow()) + dt.timedelta(hours=lead_hours)
 
 
-def ig_backlog(finals: Path, morning: set[int] | None = None) -> list[Path]:
-    """유튜브에는 있고 인스타에는 아직 없는 편, 번호 순. meta.json instagram=false 는 뺀다."""
+def held_for_youtube(finals: Path, morning: set[int], skip: Callable[[Path], bool], *, now: dt.datetime | None = None,
+                     lead_hours: float = 0.0) -> list[Path]:
+    """유튜브 기록은 있으나 유튜브 공개 전이라 이번에 미룬 아침 대기열 편(skip 이 True 인 편은 뺀다 — 이미 게시·끔)."""
+    return [d.resolve() for d in episode_dirs(finals)
+            if parse_dir_name(d)[0] in morning and youtube_public_at(d) is not None and not skip(d)
+            and not on_youtube(d, morning, now=now, lead_hours=lead_hours)]
+
+
+def order_new_first(backlog: list[Path], morning: set[int], *, slot: str, prefer: list[Path] | None = None) -> list[Path]:
+    """고르는 순서(2026-11-22). 아침: ① prefer(이번 실행에서 올린 편, 대상인 것만) ② 아침 대기열 편을 유튜브 공개가 늦은
+    것부터(오늘 공개된 편이 맨 앞) ③ 옛 편 번호순. 저녁: ① 아침 대기열 편을 유튜브 공개가 이른 것부터(가장 오래 밀린 편)
+    ② 옛 편 번호순. backlog 는 이미 on_youtube 로 거른 목록이어야 한다."""
+    new = [d for d in backlog if parse_dir_name(d)[0] in morning]
+    when = {d: youtube_public_at(d) or _UNKNOWN_TIME for d in new}
+    new.sort(key=lambda d: (when[d], parse_dir_name(d)[0] or 0), reverse=(slot == "morning"))
+    first = [p.resolve() for p in (prefer or []) if p.resolve() in backlog] if slot == "morning" else []
+    first += [d for d in new if d not in first]
+    return first + [d for d in backlog if d not in first]
+
+
+def ig_backlog(finals: Path, morning: set[int] | None = None, *, now: dt.datetime | None = None,
+               lead_hours: float = 0.0) -> list[Path]:
+    """유튜브에 있고(on_youtube) 인스타에는 아직 없는 편, 번호 순. meta.json instagram=false 는 뺀다."""
     morning = morning_numbers() if morning is None else morning
     out = []
     for d in episode_dirs(finals):
-        if read_record(d) is not None or load_meta(d).get("instagram") is False or not on_youtube(d, morning):
+        if read_record(d) is not None or load_meta(d).get("instagram") is False \
+                or not on_youtube(d, morning, now=now, lead_hours=lead_hours):
             continue
         out.append(d.resolve())
     return out
@@ -698,26 +759,32 @@ def recently_posted(finals: Path, hours: float, now: dt.datetime | None = None) 
 
 def ig_next(cfg: IgConfig, finals: Path, *, slot: str, prefer: list[Path] | None = None, dry_run: bool,
             send: Transport | None = None, env: dict[str, str] | None = None,
-            sleep: Callable[[float], None] = time.sleep, morning: set[int] | None = None) -> dict[str, Any]:
+            sleep: Callable[[float], None] = time.sleep, morning: set[int] | None = None,
+            now: dt.datetime | None = None) -> dict[str, Any]:
     """일정 게시 한 번(2026-11-08 사용자 결정). 한 번에 최대 한 편.
 
-    slot=morning(youtube-daily, 06:37 KST 유튜브 업로드 직후): prefer(오늘 유튜브에 올린 편)를 먼저, 없으면 옛 편 하나.
-    slot=evening(instagram-evening, 17시): 아직 인스타에 없는 옛 편 하나. 인스타가 유튜브를 따라잡았으면 쉰다
-    ("유튜브와 속도가 같아지면 그뒤론 아침 7시 업로드 1회만")."""
+    유튜브보다 먼저 나가지 않는다(2026-11-22, 사용자 "이것과 관련해서는 니가 다 판단해서 해"): 아침 대기열 편은 유튜브
+    공개 시각이 지금 + cfg.max_lead_hours 안일 때만 고른다(on_youtube). 예약 공개는 다음 날 07:00 공개분을 미리 올리므로
+    '이번 실행에서 올린 편(prefer)'이 내일 공개분일 수 있다 — 그런 편은 걸러지고 그날 공개된 편이 나간다.
+    slot=morning: prefer(대상인 것) → 아침 대기열 편(유튜브 공개가 늦은 것부터) → 옛 편 번호순.
+    slot=evening(instagram-evening, 17시): 밀린 아침 대기열 편(유튜브 공개가 이른 것부터) → 옛 편 번호순.
+    인스타가 유튜브를 따라잡았으면 쉰다("유튜브와 속도가 같아지면 그뒤론 아침 7시 업로드 1회만")."""
     empty = {"posted": 0, "skipped": 0, "dry-run": 0, "error": 0}
     morning = morning_numbers() if morning is None else morning
+    now = now or _utcnow()
+    lead = float(cfg.max_lead_hours)
+    held = held_for_youtube(finals, morning, lambda d: read_record(d) is not None or load_meta(d).get("instagram") is False,
+                            now=now, lead_hours=lead)
+    held_note = f" · 유튜브 공개 전이라 미룬 편 {len(held)}편" if held else ""
     if not dry_run and recently_posted(finals, RECENT_HOURS):
         return {"ok": True, "counts": empty, "results": [], "slot": slot,
                 "note": f"최근 {RECENT_HOURS}시간 안에 게시한 편이 있어 쉽니다(예비 실행이 두 번 게시하지 않게)"}
-    backlog = ig_backlog(finals, morning)
-    first: list[Path] = []
-    if slot == "morning":      # 오늘 유튜브에 올린 편, 그리고 유튜브에 올라간 새 편(아침 대기열)이 먼저
-        first = [p.resolve() for p in (prefer or []) if p.resolve() in backlog]
-        first += [d for d in backlog if parse_dir_name(d)[0] in morning and d not in first]
-    cands = first + [d for d in backlog if d not in first]
+    backlog = ig_backlog(finals, morning, now=now, lead_hours=lead)
+    cands = order_new_first(backlog, morning, slot=slot, prefer=prefer)
     if not cands:
-        return {"ok": True, "counts": empty, "results": [], "slot": slot,
-                "note": "인스타가 유튜브를 따라잡았습니다 — 올릴 편이 없습니다" + (" (17시 게시는 쉽니다)" if slot == "evening" else "")}
+        return {"ok": True, "counts": empty, "results": [], "slot": slot, "held": [_rel(d) for d in held],
+                "note": "인스타가 유튜브를 따라잡았습니다 — 올릴 편이 없습니다" + (" (17시 게시는 쉽니다)" if slot == "evening" else "")
+                + held_note}
     results = []
     for d in cands:
         res = process_episode(d, cfg, dry_run=dry_run, send=send, env=env, sleep=sleep)
@@ -726,8 +793,8 @@ def ig_next(cfg: IgConfig, finals: Path, *, slot: str, prefer: list[Path] | None
             break
     counts = {s: sum(1 for r in results if r["status"] == s) for s in empty}
     left = len([d for d in backlog if read_record(d) is None]) - (1 if dry_run and results[-1]["status"] == "dry-run" else 0)
-    return {"ok": counts["error"] == 0, "counts": counts, "results": results, "slot": slot,
-            "note": f"{'아침' if slot == 'morning' else '17시'} 게시 · 인스타에 아직 없는 편 {max(left, 0)}편"}
+    return {"ok": counts["error"] == 0, "counts": counts, "results": results, "slot": slot, "held": [_rel(d) for d in held],
+            "note": f"{'아침' if slot == 'morning' else '17시'} 게시 · 인스타에 아직 없는 편 {max(left, 0)}편" + held_note}
 
 
 def mark_posted(dir_: Path, ref: str, *, note: str = "") -> IgRecord:
@@ -760,8 +827,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--whoami", action="store_true", help="토큰이 가리키는 인스타 계정을 확인한다")
     ap.add_argument("--mark-posted", metavar="ID_OR_URL", help="이미 손으로 올린 편의 기록을 만든다(에피소드 하나와 함께)")
     ap.add_argument("--allow-repost", action="store_true", help="기록이 있는데 영상이 바뀐 경우에도 새 게시물로 올린다")
-    ap.add_argument("--next", choices=("morning", "evening"), help="일정 게시 한 번(아침: 오늘 유튜브에 올린 편 먼저, 17시: 옛 편)")
-    ap.add_argument("--prefer", type=Path, action="append", default=[], help="--next morning 에서 먼저 올릴 편(오늘 유튜브 업로드)")
+    ap.add_argument("--next", choices=("morning", "evening"), help="일정 게시 한 번(아침: 유튜브에 공개된 새 편 먼저, 17시: 밀린 새 편 → 옛 편)")
+    ap.add_argument("--prefer", type=Path, action="append", default=[], help="--next morning 에서 먼저 올릴 편(이번 유튜브 업로드 — 유튜브 공개 전이면 걸러진다)")
     ap.add_argument("--env-file", type=Path, help="KEY=VALUE 파일(.env)에서 비밀값을 읽는다")
     ap.add_argument("--report", type=Path, help="결과 JSON 을 이 파일에도 쓴다(GitHub Actions 용)")
     a = ap.parse_args(argv)

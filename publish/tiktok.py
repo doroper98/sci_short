@@ -10,7 +10,9 @@
     python -m publish.tiktok --next --prefer finals/<ep> --report tiktok-report.json   # 오늘 올릴 편 하나
     python -m publish.tiktok --next --dry-run                                         # 고르기만, 기록 안 씀
 
-고르는 순서: 오늘 유튜브에 올린 편(--prefer) → 아직 틱톡 안내를 하지 않은 편(유튜브에 있는 편, 번호 순). 하루 한 편.
+고르는 순서(인스타 아침 게시와 같음, 2026-11-22): 이번에 유튜브에 올린 편(--prefer) → 유튜브에 올라간 새 편(아침 대기열,
+유튜브 공개가 늦은 것부터) → 아직 틱톡 안내를 하지 않은 옛 편(번호 순). 하루 한 편. 아침 대기열 편은 유튜브 공개 시각이
+지금 + max_lead_hours(config/instagram.json) 안일 때만 고른다 — 유튜브보다 먼저 나가지 않는다.
 기록: finals/<ep>/tiktok_offer.json(안내한 날·영상 md5·설명). 안내한 편은 다시 고르지 않는다(게시 여부는 사람이 한다 —
 다시 안내받으려면 기록 파일을 지운다). meta.json 의 tiktok: false 인 편은 고르지 않는다.
 설명: upload.md 의 '틱톡 설명' 블록이 있으면 그것, 없으면 '인스타그램(릴스) 설명'(해시태그 5개 이내, AI 안내 금지 규칙 같음).
@@ -29,7 +31,8 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
-from publish.instagram import IgConfig, on_youtube, parse_instagram_caption, validate_caption
+from publish.instagram import (DEFAULT_MAX_LEAD_HOURS, IgConfig, held_for_youtube, on_youtube, order_new_first,
+                               parse_instagram_caption, validate_caption)
 from publish.instagram import load_config as load_ig_config
 from publish.youtube import (DEFAULT_FINALS, REPO, UploadError, _rel, episode_dirs, load_episode, load_meta,
                              md5_file, morning_numbers, parse_dir_name, parse_upload_md, probe_video)
@@ -111,11 +114,16 @@ def read_record(dir_: Path) -> TtRecord | None:
     return TtRecord(**{k: v for k, v in data.items() if k in TtRecord.__dataclass_fields__})
 
 
-def tt_backlog(finals: Path, morning: set[int] | None = None) -> list[Path]:
-    """유튜브에 있고 아직 틱톡 안내를 하지 않은 편, 번호 순."""
+def _tt_skip(d: Path) -> bool:
+    return read_record(d) is not None or load_meta(d).get("tiktok") is False
+
+
+def tt_backlog(finals: Path, morning: set[int] | None = None, *, now: dt.datetime | None = None,
+               lead_hours: float = 0.0) -> list[Path]:
+    """유튜브에 있고(on_youtube — 아침 대기열 편은 유튜브 공개 시각까지 본다) 아직 틱톡 안내를 하지 않은 편, 번호 순."""
     morning = morning_numbers() if morning is None else morning
     return [d.resolve() for d in episode_dirs(finals)
-            if read_record(d) is None and load_meta(d).get("tiktok") is not False and on_youtube(d, morning)]
+            if not _tt_skip(d) and on_youtube(d, morning, now=now, lead_hours=lead_hours)]
 
 
 def recently_offered(finals: Path, hours: float) -> bool:
@@ -135,7 +143,10 @@ def video_url(video: Path, env: dict[str, str]) -> str:
 
 
 def tt_next(cfg: TtConfig, finals: Path, *, prefer: list[Path] | None = None, dry_run: bool,
-            env: dict[str, str] | None = None, morning: set[int] | None = None) -> dict[str, Any]:
+            env: dict[str, str] | None = None, morning: set[int] | None = None, now: dt.datetime | None = None,
+            lead_hours: float = DEFAULT_MAX_LEAD_HOURS) -> dict[str, Any]:
+    """lead_hours 는 인스타의 max_lead_hours 와 같은 값을 쓴다(main 이 config/instagram.json 에서 읽음) — 두 곳이
+    같은 아침 실행에서 같은 편을 고르게, 설정은 한 곳에만 둔다."""
     env = dict(os.environ) if env is None else env
     empty = {"offered": 0, "dry-run": 0, "error": 0}
     if not cfg.enabled:
@@ -143,12 +154,14 @@ def tt_next(cfg: TtConfig, finals: Path, *, prefer: list[Path] | None = None, dr
     morning = morning_numbers() if morning is None else morning
     if not dry_run and recently_offered(finals, 6):
         return {"ok": True, "counts": empty, "results": [], "note": "최근 6시간 안에 안내한 편이 있어 쉽니다(예비 실행)"}
-    backlog = tt_backlog(finals, morning)
-    first = [p.resolve() for p in (prefer or []) if p.resolve() in backlog]
-    first += [d for d in backlog if parse_dir_name(d)[0] in morning and d not in first]   # 유튜브에 올라간 새 편 먼저
-    cands = first + [d for d in backlog if d not in first]
+    now = now or dt.datetime.now(dt.timezone.utc)
+    held = held_for_youtube(finals, morning, _tt_skip, now=now, lead_hours=lead_hours)
+    held_note = f" · 유튜브 공개 전이라 미룬 편 {len(held)}편" if held else ""
+    backlog = tt_backlog(finals, morning, now=now, lead_hours=lead_hours)
+    cands = order_new_first(backlog, morning, slot="morning", prefer=prefer)
+    first = [d for d in cands if parse_dir_name(d)[0] in morning or d in [p.resolve() for p in (prefer or [])]]
     if not cands:
-        return {"ok": True, "counts": empty, "results": [], "note": "틱톡에 안내할 편이 없습니다(모두 안내함)"}
+        return {"ok": True, "counts": empty, "results": [], "note": "틱톡에 안내할 편이 없습니다(모두 안내함)" + held_note}
     d = cands[0]
     res: dict[str, Any] = {"dir": _rel(d), "status": "error", "warnings": []}
     try:
@@ -176,7 +189,7 @@ def tt_next(cfg: TtConfig, finals: Path, *, prefer: list[Path] | None = None, dr
         res["error"] = str(ex)
     counts = {s: int(res["status"] == s) for s in empty}
     left = len(backlog) - (1 if res["status"] in ("offered", "dry-run") else 0)
-    return {"ok": res["status"] != "error", "counts": counts, "results": [res], "note": f"틱톡 안내 · 남은 편 {left}편"}
+    return {"ok": res["status"] != "error", "counts": counts, "results": [res], "note": f"틱톡 안내 · 남은 편 {left}편" + held_note}
 
 
 def instructions_md(r: dict[str, Any]) -> str:
@@ -206,7 +219,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if not a.next:
             raise UploadError("--next 를 주십시오")
-        out = tt_next(load_config(a.config), a.finals, prefer=a.prefer, dry_run=a.dry_run)
+        out = tt_next(load_config(a.config), a.finals, prefer=a.prefer, dry_run=a.dry_run,
+                      lead_hours=load_ig_config().max_lead_hours)
         for r in out["results"]:
             print(f"[tiktok] {r['dir']}: {r['status']}" + (f" — {r.get('error')}" if r.get("error") else f" · {r.get('title', '')}"),
                   file=sys.stderr)
