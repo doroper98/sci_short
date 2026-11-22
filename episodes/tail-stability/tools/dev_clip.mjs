@@ -2,7 +2,7 @@
 //   SCISHORT_ROOT=$PWD node episodes/tail-stability/tools/dev_clip.mjs --from 0 --to 4 --out outputs/tail-stability/dev_a/clip_0-4.mp4
 //   SCISHORT_ROOT=$PWD node episodes/tail-stability/tools/dev_clip.mjs --stills 0,0.5,1,74.2 --out outputs/tail-stability/dev_a/pick   # 정지화면(JPG + 묶음)
 //   [--timeline F] [--sound F] [--scenes F] [--safe]
-// 프레임 순서는 render.mjs 의 frame 과 같다: 배경 → 장면 → overlays → 자막.
+// 프레임 순서는 render.mjs 의 frame 과 같다: 배경 → 장면 → overlays → 자막 → 질감 층(filmLook).
 import fs from 'node:fs'; import path from 'node:path'; import {fileURLToPath, pathToFileURL} from 'node:url';
 
 const HERE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -15,16 +15,19 @@ const soundFile = path.resolve(arg('--sound', path.join(HERE, 'sound.json')));
 const sound = fs.existsSync(soundFile) ? JSON.parse(fs.readFileSync(soundFile, 'utf8')) : {events: []};
 const events = tl.events([...(sound.events || []), ...(ep.events || [])]);
 const theme = kit.resolveTheme(ep.theme), stage = kit.createStage({theme});
+const film = theme.name === 'film', useLook = film && ep.look !== false;
+const lookOpt = kit.loadLook(ep.look && typeof ep.look === 'object' ? ep.look : {});   // render.mjs 와 같다
 const from = Math.max(0, +arg('--from', 0)), to = Math.min(tl.duration, +arg('--to', from + 4));
 const out = path.resolve(arg('--out', path.join(ROOT, `outputs/tail-stability/dev_a/clip_${from}-${to}.mp4`)));
 if (!(to > from)) throw new Error(`--to(${to}) 가 --from(${from}) 보다 커야 합니다`);
 
 function frame(t) {
-  const scene = tl.sceneAt(t), ctx = {tl, events, theme, scene, local: scene.local, kit};
-  (ep.background || ((s, tt) => kit.background(s, tt)))(stage, t, ctx);
+  const scene = tl.sceneAt(t), ctx = {tl, events, theme, scene, local: scene.local, kit, look: lookOpt};
+  (ep.background || (film ? s => kit.filmBackground(s, lookOpt) : (s, tt) => kit.background(s, tt)))(stage, t, ctx);
   stage.ctx.save(); ep.scenes[scene.id](stage, t, scene.p, ctx); stage.ctx.restore();
   ep.overlays?.(stage, t, ctx);
   kit.drawCaptions(stage, tl, t, {...(ep.captionLayout?.default || {}), ...(ep.captionLayout?.[scene.id] || {})});
+  if (useLook) kit.filmLook(stage, t, lookOpt);
   if (argv.includes('--safe')) stage.drawSafeZones();
 }
 if (arg('--stills')) {
@@ -34,5 +37,5 @@ if (arg('--stills')) {
   console.log(`[dev_clip] 정지화면 ${times.length}장 → ${path.relative(ROOT, dir)}`);
   process.exit(0);
 }
-await kit.renderVideo({stage, duration: to - from, start: from, frame, out, gain: false, preset: 'veryfast'});
+await kit.renderVideo({stage, duration: to - from, start: from, frame, out, gain: false, preset: 'veryfast', ...(useLook ? {crf: 20} : {})});
 console.log(`[dev_clip] ${from}–${to}초 → ${path.relative(ROOT, out)}`);

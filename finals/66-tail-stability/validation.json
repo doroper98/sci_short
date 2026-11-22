@@ -1,8 +1,8 @@
 {
   "file": "tail-stability.mp4",
-  "bytes": 25678182,
-  "sha256": "fcf3329da9a8854d7dd7428282b7db6668c6b1240559590b295a40c5727cb258",
-  "created": "2026-11-20T15:24:35+00:00",
+  "bytes": 39434719,
+  "sha256": "c950332169428b0c9c706e54a9aacef661c53c95b3c99b45645bbfdda6f26fbd",
+  "created": "2026-11-22T09:08:38+00:00",
   "title": "꼬리날개를 떼면 비행기는 왜 뒤집힐까",
   "timeline_duration": 169.121,
   "max_sec": 180.0,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2597888,
         "duration": "169.133333",
-        "bit_rate": "1014119",
+        "bit_rate": "1664749",
         "bits_per_raw_sample": "8",
         "nb_frames": "5074",
         "extradata_size": 50,
@@ -133,8 +133,8 @@
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "169.133333",
-      "size": "25678182",
-      "bit_rate": "1214576",
+      "size": "39434719",
+      "bit_rate": "1865260",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -186,13 +186,13 @@
   },
   "first_moment": {
     "changed_pct": {
-      "0.5": 24.3,
-      "1.0": 26.6,
-      "1.5": 26.6,
-      "2.0": 28.3,
-      "3.0": 19.1
+      "0.5": 23.3,
+      "1.0": 25.5,
+      "1.5": 25.4,
+      "2.0": 27.0,
+      "3.0": 18.0
     },
-    "luma0_pct": 16.1,
+    "luma0_pct": 19.1,
     "first_sound_sec": 0.05,
     "pass": true
   },

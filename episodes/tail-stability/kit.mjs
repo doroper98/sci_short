@@ -3,18 +3,19 @@
 // 영상미 문법: 모형은 면과 명암이 있는 무광 덩어리, 난색 = 꼬리날개와 되돌리는 힘, 한색 = 돌풍과 더 틀어지게 하는 힘.
 // lit() 은 돌풍·힘 화살표·기록선 끝점에만 쓴다(klit — 렌즈 안이면 그 안에서 다시 자른다). 연기 줄·모형·글자는 lit() 밖.
 import {
-  rgba, mix, clamp, lerp, smooth, easeInOut, line, circle, ring, poly, rect, withAlpha, lit, rand, TAU, progressBar,
+  rgba, mix, clamp, lerp, smooth, easeInOut, line, circle, ring, poly, rect, withAlpha, lit, rand, TAU, progressBar, filmBackground,
 } from '../../pipeline/render/index.mjs';
 import {XW, LT, R2D} from './model.mjs';
 
 export const W = 1080, H = 1920;
 export const PAL = {
-  bg: '#001621', deep: '#000E16', ink: '#EFE3D4', muted: '#8AA0A6', border: '#1C3A45', plate: '#06222E',
-  warm: '#FF5A1F',                 // 꼬리날개 · 되돌리는 힘 (하나뿐인 난색)
-  warmHi: '#F29060', warmLo: '#B4481F',   // 꼬리날개 면의 무광 명암
-  cool: '#5BB8E8',                 // 돌풍 · 더 틀어지게 하는 힘 (하나뿐인 한색)
-  smoke: '#5C8996',                // 연기 줄(무광, lit 아님)
-  bodyHi: '#E6EFF1', bodyMid: '#B3C7CC', bodyLo: '#58747E', wing: '#C9D6DA', dark: '#34505A', darker: '#2B444D',
+  // 2026-11-22 재렌더: 질감 층(film 테마)의 숯색 팔레트. 바탕 계열은 chrome.mjs 의 film 테마와 같다. 값은 제작 세션의 제안.
+  bg: '#1A1A1D', deep: '#0E0E10', ink: '#F1EDE6', muted: '#A3A19B', border: '#3A3B40', plate: '#232327',
+  warm: '#FF6B1A',                 // 꼬리날개 · 되돌리는 힘 (하나뿐인 난색)
+  warmHi: '#F5A066', warmLo: '#B8501C',   // 꼬리날개 면의 무광 명암
+  cool: '#5BA8F0',                 // 돌풍 · 더 틀어지게 하는 힘 (하나뿐인 한색)
+  smoke: '#737B85',                // 연기 줄(무광, lit 아님)
+  bodyHi: '#ECEDEF', bodyMid: '#BFC3C8', bodyLo: '#6A7078', wing: '#D2D5D9', dark: '#44484E', darker: '#34373C',
   paper: '#E9E2D2', paperLo: '#B9B09C',
 };
 export const FLOW_V = 520;          // 연기 줄이 흐르는 빠르기(px / 모형 초)
@@ -33,6 +34,11 @@ export function klit(stage, fn, o = {}) {
     try { fn(c); } finally { c.restore(); }
   }, o);
 }
+
+// 에너지를 '빛'으로 그리기(2026-11-22 재렌더): 힘·돌풍·신호는 색 위에 밝은 심을 한 줄 더 긋는다(심 = mix(색, 흰색, CORE)).
+// 번짐은 질감 층(filmLook)이 lit() 둘레에만 더한다. 물체(비행기·꼬리날개·지렛대·계기 막대)는 무광 그대로. 심의 세기는 여기 한 곳.
+export const CORE = 0.5;
+export const coreCol = col => mix(col, '#FFFFFF', CORE);
 
 /** 모형 좌표(u) → 화면 px. m = {x, y, s, theta}. */
 export function toScreen(m, ux, uy) {
@@ -122,13 +128,13 @@ export function drawSide(stage, o) {
   c.fillStyle = g; c.fill();
   c.beginPath(); c.moveTo(-118, 2); c.bezierCurveTo(-116, -7, -107, -12, -101, -13); c.bezierCurveTo(-91, -16, -79, -17, -69, -17); c.lineTo(111, -17);
   c.strokeStyle = rgba('#FFFFFF', 0.55); c.lineWidth = 1.5 / Math.max(1, s * 0.6); c.lineJoin = 'round'; c.stroke();
-  c.fillStyle = rgba('#0A1E27', 0.75); for (let wx = -69; wx <= 97; wx += 13) { c.beginPath(); c.arc(wx, -6, 1.6, 0, TAU); c.fill(); }
-  c.beginPath(); c.moveTo(-97, -8); c.lineTo(-81, -12); c.lineTo(-77, -6); c.lineTo(-95, -3); c.closePath(); c.fillStyle = '#0A1E27'; c.fill();
+  c.fillStyle = rgba('#141518', 0.75); for (let wx = -69; wx <= 97; wx += 13) { c.beginPath(); c.arc(wx, -6, 1.6, 0, TAU); c.fill(); }
+  c.beginPath(); c.moveTo(-97, -8); c.lineTo(-81, -12); c.lineTo(-77, -6); c.lineTo(-95, -3); c.closePath(); c.fillStyle = '#141518'; c.fill();
   // engine (pylon + nacelle), then the wing root section in front
   rect(c, -8, 12, 14, 8, 0, PAL.darker);
   c.beginPath(); c.ellipse(-2, 25, 24, 8, 0, 0, TAU);
-  const ge = c.createLinearGradient(0, 17, 0, 33); ge.addColorStop(0, '#46636D'); ge.addColorStop(1, '#1E333B'); c.fillStyle = ge; c.fill();
-  c.beginPath(); c.ellipse(-2, 25, 24, 8, 0, Math.PI * 0.6, Math.PI * 1.4); c.strokeStyle = rgba('#9FB6BD', 0.8); c.lineWidth = 1.2; c.stroke();
+  const ge = c.createLinearGradient(0, 17, 0, 33); ge.addColorStop(0, '#5A5E64'); ge.addColorStop(1, '#27292D'); c.fillStyle = ge; c.fill();
+  c.beginPath(); c.ellipse(-2, 25, 24, 8, 0, Math.PI * 0.6, Math.PI * 1.4); c.strokeStyle = rgba('#B1B4B9', 0.8); c.lineWidth = 1.2; c.stroke();
   c.beginPath(); pathPts(c, WING_SIDE);
   // 날개 단면: 동체(bodyMid)와 갈리도록 윗면만 wing 색 띠로 밝고 몸은 한 단 어둡게(무광 명암)
   const gw = c.createLinearGradient(0, 2, 0, 12); gw.addColorStop(0, PAL.wing); gw.addColorStop(0.28, mix(PAL.wing, PAL.bodyLo, 0.55)); gw.addColorStop(1, PAL.dark);
@@ -264,7 +270,7 @@ export function drawTop(stage, o) {
     const g = c.createLinearGradient(0, -fhw, 0, fhw); g.addColorStop(0, PAL.bodyHi); g.addColorStop(0.45, PAL.bodyMid); g.addColorStop(1, PAL.bodyLo);
     c.fillStyle = g; c.fill();
     line(c, [[fx0 + 14, -fhw * 0.45], [fx1 - 50, -fhw * 0.45]], rgba('#FFFFFF', 0.4), 1.2 / s * 1.6);
-    c.beginPath(); c.moveTo(fx0 + 10, -6); c.lineTo(fx0 + 22, -9); c.lineTo(fx0 + 22, 9); c.lineTo(fx0 + 10, 6); c.closePath(); c.fillStyle = '#0A1E27'; c.fill();
+    c.beginPath(); c.moveTo(fx0 + 10, -6); c.lineTo(fx0 + 22, -9); c.lineTo(fx0 + 22, 9); c.lineTo(fx0 + 10, 6); c.closePath(); c.fillStyle = '#141518'; c.fill();
   });
   finAfter();
   if (hl.tail > 0 && tail === 'on') {
@@ -373,9 +379,11 @@ export function gustPuff(stage, x, y, age, {angle = -70 * Math.PI / 180, dist = 
       const off = (k - 2) * 22, lag = Math.abs(k - 2) * 9, L = 46 + (k === 2 ? 10 : 0);
       const tip = [head[0] + n[0] * off - d[0] * lag, head[1] + n[1] * off - d[1] * lag];
       line(c, [[tip[0] - d[0] * L, tip[1] - d[1] * L], tip], rgba(PAL.cool, 0.95), 7);
+      line(c, [[tip[0] - d[0] * (L - 4), tip[1] - d[1] * (L - 4)], [tip[0] - d[0] * 2, tip[1] - d[1] * 2]], rgba(mix(PAL.cool, '#FFFFFF', CORE - 0.05), 0.95), 2.8);   // 밝은 심
     }
     const hb = [head[0] + d[0] * 18, head[1] + d[1] * 18];
     poly(c, [[hb[0], hb[1]], [head[0] + n[0] * 12, head[1] + n[1] * 12], [head[0] - n[0] * 12, head[1] - n[1] * 12]], rgba(PAL.cool, 0.95));
+    poly(c, [[head[0] + d[0] * 11, head[1] + d[1] * 11], [head[0] + n[0] * 5, head[1] + n[1] * 5], [head[0] - n[0] * 5, head[1] - n[1] * 5]], rgba(mix(PAL.cool, '#FFFFFF', CORE - 0.05), 0.95));
     c.restore();
   }, {gain: 0.5});
 }
@@ -424,6 +432,10 @@ export function forceArrow(stage, x, y, len, col, {dashed = false, alpha = 1, ga
     c.save(); c.globalAlpha *= alpha;
     if (L > head + 0.5) line(c, [[x, y], back], col, w, {cap: 'butt'});
     poly(c, [tip, [x - hw, back[1]], [x + hw, back[1]]], col);
+    // 밝은 심: 대 가운데 한 줄(굵기 w × 0.39, 끝 둥글게)과 화살촉 안의 절반 크기 삼각형
+    const cc = coreCol(col), cw = w * 0.39, hb = [x, back[1] + sg * head * 0.12];
+    if (L > head + 0.5) line(c, [[x, y - sg * cw * 0.5], [x, back[1] + sg * 1]], cc, cw, {cap: 'round'});
+    poly(c, [[x, tip[1] + sg * head * 0.3], [x - hw * 0.45, hb[1]], [x + hw * 0.45, hb[1]]], cc);
     c.restore();
   };
   if (dashed) {
@@ -548,7 +560,7 @@ export function traceGauge(stage, {x, y, w, h, t0 = 0, span = 2.5, yMin = -12, y
       }
       withAlpha(c, S.alpha ?? 1, () => line(c, pts, S.col, S.width ?? 4, {dash: S.dash}));
       const last = pts[pts.length - 1], dNow = S.fn(upTo) * R2D;
-      if (S.dot !== false && !S.dash) klit(stage, cc => circle(cc, last[0], last[1], 6, S.col), {gain: 0.5});
+      if (S.dot !== false && !S.dash) klit(stage, cc => { circle(cc, last[0], last[1], 6, S.col); circle(cc, last[0], last[1], 3, mix(S.col, '#FFFFFF', Math.min(0.85, CORE + 0.1))); }, {gain: 0.5});
       if (dNow > yMax) withAlpha(c, S.alpha ?? 1, () => {
         const xo = X(over);
         poly(c, [[xo, y - 22], [xo - 9, y - 8], [xo + 9, y - 8]], S.col);
@@ -569,7 +581,7 @@ export function posterTitle(stage, q) {
   const yTop = POSTER.qy - 100, yBot = POSTER.ay + POSTER.AS * 0.5 + 80;
   if (q < 1) withAlpha(c, 1 - q, () => {
     const g = c.createLinearGradient(0, yTop, 0, yBot);
-    g.addColorStop(0, 'rgba(0,10,16,0)'); g.addColorStop(0.2, `rgba(0,10,16,${POSTER.band})`); g.addColorStop(0.85, `rgba(0,10,16,${POSTER.band})`); g.addColorStop(1, 'rgba(0,10,16,0)');
+    g.addColorStop(0, 'rgba(9,9,11,0)'); g.addColorStop(0.2, `rgba(9,9,11,${POSTER.band})`); g.addColorStop(0.85, `rgba(9,9,11,${POSTER.band})`); g.addColorStop(1, 'rgba(9,9,11,0)');
     c.fillStyle = g; c.fillRect(0, yTop, W, yBot - yTop);
   });
   const sh = 'rgba(0,0,0,0.9)';
@@ -597,8 +609,8 @@ export function headList(stage, t, L, a = 1) {
   if (k > 0 && out < 1) head(stage, prev[1] === cur[1] ? '' : prev[1], prev[2], a * (1 - out), a * (1 - out));
   head(stage, cur[1], cur[2], k > 0 && prev[1] !== cur[1] ? a * inn : a, a * inn);
 }
-export function captionBand(c) { const g = c.createLinearGradient(0, 1230, 0, 1920); g.addColorStop(0, 'rgba(0,8,12,0)'); g.addColorStop(0.25, 'rgba(0,8,12,0.5)'); g.addColorStop(1, 'rgba(0,8,12,0.7)'); c.fillStyle = g; c.fillRect(0, 1230, W, 690); }
-export function topBand(c) { const g = c.createLinearGradient(0, 0, 0, 320); g.addColorStop(0, 'rgba(0,8,12,0.72)'); g.addColorStop(0.7, 'rgba(0,8,12,0.4)'); g.addColorStop(1, 'rgba(0,8,12,0)'); c.fillStyle = g; c.fillRect(0, 0, W, 320); }
+export function captionBand(c) { const g = c.createLinearGradient(0, 1230, 0, 1920); g.addColorStop(0, 'rgba(8,8,10,0)'); g.addColorStop(0.25, 'rgba(8,8,10,0.5)'); g.addColorStop(1, 'rgba(8,8,10,0.7)'); c.fillStyle = g; c.fillRect(0, 1230, W, 690); }
+export function topBand(c) { const g = c.createLinearGradient(0, 0, 0, 320); g.addColorStop(0, 'rgba(8,8,10,0.72)'); g.addColorStop(0.7, 'rgba(8,8,10,0.4)'); g.addColorStop(1, 'rgba(8,8,10,0)'); c.fillStyle = g; c.fillRect(0, 0, W, 320); }
 /** 끝 한 줄(마지막 문장 동안, 읽지 않음). */
 export function endLine(stage, a = 1, y = 880) { if (a > 0) stage.text('다음 원리도 이어서 — 과학쑛츠', 540, y, {size: 34, weight: 500, color: PAL.muted, align: 'center', alpha: a}); }
 /** 결론 글(PLAN 5.8 s24): 세 줄 + 난색 짧은 줄. a = 알파. */
@@ -611,5 +623,6 @@ export function conclusion(stage, a = 1, ys = [600, 680, 760]) {
     line(c, [[480, ys[2] + 56], [600, ys[2] + 56]], PAL.warm, 4, {cap: 'butt'});
   });
 }
-export function background(stage) { const c = stage.ctx; c.fillStyle = PAL.bg; c.fillRect(0, 0, W, H); }
+/** 바탕: 질감 층의 숯색 방사형 바탕(편별 값은 scenes.mjs 의 look → render.mjs 가 loadLook 해 넘긴다). look 이 없으면 config/look.json 그대로. */
+export function background(stage, look) { if (look) filmBackground(stage, look); else filmBackground(stage); }
 export {progressBar};

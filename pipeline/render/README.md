@@ -65,6 +65,7 @@ assets/fonts가 비면 경고 한 줄과 함께 시스템 Noto CJK로 그리고,
 ```js
 export const theme = 'film';                    // 또는 'noturno' 등, {base:'film', accent:'#…'}
 export const look = false;                      // 선택: 질감 층 끄기
+// export const look = {background: {cy: 0.30}};  // 선택: 편별 덮어쓰기(밝은 곳을 무대 자리로) — 세기는 config/look.json
 export const events = [{id: 'flash', at: ['s04', 0.2]}];   // 화면 전용 사건(소리 사건은 sound.json)
 export const captionLayout = {phenomenon: {y: 1300}};
 export const titles = {hook: ['KICKER', '제목\n두 줄', '부제'], …};   // 템플릿 overlays가 사용

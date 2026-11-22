@@ -197,6 +197,9 @@ function hArrow(stage, x, y, len, col, a = 1) {
     c.save(); c.globalAlpha *= a;
     if (L > head) line(c, [[x, y], [x + sg * (L - head), y]], col, 9, {cap: 'butt'});
     poly(c, [[x + sg * L, y], [x + sg * (L - head), y - hw], [x + sg * (L - head), y + hw]], col);
+    const cc = K.coreCol(col), bx = x + sg * (L - head * 0.88);   // 밝은 심(kit forceArrow 와 같은 방식)
+    if (L > head) line(c, [[x + sg * 2, y], [x + sg * (L - head + 1), y]], cc, 3.5, {cap: 'round'});
+    poly(c, [[x + sg * (L - head * 0.3), y], [bx, y - hw * 0.45], [bx, y + hw * 0.45]], cc);
     c.restore();
   }, {gain: 0.6});
 }
@@ -228,7 +231,7 @@ function drawVane(stage, x, y, th, a) {
   withAlpha(c, a, () => {
     // 받침 원(돌지 않음)
     circle(c, x, y + 4, 34, 'rgba(0,0,0,0.35)');
-    const gb = c.createRadialGradient(x - 10, y - 10, 4, x, y, 32); gb.addColorStop(0, '#3E5B66'); gb.addColorStop(1, '#1A2E36');
+    const gb = c.createRadialGradient(x - 10, y - 10, 4, x, y, 32); gb.addColorStop(0, '#50545A'); gb.addColorStop(1, '#222428');
     c.beginPath(); c.arc(x, y, 30, 0, TAU); c.fillStyle = gb; c.fill(); ring(c, x, y, 30, rgba(PAL.muted, 0.7), 2);
     c.save(); c.translate(x, y); c.rotate(th);
     // 깃(난색, 넓은 판 두 장이 뒤로 벌어진 꼴)
@@ -341,10 +344,10 @@ function drawComputer(stage, m, a) {
   const c = stage.ctx;
   withAlpha(c, a, () => {
     c.save(); const [x, y] = tx(m, ...COMP); c.translate(x, y); c.rotate(m.theta);
-    const g = c.createLinearGradient(0, -22, 0, 22); g.addColorStop(0, '#5C7883'); g.addColorStop(1, '#22383F');
+    const g = c.createLinearGradient(0, -22, 0, 22); g.addColorStop(0, '#6D7177'); g.addColorStop(1, '#2B2D31');
     rect(c, -30, -22, 60, 44, 6, g, rgba(PAL.ink, 0.55), 1.5);
     line(c, [[-26, -18], [26, -18]], rgba('#FFFFFF', 0.3), 1.5);
-    for (let k = 0; k < 3; k++) rect(c, -18 + k * 13, -6, 9, 12, 2, '#0E1D23');
+    for (let k = 0; k < 3; k++) rect(c, -18 + k * 13, -6, 9, 12, 2, '#151619');
     c.restore();
   });
 }
@@ -366,7 +369,7 @@ function b2Frame(stage, t, P, {flipped = false} = {}) {
     const a0 = f - B2.lead; if (t < a0 || t > f + 0.05) return;
     const F = flapPts(m, P.b2.side(j), 0), pa = tx(m, ...COMP), pb = F.toS(F.hingeMid), qq = easeInOut(clamp((t - a0) / B2.lead));
     const x = lerp(pa[0], pb[0], qq), y = lerp(pa[1], pb[1], qq), fade = 1 - smooth((t - f) / 0.05);
-    K.klit(stage, cc => { circle(cc, x, y, 10, rgba(PAL.warm, 0.95 * fade)); }, {gain: 0.6});
+    K.klit(stage, cc => { circle(cc, x, y, 10, rgba(PAL.warm, 0.95 * fade)); circle(cc, x, y, 5, rgba(mix(PAL.warm, '#FFFFFF', Math.min(0.85, K.CORE + 0.1)), 0.95 * fade)); }, {gain: 0.6});
   });
   // 벌어진 끝이 뒤로 끌리는 짧은 화살표(lit)
   for (const sd of [-1, 1]) {
@@ -511,9 +514,10 @@ function closeScene(stage, t, p, ctx) {
   const xq = smooth((t - sc.start) / 0.5);                 // 0.5초 교차 전환
   const run = P.runC;
   const mU = {...UP, theta: M.runTheta(run, 'tailless', t)}, mD = {...DN, theta: M.runTheta(run, 'tailed', t)};
-  K.smokeField(stage, ph, {wake: [K.wakeOf(mU)]});
+  // 앞 장면의 풍동 창 위쪽(0~260)에는 연기가 없었다: 그 띠의 연기만 xq 로 서서히(단색 덮개 대신 — 바탕이 그라디언트라 판이 드러난다)
+  if (xq < 1) { K.smokeField(stage, ph, {wake: [K.wakeOf(mU)], y0: 260}); K.smokeField(stage, ph, {wake: [K.wakeOf(mU)], y1: 260, alpha: xq}); }
+  else K.smokeField(stage, ph, {wake: [K.wakeOf(mU)]});
   if (xq < 1) withAlpha(c, 1 - xq, () => {
-    c.fillStyle = PAL.bg; c.fillRect(0, 0, K.W, 260);           // 앞 장면의 풍동 창 위쪽(연기 없음)
     K.gaugeFloor(stage, PFLOOR, 1240);
     paperTrace(stage, t, P, 1);
     paperModel(stage, t, P, {labels: false});
@@ -555,10 +559,10 @@ function closeScene(stage, t, p, ctx) {
   // s24: 어두워지고 결론 글, 끝 한 줄(마지막 문장이 시작한 뒤에만)
   const dim = 0.55 * smooth((t - (s24.start - 0.6)) / 0.8);
   if (dim > 0) {
-    c.fillStyle = `rgba(0,8,12,${dim})`; c.fillRect(0, 0, K.W, K.H);
+    c.fillStyle = `rgba(8,8,10,${dim})`; c.fillRect(0, 0, K.W, K.H);
     // 결론 글 뒤의 띠(알파 0.45 이하 — 뒤의 모형이 비쳐 보인다)
     const b = 0.45 * dim / 0.55, g = c.createLinearGradient(0, 520, 0, 940);
-    g.addColorStop(0, 'rgba(0,8,12,0)'); g.addColorStop(0.2, `rgba(0,8,12,${b})`); g.addColorStop(0.8, `rgba(0,8,12,${b})`); g.addColorStop(1, 'rgba(0,8,12,0)');
+    g.addColorStop(0, 'rgba(8,8,10,0)'); g.addColorStop(0.2, `rgba(8,8,10,${b})`); g.addColorStop(0.8, `rgba(8,8,10,${b})`); g.addColorStop(1, 'rgba(8,8,10,0)');
     c.fillStyle = g; c.fillRect(0, 520, K.W, 420);
   }
   K.conclusion(stage, smooth((t - (s24.start - 0.4)) / 0.6));

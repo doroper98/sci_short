@@ -16,6 +16,8 @@ episodes/tail-stability/run.sh stills                # 스틸만 다시 (outputs
 SCISHORT_ROOT=$PWD node episodes/tail-stability/render.mjs --stills --safe   # 플랫폼 UI 영역 겹쳐 보기
 ```
 
+질감 층(2026-11-22 재렌더): `film` 테마 — 바탕은 `filmBackground`, 자막까지 그린 뒤 `filmLook`. 이 편의 값은 `scenes.mjs` 의 `look` 한 곳(밝은 곳의 자리·번짐 단계), 세기는 `config/look.json`, 힘·돌풍 심의 밝기는 `kit.mjs` `CORE`. 영상은 crf 20.
+
 HDR 판(2026-11-15): 빛나는 것(에너지·신호)은 `scenes.mjs` 에서 `lit(stage, c => …)` 안에서 그립니다. `hdr` 단계가 `outputs/tail-stability/final/hdr/tail-stability.hdr.mp4` 를 만듭니다. 규칙은 [docs/HDR.md](../../docs/HDR.md).
 
 `scenes.mjs`의 장면 id는 `script.json`의 `scene` 값과 같아야 합니다. 예시는 "얼음은 왜 물에 뜰까"이며 내용은 바꿉니다.

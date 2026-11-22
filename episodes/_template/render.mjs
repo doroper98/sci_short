@@ -2,6 +2,8 @@
 // 질감 층(2026-11-22 사용자: "그레인이 조금 … 적당한 빛(절대 과하지는 않은)"): 테마가 film 이면 바탕은 filmBackground(숯색),
 // 자막까지 그린 뒤 맨 마지막에 filmLook(lit() 둘레 번짐 → 비네트 → 그레인)을 건다. scenes.mjs 가 `export const look = false` 면
 // 질감 층만 꺼지고(숯색 바탕은 그대로), 다른 테마면 둘 다 꺼져 예전 모습이다. 기준: docs/ANIMATION_QUALITY.md 2026-11-22 절, 수치 config/look.json.
+// `export const look = {…}`(객체)면 config/look.json 위에 구획별로 덮어쓴다 — 편마다 바꾸는 것은 '밝은 곳의 자리'(background 의 cx·cy·r0·r1)
+// 정도이고 세기는 config/look.json 에 둔다.
 import fs from 'node:fs'; import path from 'node:path'; import {fileURLToPath, pathToFileURL} from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url)), slug = path.basename(here);
 const arg = (k, d) => { const i = process.argv.indexOf(k); return i > 0 ? path.resolve(process.argv[i + 1]) : d; };
@@ -15,7 +17,8 @@ const sound = fs.existsSync(soundFile) ? JSON.parse(fs.readFileSync(soundFile, '
 const events = tl.events([...(sound.events || []), ...(ep.events || [])]);   // one event list for picture and sound
 const theme = kit.resolveTheme(ep.theme), stage = kit.createStage({theme});
 const film = theme.name === 'film', useLook = film && ep.look !== false;
-const defaultBackground = film ? s => kit.filmBackground(s) : (s, tt) => kit.background(s, tt);
+const lookOpt = kit.loadLook(ep.look && typeof ep.look === 'object' ? ep.look : {});   // 한 번만 만든다(편별 덮어쓰기)
+const defaultBackground = film ? s => kit.filmBackground(s, lookOpt) : (s, tt) => kit.background(s, tt);
 function frame(t) {
   const scene = tl.sceneAt(t), ctx = {tl, events, theme, scene, local: scene.local, kit};
   (ep.background || defaultBackground)(stage, t, ctx);
@@ -24,7 +27,7 @@ function frame(t) {
   stage.ctx.save(); draw(stage, t, scene.p, ctx); stage.ctx.restore();
   ep.overlays?.(stage, t, ctx);
   kit.drawCaptions(stage, tl, t, {...(ep.captionLayout?.default || {}), ...(ep.captionLayout?.[scene.id] || {})});
-  if (useLook) kit.filmLook(stage, t);   // 맨 마지막(안내선 전): 번짐 → 비네트 → 그레인
+  if (useLook) kit.filmLook(stage, t, lookOpt);   // 맨 마지막(안내선 전): 번짐 → 비네트 → 그레인
   if (process.argv.includes('--safe')) stage.drawSafeZones();
 }
 fs.mkdirSync(out, {recursive: true});

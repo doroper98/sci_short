@@ -4,6 +4,8 @@
 //   node samples/look-proposal-grain/render.mjs --look film --from 0 --to 6 --out outputs/look-proposal-grain/a.mp4
 //   [--hold N] [--amount A] [--size S] [--mottle M] [--mottle-size P]   config/look.json 의 grain 값을 이번 실행만 바꾼다(측정용)
 //   [--crf N]                            영상 crf(기본 18 = 에피소드와 같음)
+//   [--look-json J]                      config/look.json 위에 구획별로 덮어쓸 JSON(문자열 또는 파일)
+//   [--label T]                          질감 층 뒤 왼쪽 위에 얹는 이름표
 //   [--bloom K]                          번짐 세기 배율(0 = 끔, 비교용)
 //   node samples/look-proposal-grain/render.mjs --look film --png 0,110 --out DIR   # 무손실 PNG
 //   [--timing]                           filmLook 에 걸린 시간을 재서 찍는다
@@ -60,7 +62,11 @@ const stage = kit.createStage({theme});
 const g = {};
 for (const k of ['hold_frames', 'amount', 'size', 'mottle', 'mottle_size']) { const v = arg('--' + (k === 'hold_frames' ? 'hold' : k.replace('_', '-'))); if (v != null) g[k] = +v; }
 const L0 = kit.loadLook(), bk = +arg('--bloom', 1);   // --bloom k: 번짐 세기 배율(0 = 끔, 비교용)
-const look = kit.loadLook({grain: g, bloom: {tight_alpha: L0.bloom.tight_alpha * bk, wide_alpha: L0.bloom.wide_alpha * bk}});
+// --look-json '{"bloom":{…},"background":{…}}' (또는 그 JSON 파일): 구획별로 덮어쓴다 — 빛 효과 단계 시안처럼 config/look.json 을 고치지 않고 비교할 때
+const lj = arg('--look-json'), LJ = lj ? JSON.parse(lj.trim().startsWith('{') ? lj : fs.readFileSync(lj, 'utf8')) : {};
+const look = kit.loadLook({...LJ, grain: {...(LJ.grain || {}), ...g},
+  bloom: {...(LJ.bloom || {}), tight_alpha: (LJ.bloom?.tight_alpha ?? L0.bloom.tight_alpha) * bk, wide_alpha: (LJ.bloom?.wide_alpha ?? L0.bloom.wide_alpha) * bk}});
+const LABEL = arg('--label');   // 질감 층을 건 뒤 왼쪽 위에 얹는 작은 이름표(시안 영상용)
 const timing = argv.includes('--timing'), spent = [];
 
 function frame(t) {
@@ -75,6 +81,7 @@ function frame(t) {
     kit.filmLook(stage, t, look);
     if (timing) spent.push(Number(process.hrtime.bigint() - t0) / 1e6);
   }
+  if (LABEL) stage.text(LABEL, 60, 80, {size: 28, weight: 500, color: '#F1EDE6', align: 'left', shadow: 'rgba(0,0,0,0.9)', shadowBlur: 10});
 }
 const report = () => {
   if (!timing || !spent.length) return;
