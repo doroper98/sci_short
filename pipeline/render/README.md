@@ -18,9 +18,10 @@ npm test                                   # node --test tests/test_*.mjs
 | `draw.mjs` | `circle ring/arc line poly rect glow sphere contactShadow arrow curve withAlpha clipEllipse clipRect`(ctx 첫 인자 또는 `stage.draw.*`), `leader scaleBar`(stage 첫 인자), `rgba mix`, `clamp lerp invLerp remap smooth easeInOut easeOut easeIn bump`, `rand rng`, `project camera lambert`, `DrawQueue` |
 | `timeline.mjs` | `loadTimeline(file)` → `Timeline`: `sceneAt(t)`, `sentenceAt(t)`, `at(ref, offset)`, `wordStart(id, word)`, `progress(t, from, to)`, `captionAt(t)`, `events(spec)`, `isDegraded()` |
 | `captions.mjs` | `drawCaptions(stage, tl, t, opts)`(문장 역할), `drawLabel(stage, text, x, y, opts)`(이름 역할), `layoutCaption`, `parseMarked` |
-| `chrome.mjs` | `THEMES`(noturno 기본·slate·graphite·navy), `resolveTheme`, `background`, `header`, `progressBar`, `sourceLine`, `endCard`. 모두 선택 사항 |
+| `chrome.mjs` | `THEMES`(noturno 기본·slate·graphite·navy·film — 새 편 틀은 film), `resolveTheme`, `background`, `header`, `progressBar`, `sourceLine`, `endCard`. 모두 선택 사항 |
 | `encode.mjs` | `renderVideo({stage, duration, frame, out})` → visual.mp4(무음) + 빛 지도 `gain.mp4`·`gain.json`, `renderStills({stage, times, frame, outDir})` → JPG + `contact-sheet.jpg`(+ 빛 지도 `contact-sheet-hdr.jpg`). `frame(t)` 는 `async` 여도 된다(`await` 한다 — 2026-11-15, 헤드리스 브라우저에서 3D 층을 받아 오는 편) |
 | `hdr.mjs` | `lit(stage, c => …, {gain})` — 빛나는 것을 화면에 그리면서 빛 지도에 흰색으로 찍는다(HDR 판에서 그곳만 흰색보다 밝아진다). `ensureGain`, `clearGain`, `whiteContext`, `cssAlpha`. 규칙은 [docs/HDR.md](../../docs/HDR.md) |
+| `look.mjs` | 질감 층(2026-11-22): `loadLook`, `filmBackground(stage)`(숯색 방사형 바탕, 디더), `filmLook(stage, t)`(프레임 맨 마지막: `lit()` 둘레 은은한 번짐 → 약한 비네트 → 흑백 그레인, 결정적), `grainParams`. 설정 `config/look.json`, 기준 [docs/ANIMATION_QUALITY.md](../../docs/ANIMATION_QUALITY.md) 2026-11-22 절 |
 | `fetch_fonts.py` | 글꼴 내려받기·변환, `assets/fonts/fonts-manifest.json`에 sha256 기록 |
 
 `index.mjs`가 전부 다시 내보냅니다: `import {createStage, …} from '../../pipeline/render/index.mjs'`.
@@ -62,7 +63,8 @@ assets/fonts가 비면 경고 한 줄과 함께 시스템 Noto CJK로 그리고,
 ## scenes.mjs 계약
 
 ```js
-export const theme = 'noturno';                 // 또는 {base:'noturno', accent:'#…'}
+export const theme = 'film';                    // 또는 'noturno' 등, {base:'film', accent:'#…'}
+export const look = false;                      // 선택: 질감 층 끄기
 export const events = [{id: 'flash', at: ['s04', 0.2]}];   // 화면 전용 사건(소리 사건은 sound.json)
 export const captionLayout = {phenomenon: {y: 1300}};
 export const titles = {hook: ['KICKER', '제목\n두 줄', '부제'], …};   // 템플릿 overlays가 사용
@@ -71,10 +73,10 @@ export const scenes = {
   …                                             // 키 = script.json의 scene id (전부 있어야 함)
 };
 export function overlays(stage, t, ctx) { … }   // 선택: 장면 뒤·자막 앞
-export function background(stage, t, ctx) { … } // 선택: 기본은 chrome.background
+export function background(stage, t, ctx) { … } // 선택: 기본은 film 테마면 filmBackground, 아니면 chrome.background
 ```
 
-`render.mjs`는 매 프레임: 배경 → `scenes[sceneAt(t).id]` → `overlays` → 자막(맨 마지막) 순서로 그립니다.
+`render.mjs`는 매 프레임: 배경 → `scenes[sceneAt(t).id]` → `overlays` → 자막 → 질감 층(`filmLook`, film 테마일 때) 순서로 그립니다.
 `ctx.events`는 `sound.json`의 `events`와 `scenes.mjs`의 `events`를 같은 타임라인으로 계산한 **하나의 목록**입니다.
 `events.pulse(id, t, dur)`(번쩍임), `events.after(id, t, dur)`(이후 상태), `events.age(id, t)`.
 render는 `outputs/<slug>/events.json`을 쓰고, `sfx.py --events-check`가 소리 시각과 1 ms 단위로 대조합니다.

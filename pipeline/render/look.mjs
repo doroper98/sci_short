@@ -168,9 +168,9 @@ function grainTiles(o, W) {
   return T;
 }
 
-/** 그 프레임의 잡음 무늬: {k, tile, ox, oy, fx, fy}. 같은 k(= floor(frame / hold_frames)) 면 같은 무늬. */
+/** 그 프레임의 잡음 무늬: {k, tile, ox, oy, fx, fy}. 같은 k(= floor(frame / hold_frames), hold_frames 0 이면 늘 0) 면 같은 무늬. */
 export function grainParams(frameIndex, look = loadLook()) {
-  const o = look.grain, k = Math.floor(frameIndex / Math.max(1, o.hold_frames | 0));
+  const o = look.grain, hold = o.hold_frames | 0, k = hold <= 0 ? 0 : Math.floor(frameIndex / hold);   // hold_frames 0 = 무늬가 바뀌지 않음(정지 그레인)
   const h1 = hash32(k ^ Math.imul(o.seed | 0, 0x9E3779B1)), h2 = hash32(h1 + 0x68E31DA4), h3 = hash32(h2 + 0x1B56C4E9);
   const tiles = Math.max(1, o.tiles | 0);
   return {k, tile: ((k % tiles) + tiles) % tiles, ox: h1 % o.tile, oy: h2 % o.tile, fx: (h3 & 1) === 1, fy: (h3 & 2) === 2};   // 이웃한 k 는 늘 다른 타일

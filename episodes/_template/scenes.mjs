@@ -8,6 +8,12 @@
 // the light map; pipeline/hdr.py makes those bright pixels up to 4× brighter than SDR white in the HDR version. Never put captions,
 // labels, readouts or the background inside lit(). The function runs twice, so no Math.random() or counters inside.
 // Check stills/contact-sheet-hdr.jpg: only what should glow may be bright there.
+// Look layer (2026-11-22, docs/ANIMATION_QUALITY.md 2026-11-22 절): with theme 'film' the template's render.mjs paints the charcoal
+// background (filmBackground) and, after the captions, filmLook() = soft bloom around lit() → light vignette → mono grain.
+//  - Inside lit() draw only the crisp core of what glows (a line, a dot, a thin ring). The bloom is the look layer's job; a big
+//    halo drawn by hand gets bloomed again and stacks up too bright.
+//  - To draw your own background, start it with the film one: export function background(stage, t, ctx) { ctx.kit.filmBackground(stage); … }
+//    (render.mjs passes the toolkit as ctx.kit). Colours: take them from stage.theme (plate, border, deep, accent…), not fixed teal/navy hex.
 // Replace the content, keep the shape: export {theme, scenes, overlays?, titles?, captionLayout?, events?}.
 // Each scene: (stage, t, p, ctx) where p = 0..1 progress inside the scene,
 // ctx = {tl (Timeline), events (resolved, shared with sound.json), theme, scene (sceneAt result), local (s since scene start)}.
@@ -22,7 +28,8 @@ import {
   withAlpha, clipRect, rect, TAU, lit,
 } from '../../pipeline/render/index.mjs';
 
-export const theme = 'noturno';   // 'noturno' (default) | 'slate' | 'graphite' | 'navy' | {base:'noturno', accent:'#…'}
+export const theme = 'film';   // 'film' (default for new episodes: charcoal + look layer) | 'noturno' | 'slate' | 'graphite' | 'navy' | {base:'film', accent:'#…'}
+// export const look = false;   // film 테마에서 질감 층(그레인·번짐·비네트)만 끈다
 
 // Visual-only events (sound events live in sound.json; both are merged into ctx.events).
 export const events = [];
@@ -64,8 +71,8 @@ function tank(stage, t, {cx = 500, cy = 930, scale = 112, angle = 0.22, tilt = 0
   const X = 2.9, Z = 1.7, B = -2.5;
   const quad = (pts, fill, stroke) => poly(ctx, pts.map(P), fill, stroke, 1.5);
   // back wall, floor and water body behind the cube
-  quad([[-X, B, -Z], [X, B, -Z], [X, 1.2, -Z], [-X, 1.2, -Z]], rgba('#0b2a36', 0.6), rgba(stage.theme.border, 0.9));
-  quad([[-X, B, -Z], [-X, B, Z], [X, B, Z], [X, B, -Z]], rgba('#06202a', 0.9));
+  quad([[-X, B, -Z], [X, B, -Z], [X, 1.2, -Z], [-X, 1.2, -Z]], rgba(stage.theme.plate, 0.6), rgba(stage.theme.border, 0.9));
+  quad([[-X, B, -Z], [-X, B, Z], [X, B, Z], [X, B, -Z]], rgba(stage.theme.deep, 0.9));
   quad([[-X, ys, -Z], [X, ys, -Z], [X, B, -Z], [-X, B, -Z]], rgba(WATER, 0.35));
   quad([[-X, ys, -Z], [-X, ys, Z], [-X, B, Z], [-X, B, -Z]], rgba(WATER, 0.25), rgba('#9fe0ff', 0.25));
   // surface plane with ripples
@@ -134,7 +141,7 @@ export const scenes = {
     const cam = {angle: A, tilt: 0.12, scale: sc, cx, cy, distance: 14};
     const O = project([0, 0.25, 0], cam), H1 = project([Math.sin(half) * d, 0.25 - Math.cos(half) * d, 0], cam), H2 = project([-Math.sin(half) * d, 0.25 - Math.cos(half) * d, 0], cam);
     glow(c, O[0], O[1], 260, O_COL, 0.08);
-    for (const H of [H1, H2]) { line(c, [O, H], '#0b1a22', 22); line(c, [O, H], rgba(H_COL, 0.7), 12); }
+    for (const H of [H1, H2]) { line(c, [O, H], stage.theme.deep, 22); line(c, [O, H], rgba(H_COL, 0.7), 12); }
     sphere(c, H1[0], H1[1], 62 * H1[3], H_COL, {shade: '#56606a'}); sphere(c, H2[0], H2[1], 62 * H2[3], H_COL, {shade: '#56606a'});
     sphere(c, O[0], O[1], 105 * O[3], O_COL, {shade: '#3d140b'});
     const a1 = Math.atan2(H1[1] - O[1], H1[0] - O[0]), a2 = Math.atan2(H2[1] - O[1], H2[0] - O[0]);
@@ -200,7 +207,7 @@ export const scenes = {
     const boxes = [[80, '물 · 0 °C', 24, false], [510, '얼음', 22, true]];
     for (const [x0, name, n, solid] of boxes) {
       stage.text(name, x0 + w / 2, 545, {role: 'display', weight: 700, size: 40, align: 'center', color: solid ? ICE : '#8fd0ef'});
-      rect(c, x0, y0, w, h, 14, rgba(solid ? '#0f3343' : '#0c2b3b', 0.9), rgba(T.border, 1), 2);
+      rect(c, x0, y0, w, h, 14, rgba(solid ? mix(T.plate, ICE, 0.06) : T.plate, 0.9), rgba(T.border, 1), 2);
       clipRect(c, x0, y0, w, h, 14, () => {
         if (!solid) {
           // 24 molecules on a tight 5×5 grid (one cell empty), small jitter + slow drift: dense but disordered
@@ -222,7 +229,7 @@ export const scenes = {
           pts.sort((u, v) => Math.hypot(u[0] - cx, u[1] - cy) - Math.hypot(v[0] - cx, v[1] - cy));
           const v = pts.slice(0, n), bonds = [];
           for (let i = 0; i < v.length; i++) for (let j = i + 1; j < v.length; j++) if (Math.abs(Math.hypot(v[i][0] - v[j][0], v[i][1] - v[j][1]) - L) < 2) bonds.push([i, j]);
-          for (const [i, j] of bonds) line(c, [v[i], v[j]], rgba('#9fd9c8', 0.55), 2, {dash: [6, 7]});
+          for (const [i, j] of bonds) line(c, [v[i], v[j]], rgba(T.accent2, 0.55), 2, {dash: [6, 7]});
           for (let i = 0; i < v.length; i++) {
             const nb = bonds.filter(([a, b]) => a === i || b === i).map(([a, b]) => v[a === i ? b : a]).slice(0, 2);
             const dirs = nb.map(q => { const d = Math.hypot(q[0] - v[i][0], q[1] - v[i][1]); return [(q[0] - v[i][0]) / d, (q[1] - v[i][1]) / d]; });

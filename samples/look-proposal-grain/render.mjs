@@ -37,11 +37,11 @@ if (LOOK === 'film' && !argv.includes('--raw')) {   // --raw: 직접 적힌 색�
   fs.mkdirSync(SRC, {recursive: true});
   const lib = pathToFileURL(path.join(ROOT, 'pipeline/render/index.mjs')).href;
   for (const f of fs.readdirSync(EP)) {
-    if (f.endsWith('.json')) fs.copyFileSync(path.join(EP, f), path.join(SRC, f));
-    if (!f.endsWith('.mjs') || f === 'render.mjs') continue;
-    let s = fs.readFileSync(path.join(EP, f), 'utf8').replaceAll("'../../pipeline/render/index.mjs'", `'${lib}'`);
-    for (const [a, b] of Object.entries(FILM_HARDCODED)) s = s.replaceAll(a, b);
-    fs.writeFileSync(path.join(SRC, f), s);
+    if (!f.endsWith('.json') && (!f.endsWith('.mjs') || f === 'render.mjs')) continue;
+    let s = fs.readFileSync(path.join(EP, f), 'utf8');
+    if (f.endsWith('.mjs')) { s = s.replaceAll("'../../pipeline/render/index.mjs'", `'${lib}'`); for (const [a, b] of Object.entries(FILM_HARDCODED)) s = s.replaceAll(a, b); }
+    const dst = path.join(SRC, f);   // 같으면 다시 쓰지 않는다(여러 렌더를 함께 돌릴 때 반쯤 쓴 파일을 읽지 않게)
+    if (!fs.existsSync(dst) || fs.readFileSync(dst, 'utf8') !== s) { fs.writeFileSync(dst + '.tmp', s); fs.renameSync(dst + '.tmp', dst); }
   }
 }
 const K = await import(pathToFileURL(path.join(SRC, 'kit.mjs')));
