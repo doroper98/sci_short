@@ -37,10 +37,32 @@ test('hold_frames: frames inside one hold share the pattern, the next hold diffe
   const at = f => { fill(stage, 90); filmLook(stage, f / stage.FPS, look); return digest(stage); };
   assert.equal(at(10), at(11));
   assert.notEqual(at(11), at(12));
+  const l4 = grainOnly({hold_frames: 2, tiles: 4, tile: 512});
   for (let k = 0; k < 50; k++) {
-    const p = grainParams(k * 2, look), q = grainParams(k * 2 + 2, look);
+    const p = grainParams(k * 2, l4), q = grainParams(k * 2 + 2, l4);
     assert.notEqual(p.tile, q.tile, 'neighbouring holds use different tiles');
   }
+});
+
+test('hold_frames 0: the same pattern for the whole video (paper-like fixed texture)', () => {
+  const look = grainOnly({hold_frames: 0});
+  const at = f => { fill(stage, 90); filmLook(stage, f / stage.FPS, look); return digest(stage); };
+  const a = at(0);
+  for (const f of [1, 2, 31, 999, 5069]) assert.equal(at(f), a, `frame ${f}`);
+  assert.deepEqual(grainParams(7, look), grainParams(4000, look));
+});
+
+test('mottle adds a coarse component: horizontal autocorrelation at lag 4 grows', () => {
+  const corr = (m, lag) => {
+    fill(stage, 90); filmLook(stage, 0, grainOnly({amount: 8, mottle: m, hold_frames: 0}));
+    const d = stage.ctx.getImageData(100, 400, 800, 800).data, w = 800, v = new Float64Array(w * 800);
+    let mean = 0; for (let i = 0; i < v.length; i++) mean += v[i] = d[i * 4 + 1]; mean /= v.length;
+    let num = 0, den = 0;
+    for (let y = 0; y < 800; y++) for (let x = 0; x < w; x++) { const a = v[y * w + x] - mean; den += a * a; if (x + lag < w) num += a * (v[y * w + x + lag] - mean); }
+    return num / den;
+  };
+  const c0 = corr(0, 4), c1 = corr(0.15, 4);
+  assert.ok(c1 > c0 + 0.05, `lag4: mottle 0 → ${c0.toFixed(3)}, mottle 0.15 → ${c1.toFixed(3)}`);
 });
 
 test('flat grey 60: mean unchanged (±0.3), sd ≈ amount (±15%); near-white 235 has less grain', () => {

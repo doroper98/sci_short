@@ -20,11 +20,12 @@ class ConfigTest(unittest.TestCase):
         cfg = json.loads((ROOT / "config" / "look.json").read_text(encoding="utf-8"))
         self.assertIn("제작 세션의 제안", cfg["_purpose"])
         for sec, keys in {"background": {"center", "edge", "cx", "cy", "r0", "r1"},
-                          "grain": {"amount", "size", "hold_frames", "highlight", "tiles", "tile", "seed"},
+                          "grain": {"amount", "size", "mottle", "mottle_size", "hold_frames", "highlight", "tiles", "tile", "seed"},
                           "bloom": {"tight_px", "tight_alpha", "wide_px", "wide_alpha"},
                           "vignette": {"strength", "r0", "r1"}}.items():
             self.assertTrue(keys <= set(cfg[sec]), f"{sec}: {keys - set(cfg[sec])}")
-        self.assertGreaterEqual(cfg["grain"]["hold_frames"], 1)
+        self.assertLessEqual(cfg["grain"]["hold_frames"], 0, "기본은 고정 무늬(2026-11-22 사용자 확인: 종이 같은 질감)")
+        self.assertTrue(0 <= cfg["grain"]["mottle"] <= 1)
         self.assertLessEqual(cfg["vignette"]["strength"], 0.3, "비네트는 약하게")
 
 

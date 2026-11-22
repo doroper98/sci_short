@@ -163,7 +163,7 @@ function blurNorm(a, n, sigma) {
       const o = y * n; for (let i = 0; i < row.length; i++) row[i] = a[o + idx[i]];
       for (let x = 0; x < n; x++) { let s = 0; for (let j = 0; j < ker.length; j++) s += ker[j] * row[x + j]; b[o + x] = s; }
     }
-    const acc = new Float32Array(n);
+    const acc = new Float64Array(n);   // 배정밀도로 더한다(가로와 같음)
     for (let y = 0; y < n; y++) {   // 세로: 행 단위로 더해 캐시를 아낀다
       acc.fill(0);
       for (let j = 0; j < ker.length; j++) { const o = idx[y + j] * n, k = ker[j]; for (let x = 0; x < n; x++) acc[x] += k * b[o + x]; }
