@@ -27,6 +27,8 @@
   "ai_label": true,
   "_ai_label": "is_ai_generated(메타 'AI 정보' 표시). 2026-11-08 사용자 결정 '켜 둠'(유튜브 contains_synthetic_media 도 켜 둠). 메타는 디지털로 만든 사실적 음성·영상에 표시를 요구하고 우리 내레이션은 합성 음성이다. 설명란 문구 금지 규칙과는 별개의 설정이다.",
 
+  "max_lead_hours": 3,
+  "_max_lead_hours": "2026-11-22: 아침 업로드 대기열(config/daily.json) 편은 유튜브 공개 시각(youtube_upload.json 의 publish_at, 없으면 uploaded_at)이 지금 + 이 시간 안일 때만 인스타 게시·틱톡 안내 대상이다. 유튜브보다 먼저 나가지 않게. 까닭: 예약 공개(2026-11-13~)로 다음 날 07:00 공개분을 미리 비공개로 올리는데, 아침 게시가 '이번 실행에서 올린 편'을 먼저 골라 2026-11-22 09:30 KST 에 54 구름(유튜브 공개 11-23 07:00)이 하루 먼저 인스타에 나갔고, 그날 07:00 에 유튜브에 공개된 48 GPU 는 인스타에 빠졌다. 사용자 \"이것과 관련해서는 니가 다 판단해서 해\"(2026-11-22). 여유 3시간은 제작 세션의 판단이다 — 아침 실행이 KST 05~10시에 시작하므로 05시대 실행도 그날 07:00 공개분을 같은 아침에 올리게 하고, 다음 날 공개분(21시간 넘게 남음)은 거른다. 0~48, 틱톡 안내도 이 값을 쓴다.",
   "hashtags_max": 5,
   "youtube_link": "Youtube : https://www.youtube.com/@Shortform_science",
   "_youtube_link": "2026-11-08 사용자: \"설명 마지막 태그 전에 유튜브 프로필 링크를 달아. Youtube : https://www.youtube.com/@Shortform_science 이렇게.\" 게시할 때 publish/instagram.py 가 해시태그 줄 앞에 붙인다(upload.md 에는 쓰지 않는다). @Shortform_science 가 과학쑛츠(UCZJSpmlBYUthLg0PSWcbU6w)임을 채널 페이지에서 확인.",
