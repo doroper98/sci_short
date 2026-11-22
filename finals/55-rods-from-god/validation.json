@@ -1,8 +1,8 @@
 {
   "file": "rods-from-god.mp4",
-  "bytes": 17869439,
-  "sha256": "dcb865fa664c7714b916c9239313890cef11a1d2241761f7874d8043d0cfe752",
-  "created": "2026-11-22T12:44:16+00:00",
+  "bytes": 17848633,
+  "sha256": "40e5aaac671ecea2bd98d7d28a416cdb466c651d549775a3ec32c099bd2ee542",
+  "created": "2026-11-22T13:03:13+00:00",
   "title": "신의 지팡이 — 우주에서 떨어뜨린 막대는 얼마나 깊이 뚫을까",
   "timeline_duration": 163.559,
   "max_sec": 180.0,
@@ -42,7 +42,7 @@
         "start_time": "0.000000",
         "duration_ts": 2512384,
         "duration": "163.566667",
-        "bit_rate": "696012",
+        "bit_rate": "694992",
         "bits_per_raw_sample": "8",
         "nb_frames": "4907",
         "extradata_size": 50,
@@ -133,8 +133,8 @@
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
       "duration": "163.566667",
-      "size": "17869439",
-      "bit_rate": "873989",
+      "size": "17848633",
+      "bit_rate": "872971",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -186,10 +186,10 @@
   },
   "first_moment": {
     "changed_pct": {
-      "0.5": 43.8,
+      "0.5": 43.7,
       "1.0": 57.8,
-      "1.5": 86.6,
-      "2.0": 89.6,
+      "1.5": 86.4,
+      "2.0": 89.3,
       "3.0": 1.6
     },
     "luma0_pct": 23.7,

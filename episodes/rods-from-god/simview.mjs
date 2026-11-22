@@ -12,6 +12,8 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = process.env.SCISHORT_ROOT || path.resolve(HERE, '../..');
 export const SIMDIR = process.env.RODS_SIMDIR || path.join(ROOT, 'outputs/rods-from-god/sim');
 export const REAL_L = 6.1;
+/** 실행의 솔버 인자(run.sh sim 과 같은 값). A 만 화면에 쓴다 — brief.md '시뮬레이션 대조'. */
+export const SIM_ARGS = {A: '--axi=1 --target=granite --dx=0.25e-3 --rodL=0.04 --rodD=0.002 --W=0.02 --plate=0.2 --plateTop=0.21 --H=0.255 --v=3400 --T=90e-6 --frames=120'};
 export {createCanvas};                 // m — 흔히 예로 드는 막대 길이
 
 const hex = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
@@ -36,7 +38,14 @@ const RUNS = {};
 export function loadRun(name) {
   if (name in RUNS) return RUNS[name];
   const f = path.join(SIMDIR, name + '.bin');
-  if (!fs.existsSync(f)) { console.warn(`[simview] ${f} 없음 — 그 실행은 그리지 않습니다`); return (RUNS[name] = null); }
+  if (!fs.existsSync(f)) {
+    // 시뮬레이션 장이 없으면 멈춘다(조용히 빈 무대로 그리지 않는다). 미리보기에서만 RODS_SIM_PREVIEW=1 로 건너뛴다.
+    if (process.env.RODS_SIM_PREVIEW === '1') { console.warn(`[simview] ${f} 없음 — RODS_SIM_PREVIEW=1 이라 그 실행은 그리지 않습니다(미리보기 전용)`); return (RUNS[name] = null); }
+    throw new Error(`[simview] 시뮬레이션 장 ${f} 이 없습니다. 다시 만들기(약 10분): episodes/rods-from-god/run.sh sim\n` +
+      `  = node episodes/rods-from-god/sim/mpm.mjs ${SIM_ARGS[name] || '(README 참고)'} --out=${path.join(SIMDIR, name)}\n` +
+      `  → node episodes/rods-from-god/sim/bake.mjs --run=${path.join(SIMDIR, name)} --out=${f}\n` +
+      `  (미리보기만 하려면 RODS_SIM_PREVIEW=1)`);
+  }
   const buf = fs.readFileSync(f), hl = buf.readUInt32LE(0), H = JSON.parse(buf.subarray(4, 4 + hl).toString());
   const size = H.nr * H.nz * H.NC, off = 4 + hl, nF = H.times.length;
   const run = {name, ...H, K: REAL_L / H.rodL, nF, frame: i => buf.subarray(off + i * size, off + (i + 1) * size), cache: new Map()};
@@ -64,12 +73,18 @@ export function simFrame(run, fi, {bands = true} = {}) {
   const hc = hot.getContext('2d'), himg = hc.createImageData(W2, nz), hp = himg.data;
   const wc = hotW.getContext('2d'), wimg = wc.createImageData(W2, nz), wp = wimg.data;
   let pMax = 0, noseZ = 1e9;
-  const rodR = run.rodD / 2 / run.cell;
+  const rodR = run.rodD / 2 / run.cell, zTop = run.plateTop / run.cell, zBot = bottomRow(run);
+  // 구멍 속(처음 지표 아래, 표적 바닥 위의 빈칸)은 숯색으로 채운다 — 뒤에 그린 지층 띠가 비쳐 보이지 않게(lit 아님)
+  const CAV = CAVITY;
   for (let zz = 0; zz < nz; zz++) {
     const row = nz - 1 - zz;     // 캔버스 위 = 큰 z
     for (let rr = 0; rr < nr; rr++) {
       const o = (zz * nr + rr) * NC, d0 = d[o] / 200, d1 = d[o + 1] / 200, dd = d0 + d1;
-      if (dd < 0.03) continue;
+      const below = zz < zTop && zz > zBot && rr < run.rEdge;
+      if (dd < 0.03) {
+        if (below) for (const side of [1, -1]) { const col = side > 0 ? nr + rr : nr - 1 - rr, i = (row * W2 + col) * 4; px[i] = CAV[0]; px[i + 1] = CAV[1]; px[i + 2] = CAV[2]; px[i + 3] = 255; }
+        continue;
+      }
       const a = sstep(0.18, 0.5, dd), fr = sstep(0.3, 0.7, d1 / dd), T = d[o + 2] * 12, bd = bands ? d[o + 3] / 255 : 0.5, fl = d[o + 5] / 255;
       if (d1 / dd > 0.5) { const pl = d[o + 4] / 255; if (pl > pMax) pMax = pl; if (zz < noseZ) noseZ = zz; }
       for (const side of [1, -1]) {
@@ -82,7 +97,8 @@ export function simFrame(run, fi, {bands = true} = {}) {
         const rod = sh < 0.5 ? WH.map((v, k) => v + (WM[k] - v) * (sh / 0.5)) : WM.map((v, k) => v + (WL[k] - v) * ((sh - 0.5) / 0.5));
         let col3 = rock.map((v, k) => v + (rod[k] - v) * fr);
         if (T > 700) { const h = ramp(HOT, T), ha = sstep(700, 1400, T) * 0.85; col3 = col3.map((v, k) => v + (h[k] - v) * ha); }
-        px[i] = col3[0]; px[i + 1] = col3[1]; px[i + 2] = col3[2]; px[i + 3] = 255 * a;
+        if (below && a < 1) { col3 = col3.map((v, k) => CAV[k] + (v - CAV[k]) * a); px[i] = col3[0]; px[i + 1] = col3[1]; px[i + 2] = col3[2]; px[i + 3] = 255; }
+        else { px[i] = col3[0]; px[i + 1] = col3[1]; px[i + 2] = col3[2]; px[i + 3] = 255 * a; }
         if (T > 900) {
           const h = ramp(HOT, T), ha = sstep(900, 1800, T) * a;
           hp[i] = h[0]; hp[i + 1] = h[1]; hp[i + 2] = h[2]; hp[i + 3] = 255 * ha;
@@ -96,6 +112,18 @@ export function simFrame(run, fi, {bands = true} = {}) {
   if (run.cache.size > 8) run.cache.delete(run.cache.keys().next().value);
   run.cache.set(ck, out);
   return out;
+}
+const CAVITY = hex('#151417');
+/** 표적 바닥의 행(0번 프레임, 축에서 가장 먼 열에서 바위가 덮인 가장 낮은 행). 그 아래 빈칸은 채우지 않는다. */
+function bottomRow(run) {
+  if (run.zBot !== undefined) return run.zBot;
+  const {nr, nz, NC, cell, plateTop} = run, d = run.frame(0), zMid = Math.round(plateTop / cell) - 20;
+  let re = 0;                                            // 바위가 덮인 가장 바깥 열(옆 벽의 빈 여백은 채우지 않는다)
+  for (let rr = 0; rr < nr; rr++) if (d[(zMid * nr + rr) * NC] / 200 > 0.5) re = rr;
+  let zb = 0;
+  for (let zz = 0; zz < nz; zz++) { const o = (zz * nr + Math.max(0, re - 2)) * NC; if (d[o] / 200 > 0.5) { zb = zz; break; } }
+  run.rEdge = re;
+  return (run.zBot = zb + 1);
 }
 /** 구멍의 윤곽(실제 m): 깊이마다 축에서 바깥으로 처음 바위가 덮인 반지름. [[r, depth], …] (얕은 곳 → 깊은 곳). */
 export function holeOutline(run, fi) {
@@ -115,17 +143,17 @@ export function holeOutline(run, fi) {
  * 단면을 무대에 그린다. ax = 축의 화면 x, sy = 처음 지표의 화면 y, ppm = 실제 1 m 당 px.
  * hot: 'screen' 이면 뜨거운 곳을 화면에(이미 색에 들어 있음), lit 은 부르는 쪽이 simHot 으로.
  */
-export function drawSim(ctx, run, fi, {ax, sy, ppm, alpha = 1, bands = true}) {
-  const f = simFrame(run, fi, {bands}), s = ppm * run.K;
-  const x = ax - run.nr * run.cell * s, y = sy - (run.Hm - run.plateTop) * s, w = run.nr * 2 * run.cell * s, h = run.nz * run.cell * s;
+export function drawSim(ctx, run, fi, {ax, sy, ppm, alpha = 1, bands = true, sv = 1}) {
+  const f = simFrame(run, fi, {bands}), s = ppm * run.K;      // sv: 세로로만 늘림(식으로 그린 그림 — 같은 굵기, 길이·깊이만 sv 배)
+  const x = ax - run.nr * run.cell * s, y = sy - (run.Hm - run.plateTop) * s * sv, w = run.nr * 2 * run.cell * s, h = run.nz * run.cell * s * sv;
   ctx.save(); ctx.globalAlpha *= alpha; ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
   ctx.drawImage(f.cv, x, y, w, h); ctx.restore();
   return f;
 }
 /** 뜨거운 곳 — lit(stage, c => simHot(c, stage, …)) 안에서 부른다(화면에는 색, 빛 지도에는 흰색). */
-export function simHot(c, stage, run, fi, {ax, sy, ppm, alpha = 1, bands = true}) {
+export function simHot(c, stage, run, fi, {ax, sy, ppm, alpha = 1, bands = true, sv = 1}) {
   const f = simFrame(run, fi, {bands}), s = ppm * run.K;
-  const x = ax - run.nr * run.cell * s, y = sy - (run.Hm - run.plateTop) * s, w = run.nr * 2 * run.cell * s, h = run.nz * run.cell * s;
+  const x = ax - run.nr * run.cell * s, y = sy - (run.Hm - run.plateTop) * s * sv, w = run.nr * 2 * run.cell * s, h = run.nz * run.cell * s * sv;
   c.save(); c.globalAlpha *= alpha; c.imageSmoothingEnabled = true;
   c.drawImage(c === stage.ctx ? f.hot : f.hotW, x, y, w, h); c.restore();
 }

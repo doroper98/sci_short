@@ -5,7 +5,7 @@
 #         episodes/<slug>/run.sh stills          # one or more named steps, in the order given
 #         SKIP_NARRATE=1 episodes/<slug>/run.sh  # reuse outputs/<slug>/narration
 #         SKIP_HDR=1 episodes/<slug>/run.sh     # HDR 판을 만들지 않는다(빛나는 것이 정말 없는 편 — 까닭을 brief.md 에)
-# Steps: narrate stills render sfx mix finish hdr validate
+# Steps: narrate sim stills render sfx mix finish hdr validate   (sim: 55 의 시뮬레이션 장 — 없으면 만든다)
 # HDR(2026-11-15 사용자 "다음 편부터 hdr 적용해"): render 가 visual.mp4 와 함께 빛 지도 gain.mp4 를 쓰고(scenes.mjs 의 lit()),
 #   hdr 단계가 둘을 합쳐 final/hdr/<slug>.hdr.mp4 를 만든다. 유튜브에는 HDR 판, 인스타·틱톡에는 SDR 판이 올라간다. docs/HDR.md
 set -euo pipefail
@@ -34,6 +34,12 @@ TITLE="${TITLE:-$("$PY" -c 'import json,sys; print(json.load(open(sys.argv[1]))[
 
 step_narrate()  { [[ "${SKIP_NARRATE:-0}" == 1 ]] && { echo "narrate: skipped (SKIP_NARRATE=1)"; return; }
                   "$NARRATE_PY" pipeline/narration/narrate.py --script "$EP/script.json" --out "$NAR"; }
+# 55: 시뮬레이션 장(outputs/<slug>/sim/A.bin, Git 제외)이 없으면 만든다 — 솔버 약 10분(4 vCPU 한 스레드) + 굳히기 수 초. 있으면 건너뛴다.
+step_sim()      { local SD="$OUT/sim"; mkdir -p "$SD"
+                  if [[ -f "$SD/A.bin" ]]; then echo "sim: $SD/A.bin 있음 — 건너뜀(다시 만들려면 지우고 run.sh sim)"; return; fi
+                  local ARGS; ARGS="$("$NODE" -e "import('$EP/simview.mjs').then(m=>console.log(m.SIM_ARGS.A))" 2>/dev/null | tail -1)"
+                  RODS_SIM_PREVIEW=1 "$NODE" "$EP/sim/mpm.mjs" $ARGS --out="$SD/A"
+                  "$NODE" "$EP/sim/bake.mjs" --run="$SD/A" --out="$SD/A.bin"; }
 step_stills()   { SCISHORT_ROOT="$ROOT" "$NODE" "$EP/render.mjs" --stills --out "$OUT" --timeline "$NAR/timeline.json"; }
 step_render()   { SCISHORT_ROOT="$ROOT" "$NODE" "$EP/render.mjs" --video  --out "$OUT" --timeline "$NAR/timeline.json"; }
 step_sfx()      { "$PY" pipeline/audio/sfx.py --sound "$EP/sound.json" --timeline "$NAR/timeline.json" \
@@ -54,7 +60,7 @@ step_hdr()      { [[ "${SKIP_HDR:-0}" == 1 ]] && { echo "hdr: skipped (SKIP_HDR=
 step_validate() { local h=(--hdr require); [[ "${SKIP_HDR:-0}" == 1 ]] && h=(--hdr skip)
                   "$PY" pipeline/validate.py "$OUT" --max-sec "$MAX_SEC" "${h[@]}"; }
 
-STEPS=("$@"); [[ ${#STEPS[@]} -eq 0 ]] && STEPS=(narrate stills render sfx mix finish hdr validate)
+STEPS=("$@"); [[ ${#STEPS[@]} -eq 0 ]] && STEPS=(narrate sim stills render sfx mix finish hdr validate)
 for s in "${STEPS[@]}"; do
   echo "== $s ($SLUG) =="
   start=$(date +%s); "step_$s"; echo "   $s: $(( $(date +%s) - start )) s"

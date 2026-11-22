@@ -173,7 +173,7 @@ function titleList(id, ctx) {
     case 'energy': return [[-Infinity, '운동에너지 = ½ × 질량 × 속도²', '속도 두 배, 에너지 네 배'], [a('s08'), '1 kg 기준', 'TNT 1 kg과 같아지는 속도']];
     case 'fall': return [[-Infinity, '낮은 궤도 · 몇 분을 몇 초로', '1초에 7.8 km'], [a('s10'), '공기층 · 크기 과장', '달궈지고, 느려진다'], [a('s11'), '흔히 드는 제원', '초속 3.4 km · 마하 10'], [a('s12'), '½ × 8.6 t × (3.4 km/s)²', 'TNT 11톤 남짓']];
     case 'penetrate': return [[-Infinity, '실제 0.007초를 아주 느리게 · 설명 모형', '막대도 바위도 흐른다'], [a('s14'), '단면 · 설명 모형', '앞끝부터 닳아 없어진다']];
-    case 'depth': return [[-Infinity, '뉴턴의 어림셈', '제 질량만큼의 바위 기둥'], [a('s16'), '텅스텐 19.3 ÷ 바위 2.7 ≈ 7', '40미터 안팎'], [a('s17'), '닳는 것까지 따진 모형', '16미터쯤, 답은 그 사이'], [a('s18'), '같은 속도 · 길이와 지름 두 배', '두 배 길면, 두 배 깊이'], [a('s19'), '정리', '길이와 밀도 비가 정한다']];
+    case 'depth': return [[-Infinity, '뉴턴의 어림셈', '제 질량만큼의 바위 기둥'], [a('s16'), '텅스텐 19.3 ÷ 바위 2.7 ≈ 7', '40미터 안팎'], [a('s17'), '닳는 것까지 따진 모형', '16미터쯤, 답은 그 사이'], [a('s18'), '같은 속도 · 같은 굵기 · 길이만 두 배', '두 배 길면, 두 배 깊이'], [a('s19'), '정리', '길이와 밀도 비가 정한다']];
     case 'limits': return [[-Infinity, '에너지 · 로그 눈금', '원자폭탄의 천분의 1 아래'], [a('s21'), '궤도까지 올리기', '1 kg 의 운동에너지 약 1,000배'], [a('s22'), '1967 · 우주조약 제4조', '해석이 갈린다']];
     case 'close': return [[-Infinity, '정리', '']];
   }
@@ -185,14 +185,14 @@ function topBand(c) { const g = c.createLinearGradient(0, 0, 0, 320); g.addColor
 // =====================================================================================================
 // 시뮬레이션 실행
 // =====================================================================================================
-// A = 막대 6.1 m(시뮬레이션 40 mm × 2 mm), 3.4 km/s. 두 배 막대는 A 를 두 배로 키워 그린다 — 이 모형(강도에 길이 척도가 없는
-// 탄소성 + 같은 격자 비율)에서는 모든 길이와 시간을 두 배로 한 것이 정확히 같은 계산이다(길이와 지름이 함께 두 배).
-// 따로 돌린 실행 B(같은 막대, 6.8 km/s)와 C(길이만 두 배, 지름 그대로)는 화면에 쓰지 않는다 — brief.md '시뮬레이션 대조'.
+// A = 막대 6.1 m(시뮬레이션 40 mm × 2 mm), 3.4 km/s. '12 m 막대'는 시뮬레이션이 아니라 식(깊이 ∝ 길이)으로 그린 그림이다:
+// A 를 세로로만 k 배 늘린다(같은 굵기, 길이·깊이·시간만 k 배 — 조건 하나). 화면에 "같은 굵기 · 식으로 그린 그림"이라고 밝힌다.
+// 따로 돌린 실행 B(같은 막대, 6.8 km/s)와 C(길이만 두 배, 지름 그대로)는 흠으로 보여 쓰지 않는다 — brief.md '시뮬레이션 대조'.
 const RUN = {A: loadRun('A')};
-/** 실제 시각 tr 에서 A 를 k 배로 키운 막대의 단면(k = 1 이면 A 그대로). */
+/** 실제 시각 tr 에서 A 를 세로로만 k 배 늘린 그림(k = 1 이면 A 그대로). */
 function simScaled(stage, tr, view, k = 1, o = {}) {
   const run = RUN.A; if (!run) return null;
-  return simAt(stage, run, frameAt(run, tr / k), {...view, ppm: view.ppm * k}, o);
+  return simAt(stage, run, frameAt(run, tr / k), {...view, sv: k}, o);
 }
 const depthScaled = (tr, k = 1) => (RUN.A ? RUN.A.realDepth[frameAt(RUN.A, tr / k)] * k : 0);
 /** 단면 + 뜨거운 곳(lit). 실행이 없으면 아무것도 그리지 않는다. */
@@ -553,7 +553,7 @@ export const scenes = {
         const lab = ['6 m 막대', '12 m 막대'];
         stage.text(lab[0], xA + 24, sy - RL * 0.6, {size: 30, weight: 700, color: PAL.ink, ...so});
         stage.text(lab[1], xB + 30, sy - RL * 1.2, {size: 30, weight: 700, color: PAL.ink, ...so});
-        stage.text('지름도 두 배', xB + 30, sy - RL * 1.2 + 36, {size: 24, weight: 500, color: PAL.muted});
+        stage.text('같은 굵기 · 식으로 그린 그림', xB + 30, sy - RL * 1.2 + 36, {size: 24, weight: 500, color: PAL.muted});
         // 같은 깊이 / 두 배 깊이 비교선(실행의 깊이에서 — 실제 막대 길이 배율)
         if (RUN.A) {
           const dA = depthScaled(trr, 1), dB = depthScaled(trr, 2);
@@ -620,6 +620,7 @@ export const scenes = {
     simScaled(stage, trr, {ax: xC, sy, ppm}, 2, {hotGain: 0.5, bands: false});
     stage.text('6 m 막대', xA + 22, sy - 30, {size: 28, weight: 700, color: PAL.ink, ...so});
     stage.text('12 m 막대', xC + 22, sy - 60, {size: 28, weight: 700, color: PAL.ink, ...so});
+    stage.text('같은 굵기 · 식으로 그린 그림', xC + 22, sy - 26, {size: 24, weight: 500, color: PAL.muted, ...so});
     const ea = fadeIn(t, s24.start - 0.3, 0.6);
     if (ea > 0) {
       if (ea > 0.01) unlitRect(stage, 30, 330, W - 60, 340, 1);
