@@ -254,7 +254,6 @@ class ScheduleTest(unittest.TestCase):
             self.assertEqual([r["dir"] for r in am["results"]], [yu._rel(today)])      # 오늘 올린 편이 먼저
             pm = ig.ig_next(_cfg(), root, slot="evening", dry_run=True, morning=morning)
             self.assertEqual([r["dir"] for r in pm["results"]], [yu._rel(today)])      # 2026-11-22: 17시도 밀린 새 편 먼저
-            (ig.read_record(done) and None)
             ig.mark_posted(today, "https://www.instagram.com/reel/TODAY1/")
             pm = ig.ig_next(_cfg(), root, slot="evening", prefer=[today], dry_run=True, morning=morning)
             self.assertEqual([r["dir"] for r in pm["results"]], [yu._rel(old)])        # 새 편이 없으면 옛 편
@@ -268,6 +267,100 @@ class ScheduleTest(unittest.TestCase):
             self.assertIn("따라잡았습니다", rest["note"])                          # 따라잡으면 17시는 쉼
             self.assertIsNotNone(ig.read_record(today))
             self.assertIsNotNone(ig.read_record(old))
+
+
+NOW = yu._parse_time("2026-11-22T12:00:00Z")      # 2026-11-22 21:00 KST
+
+
+def _yt(ep: Path, *, publish_at: str | None = None, uploaded_at: str = "2026-11-20T00:00:00+00:00") -> Path:
+    """유튜브 기록(youtube_upload.json). publish_at = 예약 공개 시각."""
+    yu.write_record(ep, yu.Record(video_id="V" + ep.name[:2], url="u", studio_url="s", uploaded_at=uploaded_at,
+                                  privacy_status="private", channel_id="UC1", channel_title="c", video_file="x.mp4",
+                                  video_bytes=1, video_md5="m", title="t", description_bytes=1,
+                                  contains_synthetic_media=True, made_for_kids=False, publish_at=publish_at))
+    return ep
+
+
+def _z(hours: float) -> str:
+    """NOW 에서 hours 시간 뒤의 UTC 'Z' 시각."""
+    import datetime as dt
+    return (NOW + dt.timedelta(hours=hours)).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+@mock.patch.object(ig, "probe_reel", lambda p: dict(PROBE_OK))
+class YoutubeFirstTest(unittest.TestCase):
+    """2026-11-22: 인스타·틱톡은 유튜브보다 먼저 나가지 않는다(54 구름이 하루 앞서 나가고 48 GPU 가 빠진 일)."""
+
+    def _picked(self, out: dict) -> list[str]:
+        return [Path(r["dir"]).name for r in out["results"]]
+
+    def test_morning_after_target_picks_today_not_tomorrow(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            _episode(root, name="01-old", slug="old")
+            tomorrow = _yt(_episode(root, name="54-clouds", slug="clouds"), publish_at=_z(21))
+            _yt(_episode(root, name="48-gpu", slug="gpu"), publish_at=_z(-2))
+            out = ig.ig_next(_cfg(), root, slot="morning", prefer=[tomorrow], dry_run=True, morning={48, 54}, now=NOW)
+            self.assertEqual(self._picked(out), ["48-gpu"])
+            self.assertIn("미룬 편 1편", out["note"])
+            self.assertEqual(out["held"], [yu._rel(tomorrow)])
+            self.assertNotIn(tomorrow.resolve(), ig.ig_backlog(root, {48, 54}, now=NOW, lead_hours=3))
+
+    def test_morning_before_target_within_lead(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            _episode(root, name="01-old", slug="old")
+            ep = _yt(_episode(root, name="48-gpu", slug="gpu"), publish_at=_z(40 / 60))
+            out = ig.ig_next(_cfg(), root, slot="morning", prefer=[ep], dry_run=True, morning={48}, now=NOW)
+            self.assertEqual(self._picked(out), ["48-gpu"])                      # 40분 뒤 공개 — 여유 3시간 안
+            self.assertNotIn("미룬", out["note"])
+            _yt(ep, publish_at=_z(5))
+            out = ig.ig_next(_cfg(), root, slot="morning", prefer=[ep], dry_run=True, morning={48}, now=NOW)
+            self.assertEqual(self._picked(out), ["01-old"])                      # 5시간 뒤 — 여유 밖, 옛 편으로
+            self.assertIn("미룬 편 1편", out["note"])
+            _yt(ep, publish_at=_z(40 / 60))
+            out = ig.ig_next(_cfg(max_lead_hours=0), root, slot="morning", prefer=[ep], dry_run=True, morning={48}, now=NOW)
+            self.assertEqual(self._picked(out), ["01-old"])                      # 여유 0 이면 40분 뒤도 거름
+
+    def test_morning_latest_public_first_evening_oldest_first(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            _episode(root, name="14-old", slug="old")
+            _yt(_episode(root, name="58-tsunami", slug="tsunami"), uploaded_at="2026-11-15T01:47:55+00:00")   # 예약 없음
+            _yt(_episode(root, name="64-radar", slug="radar"), publish_at="2026-11-19T08:00:00Z")
+            _yt(_episode(root, name="48-gpu", slug="gpu"), publish_at=_z(-14))
+            morning = {48, 58, 64}
+            am = ig.ig_next(_cfg(), root, slot="morning", dry_run=True, morning=morning, now=NOW)
+            self.assertEqual(self._picked(am), ["48-gpu"])                       # 오늘 공개된 편
+            pm = ig.ig_next(_cfg(), root, slot="evening", dry_run=True, morning=morning, now=NOW)
+            self.assertEqual(self._picked(pm), ["58-tsunami"])                   # 가장 오래 밀린 새 편, 옛 편보다 먼저
+            order = ig.order_new_first(ig.ig_backlog(root, morning, now=NOW, lead_hours=3), morning, slot="evening")
+            self.assertEqual([p.name for p in order], ["58-tsunami", "64-radar", "48-gpu", "14-old"])
+
+    def test_uploaded_at_only_and_unreadable_record(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            ep = _yt(_episode(root, name="58-tsunami", slug="tsunami"), uploaded_at="2026-11-15T01:47:55+00:00")
+            self.assertEqual(ig.youtube_public_at(ep), yu._parse_time("2026-11-15T01:47:55Z"))
+            self.assertTrue(ig.on_youtube(ep, {58}, now=NOW))
+            odd = _episode(root, name="60-odd", slug="odd")
+            (odd / "youtube_upload.json").write_text("{}", encoding="utf-8")        # 기록은 있으나 시각을 모름 → 대상
+            self.assertTrue(ig.on_youtube(odd, {60}, now=NOW))
+            none = _episode(root, name="61-none", slug="none")
+            self.assertIsNone(ig.youtube_public_at(none))
+            self.assertFalse(ig.on_youtube(none, {61}, now=NOW))                    # 기록 없음 → 대상 아님
+            self.assertTrue(ig.on_youtube(none, set(), now=NOW))                   # 아침 대기열 밖 옛 편은 늘 대상
+
+    def test_lead_config_validated(self) -> None:
+        self.assertEqual(ig.load_config().max_lead_hours, 3)
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "c.json"
+            for bad in (-1, "3", True, 49):
+                p.write_text(json.dumps({"max_lead_hours": bad}), encoding="utf-8")
+                with self.assertRaisesRegex(yu.UploadError, "max_lead_hours"):
+                    ig.load_config(p)
+            p.write_text(json.dumps({"max_lead_hours": 0}), encoding="utf-8")
+            self.assertEqual(ig.load_config(p).max_lead_hours, 0)
 
 
 @mock.patch.object(ig, "probe_reel", lambda p: dict(PROBE_OK))

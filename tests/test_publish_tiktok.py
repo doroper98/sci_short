@@ -11,9 +11,9 @@ from unittest import mock
 from publish import tiktok as tt
 from publish import youtube as yu
 try:
-    from test_publish_instagram import UPLOAD          # unittest discover -s tests
+    from test_publish_instagram import UPLOAD, _yt          # unittest discover -s tests
 except ImportError:
-    from tests.test_publish_instagram import UPLOAD    # python -m unittest tests.test_publish_tiktok
+    from tests.test_publish_instagram import UPLOAD, _yt    # python -m unittest tests.test_publish_tiktok
 
 PROBE = {"width": 1080, "height": 1920, "duration_sec": 120.0}
 ENV = {"GITHUB_REPOSITORY": "doroper98/sci_short", "GITHUB_SHA": "abc123"}
@@ -90,6 +90,20 @@ class NextTest(unittest.TestCase):
             done = tt.tt_next(cfg, root, dry_run=False, env=ENV, morning=morning)
             self.assertEqual(done["results"], [])
             self.assertIsNone(tt.read_record(night))
+
+    @mock.patch.object(tt, "recently_offered", lambda *a: False)
+    def test_tomorrow_prefer_held_today_offered(self) -> None:
+        """2026-11-22: 유튜브 공개 전(내일 07:00)인 편은 --prefer 로 와도 안내하지 않고, 오늘 공개된 편을 안내한다."""
+        now = yu._parse_time("2026-11-22T12:00:00Z")
+        with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
+            root = Path(d)
+            _ep(root, "01-old")
+            tomorrow = _yt(_ep(root, "54-clouds"), publish_at="2026-11-23T09:00:00Z")
+            _yt(_ep(root, "48-gpu"), publish_at="2026-11-21T22:00:00Z")
+            out = tt.tt_next(tt.TtConfig(), root, prefer=[tomorrow], dry_run=True, env=ENV, morning={48, 54}, now=now)
+            self.assertEqual(Path(out["results"][0]["dir"]).name, "48-gpu")
+            self.assertIn("미룬 편 1편", out["note"])
+            self.assertNotIn(tomorrow.resolve(), tt.tt_backlog(root, {48, 54}, now=now, lead_hours=3))
 
     def test_disabled_and_bad_caption(self) -> None:
         with tempfile.TemporaryDirectory(dir=yu.REPO) as d:
