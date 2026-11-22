@@ -15,7 +15,7 @@ import {
 import {loadRun, frameAt, drawSim, simHot, simRect, holeOutline, remainingLen, simFrame, SIMPAL, REAL_L} from './simview.mjs';
 
 export const theme = 'film';
-export const look = {background: {cx: 0.5, cy: 0.5, r0: 0.08, r1: 0.80}};
+export const look = {background: {cx: 0.5, cy: 0.5}};   // 편마다 바꾸는 것은 밝은 곳의 자리뿐(세기·크기는 config/look.json — 2026-11-22 사용자 "적당해" 뒤의 공통 기본값)
 export const events = [];
 export const captionLayout = {};
 

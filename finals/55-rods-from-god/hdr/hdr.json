@@ -1,8 +1,8 @@
 {
   "file": "rods-from-god.hdr.mp4",
-  "bytes": 12099025,
-  "sha256": "045cab97b30409f68117770d1f64c141e82aedb53e9dca619b65d612bf9e375b",
-  "created": "2026-11-22T12:35:12+00:00",
+  "bytes": 11940172,
+  "sha256": "ae5fc9491ce6346a4f567966e129deeb44ce962e756c30928e8130fa428d4fe8",
+  "created": "2026-11-22T12:48:00+00:00",
   "codec": "hevc Main 10",
   "pix_fmt": "yuv420p10le",
   "color": "bt2020 / smpte2084 (PQ) / bt2020nc",
@@ -22,8 +22,8 @@
   "frames": 4907,
   "lit_frames": 2324,
   "sdr_white_code": 573,
-  "peak_code": 680,
-  "peak_nits_estimate": 639,
-  "encode_seconds": 174.8,
+  "peak_code": 682,
+  "peak_nits_estimate": 653,
+  "encode_seconds": 175.9,
   "note": "peak_nits_estimate 는 무채색으로 보고 luma 코드에서 어림한 값"
 }
