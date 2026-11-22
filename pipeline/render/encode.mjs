@@ -51,7 +51,7 @@ export async function renderVideo({stage, duration, frame, out, fps = stage.FPS,
   const progress = onProgress || ((i, n, rate) => { if (i % (fps * 10) === 0 || i === n) console.log(`  frame ${i}/${n}  ${(i / fps).toFixed(1)}s  ${rate.toFixed(1)} fps`); });
   for (let i = 0; i < total; i++) {
     if (err) throw new Error(`ffmpeg pipe failed: ${err.message}\n${stderr}`);
-    if (G) clearGain(stage);
+    if (G || stage.gain) clearGain(stage);   // gain:false 여도 비운다 — 비우지 않으면 지난 프레임의 lit() 이 남아 질감 층의 번짐(look.mjs)이 쌓인다
     await frame(start + i / fps);
     const px = ctx.getImageData(0, 0, W, H).data;
     if (!ff.stdin.write(Buffer.from(px.buffer, px.byteOffset, px.byteLength))) await Promise.race([once(ff.stdin, 'drain'), closed]);

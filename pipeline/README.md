@@ -10,7 +10,7 @@
 ```text
 pipeline/
   narration/        표준 M3 음성 → narration.wav, timeline.json, captions.srt   (README: narration/README.md)
-  render/           Node 캔버스 툴킷: stage·draw·timeline·captions·chrome·encode, fetch_fonts.py   (README: render/README.md)
+  render/           Node 캔버스 툴킷: stage·draw·timeline·captions·chrome·encode·hdr·look, fetch_fonts.py   (README: render/README.md)
     tests/          node --test, fixtures/timeline.sample.json, make_fixture.py
   audio/            sfx.py(설명용 소리), mix.py(덕킹 믹스), finish.py(마스터링·mux·validation.json), tests/
   hdr.py            SDR 그림(visual.mp4) + 빛 지도(gain.mp4) → HDR 판 final/hdr/<slug>.hdr.mp4 (docs/HDR.md)
@@ -67,7 +67,7 @@ Scenes partition [0, duration] contiguously. Also `outputs/<slug>/narration/narr
 
 | 분 | 할 일 | 결과 확인 |
 |---|---|---|
-| 0–5 | `python pipeline/new_episode.py <slug> --title "…" [--theme noturno]` | `episodes/<slug>/` |
+| 0–5 | `python pipeline/new_episode.py <slug> --title "…" [--theme film]`(기본 film = 숯색 + 질감 층) | `episodes/<slug>/` |
 | 5–15 | `brief.md`: 질문 → 기원·배경 → 본질 → 메커니즘 → 현상 → 오해 → 마지막 한 줄, 소리 사건 표, 단순화 메모 | 과학 근거·단순화가 적혀 있음 |
 | 15–22 | `script.json` 합니다체 문장, 숫자·기호는 `tts`로 발음 지정, 장면 id | `narrate` 실행 → `timeline.json`의 `duration` ≤ 180, `degraded:false` |
 | 22–45 | `scenes.mjs`: 장면마다 실제로 작동하는 대상, 같은 공간 유지, 라벨·리더선, 비교, 사건 번쩍임 | `run.sh stills` → `contact-sheet.jpg`를 **직접 보고** 고침(반복) |

@@ -1,7 +1,8 @@
 """Create episodes/<slug>/ from episodes/_template/.
 
-  python pipeline/new_episode.py <slug> --title "얼음은 왜 물에 뜰까?" [--theme noturno|slate|graphite|navy]
+  python pipeline/new_episode.py <slug> --title "얼음은 왜 물에 뜰까?" [--theme film|noturno|slate|graphite|navy]
 
+The default theme is film (charcoal + the look layer: grain, soft bloom around lit(), light vignette — 2026-11-22).
 Substitutes {{slug}}, {{title}}, {{date}} in text files, "__TITLE__" in script.json and the theme in scenes.mjs.
 Refuses to overwrite an existing folder.
 """
@@ -17,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TEMPLATE = ROOT / "episodes" / "_template"
-THEMES = ("noturno", "slate", "graphite", "navy")
+THEMES = ("film", "noturno", "slate", "graphite", "navy")
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]{1,48}$")
 
 
@@ -25,7 +26,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("slug", help="lowercase ascii, digits and '-', e.g. ice-floats")
     ap.add_argument("--title", required=True)
-    ap.add_argument("--theme", default="noturno", choices=THEMES)
+    ap.add_argument("--theme", default="film", choices=THEMES)
     ap.add_argument("--episodes-dir", type=Path, default=ROOT / "episodes", help=argparse.SUPPRESS)
     a = ap.parse_args()
     if not SLUG_RE.match(a.slug):
