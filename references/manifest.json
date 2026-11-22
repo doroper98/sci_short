@@ -671,6 +671,20 @@
       "height": 2576,
       "format": "JPEG",
       "note": "사용자가 2026-11-14 에 올린 휴대전화 화면 갈무리(인스타그램 릴스의 한 장면, 계정 redpenprep, 'AI 콘텐츠' 표시). 영상 원본은 없다. 62번(심장 박동) 주제의 참고용 — 구성 원리만 참고하고 화면·문구·상표는 베끼지 않는다."
+    },
+    {
+      "id": "ref-17",
+      "title_ko": "입체로 그린 신경망: 층마다 격자로 놓인 마디와 빽빽한 연결",
+      "recorded_date": "2026-11-22",
+      "path": "references/images/17-neural-network-3d.jpg",
+      "original_filename": "IMG_2135.jpeg",
+      "upload_name": "0c530881-image.jpg",
+      "bytes": 374758,
+      "sha256": "701551fdbac004951022ded85ddf356a60abf0154d273d31b12f75aea32c8fba",
+      "width": 1184,
+      "height": 2576,
+      "format": "JPEG",
+      "note": "사용자가 2026-11-22 에 올린 휴대전화 화면 갈무리(인스타그램 릴스의 한 장면, 계정 calculusphile, 화면 제목 'NEURAL NETWORKS', 설명 첫 줄 'What if 90% of a neural network is unnecessary ...'). 영상 원본은 없다. 사용자 말: \"그리고 신경망에 대한 주제도 대기열에 넣어. 신경망도 단순히 2차원 상에서 몇가지 노드가 연결되는거 말고 그렇게 심플한 노드들에서 설명을 시작하고 이렇게 복잡한 신경망 구조(가 만약 진짜 있고 구성하는게 적합하다면)를 보여주는 영상이야\". 71번(신경망) 주제의 참고용 — 구조를 보여 주는 방식만 참고하고 화면·문구·상표는 베끼지 않는다."
     }
   ]
 }
