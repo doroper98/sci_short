@@ -252,8 +252,13 @@ class ScheduleTest(unittest.TestCase):
             self.assertNotIn(night.resolve(), ig.ig_backlog(root, morning))
             am = ig.ig_next(_cfg(), root, slot="morning", prefer=[today], dry_run=True, morning=morning)
             self.assertEqual([r["dir"] for r in am["results"]], [yu._rel(today)])      # 오늘 올린 편이 먼저
+            pm = ig.ig_next(_cfg(), root, slot="evening", dry_run=True, morning=morning)
+            self.assertEqual([r["dir"] for r in pm["results"]], [yu._rel(today)])      # 2026-11-22: 17시도 밀린 새 편 먼저
+            (ig.read_record(done) and None)
+            ig.mark_posted(today, "https://www.instagram.com/reel/TODAY1/")
             pm = ig.ig_next(_cfg(), root, slot="evening", prefer=[today], dry_run=True, morning=morning)
-            self.assertEqual([r["dir"] for r in pm["results"]], [yu._rel(old)])        # 17시는 옛 편, prefer 무시
+            self.assertEqual([r["dir"] for r in pm["results"]], [yu._rel(old)])        # 새 편이 없으면 옛 편
+            (today / ig.RECORD_NAME).unlink()
             for slot in ("morning", "evening"):
                 out = ig.ig_next(_cfg(), root, slot=slot, prefer=[today], dry_run=False, send=FakeGraph(), env=ENV,
                                  sleep=lambda s: None, morning=morning)
