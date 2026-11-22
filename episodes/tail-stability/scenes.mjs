@@ -21,8 +21,9 @@ const OWNER = {};
 for (const m of MODS) for (const id of Object.keys(m.scenes || {})) OWNER[id] = m;
 
 export const theme = 'film';
-// 질감 층의 편별 값(2026-11-22): 밝은 곳을 풍동(모형이 있는 위쪽)에 맞추고, 빛 4단계 '광원'을 쓴다 — 사용자의 단계 선택을 기다리는 값
-export const look = {background: {cx: 0.5, cy: 0.30, r0: 0.05, r1: 0.62, center: '#2B2A30'}, bloom: {tight_px: 6, tight_alpha: 0.45, wide_px: 32, wide_alpha: 0.32}};
+// 질감 층의 편별 값(2026-11-22): 밝은 곳을 풍동(모형이 있는 위쪽)에 맞춘다. 빛의 세기(번짐 2단계 + 무대 위의 등)는 이 편을 본 사용자 말
+// "적당해"로 공통 기본값(config/look.json)이 됐으므로 여기에는 자리만 남긴다 — 렌더 결과는 그 전과 같다(정지화면 해시로 확인).
+export const look = {background: {cx: 0.5, cy: 0.30}};
 export const events = [];
 export const captionLayout = Object.assign({}, ...MODS.map(m => m.captionLayout || {}));
 
