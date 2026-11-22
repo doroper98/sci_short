@@ -101,7 +101,7 @@ function drawArrow(stage, {x, y, theta = 0, thick = 1, alpha = 1}) {
     rect(c, 446, -hh - 2, 12, 2 * hh + 4, 3, PAL.darker);                                      // 오늬
     // 촉
     c.beginPath(); c.moveTo(-304, 0); c.lineTo(-254, -15 - hh * 0.4); c.lineTo(-244, 0); c.lineTo(-254, 15 + hh * 0.4); c.closePath();
-    const gh = c.createLinearGradient(0, -18, 0, 18); gh.addColorStop(0, '#9FB6BD'); gh.addColorStop(0.5, '#58747E'); gh.addColorStop(1, PAL.darker);
+    const gh = c.createLinearGradient(0, -18, 0, 18); gh.addColorStop(0, '#B1B4B9'); gh.addColorStop(0.5, '#6A7078'); gh.addColorStop(1, PAL.darker);
     c.fillStyle = gh; c.fill();
     c.restore();
     K.cgMark(c, x, y, 14, theta);
@@ -135,7 +135,7 @@ function drawPenaud(stage, {x, y, theta = 0, spin = 0, un = 0, running = false, 
         const q = (xx - x0) / (x1 - x0), sg = Math.sin(Math.PI * q) * sag;
         pts.push([xx, yb + sg + 3.2 * Math.sin(TAU * (xx - x0) / pitch + ph + k * Math.PI) * (1 - 0.6 * un)]);
       }
-      line(c, pts, k ? '#58747E' : '#8AA0A6', 2.8);
+      line(c, pts, k ? '#6A7078' : '#9C9FA4', 2.8);
     }
     line(c, [[x0, 4], [x0, yb + 2]], PAL.darker, 2.5); line(c, [[x1, 4], [x1, yb + 2]], PAL.darker, 2.5);   // 갈고리
     // 막대 동체
@@ -158,7 +158,7 @@ function drawPenaud(stage, {x, y, theta = 0, spin = 0, un = 0, running = false, 
     for (const k of [0, 1]) {
       const a = spin + k * Math.PI, ly = 60 * Math.cos(a), wd = 4 + 7 * Math.abs(Math.sin(a));
       c.beginPath(); c.ellipse(px, ly / 2, wd / 2, Math.abs(ly) / 2 + 1, 0, 0, TAU);
-      const gb = c.createLinearGradient(px - wd, 0, px + wd, 0); gb.addColorStop(0, '#6E8A93'); gb.addColorStop(1, '#1E333B');
+      const gb = c.createLinearGradient(px - wd, 0, px + wd, 0); gb.addColorStop(0, '#7F8389'); gb.addColorStop(1, '#27292D');
       c.fillStyle = gb; c.fill();
     }
     circle(c, px, 0, 6, PAL.darker);
@@ -201,7 +201,7 @@ function drawSeesaw(stage, {d, a = 1, labA = 1, prodA = 0}) {
   withAlpha(c, a, () => {
     poly(c, [[X, Y + 6], [X - 26, Y + 50], [X + 26, Y + 50]], PAL.dark, rgba(PAL.muted, 0.9), 2);   // 받침
     c.save(); c.translate(X, Y); c.rotate(tilt);
-    const gb = c.createLinearGradient(0, -7, 0, 7); gb.addColorStop(0, '#9FB6BD'); gb.addColorStop(1, PAL.dark);
+    const gb = c.createLinearGradient(0, -7, 0, 7); gb.addColorStop(0, '#B1B4B9'); gb.addColorStop(1, PAL.dark);
     rect(c, -170, -7, 640, 14, 5, gb);
     for (let k = -1; k <= 4; k++) if (k) {
       line(c, [[k * U, 7], [k * U, 17]], rgba(PAL.muted, 0.9), 2, {cap: 'butt'});

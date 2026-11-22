@@ -20,7 +20,9 @@ for (const f of FILES) {
 const OWNER = {};
 for (const m of MODS) for (const id of Object.keys(m.scenes || {})) OWNER[id] = m;
 
-export const theme = 'noturno';
+export const theme = 'film';
+// 질감 층의 편별 값(2026-11-22): 밝은 곳을 풍동(모형이 있는 위쪽)에 맞추고, 빛 4단계 '광원'을 쓴다 — 사용자의 단계 선택을 기다리는 값
+export const look = {background: {cx: 0.5, cy: 0.30, r0: 0.05, r1: 0.62, center: '#2B2A30'}, bloom: {tight_px: 6, tight_alpha: 0.45, wide_px: 32, wide_alpha: 0.32}};
 export const events = [];
 export const captionLayout = Object.assign({}, ...MODS.map(m => m.captionLayout || {}));
 
@@ -49,7 +51,7 @@ export const scenes = Object.fromEntries(IDS.map(id => [id, (stage, t, p, ctx) =
   fn(stage, t, p, withClock(ctx));
 }]));
 
-export function background(stage) { K.background(stage); }
+export function background(stage, t, ctx) { K.background(stage, ctx?.look); }   // ctx.look = render.mjs 가 loadLook(look) 한 값
 
 const fadeIn = (t, t0, d = 0.4) => smooth((t - t0) / d);
 const fadeOut = (t, t1, d = 0.4) => 1 - smooth((t - t1) / d);
