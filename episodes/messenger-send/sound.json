@@ -1,0 +1,1526 @@
+{
+ "version": 1,
+ "notes": "설명용 합성음입니다(녹음 아님). 각 사건은 scenes.mjs 의 ctx.events 와 같은 시각을 씁니다(신호 점의 위치는 이 사건 시각 사이를 보간). 기본음은 모두 700 Hz 아래(사용자 규칙). 난색(내 메시지) 보냄 520 Hz · 도착 392 Hz, 한색(읽음) 보냄 440 Hz · 도착 349 Hz.",
+ "ambient": {
+  "enabled": false
+ },
+ "events": [
+  {
+   "id": "hk_send",
+   "at": 0.05,
+   "kind": "tick",
+   "params": {
+    "freq": 520,
+    "decay": 0.06,
+    "gain_db": -18
+   },
+   "means": "결과 먼저: 내 전화 → 기지국 → 데이터센터 → 친구 전화 — send"
+  },
+  {
+   "id": "hk_ant",
+   "at": 0.45,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.05,
+    "gain_db": -20
+   },
+   "means": "결과 먼저: 내 전화 → 기지국 → 데이터센터 → 친구 전화 — ant"
+  },
+  {
+   "id": "hk_dc",
+   "at": 0.95,
+   "kind": "tone",
+   "params": {
+    "freq": 196,
+    "dur": 0.22,
+    "attack": 0.005,
+    "release": 0.15,
+    "gain_db": -18
+   },
+   "means": "결과 먼저: 내 전화 → 기지국 → 데이터센터 → 친구 전화 — dc"
+  },
+  {
+   "id": "hk_out",
+   "at": 1.1,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.05,
+    "gain_db": -21
+   },
+   "means": "결과 먼저: 내 전화 → 기지국 → 데이터센터 → 친구 전화 — out"
+  },
+  {
+   "id": "hk_ant2",
+   "at": 1.55,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.05,
+    "gain_db": -20
+   },
+   "means": "결과 먼저: 내 전화 → 기지국 → 데이터센터 → 친구 전화 — ant2"
+  },
+  {
+   "id": "hk_arr",
+   "at": 1.85,
+   "kind": "tone",
+   "params": {
+    "freq": 392,
+    "dur": 0.45,
+    "attack": 0.005,
+    "release": 0.35,
+    "gain_db": -17
+   },
+   "means": "결과 먼저: 내 전화 → 기지국 → 데이터센터 → 친구 전화 — arr"
+  },
+  {
+   "id": "hk_rf1",
+   "at": 0.07,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.4,
+    "f_start": 180,
+    "f_end": 520,
+    "q": 2.0,
+    "gain_db": -28
+   },
+   "means": "결과 먼저: 내 전화 → 기지국 → 데이터센터 → 친구 전화 — 전파(올라감)"
+  },
+  {
+   "id": "hk_rf2",
+   "at": 1.57,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.30000000000000004,
+    "f_start": 520,
+    "f_end": 180,
+    "q": 2.0,
+    "gain_db": -28
+   },
+   "means": "결과 먼저: 내 전화 → 기지국 → 데이터센터 → 친구 전화 — 전파(내려옴)"
+  },
+  {
+   "id": "hk_rewind",
+   "at": 2.0,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.7,
+    "f_start": 600,
+    "f_end": 160,
+    "q": 1.5,
+    "gain_db": -26
+   },
+   "means": "되감기"
+  },
+  {
+   "id": "h2_send",
+   "at": {
+    "sentence": "s02",
+    "word": "그사이",
+    "offset": 0.0
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 520,
+    "decay": 0.06,
+    "gain_db": -18
+   },
+   "means": "s02 같은 길을 천천히 — send"
+  },
+  {
+   "id": "h2_ant",
+   "at": {
+    "sentence": "s02",
+    "word": "그사이",
+    "offset": 0.7
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.05,
+    "gain_db": -20
+   },
+   "means": "s02 같은 길을 천천히 — ant"
+  },
+  {
+   "id": "h2_dc",
+   "at": {
+    "sentence": "s02",
+    "word": "그사이",
+    "offset": 1.7
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 196,
+    "dur": 0.22,
+    "attack": 0.005,
+    "release": 0.15,
+    "gain_db": -18
+   },
+   "means": "s02 같은 길을 천천히 — dc"
+  },
+  {
+   "id": "h2_out",
+   "at": {
+    "sentence": "s02",
+    "word": "그사이",
+    "offset": 2.0
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.05,
+    "gain_db": -21
+   },
+   "means": "s02 같은 길을 천천히 — out"
+  },
+  {
+   "id": "h2_ant2",
+   "at": {
+    "sentence": "s02",
+    "word": "그사이",
+    "offset": 3.0
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.05,
+    "gain_db": -20
+   },
+   "means": "s02 같은 길을 천천히 — ant2"
+  },
+  {
+   "id": "h2_arr",
+   "at": {
+    "sentence": "s02",
+    "word": "그사이",
+    "offset": 3.6
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 392,
+    "dur": 0.45,
+    "attack": 0.005,
+    "release": 0.35,
+    "gain_db": -17
+   },
+   "means": "s02 같은 길을 천천히 — arr"
+  },
+  {
+   "id": "h2_rf1",
+   "at": {
+    "sentence": "s02",
+    "word": "그사이",
+    "offset": 0.02
+   },
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.7,
+    "f_start": 180,
+    "f_end": 520,
+    "q": 2.0,
+    "gain_db": -28
+   },
+   "means": "s02 같은 길을 천천히 — 전파(올라감)"
+  },
+  {
+   "id": "h2_rf2",
+   "at": {
+    "sentence": "s02",
+    "word": "그사이",
+    "offset": 3.02
+   },
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.6000000000000001,
+    "f_start": 520,
+    "f_end": 180,
+    "q": 2.0,
+    "gain_db": -28
+   },
+   "means": "s02 같은 길을 천천히 — 전파(내려옴)"
+  },
+  {
+   "id": "hk_many",
+   "at": [
+    "s03",
+    0.0
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.05,
+    "gain_db": -30,
+    "repeat": 6,
+    "interval": 0.9
+   },
+   "means": "많은 사람의 메시지가 같은 길을 오감"
+  },
+  {
+   "id": "mo_0",
+   "at": [
+    "s04",
+    0.6
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 400,
+    "dur": 0.12,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -24
+   },
+   "means": "전신 손잡이가 눌린 동안의 전류(점·줄)"
+  },
+  {
+   "id": "mo_1",
+   "at": [
+    "s04",
+    0.82
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 400,
+    "dur": 0.36,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -24
+   },
+   "means": "전신 손잡이가 눌린 동안의 전류(점·줄)"
+  },
+  {
+   "id": "mo_2",
+   "at": [
+    "s04",
+    1.3
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 400,
+    "dur": 0.12,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -24
+   },
+   "means": "전신 손잡이가 눌린 동안의 전류(점·줄)"
+  },
+  {
+   "id": "mo_3",
+   "at": [
+    "s04",
+    1.52
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 400,
+    "dur": 0.12,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -24
+   },
+   "means": "전신 손잡이가 눌린 동안의 전류(점·줄)"
+  },
+  {
+   "id": "mo_4",
+   "at": [
+    "s04",
+    1.76
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 400,
+    "dur": 0.36,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -24
+   },
+   "means": "전신 손잡이가 눌린 동안의 전류(점·줄)"
+  },
+  {
+   "id": "mo_5",
+   "at": [
+    "s04",
+    2.24
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 400,
+    "dur": 0.36,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -24
+   },
+   "means": "전신 손잡이가 눌린 동안의 전류(점·줄)"
+  },
+  {
+   "id": "mo_6",
+   "at": [
+    "s04",
+    2.72
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 400,
+    "dur": 0.12,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -24
+   },
+   "means": "전신 손잡이가 눌린 동안의 전류(점·줄)"
+  },
+  {
+   "id": "mo_7",
+   "at": [
+    "s04",
+    2.94
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 400,
+    "dur": 0.36,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -24
+   },
+   "means": "전신 손잡이가 눌린 동안의 전류(점·줄)"
+  },
+  {
+   "id": "mo_8",
+   "at": [
+    "s04",
+    3.42
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 400,
+    "dur": 0.12,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -24
+   },
+   "means": "전신 손잡이가 눌린 동안의 전류(점·줄)"
+  },
+  {
+   "id": "ri_0",
+   "at": [
+    "s05",
+    0.5
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.084,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -26
+   },
+   "means": "중계국으로 들어오는 전보"
+  },
+  {
+   "id": "ri_1",
+   "at": [
+    "s05",
+    0.654
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.252,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -26
+   },
+   "means": "중계국으로 들어오는 전보"
+  },
+  {
+   "id": "ri_2",
+   "at": [
+    "s05",
+    0.99
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.084,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -26
+   },
+   "means": "중계국으로 들어오는 전보"
+  },
+  {
+   "id": "ri_3",
+   "at": [
+    "s05",
+    1.144
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.084,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -26
+   },
+   "means": "중계국으로 들어오는 전보"
+  },
+  {
+   "id": "ri_4",
+   "at": [
+    "s05",
+    1.312
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.252,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -26
+   },
+   "means": "중계국으로 들어오는 전보"
+  },
+  {
+   "id": "ri_5",
+   "at": [
+    "s05",
+    1.648
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.252,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -26
+   },
+   "means": "중계국으로 들어오는 전보"
+  },
+  {
+   "id": "ri_6",
+   "at": [
+    "s05",
+    1.984
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.084,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -26
+   },
+   "means": "중계국으로 들어오는 전보"
+  },
+  {
+   "id": "ri_7",
+   "at": [
+    "s05",
+    2.138
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.252,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -26
+   },
+   "means": "중계국으로 들어오는 전보"
+  },
+  {
+   "id": "ri_8",
+   "at": [
+    "s05",
+    2.474
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 330,
+    "dur": 0.084,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -26
+   },
+   "means": "중계국으로 들어오는 전보"
+  },
+  {
+   "id": "ro_0",
+   "at": {
+    "sentence": "s05",
+    "word": "알맞은",
+    "offset": -0.2
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 400,
+    "dur": 0.084,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -24
+   },
+   "means": "다 받은 뒤 알맞은 전선으로 다시 나감"
+  },
+  {
+   "id": "ro_1",
+   "at": {
+    "sentence": "s05",
+    "word": "알맞은",
+    "offset": -0.046
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 400,
+    "dur": 0.252,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -24
+   },
+   "means": "다 받은 뒤 알맞은 전선으로 다시 나감"
+  },
+  {
+   "id": "ro_2",
+   "at": {
+    "sentence": "s05",
+    "word": "알맞은",
+    "offset": 0.29
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 400,
+    "dur": 0.084,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -24
+   },
+   "means": "다 받은 뒤 알맞은 전선으로 다시 나감"
+  },
+  {
+   "id": "ro_3",
+   "at": {
+    "sentence": "s05",
+    "word": "알맞은",
+    "offset": 0.444
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 400,
+    "dur": 0.084,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -24
+   },
+   "means": "다 받은 뒤 알맞은 전선으로 다시 나감"
+  },
+  {
+   "id": "ro_4",
+   "at": {
+    "sentence": "s05",
+    "word": "알맞은",
+    "offset": 0.612
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 400,
+    "dur": 0.252,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -24
+   },
+   "means": "다 받은 뒤 알맞은 전선으로 다시 나감"
+  },
+  {
+   "id": "ro_5",
+   "at": {
+    "sentence": "s05",
+    "word": "알맞은",
+    "offset": 0.948
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 400,
+    "dur": 0.252,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -24
+   },
+   "means": "다 받은 뒤 알맞은 전선으로 다시 나감"
+  },
+  {
+   "id": "ro_6",
+   "at": {
+    "sentence": "s05",
+    "word": "알맞은",
+    "offset": 1.284
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 400,
+    "dur": 0.084,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -24
+   },
+   "means": "다 받은 뒤 알맞은 전선으로 다시 나감"
+  },
+  {
+   "id": "ro_7",
+   "at": {
+    "sentence": "s05",
+    "word": "알맞은",
+    "offset": 1.438
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 400,
+    "dur": 0.252,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -24
+   },
+   "means": "다 받은 뒤 알맞은 전선으로 다시 나감"
+  },
+  {
+   "id": "ro_8",
+   "at": {
+    "sentence": "s05",
+    "word": "알맞은",
+    "offset": 1.774
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 400,
+    "dur": 0.084,
+    "attack": 0.005,
+    "release": 0.02,
+    "gain_db": -24
+   },
+   "means": "다 받은 뒤 알맞은 전선으로 다시 나감"
+  },
+  {
+   "id": "og_net",
+   "at": {
+    "sentence": "s06",
+    "word": "인터넷으로",
+    "offset": -0.1
+   },
+   "kind": "whoosh",
+   "params": {
+    "dur": 1.6,
+    "f_start": 220,
+    "f_end": 480,
+    "q": 2.0,
+    "gain_db": -28
+   },
+   "means": "전화 → 서버 → 전화(인터넷)"
+  },
+  {
+   "id": "es_send",
+   "at": [
+    "s08",
+    0.3
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 520,
+    "decay": 0.06,
+    "gain_db": -18
+   },
+   "means": "곧장이 아니라 서버를 거쳐 — send"
+  },
+  {
+   "id": "es_ant",
+   "at": [
+    "s08",
+    0.9
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.05,
+    "gain_db": -20
+   },
+   "means": "곧장이 아니라 서버를 거쳐 — ant"
+  },
+  {
+   "id": "es_dc",
+   "at": [
+    "s08",
+    1.9
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 196,
+    "dur": 0.22,
+    "attack": 0.005,
+    "release": 0.15,
+    "gain_db": -18
+   },
+   "means": "곧장이 아니라 서버를 거쳐 — dc"
+  },
+  {
+   "id": "es_out",
+   "at": [
+    "s08",
+    2.2
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.05,
+    "gain_db": -21
+   },
+   "means": "곧장이 아니라 서버를 거쳐 — out"
+  },
+  {
+   "id": "es_ant2",
+   "at": [
+    "s08",
+    3.2
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.05,
+    "gain_db": -20
+   },
+   "means": "곧장이 아니라 서버를 거쳐 — ant2"
+  },
+  {
+   "id": "es_arr",
+   "at": [
+    "s08",
+    3.8
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 392,
+    "dur": 0.45,
+    "attack": 0.005,
+    "release": 0.35,
+    "gain_db": -17
+   },
+   "means": "곧장이 아니라 서버를 거쳐 — arr"
+  },
+  {
+   "id": "es_rf1",
+   "at": [
+    "s08",
+    0.32
+   ],
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.6,
+    "f_start": 180,
+    "f_end": 520,
+    "q": 2.0,
+    "gain_db": -28
+   },
+   "means": "곧장이 아니라 서버를 거쳐 — 전파(올라감)"
+  },
+  {
+   "id": "es_rf2",
+   "at": [
+    "s08",
+    3.22
+   ],
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.6000000000000001,
+    "f_start": 520,
+    "f_end": 180,
+    "q": 2.0,
+    "gain_db": -28
+   },
+   "means": "곧장이 아니라 서버를 거쳐 — 전파(내려옴)"
+  },
+  {
+   "id": "enc_num",
+   "at": {
+    "sentence": "s09",
+    "word": "사만사천삼십이번",
+    "offset": -0.5
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 247,
+    "dur": 0.25,
+    "gain_db": -20
+   },
+   "means": "글자 → 번호 44032"
+  },
+  {
+   "id": "enc_bits",
+   "at": {
+    "sentence": "s10",
+    "word": "영과",
+    "offset": 0.0
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 600,
+    "decay": 0.03,
+    "gain_db": -28,
+    "repeat": 24,
+    "interval": 0.06
+   },
+   "means": "0과 1 스물네 칸이 하나씩"
+  },
+  {
+   "id": "enc_lock",
+   "at": {
+    "sentence": "s11",
+    "word": "암호로",
+    "offset": 0.0
+   },
+   "kind": "noise",
+   "params": {
+    "dur": 0.5,
+    "low": 200,
+    "high": 650,
+    "attack": 0.02,
+    "release": 0.3,
+    "gain_db": -26
+   },
+   "means": "잠금 — 무늬가 바뀜"
+  },
+  {
+   "id": "enc_pack",
+   "at": {
+    "sentence": "s11",
+    "word": "패킷에",
+    "offset": -0.2
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 220,
+    "dur": 0.2,
+    "gain_db": -20
+   },
+   "means": "패킷에 담김"
+  },
+  {
+   "id": "enc_addr",
+   "at": {
+    "sentence": "s12",
+    "word": "도착",
+    "offset": 0.0
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 350,
+    "decay": 0.06,
+    "gain_db": -19
+   },
+   "means": "도착 주소: 서버"
+  },
+  {
+   "id": "rt_send",
+   "at": [
+    "s13",
+    0.4
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 520,
+    "decay": 0.06,
+    "gain_db": -18
+   },
+   "means": "패킷이 전파로 떠남"
+  },
+  {
+   "id": "rt_rf",
+   "at": [
+    "s13",
+    0.42
+   ],
+   "kind": "whoosh",
+   "params": {
+    "dur": 1.6,
+    "f_start": 180,
+    "f_end": 520,
+    "q": 2.0,
+    "gain_db": -28
+   },
+   "means": "전파"
+  },
+  {
+   "id": "rt_ant",
+   "at": {
+    "sentence": "s13",
+    "word": "안테나까지",
+    "offset": 0.4
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.05,
+    "gain_db": -20
+   },
+   "means": "기지국이 받음"
+  },
+  {
+   "id": "rt_dc",
+   "at": {
+    "sentence": "s14",
+    "word": "달립니다",
+    "offset": 0.3
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 196,
+    "dur": 0.22,
+    "attack": 0.005,
+    "release": 0.15,
+    "gain_db": -18
+   },
+   "means": "광케이블 끝 데이터센터에 닿음"
+  },
+  {
+   "id": "rt_fiber",
+   "at": [
+    "s15",
+    -0.2
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.04,
+    "gain_db": -24,
+    "repeat": 5,
+    "interval": 1.0
+   },
+   "means": "광케이블 확대: 10 km 눈금마다"
+  },
+  {
+   "id": "sv_in",
+   "at": [
+    "server",
+    1.2
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 165,
+    "dur": 0.3,
+    "gain_db": -19
+   },
+   "means": "서버가 패킷을 받음"
+  },
+  {
+   "id": "sv_find",
+   "at": [
+    "s17",
+    0.2
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 500,
+    "decay": 0.03,
+    "gain_db": -27,
+    "repeat": 5,
+    "interval": 0.18
+   },
+   "means": "받는 사람 찾기"
+  },
+  {
+   "id": "sv_check",
+   "at": {
+    "sentence": "s17",
+    "word": "연결돼",
+    "offset": -0.1
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 294,
+    "dur": 0.3,
+    "gain_db": -21
+   },
+   "means": "연결 상태 확인"
+  },
+  {
+   "id": "d1_out",
+   "at": {
+    "sentence": "s18",
+    "word": "통로로",
+    "offset": 0.0
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.05,
+    "gain_db": -21
+   },
+   "means": "① 열린 통로로 내려보냄"
+  },
+  {
+   "id": "d1_ant",
+   "at": {
+    "sentence": "s18",
+    "word": "통로로",
+    "offset": 0.9
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.05,
+    "gain_db": -20
+   },
+   "means": "① 기지국"
+  },
+  {
+   "id": "d1_arr",
+   "at": {
+    "sentence": "s18",
+    "word": "통로로",
+    "offset": 1.5
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 392,
+    "dur": 0.45,
+    "attack": 0.005,
+    "release": 0.35,
+    "gain_db": -17
+   },
+   "means": "① 도착"
+  },
+  {
+   "id": "d2_noti",
+   "at": [
+    "s19",
+    0.8
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.05,
+    "gain_db": -21
+   },
+   "means": "② 서버 → 알림 서버"
+  },
+  {
+   "id": "d2_wake",
+   "at": [
+    "s19",
+    2.7
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.05,
+    "gain_db": -19,
+    "repeat": 2,
+    "interval": 0.14
+   },
+   "means": "② 알림이 전화를 깨움"
+  },
+  {
+   "id": "d2_out",
+   "at": [
+    "s19",
+    3.2
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.05,
+    "gain_db": -21
+   },
+   "means": "② 깨어난 앱에 메시지"
+  },
+  {
+   "id": "d2_ant",
+   "at": [
+    "s19",
+    4.1
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.05,
+    "gain_db": -20
+   },
+   "means": "② 기지국"
+  },
+  {
+   "id": "d2_arr",
+   "at": [
+    "s19",
+    4.7
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 392,
+    "dur": 0.45,
+    "attack": 0.005,
+    "release": 0.35,
+    "gain_db": -17
+   },
+   "means": "② 도착"
+  },
+  {
+   "id": "d3_hold",
+   "at": [
+    "s20",
+    0.3
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 147,
+    "dur": 0.35,
+    "gain_db": -19
+   },
+   "means": "③ 서버가 맡아 둠"
+  },
+  {
+   "id": "d3_on",
+   "at": {
+    "sentence": "s20",
+    "word": "다시",
+    "offset": 0.0
+   },
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     196,
+     294
+    ],
+    "dur": 0.6,
+    "attack": 0.2,
+    "gain_db": -22
+   },
+   "means": "③ 전화가 켜짐(건너뜀)"
+  },
+  {
+   "id": "d3_out",
+   "at": {
+    "sentence": "s20",
+    "word": "다시",
+    "offset": 0.4
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.05,
+    "gain_db": -21
+   },
+   "means": "③ 건넴"
+  },
+  {
+   "id": "d3_ant",
+   "at": {
+    "sentence": "s20",
+    "word": "다시",
+    "offset": 1.3
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.05,
+    "gain_db": -20
+   },
+   "means": "③ 기지국"
+  },
+  {
+   "id": "d3_arr",
+   "at": {
+    "sentence": "s20",
+    "word": "다시",
+    "offset": 1.9
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 392,
+    "dur": 0.45,
+    "attack": 0.005,
+    "release": 0.35,
+    "gain_db": -17
+   },
+   "means": "③ 도착"
+  },
+  {
+   "id": "rd_open",
+   "at": [
+    "s21",
+    0.3
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.05,
+    "gain_db": -22
+   },
+   "means": "친구가 대화방을 엶"
+  },
+  {
+   "id": "rd_send",
+   "at": {
+    "sentence": "s21",
+    "word": "짧은",
+    "offset": 0.0
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.06,
+    "gain_db": -18
+   },
+   "means": "읽음 신호가 떠남"
+  },
+  {
+   "id": "rd_ant",
+   "at": {
+    "sentence": "s21",
+    "word": "짧은",
+    "offset": 0.6
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.05,
+    "gain_db": -20
+   },
+   "means": "기지국"
+  },
+  {
+   "id": "rd_dc",
+   "at": {
+    "sentence": "s21",
+    "word": "짧은",
+    "offset": 1.8
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 196,
+    "dur": 0.22,
+    "attack": 0.005,
+    "release": 0.15,
+    "gain_db": -18
+   },
+   "means": "서버"
+  },
+  {
+   "id": "rd_out",
+   "at": [
+    "s22",
+    0.3
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.05,
+    "gain_db": -21
+   },
+   "means": "서버에서 내 전화로"
+  },
+  {
+   "id": "rd_ant2",
+   "at": {
+    "sentence": "s22",
+    "word": "닿는",
+    "offset": -0.6
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.05,
+    "gain_db": -20
+   },
+   "means": "기지국"
+  },
+  {
+   "id": "rd_arr",
+   "at": {
+    "sentence": "s22",
+    "word": "사라집니다",
+    "offset": -0.3
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 349,
+    "dur": 0.35,
+    "attack": 0.005,
+    "release": 0.25,
+    "gain_db": -18
+   },
+   "means": "숫자 1이 사라짐"
+  },
+  {
+   "id": "my_off",
+   "at": {
+    "sentence": "s23",
+    "word": "불이",
+    "offset": 0.0
+   },
+   "kind": "chirp",
+   "params": {
+    "points": [
+     [
+      0,
+      300,
+      0.5
+     ],
+     [
+      1.0,
+      80,
+      0.0
+     ]
+    ],
+    "gain_db": -18
+   },
+   "means": "데이터센터 서버가 꺼짐"
+  },
+  {
+   "id": "my_send",
+   "at": {
+    "sentence": "s23",
+    "word": "메시지가",
+    "offset": -0.6
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 520,
+    "decay": 0.06,
+    "gain_db": -19
+   },
+   "means": "메시지를 보냄"
+  },
+  {
+   "id": "my_stop",
+   "at": {
+    "sentence": "s23",
+    "word": "메시지가",
+    "offset": 1.0
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 150,
+    "decay": 0.08,
+    "gain_db": -18
+   },
+   "means": "서버 앞에서 멈춤"
+  },
+  {
+   "id": "cl_send",
+   "at": [
+    "s25",
+    0.2
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 520,
+    "decay": 0.06,
+    "gain_db": -18
+   },
+   "means": "정리 — 서버를 거쳐 친구 전화로 — send"
+  },
+  {
+   "id": "cl_ant",
+   "at": [
+    "s25",
+    0.8
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.05,
+    "gain_db": -20
+   },
+   "means": "정리 — 서버를 거쳐 친구 전화로 — ant"
+  },
+  {
+   "id": "cl_dc",
+   "at": [
+    "s25",
+    1.7
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 196,
+    "dur": 0.22,
+    "attack": 0.005,
+    "release": 0.15,
+    "gain_db": -18
+   },
+   "means": "정리 — 서버를 거쳐 친구 전화로 — dc"
+  },
+  {
+   "id": "cl_out",
+   "at": [
+    "s25",
+    2.0
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.05,
+    "gain_db": -21
+   },
+   "means": "정리 — 서버를 거쳐 친구 전화로 — out"
+  },
+  {
+   "id": "cl_ant2",
+   "at": [
+    "s25",
+    3.0
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.05,
+    "gain_db": -20
+   },
+   "means": "정리 — 서버를 거쳐 친구 전화로 — ant2"
+  },
+  {
+   "id": "cl_arr",
+   "at": [
+    "s25",
+    3.6
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 392,
+    "dur": 0.45,
+    "attack": 0.005,
+    "release": 0.35,
+    "gain_db": -17
+   },
+   "means": "정리 — 서버를 거쳐 친구 전화로 — arr"
+  },
+  {
+   "id": "cl_rf1",
+   "at": [
+    "s25",
+    0.22
+   ],
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.6,
+    "f_start": 180,
+    "f_end": 520,
+    "q": 2.0,
+    "gain_db": -28
+   },
+   "means": "정리 — 서버를 거쳐 친구 전화로 — 전파(올라감)"
+  },
+  {
+   "id": "cl_rf2",
+   "at": [
+    "s25",
+    3.02
+   ],
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.6000000000000001,
+    "f_start": 520,
+    "f_end": 180,
+    "q": 2.0,
+    "gain_db": -28
+   },
+   "means": "정리 — 서버를 거쳐 친구 전화로 — 전파(내려옴)"
+  }
+ ]
+}
