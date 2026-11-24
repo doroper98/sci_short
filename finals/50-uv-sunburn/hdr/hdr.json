@@ -1,0 +1,29 @@
+{
+  "file": "uv-sunburn.hdr.mp4",
+  "bytes": 18180109,
+  "sha256": "b93399e6f8b6110e77ceda3b8b295e81f04fc95b97ac039a24847e5670a3de52",
+  "created": "2026-11-24T04:51:05+00:00",
+  "codec": "hevc Main 10",
+  "pix_fmt": "yuv420p10le",
+  "color": "bt2020 / smpte2084 (PQ) / bt2020nc",
+  "duration": 171.0,
+  "settings": {
+    "sdr_white_nits": 203,
+    "peak_boost": 4,
+    "gate": [
+      0.4,
+      0.7
+    ],
+    "crf": 18,
+    "preset": "medium",
+    "max_cll": 812,
+    "max_fall": 300
+  },
+  "frames": 5130,
+  "lit_frames": 3380,
+  "sdr_white_code": 573,
+  "peak_code": 729,
+  "peak_nits_estimate": 1069,
+  "encode_seconds": 195.8,
+  "note": "peak_nits_estimate 는 무채색으로 보고 luma 코드에서 어림한 값"
+}
