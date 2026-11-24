@@ -723,6 +723,25 @@
       "hdr_bytes": 18180109
     },
     {
+      "number": 53,
+      "slug": "messenger-send",
+      "title": "카톡 — 보내기를 누르면 메시지는 어디를 거쳐 갈까",
+      "status": "final",
+      "folder": "finals/53-messenger-send",
+      "video": "finals/53-messenger-send/messenger-send.mp4",
+      "duration_sec": 171.0,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 18799104,
+      "sha256": "8ebd505d4a99c152556b5072100ea4dbf34120dcf6855b3028da21ee76e55b04",
+      "video_date": "uncommitted",
+      "episode_code": "episodes/messenger-send",
+      "upload_info": "finals/53-messenger-send/upload.md",
+      "thumbnail": "0초 프레임(숯색 바탕의 책상 위에 나란히 선 이름 없는 휴대전화 두 대 — 왼쪽 전화에 막 보낸 말풍선 \"가자\"와 숫자 1. 흰 물음 두 줄 \"옆자리 친구에게 보낸 / 메시지는 어디를 거쳐 갈까?\"와 그 아래 가장 큰 주황 주제어 \"카톡\". 답은 쓰지 않음. 로고·실제 앱 화면 없음)",
+      "hdr": "finals/53-messenger-send/hdr/messenger-send.hdr.mp4",
+      "hdr_bytes": 13593468
+    },
+    {
       "number": 54,
       "slug": "clouds",
       "title": "구름 — 구름은 왜 하얗고 왜 떠 있을까",
