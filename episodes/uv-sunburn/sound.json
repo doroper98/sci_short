@@ -1,0 +1,725 @@
+{
+ "version": 1,
+ "notes": "설명용 합성음입니다(녹음 아님). 각 사건은 scenes.mjs 의 ctx.events 와 같은 시각을 씁니다. 기본음은 모두 700 Hz 아래(사용자 규칙). 되풀이 사건은 repeat/interval 하나로 적고 scenes.mjs 가 같은 값으로 셉니다.",
+ "ambient": {
+  "enabled": false
+ },
+ "events": [
+  {
+   "id": "hk_sun",
+   "at": 0.0,
+   "kind": "env_noise",
+   "params": {
+    "points": [
+     [
+      0,
+      0.6
+     ],
+     [
+      1.8,
+      0.6
+     ],
+     [
+      2.1,
+      0
+     ]
+    ],
+    "low": 160,
+    "high": 520,
+    "gain_db": -24
+   },
+   "means": "0~2초 햇볕(자외선 알갱이)이 내리쬠 — 결과 먼저"
+  },
+  {
+   "id": "hk_red",
+   "at": 0.25,
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     131,
+     196
+    ],
+    "dur": 1.0,
+    "attack": 0.4,
+    "gain_db": -22
+   },
+   "means": "혈관이 넓어져 피부가 붉어짐(0~1초)"
+  },
+  {
+   "id": "hk_tan",
+   "at": 1.15,
+   "kind": "tone",
+   "params": {
+    "freq": 98,
+    "dur": 0.9,
+    "attack": 0.2,
+    "release": 0.4,
+    "gain_db": -20
+   },
+   "means": "멜라닌이 핵 위에 모여 피부가 짙어짐(1~2초)"
+  },
+  {
+   "id": "hk_rew",
+   "at": 2.2,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.8,
+    "f_start": 560,
+    "f_end": 160,
+    "q": 1.5,
+    "gain_db": -24
+   },
+   "means": "처음 상태로 되감기"
+  },
+  {
+   "id": "hk_redrise",
+   "at": {
+    "sentence": "s02",
+    "word": "빨개지는"
+   },
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     147,
+     220
+    ],
+    "dur": 1.6,
+    "attack": 0.6,
+    "gain_db": -24
+   },
+   "means": "시간 축의 붉어짐 곡선이 오름"
+  },
+  {
+   "id": "hk_tanrise",
+   "at": {
+    "sentence": "s02",
+    "word": "검어지는"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 98,
+    "dur": 1.6,
+    "attack": 0.6,
+    "release": 0.6,
+    "gain_db": -22
+   },
+   "means": "시간 축의 검어짐 곡선이 오름"
+  },
+  {
+   "id": "prism",
+   "at": [
+    "s03",
+    0.3
+   ],
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     196,
+     294
+    ],
+    "dur": 1.4,
+    "attack": 0.5,
+    "gain_db": -26
+   },
+   "means": "햇빛이 프리즘에서 색 띠로 갈림"
+  },
+  {
+   "id": "thermo",
+   "at": {
+    "sentence": "s03",
+    "word": "보이지"
+   },
+   "kind": "chirp",
+   "params": {
+    "points": [
+     [
+      0,
+      170,
+      0.0
+     ],
+     [
+      0.3,
+      180,
+      0.5
+     ],
+     [
+      2.0,
+      300,
+      0.5
+     ],
+     [
+      2.4,
+      300,
+      0.0
+     ]
+    ],
+    "gain_db": -26
+   },
+   "means": "빨간빛 바깥의 온도계가 오름"
+  },
+  {
+   "id": "agcl",
+   "at": {
+    "sentence": "s04",
+    "word": "염화은을"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 520,
+    "repeat": 6,
+    "interval": 0.16,
+    "gain_db": -22
+   },
+   "means": "색 자리마다 염화은 조각을 놓음"
+  },
+  {
+   "id": "dark_uv",
+   "at": [
+    "s05",
+    0.2
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "repeat": 8,
+    "interval": 0.55,
+    "gain_db": -22
+   },
+   "means": "보라 바깥의 염화은이 가장 빨리 검어짐(검기 한 칸마다)"
+  },
+  {
+   "id": "uvname",
+   "at": {
+    "sentence": "s06",
+    "word": "자외선입니다"
+   },
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     220,
+     330
+    ],
+    "dur": 1.3,
+    "attack": 0.4,
+    "gain_db": -24
+   },
+   "means": "보이지 않는 빛 = 자외선"
+  },
+  {
+   "id": "dial",
+   "at": {
+    "sentence": "s07",
+    "word": "짧을수록"
+   },
+   "kind": "chirp",
+   "params": {
+    "points": [
+     [
+      0,
+      150,
+      0
+     ],
+     [
+      0.2,
+      150,
+      0.5
+     ],
+     [
+      2.6,
+      420,
+      0.5
+     ],
+     [
+      3.0,
+      420,
+      0
+     ]
+    ],
+    "gain_db": -26
+   },
+   "means": "파장을 줄이면 알갱이 하나의 에너지가 커짐"
+  },
+  {
+   "id": "ir_hit",
+   "at": {
+    "sentence": "s08",
+    "word": "분자를"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 110,
+    "dur": 0.5,
+    "attack": 0.02,
+    "release": 0.4,
+    "gain_db": -20
+   },
+   "means": "적외선 알갱이가 분자에 닿음"
+  },
+  {
+   "id": "ir_shake",
+   "at": {
+    "sentence": "s08",
+    "word": "흔들어"
+   },
+   "kind": "env_noise",
+   "params": {
+    "points": [
+     [
+      0,
+      0
+     ],
+     [
+      0.2,
+      0.6
+     ],
+     [
+      1.6,
+      0.5
+     ],
+     [
+      2.0,
+      0
+     ]
+    ],
+    "low": 90,
+    "high": 300,
+    "gain_db": -24
+   },
+   "means": "분자가 흔들림(온도만 오름)"
+  },
+  {
+   "id": "uv_hit",
+   "at": {
+    "sentence": "s08",
+    "word": "자외선"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 620,
+    "gain_db": -18
+   },
+   "means": "자외선 알갱이가 분자에 닿음"
+  },
+  {
+   "id": "bond",
+   "at": {
+    "sentence": "s08",
+    "word": "결합을"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.12,
+    "gain_db": -16
+   },
+   "means": "결합이 바뀜"
+  },
+  {
+   "id": "atm",
+   "at": {
+    "sentence": "s10",
+    "word": "대기가"
+   },
+   "kind": "noise",
+   "params": {
+    "dur": 0.5,
+    "low": 120,
+    "high": 500,
+    "gain_db": -24
+   },
+   "means": "대기에서 C·B 알갱이가 멈춤"
+  },
+  {
+   "id": "ground95",
+   "at": {
+    "sentence": "s11",
+    "word": "구십오퍼센트쯤은"
+   },
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     196,
+     247
+    ],
+    "dur": 1.2,
+    "attack": 0.3,
+    "gain_db": -26
+   },
+   "means": "땅에 닿은 비율 막대 A 95%"
+  },
+  {
+   "id": "b_epi",
+   "at": [
+    "s12",
+    0.2
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "repeat": 6,
+    "interval": 0.33,
+    "gain_db": -24
+   },
+   "means": "자외선 B 가 표피에서 멈춤"
+  },
+  {
+   "id": "a_derm",
+   "at": {
+    "sentence": "s12",
+    "word": "에이는"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "repeat": 6,
+    "interval": 0.33,
+    "gain_db": -24
+   },
+   "means": "자외선 A 가 진피까지"
+  },
+  {
+   "id": "absorb",
+   "at": {
+    "sentence": "s13",
+    "word": "흡수하면"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 620,
+    "gain_db": -18
+   },
+   "means": "DNA 가 자외선 B 알갱이를 흡수"
+  },
+  {
+   "id": "dimer",
+   "at": {
+    "sentence": "s13",
+    "word": "들러붙습니다"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.14,
+    "gain_db": -16
+   },
+   "means": "이웃한 두 염기가 들러붙음"
+  },
+  {
+   "id": "stall",
+   "at": {
+    "sentence": "s14",
+    "word": "막아"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 165,
+    "dur": 0.5,
+    "release": 0.3,
+    "gain_db": -22
+   },
+   "means": "읽는 장치가 들러붙은 자리에서 멈춤"
+  },
+  {
+   "id": "cut",
+   "at": {
+    "sentence": "s14",
+    "word": "잘라"
+   },
+   "kind": "noise",
+   "params": {
+    "dur": 0.25,
+    "low": 200,
+    "high": 650,
+    "gain_db": -24
+   },
+   "means": "들러붙은 자리를 잘라 냄"
+  },
+  {
+   "id": "fill",
+   "at": {
+    "sentence": "s14",
+    "word": "고칩니다"
+   },
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     196,
+     294
+    ],
+    "dur": 1.0,
+    "attack": 0.3,
+    "gain_db": -26
+   },
+   "means": "새로 채워 고침"
+  },
+  {
+   "id": "many",
+   "at": [
+    "s15",
+    0.1
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 500,
+    "repeat": 10,
+    "interval": 0.14,
+    "gain_db": -26
+   },
+   "means": "들러붙은 자리가 많아짐"
+  },
+  {
+   "id": "die",
+   "at": {
+    "sentence": "s15",
+    "word": "죽어"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "glide_to": 110,
+    "dur": 1.2,
+    "release": 0.5,
+    "gain_db": -22
+   },
+   "means": "세포가 쪼그라들어 사라짐"
+  },
+  {
+   "id": "signal",
+   "at": [
+    "s16",
+    0.1
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 560,
+    "repeat": 8,
+    "interval": 0.32,
+    "gain_db": -26
+   },
+   "means": "다친 세포가 신호를 내보냄"
+  },
+  {
+   "id": "widen",
+   "at": {
+    "sentence": "s16",
+    "word": "넓어지면서"
+   },
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     131,
+     196
+    ],
+    "dur": 1.6,
+    "attack": 0.5,
+    "gain_db": -22
+   },
+   "means": "혈관이 넓어짐"
+  },
+  {
+   "id": "peak",
+   "at": {
+    "sentence": "s17",
+    "word": "가장"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 147,
+    "dur": 0.8,
+    "release": 0.4,
+    "gain_db": -22
+   },
+   "means": "붉어짐이 가장 심한 때"
+  },
+  {
+   "id": "wake",
+   "at": {
+    "sentence": "s18",
+    "word": "깨워"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 110,
+    "glide_to": 165,
+    "dur": 0.7,
+    "gain_db": -22
+   },
+   "means": "멜라닌 세포가 깨어남"
+  },
+  {
+   "id": "grain",
+   "at": {
+    "sentence": "s18",
+    "word": "색소를"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 200,
+    "repeat": 6,
+    "interval": 0.25,
+    "gain_db": -24
+   },
+   "means": "멜라닌 알갱이가 만들어짐"
+  },
+  {
+   "id": "pass",
+   "at": [
+    "s19",
+    0.2
+   ],
+   "kind": "whoosh",
+   "params": {
+    "dur": 1.0,
+    "f_start": 180,
+    "f_end": 420,
+    "q": 1.5,
+    "gain_db": -28
+   },
+   "means": "알갱이가 이웃 세포로 건네짐"
+  },
+  {
+   "id": "cap",
+   "at": {
+    "sentence": "s19",
+    "word": "양산처럼"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.12,
+    "gain_db": -20
+   },
+   "means": "핵 위에 모자처럼 모임"
+  },
+  {
+   "id": "block",
+   "at": {
+    "sentence": "s19",
+    "word": "흡수합니다"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "repeat": 4,
+    "interval": 0.3,
+    "gain_db": -24
+   },
+   "means": "자외선 알갱이가 멜라닌에서 멈춤"
+  },
+  {
+   "id": "tanrise",
+   "at": [
+    "s20",
+    0.1
+   ],
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     98,
+     147
+    ],
+    "dur": 2.0,
+    "attack": 0.6,
+    "gain_db": -24
+   },
+   "means": "시간 축의 검어짐 곡선이 오름"
+  },
+  {
+   "id": "cmp",
+   "at": [
+    "s21",
+    0.2
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 420,
+    "repeat": 8,
+    "interval": 0.4,
+    "gain_db": -26
+   },
+   "means": "같은 자외선이 두 피부에 — 핵에 닿은 알갱이"
+  },
+  {
+   "id": "x24",
+   "at": {
+    "sentence": "s21",
+    "word": "두"
+   },
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     165,
+     247
+    ],
+    "dur": 1.2,
+    "attack": 0.3,
+    "gain_db": -24
+   },
+   "means": "빨개지기까지의 시간 막대가 두~네 배"
+  },
+  {
+   "id": "snow",
+   "at": {
+    "sentence": "s22",
+    "word": "눈이"
+   },
+   "kind": "noise",
+   "params": {
+    "dur": 0.4,
+    "low": 200,
+    "high": 600,
+    "gain_db": -26
+   },
+   "means": "땅을 풀밭에서 눈으로 바꿈"
+  },
+  {
+   "id": "refl",
+   "at": [
+    "s22",
+    3.0
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "repeat": 6,
+    "interval": 0.3,
+    "gain_db": -26
+   },
+   "means": "눈에서 되비친 알갱이가 피부에 닿음"
+  },
+  {
+   "id": "years",
+   "at": [
+    "s23",
+    0.1
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 200,
+    "repeat": 5,
+    "interval": 0.7,
+    "gain_db": -24
+   },
+   "means": "해마다 남는 손상 표식"
+  },
+  {
+   "id": "end",
+   "at": [
+    "s24",
+    0.0
+   ],
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     147,
+     220,
+     294
+    ],
+    "dur": 3.0,
+    "attack": 0.8,
+    "gain_db": -28
+   },
+   "means": "결론"
+  }
+ ]
+}
