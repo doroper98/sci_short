@@ -18,5 +18,7 @@ SCISHORT_ROOT=$PWD node episodes/seismic-waves/render.mjs --stills --safe   # �
 
 HDR 판(2026-11-15): 빛나는 것(에너지·신호)은 `scenes.mjs` 에서 `lit(stage, c => …)` 안에서 그립니다. `hdr` 단계가 `outputs/seismic-waves/final/hdr/seismic-waves.hdr.mp4` 를 만듭니다. 규칙은 [docs/HDR.md](../../docs/HDR.md).
 
-`scenes.mjs`의 장면 id는 `script.json`의 `scene` 값과 같아야 합니다. 예시는 "얼음은 왜 물에 뜰까"이며 내용은 바꿉니다.
+`scenes.mjs`의 장면 id는 `script.json`의 `scene` 값과 같아야 합니다.
+
+이 편만의 파일: `model.mjs`(같은 시계 — 실행(미끄러짐)마다의 시각·배율, 파의 변위 해석해, 지진계 합성 기록, 경보 시각, 사슬 펄스 시각, 지구 단면 광선)와 `make_sound.mjs`(`sound.json` 을 `model.mjs` 에서 만든다 — `sound.json` 은 손으로 고치지 않는다: `node episodes/seismic-waves/make_sound.mjs`).
 자세한 순서와 API는 [pipeline/README.md](../../pipeline/README.md).

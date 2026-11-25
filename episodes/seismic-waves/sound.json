@@ -1,61 +1,1795 @@
 {
-  "version": 1,
-  "notes": "설명용 합성음입니다(녹음 아님). 각 사건은 scenes.mjs의 ctx.events와 같은 시각을 씁니다. at 문법은 pipeline/README.md 참고.",
-  "events": [
-    {
-      "id": "bond",
-      "at": {
-        "sentence": "s03",
-        "word": "수소 결합"
-      },
-      "kind": "tick",
+ "version": 1,
+ "notes": "설명용 합성음(녹음 아님). make_sound.mjs 가 model.mjs 의 같은 시계로 만든다 — 손으로 고치지 말 것. 기본음·잡음 대역 모두 700 Hz 아래.",
+ "ambient": {
+  "enabled": false
+ },
+ "events": [
+  {
+   "id": "h0_slip",
+   "at": 0,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
       "params": {
-        "freq": 1760,
-        "gain_db": -20,
-        "decay": 0.12,
-        "repeat": 3,
-        "interval": 0.09
-      },
-      "means": "수소 결합이 이어지는 순간 — 화면의 결합선 번쩍임과 같은 시각"
-    },
-    {
-      "id": "float",
-      "at": [
-        "s05",
-        0.15
-      ],
-      "kind": "swell",
+       "freq": 70,
+       "dur": 0.7,
+       "attack": 0.01,
+       "release": 0.5,
+       "gain_db": -10
+      }
+     },
+     {
+      "kind": "noise",
       "params": {
-        "freqs": [
-          220,
-          330,
-          440
-        ],
-        "dur": 1.6,
-        "gain_db": -24
-      },
-      "means": "얼음이 떠오르는 결론 — 화면의 수면 고리와 같은 시각"
-    }
-  ],
-  "ambient": {
-    "enabled": false,
-    "kind": "pad",
-    "seed": 7,
-    "gain_db": -32,
-    "root_hz": 110,
-    "intervals": [
-      0,
-      7,
-      12,
-      16
+       "dur": 0.5,
+       "low": 50,
+       "high": 260,
+       "release": 0.4,
+       "gain_db": -14
+      }
+     }
     ]
+   },
+   "means": "단층이 미끄러짐(진원)"
   },
-  "music": {
-    "id": "zabriskie_patriarch",
-    "enabled": false,
-    "under_db": 12,
-    "duck_db": 6,
-    "start_sec": 0,
-    "note": "기본 꺼짐(2026-10-31 사용자 결정). 켜려면 enabled true. assets/music/registry.json 의 id. NO_MUSIC=1 이면 생략"
+  {
+   "id": "h0_p",
+   "at": 0.99,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.12,
+    "gain_db": -16
+   },
+   "means": "P파가 닿음(작은 흔들림)"
+  },
+  {
+   "id": "h0_s",
+   "at": 1.793,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 130,
+       "dur": 0.8,
+       "attack": 0.02,
+       "release": 0.6,
+       "gain_db": -9
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.7,
+       "low": 60,
+       "high": 320,
+       "release": 0.5,
+       "gain_db": -15
+      }
+     }
+    ]
+   },
+   "means": "S파가 닿음(큰 흔들림)"
+  },
+  {
+   "id": "h0_rewind",
+   "at": 2,
+   "kind": "whoosh",
+   "params": {
+    "dur": 1.3,
+    "f_start": 520,
+    "f_end": 120,
+    "gain_db": -22
+   },
+   "means": "되감기"
+  },
+  {
+   "id": "h1_slip",
+   "at": 5.5,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 70,
+       "dur": 0.7,
+       "attack": 0.01,
+       "release": 0.5,
+       "gain_db": -10
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.5,
+       "low": 50,
+       "high": 260,
+       "release": 0.4,
+       "gain_db": -14
+      }
+     }
+    ]
+   },
+   "means": "단층이 미끄러짐(진원)"
+  },
+  {
+   "id": "h1_p",
+   "at": 8.996,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.12,
+    "gain_db": -16
+   },
+   "means": "P파가 닿음(작은 흔들림)"
+  },
+  {
+   "id": "h1_s",
+   "at": 11.494,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 130,
+       "dur": 0.8,
+       "attack": 0.02,
+       "release": 0.6,
+       "gain_db": -9
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.7,
+       "low": 60,
+       "high": 320,
+       "release": 0.5,
+       "gain_db": -15
+      }
+     }
+    ]
+   },
+   "means": "S파가 닿음(큰 흔들림)"
+  },
+  {
+   "id": "h2_p",
+   "at": 14.58,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.12,
+    "gain_db": -18
+   },
+   "means": "P파가 닿음(작은 흔들림)"
+  },
+  {
+   "id": "h2_s",
+   "at": 16.055,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 130,
+       "dur": 0.8,
+       "attack": 0.02,
+       "release": 0.6,
+       "gain_db": -12
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.7,
+       "low": 60,
+       "high": 320,
+       "release": 0.5,
+       "gain_db": -18
+      }
+     }
+    ]
+   },
+   "means": "S파가 닿음(큰 흔들림)"
+  },
+  {
+   "id": "or_p",
+   "at": 28.501,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.12,
+    "gain_db": -16
+   },
+   "means": "P파가 닿음(작은 흔들림)"
+  },
+  {
+   "id": "or_s",
+   "at": 30.602,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 130,
+       "dur": 0.8,
+       "attack": 0.02,
+       "release": 0.6,
+       "gain_db": -11
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.7,
+       "low": 60,
+       "high": 320,
+       "release": 0.5,
+       "gain_db": -17
+      }
+     }
+    ]
+   },
+   "means": "S파가 닿음(큰 흔들림)"
+  },
+  {
+   "id": "es_press",
+   "at": 41.5,
+   "kind": "tick",
+   "params": {
+    "freq": 200,
+    "decay": 0.1,
+    "gain_db": -18
+   },
+   "means": "덩어리를 누름·놓음·비틂"
+  },
+  {
+   "id": "es_release",
+   "at": 42.5,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.1,
+    "gain_db": -18
+   },
+   "means": "덩어리를 누름·놓음·비틂"
+  },
+  {
+   "id": "es_twist",
+   "at": 44.2,
+   "kind": "tick",
+   "params": {
+    "freq": 170,
+    "decay": 0.1,
+    "gain_db": -18
+   },
+   "means": "덩어리를 누름·놓음·비틂"
+  },
+  {
+   "id": "es_release2",
+   "at": 45,
+   "kind": "tick",
+   "params": {
+    "freq": 230,
+    "decay": 0.1,
+    "gain_db": -18
+   },
+   "means": "덩어리를 누름·놓음·비틂"
+  },
+  {
+   "id": "push8_0",
+   "at": 47.35,
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 1번째 덩어리에 닿음"
+  },
+  {
+   "id": "push8_1",
+   "at": 47.65,
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 2번째 덩어리에 닿음"
+  },
+  {
+   "id": "push8_2",
+   "at": 47.95,
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 3번째 덩어리에 닿음"
+  },
+  {
+   "id": "push8_3",
+   "at": 48.25,
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 4번째 덩어리에 닿음"
+  },
+  {
+   "id": "push8_4",
+   "at": 48.55,
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 5번째 덩어리에 닿음"
+  },
+  {
+   "id": "push8_5",
+   "at": 48.85,
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 6번째 덩어리에 닿음"
+  },
+  {
+   "id": "push8_6",
+   "at": 49.15,
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 7번째 덩어리에 닿음"
+  },
+  {
+   "id": "push8_7",
+   "at": 49.45,
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 8번째 덩어리에 닿음"
+  },
+  {
+   "id": "push8_8",
+   "at": 49.75,
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 9번째 덩어리에 닿음"
+  },
+  {
+   "id": "push8_9",
+   "at": 50.05,
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 10번째 덩어리에 닿음"
+  },
+  {
+   "id": "racePush_0",
+   "at": 53.3,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -21
+   },
+   "means": "미는 흔들림이 1번째 덩어리에 닿음"
+  },
+  {
+   "id": "raceTwist_0",
+   "at": 53.3,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "비트는 흔들림이 1번째 덩어리에 닿음"
+  },
+  {
+   "id": "racePush_1",
+   "at": 53.6,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -21
+   },
+   "means": "미는 흔들림이 2번째 덩어리에 닿음"
+  },
+  {
+   "id": "raceTwist_1",
+   "at": 53.819,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "비트는 흔들림이 2번째 덩어리에 닿음"
+  },
+  {
+   "id": "racePush_2",
+   "at": 53.9,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -21
+   },
+   "means": "미는 흔들림이 3번째 덩어리에 닿음"
+  },
+  {
+   "id": "racePush_3",
+   "at": 54.2,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -21
+   },
+   "means": "미는 흔들림이 4번째 덩어리에 닿음"
+  },
+  {
+   "id": "raceTwist_2",
+   "at": 54.338,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "비트는 흔들림이 3번째 덩어리에 닿음"
+  },
+  {
+   "id": "racePush_4",
+   "at": 54.5,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -21
+   },
+   "means": "미는 흔들림이 5번째 덩어리에 닿음"
+  },
+  {
+   "id": "racePush_5",
+   "at": 54.8,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -21
+   },
+   "means": "미는 흔들림이 6번째 덩어리에 닿음"
+  },
+  {
+   "id": "raceTwist_3",
+   "at": 54.857,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "비트는 흔들림이 4번째 덩어리에 닿음"
+  },
+  {
+   "id": "racePush_6",
+   "at": 55.1,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -21
+   },
+   "means": "미는 흔들림이 7번째 덩어리에 닿음"
+  },
+  {
+   "id": "raceTwist_4",
+   "at": 55.376,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "비트는 흔들림이 5번째 덩어리에 닿음"
+  },
+  {
+   "id": "racePush_7",
+   "at": 55.4,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -21
+   },
+   "means": "미는 흔들림이 8번째 덩어리에 닿음"
+  },
+  {
+   "id": "racePush_8",
+   "at": 55.7,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -21
+   },
+   "means": "미는 흔들림이 9번째 덩어리에 닿음"
+  },
+  {
+   "id": "raceTwist_5",
+   "at": 55.895,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "비트는 흔들림이 6번째 덩어리에 닿음"
+  },
+  {
+   "id": "racePush_9",
+   "at": 56,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.06,
+    "gain_db": -21
+   },
+   "means": "미는 흔들림이 10번째 덩어리에 닿음"
+  },
+  {
+   "id": "raceTwist_6",
+   "at": 56.414,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "비트는 흔들림이 7번째 덩어리에 닿음"
+  },
+  {
+   "id": "raceTwist_7",
+   "at": 56.933,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "비트는 흔들림이 8번째 덩어리에 닿음"
+  },
+  {
+   "id": "raceTwist_8",
+   "at": 57.452,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "비트는 흔들림이 9번째 덩어리에 닿음"
+  },
+  {
+   "id": "raceTwist_9",
+   "at": 57.971,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "비트는 흔들림이 10번째 덩어리에 닿음"
+  },
+  {
+   "id": "p1_slip",
+   "at": 62,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 70,
+       "dur": 0.7,
+       "attack": 0.01,
+       "release": 0.5,
+       "gain_db": -14
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.5,
+       "low": 50,
+       "high": 260,
+       "release": 0.4,
+       "gain_db": -18
+      }
+     }
+    ]
+   },
+   "means": "단층이 미끄러짐(진원)"
+  },
+  {
+   "id": "p1_trk",
+   "at": 64.917,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.12,
+    "gain_db": -14
+   },
+   "means": "P파가 닿음(작은 흔들림)"
+  },
+  {
+   "id": "waterPush_0",
+   "at": 68.7,
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 1번째 덩어리에 닿음"
+  },
+  {
+   "id": "waterPush_1",
+   "at": 69,
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 2번째 덩어리에 닿음"
+  },
+  {
+   "id": "waterPush_2",
+   "at": 69.3,
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 3번째 덩어리에 닿음"
+  },
+  {
+   "id": "waterPush_3",
+   "at": 69.6,
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 4번째 덩어리에 닿음"
+  },
+  {
+   "id": "waterPush_4",
+   "at": 69.9,
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 5번째 덩어리에 닿음"
+  },
+  {
+   "id": "waterPush_5",
+   "at": 70.2,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 6번째 덩어리에 닿음"
+  },
+  {
+   "id": "waterPush_6",
+   "at": 70.75,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 7번째 덩어리에 닿음"
+  },
+  {
+   "id": "waterPush_7",
+   "at": 71.3,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 8번째 덩어리에 닿음"
+  },
+  {
+   "id": "waterPush_8",
+   "at": 71.85,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 9번째 덩어리에 닿음"
+  },
+  {
+   "id": "waterPush_9",
+   "at": 72.4,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.06,
+    "gain_db": -20
+   },
+   "means": "미는 흔들림이 10번째 덩어리에 닿음"
+  },
+  {
+   "id": "p2_slip",
+   "at": 74.6,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 70,
+       "dur": 0.7,
+       "attack": 0.01,
+       "release": 0.5,
+       "gain_db": -14
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.5,
+       "low": 50,
+       "high": 260,
+       "release": 0.4,
+       "gain_db": -18
+      }
+     }
+    ]
+   },
+   "means": "단층이 미끄러짐(진원)"
+  },
+  {
+   "id": "p2_sec1",
+   "at": 75.6,
+   "kind": "tick",
+   "params": {
+    "freq": 400,
+    "decay": 0.04,
+    "gain_db": -24
+   },
+   "means": "P 앞면이 6 km — 1초"
+  },
+  {
+   "id": "p2_sec2",
+   "at": 76.6,
+   "kind": "tick",
+   "params": {
+    "freq": 400,
+    "decay": 0.04,
+    "gain_db": -24
+   },
+   "means": "P 앞면이 12 km — 1초"
+  },
+  {
+   "id": "p2_sec3",
+   "at": 77.6,
+   "kind": "tick",
+   "params": {
+    "freq": 400,
+    "decay": 0.04,
+    "gain_db": -24
+   },
+   "means": "P 앞면이 18 km — 1초"
+  },
+  {
+   "id": "p2_sec4",
+   "at": 78.6,
+   "kind": "tick",
+   "params": {
+    "freq": 400,
+    "decay": 0.04,
+    "gain_db": -24
+   },
+   "means": "P 앞면이 24 km — 1초"
+  },
+  {
+   "id": "s1_slip",
+   "at": 81,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 70,
+       "dur": 0.7,
+       "attack": 0.01,
+       "release": 0.5,
+       "gain_db": -14
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.5,
+       "low": 50,
+       "high": 260,
+       "release": 0.4,
+       "gain_db": -18
+      }
+     }
+    ]
+   },
+   "means": "단층이 미끄러짐(진원)"
+  },
+  {
+   "id": "s1_trk",
+   "at": 83.632,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 130,
+       "dur": 0.8,
+       "attack": 0.02,
+       "release": 0.6,
+       "gain_db": -11
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.7,
+       "low": 60,
+       "high": 320,
+       "release": 0.5,
+       "gain_db": -17
+      }
+     }
+    ]
+   },
+   "means": "S파가 닿음(큰 흔들림)"
+  },
+  {
+   "id": "s2_slip",
+   "at": 86.2,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 70,
+       "dur": 0.7,
+       "attack": 0.01,
+       "release": 0.5,
+       "gain_db": -14
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.5,
+       "low": 50,
+       "high": 260,
+       "release": 0.4,
+       "gain_db": -18
+      }
+     }
+    ]
+   },
+   "means": "단층이 미끄러짐(진원)"
+  },
+  {
+   "id": "s2_sec1",
+   "at": 87.2,
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "decay": 0.04,
+    "gain_db": -24
+   },
+   "means": "S 앞면이 3.5 km — 1초"
+  },
+  {
+   "id": "s2_sec2",
+   "at": 88.2,
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "decay": 0.04,
+    "gain_db": -24
+   },
+   "means": "S 앞면이 7 km — 1초"
+  },
+  {
+   "id": "s2_sec3",
+   "at": 89.2,
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "decay": 0.04,
+    "gain_db": -24
+   },
+   "means": "S 앞면이 10.5 km — 1초"
+  },
+  {
+   "id": "s2_sec4",
+   "at": 90.2,
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "decay": 0.04,
+    "gain_db": -24
+   },
+   "means": "S 앞면이 14 km — 1초"
+  },
+  {
+   "id": "s2_sec5",
+   "at": 91.2,
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "decay": 0.04,
+    "gain_db": -24
+   },
+   "means": "S 앞면이 17.5 km — 1초"
+  },
+  {
+   "id": "s2_sec6",
+   "at": 92.2,
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "decay": 0.04,
+    "gain_db": -24
+   },
+   "means": "S 앞면이 21 km — 1초"
+  },
+  {
+   "id": "waterTwist_0",
+   "at": 95.3,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.06,
+    "gain_db": -19
+   },
+   "means": "비트는 흔들림이 1번째 덩어리에 닿음"
+  },
+  {
+   "id": "waterTwist_1",
+   "at": 95.72,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.06,
+    "gain_db": -19
+   },
+   "means": "비트는 흔들림이 2번째 덩어리에 닿음"
+  },
+  {
+   "id": "waterTwist_2",
+   "at": 96.14,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.06,
+    "gain_db": -19
+   },
+   "means": "비트는 흔들림이 3번째 덩어리에 닿음"
+  },
+  {
+   "id": "waterTwist_3",
+   "at": 96.56,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.06,
+    "gain_db": -19
+   },
+   "means": "비트는 흔들림이 4번째 덩어리에 닿음"
+  },
+  {
+   "id": "waterTwist_4",
+   "at": 96.98,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.06,
+    "gain_db": -19
+   },
+   "means": "비트는 흔들림이 5번째 덩어리에 닿음"
+  },
+  {
+   "id": "qa_slip",
+   "at": 101.9,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 70,
+       "dur": 0.7,
+       "attack": 0.01,
+       "release": 0.5,
+       "gain_db": -18
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.5,
+       "low": 50,
+       "high": 260,
+       "release": 0.4,
+       "gain_db": -22
+      }
+     }
+    ]
+   },
+   "means": "단층이 미끄러짐(진원)"
+  },
+  {
+   "id": "qa_p",
+   "at": 103.585,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.12,
+    "gain_db": -22
+   },
+   "means": "P파가 닿음(작은 흔들림)"
+  },
+  {
+   "id": "qa_s",
+   "at": 104.789,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 130,
+       "dur": 0.8,
+       "attack": 0.02,
+       "release": 0.6,
+       "gain_db": -17
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.7,
+       "low": 60,
+       "high": 320,
+       "release": 0.5,
+       "gain_db": -23
+      }
+     }
+    ]
+   },
+   "means": "S파가 닿음(큰 흔들림)"
+  },
+  {
+   "id": "qb_slip",
+   "at": 105,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 70,
+       "dur": 0.7,
+       "attack": 0.01,
+       "release": 0.5,
+       "gain_db": -8
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.5,
+       "low": 50,
+       "high": 260,
+       "release": 0.4,
+       "gain_db": -12
+      }
+     }
+    ]
+   },
+   "means": "단층이 미끄러짐(진원)"
+  },
+  {
+   "id": "qb_p",
+   "at": 106.685,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.12,
+    "gain_db": -14
+   },
+   "means": "P파가 닿음(작은 흔들림)"
+  },
+  {
+   "id": "qb_s",
+   "at": 107.889,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 130,
+       "dur": 0.8,
+       "attack": 0.02,
+       "release": 0.6,
+       "gain_db": -7
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.7,
+       "low": 60,
+       "high": 320,
+       "release": 0.5,
+       "gain_db": -13
+      }
+     }
+    ]
+   },
+   "means": "S파가 닿음(큰 흔들림)"
+  },
+  {
+   "id": "d1_slip",
+   "at": 110.5,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 70,
+       "dur": 0.7,
+       "attack": 0.01,
+       "release": 0.5,
+       "gain_db": -12
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.5,
+       "low": 50,
+       "high": 260,
+       "release": 0.4,
+       "gain_db": -16
+      }
+     }
+    ]
+   },
+   "means": "단층이 미끄러짐(진원)"
+  },
+  {
+   "id": "d1_p50",
+   "at": 112.675,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.12,
+    "gain_db": -16
+   },
+   "means": "P파가 닿음(작은 흔들림)"
+  },
+  {
+   "id": "d1_s50",
+   "at": 114.229,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 130,
+       "dur": 0.8,
+       "attack": 0.02,
+       "release": 0.6,
+       "gain_db": -11
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.7,
+       "low": 60,
+       "high": 320,
+       "release": 0.5,
+       "gain_db": -17
+      }
+     }
+    ]
+   },
+   "means": "S파가 닿음(큰 흔들림)"
+  },
+  {
+   "id": "d1_p100",
+   "at": 114.713,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.12,
+    "gain_db": -18
+   },
+   "means": "P파가 닿음(작은 흔들림)"
+  },
+  {
+   "id": "d1_s100",
+   "at": 117.723,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 130,
+       "dur": 0.8,
+       "attack": 0.02,
+       "release": 0.6,
+       "gain_db": -12
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.7,
+       "low": 60,
+       "high": 320,
+       "release": 0.5,
+       "gain_db": -18
+      }
+     }
+    ]
+   },
+   "means": "S파가 닿음(큰 흔들림)"
+  },
+  {
+   "id": "cnt_near1",
+   "at": 118.1,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.035,
+    "gain_db": -23
+   },
+   "means": "간격 1초 — 8 km"
+  },
+  {
+   "id": "cnt_near2",
+   "at": 118.6,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.035,
+    "gain_db": -23
+   },
+   "means": "간격 2초 — 8 km"
+  },
+  {
+   "id": "cnt_near3",
+   "at": 119.1,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.035,
+    "gain_db": -23
+   },
+   "means": "간격 3초 — 8 km"
+  },
+  {
+   "id": "cnt_near4",
+   "at": 119.6,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.035,
+    "gain_db": -23
+   },
+   "means": "간격 4초 — 8 km"
+  },
+  {
+   "id": "cnt_near5",
+   "at": 120.1,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.035,
+    "gain_db": -23
+   },
+   "means": "간격 5초 — 8 km"
+  },
+  {
+   "id": "cnt_near6",
+   "at": 120.6,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.035,
+    "gain_db": -23
+   },
+   "means": "간격 6초 — 8 km"
+  },
+  {
+   "id": "cnt_far1",
+   "at": 124.22,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.035,
+    "gain_db": -23
+   },
+   "means": "간격 1초 — 8 km"
+  },
+  {
+   "id": "cnt_far2",
+   "at": 124.54,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.035,
+    "gain_db": -23
+   },
+   "means": "간격 2초 — 8 km"
+  },
+  {
+   "id": "cnt_far3",
+   "at": 124.86,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.035,
+    "gain_db": -23
+   },
+   "means": "간격 3초 — 8 km"
+  },
+  {
+   "id": "cnt_far4",
+   "at": 125.18,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.035,
+    "gain_db": -23
+   },
+   "means": "간격 4초 — 8 km"
+  },
+  {
+   "id": "cnt_far5",
+   "at": 125.5,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.035,
+    "gain_db": -23
+   },
+   "means": "간격 5초 — 8 km"
+  },
+  {
+   "id": "cnt_far6",
+   "at": 125.82,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.035,
+    "gain_db": -23
+   },
+   "means": "간격 6초 — 8 km"
+  },
+  {
+   "id": "cnt_far7",
+   "at": 126.14,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.035,
+    "gain_db": -23
+   },
+   "means": "간격 7초 — 8 km"
+  },
+  {
+   "id": "cnt_far8",
+   "at": 126.46,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.035,
+    "gain_db": -23
+   },
+   "means": "간격 8초 — 8 km"
+  },
+  {
+   "id": "cnt_far9",
+   "at": 126.78,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.035,
+    "gain_db": -23
+   },
+   "means": "간격 9초 — 8 km"
+  },
+  {
+   "id": "cnt_far10",
+   "at": 127.1,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.035,
+    "gain_db": -23
+   },
+   "means": "간격 10초 — 8 km"
+  },
+  {
+   "id": "cnt_far11",
+   "at": 127.42,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.035,
+    "gain_db": -23
+   },
+   "means": "간격 11초 — 8 km"
+  },
+  {
+   "id": "cnt_far12",
+   "at": 127.74,
+   "kind": "tick",
+   "params": {
+    "freq": 440,
+    "decay": 0.035,
+    "gain_db": -23
+   },
+   "means": "간격 12초 — 8 km"
+  },
+  {
+   "id": "w1_slip",
+   "at": 131.2,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 70,
+       "dur": 0.7,
+       "attack": 0.01,
+       "release": 0.5,
+       "gain_db": -12
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.5,
+       "low": 50,
+       "high": 260,
+       "release": 0.4,
+       "gain_db": -16
+      }
+     }
+    ]
+   },
+   "means": "단층이 미끄러짐(진원)"
+  },
+  {
+   "id": "w1_detect",
+   "at": 132.867,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.12,
+    "gain_db": -15
+   },
+   "means": "P파가 닿음(작은 흔들림)"
+  },
+  {
+   "id": "w1_nearS",
+   "at": 134.057,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 130,
+       "dur": 0.8,
+       "attack": 0.02,
+       "release": 0.6,
+       "gain_db": -11
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.7,
+       "low": 60,
+       "high": 320,
+       "release": 0.5,
+       "gain_db": -17
+      }
+     }
+    ]
+   },
+   "means": "S파가 닿음(큰 흔들림)"
+  },
+  {
+   "id": "w1_alert",
+   "at": 134.867,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 523,
+       "dur": 0.12,
+       "gain_db": -18
+      }
+     },
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 440,
+       "dur": 0.16,
+       "gain_db": -18
+      },
+      "offset": 0.16
+     }
+    ]
+   },
+   "means": "경보가 나감"
+  },
+  {
+   "id": "w1_cityAlert",
+   "at": 135.107,
+   "kind": "tick",
+   "params": {
+    "freq": 523,
+    "decay": 0.08,
+    "gain_db": -19
+   },
+   "means": "도시에 경보가 닿음"
+  },
+  {
+   "id": "w1_cityP",
+   "at": 137.941,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.12,
+    "gain_db": -18
+   },
+   "means": "P파가 닿음(작은 흔들림)"
+  },
+  {
+   "id": "w1_cityS",
+   "at": 142.756,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 130,
+       "dur": 0.8,
+       "attack": 0.02,
+       "release": 0.6,
+       "gain_db": -10
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.7,
+       "low": 60,
+       "high": 320,
+       "release": 0.5,
+       "gain_db": -16
+      }
+     }
+    ]
+   },
+   "means": "S파가 닿음(큰 흔들림)"
+  },
+  {
+   "id": "co_slip",
+   "at": 146.3,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 70,
+       "dur": 0.7,
+       "attack": 0.01,
+       "release": 0.5,
+       "gain_db": -12
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.5,
+       "low": 50,
+       "high": 260,
+       "release": 0.4,
+       "gain_db": -16
+      }
+     }
+    ]
+   },
+   "means": "단층이 미끄러짐(진원)"
+  },
+  {
+   "id": "co_s_cmb",
+   "at": 147.873,
+   "kind": "tone",
+   "params": {
+    "freq": 110,
+    "dur": 0.5,
+    "attack": 0.01,
+    "release": 0.4,
+    "gain_db": -15
+   },
+   "means": "S파가 바깥 핵에 닿아 멈춤"
+  },
+  {
+   "id": "co_p_core",
+   "at": 150.158,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.12,
+    "gain_db": -15
+   },
+   "means": "P파가 닿음(작은 흔들림)"
+  },
+  {
+   "id": "co_shadow",
+   "at": 151.212,
+   "kind": "tone",
+   "params": {
+    "freq": 147,
+    "dur": 0.6,
+    "attack": 0.05,
+    "release": 0.5,
+    "gain_db": -19
+   },
+   "means": "S파 그늘이 드러남"
+  },
+  {
+   "id": "c1_slip",
+   "at": 159.6,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 70,
+       "dur": 0.7,
+       "attack": 0.01,
+       "release": 0.5,
+       "gain_db": -12
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.5,
+       "low": 50,
+       "high": 260,
+       "release": 0.4,
+       "gain_db": -16
+      }
+     }
+    ]
+   },
+   "means": "단층이 미끄러짐(진원)"
+  },
+  {
+   "id": "c1_p",
+   "at": 162.409,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.12,
+    "gain_db": -17
+   },
+   "means": "P파가 닿음(작은 흔들림)"
+  },
+  {
+   "id": "c1_s",
+   "at": 164.415,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 130,
+       "dur": 0.8,
+       "attack": 0.02,
+       "release": 0.6,
+       "gain_db": -11
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.7,
+       "low": 60,
+       "high": 320,
+       "release": 0.5,
+       "gain_db": -17
+      }
+     }
+    ]
+   },
+   "means": "S파가 닿음(큰 흔들림)"
   }
+ ]
 }
