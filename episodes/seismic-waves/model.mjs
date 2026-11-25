@@ -48,10 +48,10 @@ export const RUNS = {
   h1: linRun('h1', 5.5, 4.82, {until: 14.0}),
   // s03: 같은 지진 다시 · 확대(관측소 아래 알갱이)
   h2: linRun('h2', 14.0, 8.08, {tau0: 12, until: 19.6}),
-  // pwave s10: P 만, 느리게 / s12: P 만, 실제 빠르기
+  // pwave s10: P 만, 빠르게(화면 1초 = 실제 3초) / s12: P 만, 실제 빠르기
   p1: linRun('p1', 62.0, 3.0, {S: false, until: 68.0}),
   p2: linRun('p2', 74.6, 1.0, {S: false, until: 80.5}),
-  // swave s13: S 만, 느리게 / s14: 실제 빠르기(P 는 흐리게 같은 시계로)
+  // swave s13: S 만, 빠르게(화면 1초 = 실제 5.7초) / s14: 실제 빠르기(P 는 흐리게 같은 시계로)
   s1: linRun('s1', 81.0, 5.7, {P: false, until: 86.0}),
   s2: linRun('s2', 86.2, 1.0, {until: 101.4}),
   // speed s16: 작은 지진 → 큰 지진(크기만 다름)

@@ -782,21 +782,21 @@
     {
       "number": 57,
       "slug": "seismic-waves",
-      "title": "",
+      "title": "지진파 — 단층은 한 번 미끄러졌는데, 흔들림은 왜 두 번 올까",
       "status": "final",
       "folder": "finals/57-seismic-waves",
       "video": "finals/57-seismic-waves/seismic-waves.mp4",
       "duration_sec": 168.0,
       "width": 1080,
       "height": 1920,
-      "bytes": 33364824,
-      "sha256": "0c51aee3408247ddf385468be2f3233bef4cd60f084cb328f3fb14f4a889a028",
+      "bytes": 33387535,
+      "sha256": "1812cec4d7b1b3afee8b1ca062282fce98a6d3b37cecaec629b55e14e47f93cb",
       "video_date": "uncommitted",
       "episode_code": "episodes/seismic-waves",
       "upload_info": "finals/57-seismic-waves/upload.md",
       "thumbnail": "0초 프레임(숯색 바탕 아래쪽을 가득 채운 땅 단면 — 지층 무늬의 바위 덩어리와 비스듬한 단층, 진원의 작은 섬광. 흰 물음 두 줄 \"단층은 한 번 미끄러졌는데 / 흔들림은 왜 두 번 올까?\"와 그 아래 가장 큰 주황 주제어 \"지진파\". 답은 쓰지 않음)",
       "hdr": "finals/57-seismic-waves/hdr/seismic-waves.hdr.mp4",
-      "hdr_bytes": 21066998
+      "hdr_bytes": 21083591
     },
     {
       "number": 58,
