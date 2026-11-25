@@ -1,0 +1,29 @@
+{
+  "file": "seismic-waves.hdr.mp4",
+  "bytes": 21083591,
+  "sha256": "40f37a19641b4437733dbb35f7d23ee2bc16db3c4988f5fcc920f3b360b4f300",
+  "created": "2026-11-25T12:43:58+00:00",
+  "codec": "hevc Main 10",
+  "pix_fmt": "yuv420p10le",
+  "color": "bt2020 / smpte2084 (PQ) / bt2020nc",
+  "duration": 167.979,
+  "settings": {
+    "sdr_white_nits": 203,
+    "peak_boost": 4,
+    "gate": [
+      0.4,
+      0.7
+    ],
+    "crf": 18,
+    "preset": "medium",
+    "max_cll": 812,
+    "max_fall": 300
+  },
+  "frames": 5039,
+  "lit_frames": 3947,
+  "sdr_white_code": 573,
+  "peak_code": 732,
+  "peak_nits_estimate": 1103,
+  "encode_seconds": 205.5,
+  "note": "peak_nits_estimate 는 무채색으로 보고 luma 코드에서 어림한 값"
+}
