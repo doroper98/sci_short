@@ -1,61 +1,580 @@
 {
-  "version": 1,
-  "notes": "설명용 합성음입니다(녹음 아님). 각 사건은 scenes.mjs의 ctx.events와 같은 시각을 씁니다. at 문법은 pipeline/README.md 참고.",
-  "events": [
-    {
-      "id": "bond",
-      "at": {
-        "sentence": "s03",
-        "word": "수소 결합"
-      },
-      "kind": "tick",
-      "params": {
-        "freq": 1760,
-        "gain_db": -20,
-        "decay": 0.12,
-        "repeat": 3,
-        "interval": 0.09
-      },
-      "means": "수소 결합이 이어지는 순간 — 화면의 결합선 번쩍임과 같은 시각"
-    },
-    {
-      "id": "float",
-      "at": [
-        "s05",
-        0.15
-      ],
-      "kind": "swell",
-      "params": {
-        "freqs": [
-          220,
-          330,
-          440
-        ],
-        "dur": 1.6,
-        "gain_db": -24
-      },
-      "means": "얼음이 떠오르는 결론 — 화면의 수면 고리와 같은 시각"
-    }
-  ],
-  "ambient": {
-    "enabled": false,
-    "kind": "pad",
-    "seed": 7,
-    "gain_db": -32,
-    "root_hz": 110,
-    "intervals": [
-      0,
-      7,
-      12,
-      16
-    ]
+ "version": 1,
+ "notes": "설명용 합성음입니다(녹음 아님). 각 사건은 scenes.mjs 의 ctx.events 와 같은 시각을 씁니다. 기본음은 모두 700 Hz 아래(사용자 규칙). 되풀이 사건은 repeat/interval 하나로 적고 scenes.mjs 가 같은 값으로 박자를 셉니다.",
+ "ambient": {
+  "enabled": false
+ },
+ "events": [
+  {
+   "id": "harr",
+   "at": 0.4,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.05,
+    "gain_db": -22,
+    "repeat": 15,
+    "interval": 0.1
+   },
+   "means": "0.4~1.8초: 비트가 GPU 에 닿아 계산기 칸이 켜짐(결과 먼저)"
   },
-  "music": {
-    "id": "zabriskie_patriarch",
-    "enabled": false,
-    "under_db": 12,
-    "duck_db": 6,
-    "start_sec": 0,
-    "note": "기본 꺼짐(2026-10-31 사용자 결정). 켜려면 enabled true. assets/music/registry.json 의 id. NO_MUSIC=1 이면 생략"
+  {
+   "id": "rew",
+   "at": 2.2,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.8,
+    "f_start": 600,
+    "f_end": 150,
+    "gain_db": -24
+   },
+   "means": "되감기 — 칸이 다시 꺼짐"
+  },
+  {
+   "id": "name",
+   "at": {
+    "sentence": "s02",
+    "word": "고 대역폭"
+   },
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     196,
+     294
+    ],
+    "dur": 1.4,
+    "gain_db": -28
+   },
+   "means": "기둥에 이름표 HBM · High Bandwidth Memory"
+  },
+  {
+   "id": "flow2",
+   "at": [
+    "s02",
+    0.3
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 170,
+    "decay": 0.04,
+    "gain_db": -30,
+    "repeat": 18,
+    "interval": 0.25
+   },
+   "means": "s02: 많은 선으로 비트가 한꺼번에 도착(되풀이)"
+  },
+  {
+   "id": "grow1",
+   "at": [
+    "s03",
+    1.6
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 150,
+    "dur": 0.4,
+    "release": 0.3,
+    "gain_db": -22
+   },
+   "means": "계산기 칸 9 → 36"
+  },
+  {
+   "id": "grow2",
+   "at": [
+    "s03",
+    3.4
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 175,
+    "dur": 0.4,
+    "release": 0.3,
+    "gain_db": -22
+   },
+   "means": "계산기 칸 36 → 144"
+  },
+  {
+   "id": "wall",
+   "at": {
+    "sentence": "s03",
+    "word": "메모리 벽"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 110,
+    "dur": 0.8,
+    "release": 0.5,
+    "gain_db": -18
+   },
+   "means": "'메모리 벽' 이름표(1994)"
+  },
+  {
+   "id": "y2013",
+   "at": {
+    "sentence": "s04",
+    "word": "이천십삼년"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.08,
+    "gain_db": -20
+   },
+   "means": "연도 눈금 2013 표준"
+  },
+  {
+   "id": "y2015",
+   "at": {
+    "sentence": "s04",
+    "word": "이천십오년"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.08,
+    "gain_db": -20
+   },
+   "means": "연도 눈금 2015 첫 그래픽 카드 — 기둥이 GPU 옆에 들어섬"
+  },
+  {
+   "id": "slide",
+   "at": {
+    "sentence": "s04",
+    "word": "이천십오년",
+    "offset": 0.2
+   },
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.9,
+    "f_start": 180,
+    "f_end": 420,
+    "gain_db": -28
+   },
+   "means": "HBM 기둥이 GPU 옆으로 들어섬"
+  },
+  {
+   "id": "sparse",
+   "at": [
+    "s05",
+    0.6
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 200,
+    "decay": 0.05,
+    "gain_db": -24,
+    "repeat": 12,
+    "interval": 0.5
+   },
+   "means": "적은 선으로 비트가 드문드문 도착 — 칸 하나씩만 잠깐 켜짐"
+  },
+  {
+   "id": "num1",
+   "at": [
+    "s06",
+    0.4
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 220,
+    "dur": 0.18,
+    "release": 0.12,
+    "gain_db": -20
+   },
+   "means": "숫자 하나(32비트) 출발"
+  },
+  {
+   "id": "arr1",
+   "at": [
+    "s06",
+    2.9
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.1,
+    "gain_db": -18
+   },
+   "means": "숫자 하나 도착 — 그동안 계산 328번"
+  },
+  {
+   "id": "arr2",
+   "at": [
+    "s06",
+    5.4
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.1,
+    "gain_db": -18
+   },
+   "means": "다음 숫자 도착 — 다시 328번"
+  },
+  {
+   "id": "w4",
+   "at": [
+    "s07",
+    0.3
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.04,
+    "gain_db": -24,
+    "repeat": 10,
+    "interval": 0.3
+   },
+   "means": "선 4줄: 박자마다 4비트"
+  },
+  {
+   "id": "w16",
+   "at": [
+    "s07",
+    3.3
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 180,
+    "decay": 0.04,
+    "gain_db": -24,
+    "repeat": 8,
+    "interval": 0.3
+   },
+   "means": "선 16줄(같은 빠르기): 박자마다 16비트"
+  },
+  {
+   "id": "core",
+   "at": [
+    "s08",
+    0.1
+   ],
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     147,
+     220
+    ],
+    "dur": 2.0,
+    "gain_db": -26
+   },
+   "means": "본질 문장 — 쌓은 기둥, 많은 선, 모든 칸이 켜짐"
+  },
+  {
+   "id": "gddr",
+   "at": [
+    "s09",
+    0.4
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 140,
+    "dur": 0.5,
+    "release": 0.35,
+    "gain_db": -20
+   },
+   "means": "그래픽 메모리 포장이 기판 위 멀리 자리 잡음"
+  },
+  {
+   "id": "balls",
+   "at": {
+    "sentence": "s10",
+    "word": "땜납"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 250,
+    "decay": 0.06,
+    "gain_db": -22,
+    "repeat": 4,
+    "interval": 0.12
+   },
+   "means": "땜납 구슬 확대(0.75 mm)"
+  },
+  {
+   "id": "chargeL",
+   "at": [
+    "s11",
+    0.3
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 130,
+    "dur": 0.9,
+    "attack": 0.3,
+    "release": 0.4,
+    "gain_db": -22,
+    "repeat": 4,
+    "interval": 1.4
+   },
+   "means": "긴 선: 비트마다 선 전체가 채워졌다 비워짐(길게)"
+  },
+  {
+   "id": "rise",
+   "at": [
+    "s12",
+    0.2
+   ],
+   "kind": "whoosh",
+   "params": {
+    "dur": 1.2,
+    "f_start": 150,
+    "f_end": 360,
+    "gain_db": -26
+   },
+   "means": "인터포저가 들어서고 GPU 와 기둥이 나란히"
+  },
+  {
+   "id": "bumps",
+   "at": {
+    "sentence": "s13",
+    "word": "접점"
+   },
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.03,
+    "gain_db": -24,
+    "repeat": 8,
+    "interval": 0.06
+   },
+   "means": "촘촘한 접점(수십 µm)"
+  },
+  {
+   "id": "lines",
+   "at": {
+    "sentence": "s14",
+    "word": "천이십사개"
+   },
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     165,
+     247
+    ],
+    "dur": 1.4,
+    "gain_db": -26
+   },
+   "means": "데이터 선 1,024개가 켜짐"
+  },
+  {
+   "id": "chargeS",
+   "at": [
+    "s15",
+    0.6
+   ],
+   "kind": "tone",
+   "params": {
+    "freq": 150,
+    "dur": 0.3,
+    "attack": 0.05,
+    "release": 0.2,
+    "gain_db": -24,
+    "repeat": 5,
+    "interval": 1.1
+   },
+   "means": "짧은 선: 비트마다 조금만 채웠다 비움(짧게)"
+  },
+  {
+   "id": "flow16",
+   "at": [
+    "s16",
+    0.2
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 175,
+    "decay": 0.03,
+    "gain_db": -28,
+    "repeat": 20,
+    "interval": 0.25
+   },
+   "means": "모든 선에 비트가 흐름 — 1초에 1테라바이트 넘게"
+  },
+  {
+   "id": "die",
+   "at": [
+    "s17",
+    3.6
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 140,
+    "decay": 0.12,
+    "click": 0.5,
+    "gain_db": -18,
+    "repeat": 12,
+    "interval": 0.32
+   },
+   "means": "칩이 한 장씩 내려앉음(1 → 12층)"
+  },
+  {
+   "id": "drill",
+   "at": {
+    "sentence": "s18",
+    "word": "구멍"
+   },
+   "kind": "noise",
+   "params": {
+    "dur": 0.6,
+    "low": 200,
+    "high": 600,
+    "gain_db": -28
+   },
+   "means": "칩에 구멍이 뚫림"
+  },
+  {
+   "id": "cu",
+   "at": {
+    "sentence": "s18",
+    "word": "구리"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 200,
+    "dur": 0.6,
+    "attack": 0.2,
+    "release": 0.3,
+    "gain_db": -24
+   },
+   "means": "구멍에 구리가 참"
+  },
+  {
+   "id": "tsv",
+   "at": [
+    "s18",
+    4.6
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 230,
+    "decay": 0.04,
+    "gain_db": -26,
+    "repeat": 10,
+    "interval": 0.4
+   },
+   "means": "신호가 구멍을 타고 층을 오감"
+  },
+  {
+   "id": "twelve",
+   "at": {
+    "sentence": "s19",
+    "word": "열두층"
+   },
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     131,
+     196
+    ],
+    "dur": 1.4,
+    "gain_db": -26
+   },
+   "means": "12층 기둥 — 2024 대량 생산"
+  },
+  {
+   "id": "heat",
+   "at": [
+    "s20",
+    0.2
+   ],
+   "kind": "env_noise",
+   "params": {
+    "points": [
+     [
+      0,
+      0
+     ],
+     [
+      0.6,
+      0.6
+     ],
+     [
+      4.4,
+      0.6
+     ],
+     [
+      5.2,
+      0
+     ]
+    ],
+    "low": 120,
+    "high": 500,
+    "gain_db": -22
+   },
+   "means": "열이 아래층에서 층을 지나 위로"
+  },
+  {
+   "id": "align",
+   "at": [
+    "s21",
+    0.9
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.06,
+    "gain_db": -22,
+    "repeat": 2,
+    "interval": 1.0
+   },
+   "means": "맨 위 칩의 구멍 줄이 아래와 맞춰짐"
+  },
+  {
+   "id": "token",
+   "at": [
+    "s22",
+    0.8
+   ],
+   "kind": "tick",
+   "params": {
+    "freq": 210,
+    "decay": 0.07,
+    "gain_db": -21,
+    "repeat": 9,
+    "interval": 1.45
+   },
+   "means": "모델 숫자를 모두 읽고 낱말 한 조각이 나옴"
+  },
+  {
+   "id": "tbps",
+   "at": {
+    "sentence": "s23",
+    "word": "삼테라바이트"
+   },
+   "kind": "tone",
+   "params": {
+    "freq": 165,
+    "dur": 0.6,
+    "release": 0.4,
+    "gain_db": -22
+   },
+   "means": "1초에 3.35 TB"
+  },
+  {
+   "id": "final",
+   "at": [
+    "s24",
+    0.2
+   ],
+   "kind": "swell",
+   "params": {
+    "freqs": [
+     147,
+     220
+    ],
+    "dur": 2.4,
+    "gain_db": -26
+   },
+   "means": "결론 — 처음의 단면, 모든 칸이 켜짐"
   }
+ ],
+ "music": {
+  "id": "zabriskie_patriarch",
+  "enabled": false,
+  "under_db": 12,
+  "duck_db": 6,
+  "start_sec": 0,
+  "note": "기본 꺼짐"
+ }
 }

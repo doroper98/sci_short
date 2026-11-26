@@ -1,0 +1,29 @@
+{
+  "file": "hbm.hdr.mp4",
+  "bytes": 16989678,
+  "sha256": "ced54030282e284a61b46c0331325555218376fc73986488855f9397267dfe02",
+  "created": "2026-11-26T11:55:25+00:00",
+  "codec": "hevc Main 10",
+  "pix_fmt": "yuv420p10le",
+  "color": "bt2020 / smpte2084 (PQ) / bt2020nc",
+  "duration": 169.335,
+  "settings": {
+    "sdr_white_nits": 203,
+    "peak_boost": 4,
+    "gate": [
+      0.4,
+      0.7
+    ],
+    "crf": 18,
+    "preset": "medium",
+    "max_cll": 812,
+    "max_fall": 300
+  },
+  "frames": 5080,
+  "lit_frames": 4987,
+  "sdr_white_code": 573,
+  "peak_code": 725,
+  "peak_nits_estimate": 1025,
+  "encode_seconds": 245.7,
+  "note": "peak_nits_estimate 는 무채색으로 보고 luma 코드에서 어림한 값"
+}
