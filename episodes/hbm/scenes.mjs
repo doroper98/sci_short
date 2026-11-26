@@ -349,7 +349,7 @@ function planStream(stage, t, sites, t0, a = 1) {      // 기둥 → GPU 로 흐
       const [x, y] = SITES[s], left = x < PV.gx, sx = left ? x + PV.sw : x, ex = left ? PV.gx : PV.gx + PV.gw;
       for (let r = 0; r < 6; r++) {
         const yy = y + 14 + r * 18;
-        for (let m = 0; m < 3; m++) { const u = ((t - t0) * 1.4 + m / 3 + r * 0.13) % 1; if (t < t0) continue; const xx = lerp(sx, ex, u); circle(cc, xx, yy, 4, rgba(PAL.warm, 0.9 * a)); circle(cc, xx, yy, 2, rgba(CORE(PAL.warm), a)); }
+        for (let m = 0; m < 3; m++) { if (t < t0) continue; const u = ((t - t0) * 1.4 + m / 3 + r * 0.13) % 1; const xx = lerp(sx, ex, u); circle(cc, xx, yy, 4, rgba(PAL.warm, 0.9 * a)); circle(cc, xx, yy, 2, rgba(CORE(PAL.warm), a)); }
       }
     }
   }, {gain: 0.7});
@@ -384,10 +384,11 @@ export const scenes = {
     const n = t < g1 ? 3 : t < g2 ? 6 : 12, N = n * n, slide = easeInOut((t - y15) / 1.2);
     // 선 4줄(메모리는 화면 밖 오른쪽) — 비트가 일정한 박자로 도착, 도착한 칸은 1.2초 일함
     const P = 0.3, D = 1.2, tA = S(ctx, 's03').start - 1.4;
-    const arr = []; for (let te = tA; te < t + 0.01; te += P / 4) arr.push(te);
+    const DT = P / 4, FLY = 1.0, arrAt = m => tA + m * DT;           // 도착 열 하나: 칸·계기·보이는 비트가 함께 쓴다
+    const arr = []; for (let m = 0; arrAt(m) <= t + 1e-6; m++) arr.push(arrAt(m));
     const slots = new Map();
     arr.forEach((ta, m) => { const j = Math.floor(rand(m * 1.37 + n) * N); if (t - ta < D) slots.set(j, Math.max(slots.get(j) || 0, smooth((t - ta) / 0.1) * (1 - smooth((t - ta - D + 0.2) / 0.2)))); });
-    const after = slide > 0 ? busyFromArrivals(arrivals(y15 + 0.6, 1e9), t, 144) : null;
+    const after = slide > 0 ? busyFromArrivals(arrivals(y15 + 0.3, 1e9), t, 144) : null;   // 아래 bitsOnWires 와 같은 t0
     const busy = j => Math.max(slots.get(j) || 0, after ? after(j) : 0);
     withCam(stage, CAM_FULL, () => {
       drawBoard(c); drawSubstrate(c); drawInterposer(c, 1); drawWires(c, slide);
@@ -397,9 +398,9 @@ export const scenes = {
       drawGPU(stage, busy, {n});
       lit(stage, cc => {
         if (slide >= 1) return;
-        for (let m = 0; m < 60; m++) {
-          const te = tA + m * P / 4 * 1.0 - 1.0; if (te > t) break;
-          const q = m % 4, u = (t - te) / 1.0; if (u < 0 || u > 1) continue;
+        // 지금 날아오는 비트 = 도착 시각이 (t, t + FLY] 인 것(상한 없음). m 번째 비트가 arr[m] 에 칸 하나를 켠다
+        for (let m = Math.max(0, Math.ceil((t - tA) / DT - 1e-6)); arrAt(m) <= t + FLY; m++) {
+          const q = m % 4, u = (t - (arrAt(m) - FLY)) / FLY; if (u < 0 || u > 1) continue;
           const pth = [[1100, G.intY + 20 + q * 10], [G.gpuX1 - 30 - q * 12, G.intY + 20 + q * 10], [G.gpuX1 - 30 - q * 12, G.gpuY1]];
           const [x, y] = along(pth, u); circle(cc, x, y, 5, rgba(PAL.warm, 0.95 * (1 - slide))); circle(cc, x, y, 2.5, rgba(CORE(PAL.warm), 1 - slide));
         }
@@ -428,7 +429,7 @@ export const scenes = {
     const sp = ticks(ctx, 'sparse');
     const sparseBusy = j => { let b = 0; sp.forEach((ta, m) => { if (ORDER[(m * 37) % 144] === j) b = Math.max(b, smooth((t - ta) / 0.1) * (1 - smooth((t - ta - 0.35) / 0.15))); }); return b; };
     const coreA = fadeIn(t, s08 - 0.3, 0.8);
-    const coreBusy = busyFromArrivals(arrivals(s08 + 0.1, 1e9), t);
+    const coreBusy = busyFromArrivals(arrivals(s08 - 0.2, 1e9), t);   // 아래 bitsOnWires 와 같은 t0
     withCam(stage, CAM_FULL, () => {
       drawBoard(c); drawSubstrate(c); drawInterposer(c, 1); drawWires(c, coreA);
       withAlpha(c, 1 - coreA, () => { for (let q = 0; q < 4; q++) line(c, [[1100, G.intY + 20 + q * 10], [G.gpuX1 - 30 - q * 12, G.intY + 20 + q * 10], [G.gpuX1 - 30 - q * 12, G.gpuY1]], rgba('#2E3036', 1), 2.2, {cap: 'butt'}); farMem(stage); });
@@ -479,8 +480,8 @@ export const scenes = {
       rect(c, 100, y0 - 10, 50, hgt + 20, 6, PAL.dram); rect(c, 880, y0 - 10, 60, hgt + 20, 6, PAL.gpu);
       stage.text('메모리', 125, y0 + hgt + 36, {size: 24, weight: 700, color: PAL.ink, align: 'center'}); stage.text('GPU', 910, y0 + hgt + 36, {size: 24, weight: 700, color: PAL.ink, align: 'center'});
       const P = 0.3, t0 = nW === 4 ? evT(ctx, 'w4') : w16;
-      lit(stage, cc => { for (let q = 0; q < nW; q++) { const yy = y0 + (q + 0.5) * hgt / nW; for (let m = -3; m < 30; m++) { const x = 150 + ((t - t0) / P - m) * 120; if (x < 150 || x > 880) continue; circle(cc, x, yy, 5, rgba(PAL.warm, 0.95)); circle(cc, x, yy, 2.4, CORE(PAL.warm)); } } }, {gain: 0.8});
-      const beats = Math.max(0, Math.floor((t - t0) / P - 6));
+      lit(stage, cc => { for (let q = 0; q < nW; q++) { const yy = y0 + (q + 0.5) * hgt / nW; for (let m = 0; m <= Math.floor((t - t0) / P); m++) { const x = 150 + ((t - t0) / P - m) * 120; if (x > 880) continue; circle(cc, x, yy, 5, rgba(PAL.warm, 0.95)); circle(cc, x, yy, 2.4, CORE(PAL.warm)); } } }, {gain: 0.8});
+      const beats = Math.max(0, Math.floor((t - t0) / P - 730 / 120) + 1);   // x = 880 에 닿은 박자 수(위 그림과 같은 식)
       stage.text(`박자마다 ${nW}비트`, 540, 760, {role: 'display', size: 50, weight: 700, color: PAL.warmHi, align: 'center'});
       if (nW === 16) stage.text('선 4줄일 때: 박자마다 4비트', 540, 815, {size: 27, weight: 500, color: rgba(PAL.muted, 0.8), align: 'center'});
       else stage.text(`선 하나 = 박자마다 비트 하나 · 도착 ${beats * nW}비트`, 540, 815, {size: 27, weight: 500, color: PAL.muted, align: 'center'});
@@ -532,7 +533,8 @@ export const scenes = {
     const c = stage.ctx, s12 = S(ctx, 's12').start, s13 = S(ctx, 's13').start, s14 = S(ctx, 's14').start, s15 = S(ctx, 's15').start, s16 = S(ctx, 's16').start;
     const rise = easeInOut((t - s12 - 0.2) / 1.6), memOut = 1 - smooth((t - s12) / 0.6), wl = fadeIn(t, evT(ctx, 'lines') - 0.2, 0.8);
     const cs = ticks(ctx, 'chargeS'), flowA = fadeIn(t, s16 - 0.2, 0.5);
-    const busy = flowA > 0 ? busyFromArrivals(arrivals(s16, 1e9), t) : (j => { let b = 0; cs.forEach((ta, m) => { for (let q = 0; q < 6; q++) if (ORDER[(m * 6 + q) * 7 % 144] === j) b = Math.max(b, smooth((t - ta - 0.3) / 0.1) * (1 - smooth((t - ta - 0.9) / 0.15))); }); return b; });
+    const arr14 = busyFromArrivals(arrivals(s14 + 0.2, s15 - 1.0), t), live14 = t >= s14 && t < s15 + 0.6 ? 1 - smooth((t - s15 - 0.1) / 0.4) : 0;   // s14: 선 1,024개로 온 비트가 칸을 켜고, 흐름이 멈추면 꺼짐
+    const busy = flowA > 0 ? busyFromArrivals(arrivals(s16 - 0.3, 1e9), t) : (j => Math.max(arr14(j) * live14, (j => { let b = 0; cs.forEach((ta, m) => { for (let q = 0; q < 6; q++) if (ORDER[(m * 6 + q) * 7 % 144] === j) b = Math.max(b, smooth((t - ta - 0.3) / 0.1) * (1 - smooth((t - ta - 0.9) / 0.15))); }); return b; })(j)));
     withCam(stage, CAM_FULL, () => {
       drawBoard(c); drawSubstrate(c);
       withAlpha(c, memOut, () => { for (let x = BD.memX0 + 16; x < BD.memX1 - 8; x += 34) circle(c, x, G.ballY, 10, PAL.ballLo); rect(c, BD.memX0 + 6, BD.memY0, BD.memX1 - BD.memX0 - 12, BD.memY1 - BD.memY0, 5, PAL.mold); });
@@ -542,7 +544,7 @@ export const scenes = {
       drawGPU(stage, busy, {n: 12});
       // s15: 짧은 선의 전하(선 24줄 모두)
       if (t < s16) cs.forEach(ta => { const q = clamp((t - ta) / 0.3), e = 1 - smooth((t - ta - 0.35) / 0.4); if (e > 0 && q > 0) for (let k = 0; k < NW; k += 3) chargePath(stage, wirePath(k), q, e, PAL.warm, 3); });
-      if (t >= s14 && t < s15) bitsOnWires(stage, t, {t0: s14 + 0.2, a: wl});
+      if (t >= s14 && t < s15 + 0.6) bitsOnWires(stage, t, {t0: s14 + 0.2, tEnd: s15 - 1.0, a: wl});   // 칸 켜짐(arr14)과 같은 출발 열
       if (flowA > 0) bitsOnWires(stage, t, {t0: s16 - 0.3, a: flowA});
     });
     if (rise > 0.6 && t < s13 - 0.2) withAlpha(c, fadeIn(t, s12 + 1.4, 0.4), () => { label(stage, '인터포저 — 실리콘 판', 540, 1000, {size: 28}); label(stage, 'GPU', 366, 470, {size: 34}); label(stage, 'HBM', 793, 500, {size: 34, color: PAL.coolHi}); });
@@ -599,9 +601,9 @@ export const scenes = {
       withCam(stage, cam, () => {
         drawBoard(c); drawSubstrate(c); drawInterposer(c); drawWires(c);
         drawStack(stage, {nl: Math.max(0.0001, nlf), tsv: tsvA});
-        drawGPU(stage, () => 0);
-        // TSV 신호가 층을 오르내림
         const tt = ticks(ctx, 'tsv');
+        drawGPU(stage, busyFromArrivals(arrivals(tt[0], 1e9), t));   // 아래 bitsOnWires 와 같은 출발 열
+        // TSV 신호가 층을 오르내림
         if (t > tt[0] - 0.1) lit(stage, cc => {
           for (let q = 0; q < 8; q++) { const tx = G.hbmX0 + 22 + q * (G.hbmX1 - G.hbmX0 - 44) / 7; for (let m = 0; m < 3; m++) { const u = ((t - tt[0]) * 0.5 + m / 3 + q * 0.07) % 1; const yy = lerp(G.baseY0, dieTop(G.NL - 1), q % 2 ? u : 1 - u); circle(cc, tx, yy, 4, rgba(PAL.warm, 0.95 * tsvA)); circle(cc, tx, yy, 1.8, rgba(CORE(PAL.warm), tsvA)); } }
         }, {gain: 0.7});
@@ -646,7 +648,7 @@ export const scenes = {
     withCam(stage, cam, () => {
       drawBoard(c); drawSubstrate(c); drawInterposer(c); drawWires(c);
       drawStack(stage, {nl: G.NL - (lift > 0 ? 1 : 0), heat, tsv: 1, lid: lidA * (lift > 0 ? 0.25 : 1)});
-      drawGPU(stage, () => 0.6);
+      const tw0 = ctx.scene.start - 2.0; drawGPU(stage, busyFromArrivals(arrivals(tw0, 1e9), t)); bitsOnWires(stage, t, {t0: tw0});   // 일하는 칸 = 도착한 비트
       if (lift > 0) {   // 들린 맨 위 칩
         const y = dieTop(G.NL - 1) - lift * 60, x0 = G.hbmX0 + shift, w = G.hbmX1 - G.hbmX0;
         rect(c, x0, y, w, G.dieH, 3, PAL.dram, rgba('#000', 0.35), 1.2); rect(c, x0 + 3, y + 3, w - 6, 4, 2, PAL.dramHi);
@@ -681,10 +683,10 @@ export const scenes = {
     const k = countUntil(tk, t), last = k ? tk[k - 1] : tk[0] - TOK_VIS, ph = clamp((t - last) / TOK_VIS);
     const sites = [0, 1, 2, 3, 4];
     // 한 조각: 앞 0.9 동안 기둥에서 읽어 GPU 로, 그다음 계산(칸 켜짐), 끝에 조각이 나옴
-    const readA = 1 - smooth((ph - 0.6) / 0.15), busy = j => smooth((ph - 0.2 - (ORDER.indexOf(j) / 144) * 0.4) / 0.08) * (1 - smooth((ph - 0.92) / 0.08));
+    const readA = smooth(ph / 0.08) * (1 - smooth((ph - 0.6) / 0.15)), busy = j => smooth((ph - 0.2 - (ORDER.indexOf(j) / 144) * 0.4) / 0.08) * (1 - smooth((ph - 0.92) / 0.08));
     withAlpha(c, fadeIn(t, ctx.scene.start, 0.5), () => {
       planView(stage, {fill: [1, 1, 1, 1, 1, 0], busy, hide: [5]});
-      planStream(stage, t, sites, tk[0] - TOK_VIS, readA);
+      planStream(stage, t, sites, last, readA);   // 한 조각마다 기둥에서 새로 읽기 시작
       label(stage, 'GPU', PV.gx + PV.gw / 2, PV.gy + PV.gh / 2, {size: 40});
       SITES.slice(0, 5).forEach(([x, y]) => note(stage, 'HBM', x + PV.sw / 2, y + PV.sh / 2, {size: 26, color: PAL.coolHi}));
     });
@@ -706,7 +708,7 @@ export const scenes = {
   // ---------------------------------------------------------------- close
   close(stage, t, p, ctx) {
     const c = stage.ctx, last = ctx.tl.sentences[ctx.tl.sentences.length - 1];
-    const t0 = ctx.scene.start, busy = busyFromArrivals(arrivals(t0 + 0.1, 1e9), t);
+    const t0 = ctx.scene.start, busy = busyFromArrivals(arrivals(t0, 1e9), t);   // 아래 bitsOnWires 와 같은 t0
     withCam(stage, CAM_FULL, () => { packageScene(stage, t, {busy}); bitsOnWires(stage, t, {t0: t0}); });
     const ea = fadeIn(t, last.start - 0.3, 0.6);
     if (ea > 0) {
