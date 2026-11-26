@@ -1,0 +1,28 @@
+{
+ "media_id": "18210882100375640",
+ "permalink": "https://www.instagram.com/reel/DgN8f4uo8vL/",
+ "posted_at": "2026-11-26T20:19:32+00:00",
+ "ig_user_id": "17841457693338876",
+ "username": "_scishorts",
+ "video_file": "messenger-send.mp4",
+ "video_bytes": 18799104,
+ "video_md5": "6e2eefa2eeaca40121b1bd83e28cf332",
+ "caption_chars": 430,
+ "hashtags": [
+  "#카톡",
+  "#메신저",
+  "#서버",
+  "#과학",
+  "#인터넷"
+ ],
+ "container_id": "17987705891923112",
+ "shortcode": "DgN8f4uo8vL",
+ "transfer": "url",
+ "ai_label": true,
+ "number": 53,
+ "slug": "messenger-send",
+ "status": "posted",
+ "note": "",
+ "source": "api",
+ "schema_version": 1
+}
