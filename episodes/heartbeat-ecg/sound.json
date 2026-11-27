@@ -1,0 +1,6318 @@
+{
+ "version": 1,
+ "notes": "설명용 합성음(녹음 아님). make_sound.mjs 가 model.mjs 의 같은 시계(plan)로 만든다 — 손으로 고치지 말 것. 기본음·잡음 대역 모두 700 Hz 아래, 병원 감시 장치의 삐 소리 없음.",
+ "ambient": {
+  "enabled": false
+ },
+ "events": [
+  {
+   "id": "hook0_s1_0",
+   "at": 1.467,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -12
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -18
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rewind",
+   "at": 2.2,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.8,
+    "f_start": 480,
+    "f_end": 140,
+    "gain_db": -24
+   },
+   "means": "되감기"
+  },
+  {
+   "id": "hookReal_s1_0",
+   "at": 5.332,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s2_0",
+   "at": 5.652,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s1_1",
+   "at": 6.132,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s2_1",
+   "at": 6.452,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s1_2",
+   "at": 6.932,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s2_2",
+   "at": 7.252,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s1_3",
+   "at": 7.732,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s2_3",
+   "at": 8.052,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s1_4",
+   "at": 8.532,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s2_4",
+   "at": 8.852,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s1_5",
+   "at": 9.332,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s2_5",
+   "at": 9.652,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s1_6",
+   "at": 10.132,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s2_6",
+   "at": 10.452,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s1_7",
+   "at": 10.932,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s2_7",
+   "at": 11.252,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s1_8",
+   "at": 11.732,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s2_8",
+   "at": 12.052,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s1_9",
+   "at": 12.532,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s2_9",
+   "at": 12.852,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s1_10",
+   "at": 13.332,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s2_10",
+   "at": 13.652,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "hookReal_s1_11",
+   "at": 14.132,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_-1",
+   "at": 14.444,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_0",
+   "at": 14.924,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_0",
+   "at": 15.244,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_1",
+   "at": 15.724,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_1",
+   "at": 16.044,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_2",
+   "at": 16.524,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_2",
+   "at": 16.844,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_3",
+   "at": 17.324,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_3",
+   "at": 17.644,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_4",
+   "at": 18.124,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_4",
+   "at": 18.444,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_5",
+   "at": 18.924,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_5",
+   "at": 19.244,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_6",
+   "at": 19.724,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_6",
+   "at": 20.044,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_7",
+   "at": 20.524,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_7",
+   "at": 20.844,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_8",
+   "at": 21.324,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_8",
+   "at": 21.644,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_9",
+   "at": 22.124,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_9",
+   "at": 22.444,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_10",
+   "at": 22.924,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_10",
+   "at": 23.244,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_11",
+   "at": 23.724,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_11",
+   "at": 24.044,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_12",
+   "at": 24.524,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_12",
+   "at": 24.844,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_13",
+   "at": 25.324,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_13",
+   "at": 25.644,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_14",
+   "at": 26.124,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_14",
+   "at": 26.444,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_15",
+   "at": 26.924,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_15",
+   "at": 27.244,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_16",
+   "at": 27.724,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_16",
+   "at": 28.044,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_17",
+   "at": 28.524,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_17",
+   "at": 28.844,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_18",
+   "at": 29.324,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_18",
+   "at": 29.644,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_19",
+   "at": 30.124,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_19",
+   "at": 30.444,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_20",
+   "at": 30.924,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_20",
+   "at": 31.244,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_21",
+   "at": 31.724,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s2_21",
+   "at": 32.044,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -26
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -33
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "origin_s1_22",
+   "at": 32.524,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -24
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "cell0_0",
+   "at": 40.712,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell0_1",
+   "at": 41.092,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell0_2",
+   "at": 41.472,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell0_3",
+   "at": 41.852,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell0_4",
+   "at": 42.232,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell0_5",
+   "at": 42.612,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell0_6",
+   "at": 42.992,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell0_7",
+   "at": 43.372,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell1_0",
+   "at": 47.284,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell1_1",
+   "at": 47.664,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell1_2",
+   "at": 48.044,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell1_3",
+   "at": 48.424,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell1_4",
+   "at": 48.804,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell1_5",
+   "at": 49.184,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell1_6",
+   "at": 49.564,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell1_7",
+   "at": 49.944,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell2_0",
+   "at": 51.224,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell2_1",
+   "at": 51.604,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell2_2",
+   "at": 51.984,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell2_3",
+   "at": 52.364,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell2_4",
+   "at": 52.744,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell2_5",
+   "at": 53.124,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell2_6",
+   "at": 53.504,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "cell2_7",
+   "at": 53.884,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.035,
+    "gain_db": -26
+   },
+   "means": "세포 하나가 뒤집힘"
+  },
+  {
+   "id": "core_sa_0",
+   "at": 54.537,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.06,
+    "gain_db": -18
+   },
+   "means": "동방결절이 발화"
+  },
+  {
+   "id": "core_s1_0",
+   "at": 56.849,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -14
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -20
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "core_s2_0",
+   "at": 59.93,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -16
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -23
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "atria_sa_0",
+   "at": 68.304,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.06,
+    "gain_db": -14
+   },
+   "means": "동방결절이 발화"
+  },
+  {
+   "id": "av_hold_atria",
+   "at": 71.533,
+   "kind": "tone",
+   "params": {
+    "freq": 110,
+    "dur": 3.8347846153846206,
+    "attack": 0.4,
+    "release": 0.5,
+    "gain_db": -30
+   },
+   "means": "신호가 방실결절에 머묾"
+  },
+  {
+   "id": "av_hold_avnode",
+   "at": 75.368,
+   "kind": "tone",
+   "params": {
+    "freq": 110,
+    "dur": 13.878191489361711,
+    "attack": 0.4,
+    "release": 0.5,
+    "gain_db": -30
+   },
+   "means": "신호가 방실결절에 머묾"
+  },
+  {
+   "id": "contract_s1_0",
+   "at": 113.185,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -12
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -18
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "contract_s2_0",
+   "at": 135.242,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -13
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -20
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s1_0",
+   "at": 145.192,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s2_0",
+   "at": 145.512,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s1_1",
+   "at": 145.992,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s2_1",
+   "at": 146.312,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s1_2",
+   "at": 146.792,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s2_2",
+   "at": 147.112,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s1_3",
+   "at": 147.592,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s2_3",
+   "at": 147.912,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s1_4",
+   "at": 148.392,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s2_4",
+   "at": 148.712,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s1_5",
+   "at": 149.192,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s2_5",
+   "at": 149.512,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s1_6",
+   "at": 149.992,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s2_6",
+   "at": 150.312,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s1_7",
+   "at": 150.792,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s2_7",
+   "at": 151.112,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s1_8",
+   "at": 151.592,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s2_8",
+   "at": 151.912,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s1_9",
+   "at": 152.392,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate75_s2_9",
+   "at": 152.712,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_-1",
+   "at": 152.743,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_0",
+   "at": 152.99,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_0",
+   "at": 153.243,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_1",
+   "at": 153.49,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_1",
+   "at": 153.743,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_2",
+   "at": 153.99,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_2",
+   "at": 154.243,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_3",
+   "at": 154.49,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_3",
+   "at": 154.743,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_4",
+   "at": 154.99,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_4",
+   "at": 155.243,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_5",
+   "at": 155.49,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_5",
+   "at": 155.743,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_6",
+   "at": 155.99,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_6",
+   "at": 156.243,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_7",
+   "at": 156.49,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_7",
+   "at": 156.743,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_8",
+   "at": 156.99,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_8",
+   "at": 157.243,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_9",
+   "at": 157.49,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_9",
+   "at": 157.743,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_10",
+   "at": 157.99,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_10",
+   "at": 158.243,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_11",
+   "at": 158.49,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_11",
+   "at": 158.743,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_12",
+   "at": 158.99,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_12",
+   "at": 159.243,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_13",
+   "at": 159.49,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_13",
+   "at": 159.743,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_14",
+   "at": 159.99,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_14",
+   "at": 160.243,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_15",
+   "at": 160.49,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_15",
+   "at": 160.743,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_16",
+   "at": 160.99,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_16",
+   "at": 161.243,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_17",
+   "at": 161.49,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_17",
+   "at": 161.743,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_18",
+   "at": 161.99,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_18",
+   "at": 162.243,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_19",
+   "at": 162.49,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_19",
+   "at": 162.743,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_20",
+   "at": 162.99,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_20",
+   "at": 163.243,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_21",
+   "at": 163.49,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_21",
+   "at": 163.743,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_22",
+   "at": 163.99,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_22",
+   "at": 164.243,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_23",
+   "at": 164.49,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_23",
+   "at": 164.743,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_24",
+   "at": 164.99,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_24",
+   "at": 165.243,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_25",
+   "at": 165.49,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_25",
+   "at": 165.743,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_26",
+   "at": 165.99,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_26",
+   "at": 166.243,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_27",
+   "at": 166.49,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_27",
+   "at": 166.743,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s1_28",
+   "at": 166.99,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -20
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -26
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "rate120_s2_28",
+   "at": 167.243,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -22
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -29
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "close_s1_0",
+   "at": 167.559,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -21
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -27
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "close_s2_0",
+   "at": 167.879,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -23
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "close_s1_1",
+   "at": 168.359,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -21
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -27
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "close_s2_1",
+   "at": 168.679,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -23
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "close_s1_2",
+   "at": 169.159,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -21
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -27
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "close_s2_2",
+   "at": 169.479,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -23
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "close_s1_3",
+   "at": 169.959,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -21
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -27
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "close_s2_3",
+   "at": 170.279,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -23
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "close_s1_4",
+   "at": 170.759,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -21
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -27
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "close_s2_4",
+   "at": 171.079,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -23
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "close_s1_5",
+   "at": 171.559,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -21
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -27
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "close_s2_5",
+   "at": 171.879,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -23
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "close_s1_6",
+   "at": 172.359,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -21
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -27
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "close_s2_6",
+   "at": 172.679,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -23
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "close_s1_7",
+   "at": 173.159,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -21
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -27
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "close_s2_7",
+   "at": 173.479,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -23
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "close_s1_8",
+   "at": 173.959,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 62,
+       "dur": 0.22,
+       "attack": 0.005,
+       "release": 0.18,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -21
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 40,
+       "high": 180,
+       "release": 0.1,
+       "gain_db": -27
+      }
+     }
+    ]
+   },
+   "means": "방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)"
+  },
+  {
+   "id": "close_s2_8",
+   "at": 174.279,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 92,
+       "dur": 0.14,
+       "attack": 0.004,
+       "release": 0.11,
+       "harmonics": [
+        1,
+        0.6,
+        0.35
+       ],
+       "gain_db": -23
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.08,
+       "low": 60,
+       "high": 240,
+       "release": 0.07,
+       "gain_db": -30
+      }
+     }
+    ]
+   },
+   "means": "동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)"
+  }
+ ]
+}
