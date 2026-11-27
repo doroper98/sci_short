@@ -10,6 +10,10 @@
 
 `brief.md`는 기획·단순화·검증 메모, `render.mjs`와 `run.sh`는 보통 고치지 않습니다.
 
+이 편은 파일이 둘 더 있습니다(같은 시계).
+- `model.mjs` — 한 박동의 모형: 흥분·회복 시각 지도, 수축, 판막, 피의 흐름, 심전도 곡선, 그리고 장면마다의 '박동 실행'(`plan(timeline)`).
+- `make_sound.mjs` — `sound.json` 을 같은 `plan()` 에서 만든다(손으로 고치지 않는다). 대본·음성이 바뀌면 `node episodes/heartbeat-ecg/make_sound.mjs` 를 다시 돌린 뒤 `run.sh stills render sfx …`.
+
 ```bash
 episodes/heartbeat-ecg/run.sh                       # narrate → stills → render → sfx → mix → finish → hdr → validate
 episodes/heartbeat-ecg/run.sh stills                # 스틸만 다시 (outputs/heartbeat-ecg/stills/contact-sheet.jpg, 빛 지도 contact-sheet-hdr.jpg)

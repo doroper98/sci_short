@@ -1,7 +1,7 @@
 // 62 심전도 — sound.json 을 model.mjs 의 같은 시계(plan)에서 만든다. 실행: node episodes/heartbeat-ecg/make_sound.mjs
 // 모두 합성한 설명용 소리(녹음 아님). 기본음·잡음 대역 모두 700 Hz 아래(사용자 규칙). 병원 감시 장치의 맑은 '삐' 소리는 쓰지 않는다.
 //  - 발화(동방결절): 아주 작은 낮은 틱(240 Hz) — 느리게 보는 장면에서만(실제 빠르기에서는 두 심장 소리만)
-//  - 첫째 소리(방실판막 닫힘): 낮고 둔한 둥(62 Hz + 대역 잡음 40~180 Hz), 둘째 소리: 조금 높고 짧은 둥(92 Hz)
+//  - 첫째 소리(방실판막 닫힘): 낮고 둔한 둥(62 Hz + 배음 124·186 Hz — 휴대전화 스피커에서도 들리게 + 대역 잡음 40~180 Hz), 둘째 소리: 조금 높고 짧은 둥(92 Hz + 배음 184·276 Hz)
 //    — 실제 심음의 녹음이 아니라 '닫히는 순간'을 알리는 표시음. 느리게 보는 장면에서도 음높이는 그대로(SOUND_DESIGN 7).
 //  - 방실결절에서 머무는 동안: 낮은 지속음(110 Hz, 작게), 되감기: 낮은 쓸림, 세포가 뒤집힐 때: 짧은 틱
 import fs from 'node:fs'; import path from 'node:path'; import {fileURLToPath} from 'node:url';
@@ -11,8 +11,8 @@ const tl = JSON.parse(fs.readFileSync(path.join(root, 'outputs/heartbeat-ecg/nar
 const R = M.plan(tl), ev = [];
 const r3 = x => Math.round(x * 1000) / 1000;
 const add = (id, at, kind, params, means) => ev.push({id, at: r3(at), kind, params, means});
-const S1 = (id, at, g) => add(id, at, 'custom', {layers: [{kind: 'tone', params: {freq: 62, dur: 0.22, attack: 0.005, release: 0.18, gain_db: g}}, {kind: 'noise', params: {dur: 0.12, low: 40, high: 180, release: 0.1, gain_db: g - 6}}]}, '방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)');
-const S2 = (id, at, g) => add(id, at, 'custom', {layers: [{kind: 'tone', params: {freq: 92, dur: 0.14, attack: 0.004, release: 0.11, gain_db: g}}, {kind: 'noise', params: {dur: 0.08, low: 60, high: 240, release: 0.07, gain_db: g - 7}}]}, '동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)');
+const S1 = (id, at, g) => add(id, at, 'custom', {layers: [{kind: 'tone', params: {freq: 62, dur: 0.22, attack: 0.005, release: 0.18, harmonics: [1, 0.6, 0.35], gain_db: g}}, {kind: 'noise', params: {dur: 0.12, low: 40, high: 180, release: 0.1, gain_db: g - 6}}]}, '방실판막이 닫힘 — 첫째 심장 소리(설명용 표시음)');
+const S2 = (id, at, g) => add(id, at, 'custom', {layers: [{kind: 'tone', params: {freq: 92, dur: 0.14, attack: 0.004, release: 0.11, harmonics: [1, 0.6, 0.35], gain_db: g}}, {kind: 'noise', params: {dur: 0.08, low: 60, high: 240, release: 0.07, gain_db: g - 7}}]}, '동맥판막이 닫힘 — 둘째 심장 소리(설명용 표시음)');
 const SA = (id, at, g) => add(id, at, 'tick', {freq: 240, decay: 0.06, gain_db: g}, '동방결절이 발화');
 const runEvents = (key, {sa = null, s1 = -16, s2 = -18} = {}) => {
   const run = R[key];

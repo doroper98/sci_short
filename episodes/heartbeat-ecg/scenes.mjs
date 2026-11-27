@@ -134,7 +134,7 @@ function excState(k, x, y, w, c) {  // k = 방
   const a = M.actTime(k, x, y, w), r = M.recTime(k, x, y, w);
   let E = 0, F = 0, R = 0;
   for (const cc of [c, c + M.RR75]) {
-    const e = smooth((cc - a) / 3) * (1 - smooth((cc - r) / 14));
+    const e = smooth((cc - a) / 5) * (1 - smooth((cc - r) / 14));
     E = Math.max(E, e);
     const fd = cc - a; if (fd >= 0 && fd < 3.5) F = Math.max(F, 1 - fd / 3.5);
     const rd = cc - r, rw = k === 'RA' || k === 'LA' ? 3 : 5; if (rd >= 0 && rd < rw) R = Math.max(R, 1 - rd / rw);
@@ -167,7 +167,7 @@ function heartBuffer(stage, cam, st) {
         const r = Math.max(s.cav.rx, s.cav.ry), d = (ec - 1) * Math.min(s.cav.rx, s.cav.ry) * 0.5 + (ec - 1) * r * 0.5;
         if (d < bec) { bec = d; best = k; }
       }
-      if (!hit && best) { const dEnv = (1 - eEnv) * 0.5 * (env.rx + env.ry); hit = {k: best, cav: false, w: clamp(bec / Math.max(1, bec + dEnv))}; }
+      if (!hit && best) { const dEnv = (1 - eEnv) * 0.5 * (env.rx + env.ry); hit = {k: best, cav: false, w: clamp(bec / Math.max(1, bec + dEnv)), dc: bec, de: dEnv}; }
       if (!hit) continue;
       const o = (j * BW + i) * 4;
       if (hit.cav) {
@@ -177,13 +177,14 @@ function heartBuffer(stage, cam, st) {
       }
       const {E, F, R} = excState(hit.k, x, y, hit.w, st.c, hit.k);
       const shade = 0.80 + 0.20 * Math.sin(Math.PI * hit.w) - 0.06 * hit.w;
-      const rq = R * 0.55 * (1 - 0.3 * E);
+      const rq = R * 0.55 * (1 - 0.3 * E), aa = 1.3 * DS / z, qc = clamp(hit.dc / aa), qe = clamp(hit.de / aa);   // 가장자리 부드럽게(공 쪽, 바깥 쪽)
       for (let ch = 0; ch < 3; ch++) {
         let v = lerp(PAL.rest[ch], PAL.exc[ch], E);
         v = lerp(v, PAL.recov[ch], rq);
-        d[o + ch] = clamp(v * shade * (st.dim ?? 1), 0, 255);
+        v = lerp(PAL.blood[ch] * 0.7, v * shade * (st.dim ?? 1), qc);
+        d[o + ch] = clamp(v, 0, 255);
       }
-      d[o + 3] = 255;
+      d[o + 3] = 255 * qe;
       if (F > 0.02) {           // 흥분 앞면 = 신호(빛)
         const a = F * F;
         f[o] = 255; f[o + 1] = 190 + 50 * a; f[o + 2] = 120 + 90 * a; f[o + 3] = 255 * a * 0.9;
