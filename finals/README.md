@@ -77,11 +77,11 @@
 | 55 | 신의 지팡이 — 우주에서 떨어뜨린 막대는 얼마나 깊이 뚫을까 | 163.6초 | [55-rods-from-god/](55-rods-from-god/) | [upload.md](55-rods-from-god/upload.md) | 2026-11-22 |
 | 57 | 지진파 — 단층은 한 번 미끄러졌는데, 흔들림은 왜 두 번 올까 | 168.0초 | [57-seismic-waves/](57-seismic-waves/) | [upload.md](57-seismic-waves/upload.md) | 2026-11-25 |
 | 58 | 쓰나미는 어떻게 생기고, 어떻게 바다를 건널까 — 바닥까지 물 전체가 움직이는 파도라서, 깊은 바다에서는 낮고 빠르고 얕은 해안에서는 느려지고 높아진다 | 164.9초 | [58-tsunami/](58-tsunami/) | [upload.md](58-tsunami/upload.md) | 2026-11-15 |
-| 62 | 심전도 — 심장 박동의 물결 | 174.8초 | [62-heartbeat-ecg/](62-heartbeat-ecg/) | [upload.md](62-heartbeat-ecg/upload.md) | 2026-11-27 |
+| 62 | 심전도 — 심장 박동의 물결 | 174.8초 | [62-heartbeat-ecg/](62-heartbeat-ecg/) | [upload.md](62-heartbeat-ecg/upload.md) | uncommitted |
 | 64 | 기상 레이더는 비구름을 어떻게 볼까 — 구름을 찍지 않는다. 전파를 쏘고, 빗방울이 돌려보낸 메아리의 시간과 세기를 잰다 | 164.8초 | [64-weather-radar/](64-weather-radar/) | [upload.md](64-weather-radar/upload.md) | 2026-11-15 |
 | 66 | 꼬리날개 — 멀리 있는 작은 날개가 비행기를 되돌린다 | 169.1초 | [66-tail-stability/](66-tail-stability/) | [upload.md](66-tail-stability/upload.md) | 2026-11-22 |
 
-합계 51편, 142.1분, 1112 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
+합계 51편, 142.1분, 1113 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
 <!-- catalog:end -->
 
 ## 이전 작품 (`legacy/`)

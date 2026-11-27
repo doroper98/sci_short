@@ -484,18 +484,20 @@ export const scenes = {
     lit(stage, cc => { line(cc, str, rgba('#FFE7C8', 0.95), 3); line(cc, str, '#FFFFFF', 1.2); }, {gain: 0.6});
     line(c, [[gx - 6, gy - 200], [gx + 6, gy - 200]], PAL.muted, 4); line(c, [[gx - 6, gy + 200], [gx + 6, gy + 200]], PAL.muted, 4);
     // 빛줄기 → 띠의 기록 자리(x = 540 + 이동)
-    const recX = 540 + dx * 2.2;
-    lit(stage, cc => { cc.save(); cc.globalAlpha = 0.35; poly(cc, [[gx - 14, gy + 210], [gx + 14, gy + 210], [recX + 6, STRIP.y0 + 30], [recX - 6, STRIP.y0 + 30]], rgba('#FFD9A8', 0.6)); cc.restore(); }, {gain: 0.35});
+    // 빛줄기는 아래에서(띠를 그린 뒤) — 끝점 = 펜 끝(기록 자리 x = 540, 높이 = 지금 전압). 실은 옆으로, 기록점은 세로로 움직이므로
+    // 그 사이의 렌즈·틈은 설명 그림으로 줄였다(아래 각주 한 줄).
     note(stage, '실(석영)', gx, gy - 236, {size: 26});
     note(stage, '자석', gx - 100, gy - 190, {size: 26}); note(stage, '자석', gx + 100, gy - 190, {size: 26});
     // 사진 띠: 기록 자리는 x = 540 고정(빛), 종이는 왼쪽으로 흐른다(실제 빠르기, 0.2초 = 75 px)
     stripPanel(stage, '사진 띠 · 왼쪽으로 흐름');
     const pxPerMs = 0.375, recBase = 540;
-    const xs = ms => recBase - (now - ms) * pxPerMs + dx * 2.2 * (ms === now ? 1 : 0);
     const pts = []; for (let ms = Math.max(run.ms0, now - (recBase - STRIP.x0) / pxPerMs); ms <= now; ms += 2) pts.push([recBase - (now - ms) * pxPerMs, yOf(M.ecgAt(ms, 75))]);
     if (pts.length > 1) line(c, pts, PAL.ink, 3);
     for (let ms = Math.ceil((now - 1200) / 200) * 200; ms <= now; ms += 200) { const x = recBase - (now - ms) * pxPerMs; if (x > STRIP.x0) line(c, [[x, STRIP.y0 + 34], [x, STRIP.y1 - 6]], rgba(PAL.muted, 0.12), 1); }
-    penTip(stage, recBase, yOf(v));
+    const py = yOf(v);
+    lit(stage, cc => { cc.save(); cc.globalAlpha = 0.35; poly(cc, [[gx - 14, gy + 210], [gx + 14, gy + 210], [recBase + 6, py], [recBase - 6, py]], rgba('#FFD9A8', 0.6)); cc.restore(); }, {gain: 0.35});
+    penTip(stage, recBase, py);
+    note(stage, '렌즈로 실의 그림자를 띠 위 세로 틈에 비춤 · 설명 그림', 84, 970, {size: 24, align: 'left'});
     // s04: 이름 P Q R S T 를 지나간 박동의 굴곡에(사건 순간 뒤 종이와 함께 흐름)
     const s04 = ctx.tl.sentence('s04').start - 0.3;
     if (t > s04) {
