@@ -1,0 +1,27 @@
+{
+ "media_id": "18106468529355940",
+ "permalink": "https://www.instagram.com/reel/DgPVBHyhYHY/",
+ "posted_at": "2026-11-27T09:13:02+00:00",
+ "ig_user_id": "17841457693338876",
+ "username": "_scishorts",
+ "video_file": "weather-radar.mp4",
+ "video_bytes": 13597807,
+ "video_md5": "f7968ec6acaf383e40d8d8f08ba3a800",
+ "caption_chars": 398,
+ "hashtags": [
+  "#기상레이더",
+  "#날씨",
+  "#일기예보",
+  "#과학"
+ ],
+ "container_id": "17987823644923112",
+ "shortcode": "DgPVBHyhYHY",
+ "transfer": "url",
+ "ai_label": true,
+ "number": 64,
+ "slug": "weather-radar",
+ "status": "posted",
+ "note": "",
+ "source": "api",
+ "schema_version": 1
+}
