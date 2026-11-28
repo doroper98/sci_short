@@ -1,0 +1,29 @@
+{
+  "file": "route-finding.hdr.mp4",
+  "bytes": 14274677,
+  "sha256": "9d1659fd7c8a59b6df103b7ea00675d21d358278c7b6e04f8ec110286f4eb737",
+  "created": "2026-11-28T12:09:06+00:00",
+  "codec": "hevc Main 10",
+  "pix_fmt": "yuv420p10le",
+  "color": "bt2020 / smpte2084 (PQ) / bt2020nc",
+  "duration": 172.2,
+  "settings": {
+    "sdr_white_nits": 203,
+    "peak_boost": 4,
+    "gate": [
+      0.4,
+      0.7
+    ],
+    "crf": 18,
+    "preset": "medium",
+    "max_cll": 812,
+    "max_fall": 300
+  },
+  "frames": 5166,
+  "lit_frames": 3503,
+  "sdr_white_code": 573,
+  "peak_code": 715,
+  "peak_nits_estimate": 923,
+  "encode_seconds": 200.5,
+  "note": "peak_nits_estimate 는 무채색으로 보고 luma 코드에서 어림한 값"
+}
