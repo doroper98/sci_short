@@ -49,7 +49,7 @@ export const AX = {lg0: 0, lg1: 6, y0: 0, y1: 8};
 const r3 = x => Math.round(x * 1000) / 1000;
 function finder(tl) {
   const S = id => tl.sentences.find(s => s.id === id), sc = id => tl.scenes.find(s => s.id === id);
-  /** 문장 id 안에서 낱말(발음 tts 기준)의 첫 글자 시각 */
+  /** 문장 id 안에서 낱말(발음 tts 기준 — 된소리로 적은 낱말은 그 표기로: 상대썽·사껀·물찔·잔물껼)의 첫 글자 시각 */
   const word = (id, w, off = 0) => {
     const s = S(id), ch = s.chars || [], joined = ch.map(c => c.c).join(''), i = joined.indexOf(w);
     if (i < 0) throw new Error(`model: ${id} 에 "${w}" 없음`);
@@ -73,10 +73,10 @@ export function plan(tl) {
   P.exch = {t0: s02.start - 0.5, K, trips: []};
   for (let k = 0; k < K; k++) { const a = x0 + k * step; P.exch.trips.push({ask: r3(a), askArr: r3(a + step * 0.38), ans: r3(a + step * 0.48), ansArr: r3(a + step * 0.86)}); }
   // ---- origin
-  P.origin = {land: r3(word('s03', '일반상대성', -0.25)), bend: 1.3, wobble: r3(word('s04', '휘고', -0.1)), wobbleEnd: sc('origin').end, quant: r3(word('s03', '양자역학', 0))};
+  P.origin = {land: r3(word('s03', '일반상대썽', -0.25)), bend: 1.3, wobble: r3(word('s04', '휘고', -0.1)), wobbleEnd: sc('origin').end, quant: r3(word('s03', '양자역학', 0))};
   // ---- infinity: 잔물결 k = 1…10 하나씩, 그 뒤 ×10 씩(N = 100 … 10⁶)
   const rip = [], s05 = S('s05'), s06 = S('s06');
-  const r1 = word('s05', '잔물결', 0.1);
+  const r1 = word('s05', '잔물껼', 0.1);
   rip.push({k: 1, lg: 0, t: r3(r1)}, {k: 2, lg: Math.log10(2), t: r3(r1 + 1.3)}, {k: 3, lg: Math.log10(3), t: r3(r1 + 2.6)});
   const r4 = s06.start + 0.3;
   for (let k = 4; k <= 10; k++) rip.push({k, lg: Math.log10(k), t: r3(r4 + (k - 4) * 0.42)});
@@ -86,7 +86,7 @@ export function plan(tl) {
   P.infinity = {plateOut: [S('s07').start - 0.2, S('s07').start + 1.4], loops: []};
   for (let t0 = word('s07', '빛의', -0.1); t0 < sc('infinity').end - 1.2; t0 += 2.3) P.infinity.loops.push(r3(t0));
   // ---- diamond
-  P.diamond = {p: r3(word('s08', '사건에서', 0.0)), grow: 2.0, q0: r3(word('s08', '나중', 0.0)), qArr: 0, label: r3(word('s09', '인과', -0.2)), sig: r3(word('s09', '원인과', -0.3)), sigDur: 2.6};
+  P.diamond = {p: r3(word('s08', '사껀에서', 0.0)), grow: 2.0, q0: r3(word('s08', '나중', 0.0)), qArr: 0, label: r3(word('s09', '인과', -0.2)), sig: r3(word('s09', '원인과', -0.3)), sigDur: 2.6};
   P.diamond.qArr = r3(P.diamond.q0 + 1.8);
   // ---- focus: 중력자 n 하나씩(고리가 원뿔을 따라 올라감), 9번째는 한계에 막힘
   const grav = [], s10 = S('s10'), s12 = S('s12'), s13 = S('s13');
@@ -118,7 +118,7 @@ export function plan(tl) {
   const s17 = S('s17');
   P.bh = {r0: 1.0, falls: [{t: r3(s17.start + 0.9), dr: 0.16}, {t: r3(s17.start + 3.9), dr: 0.16}], fallDur: 1.2};
   // ---- limits
-  P.limits = {mark: r3(S('s18').start + 0.4), empty: r3(word('s18', '물질이', -0.2)), exp: r3(word('s19', '실험으로', -0.1))};
+  P.limits = {mark: r3(S('s18').start + 0.4), empty: r3(word('s18', '물찔이', -0.2)), exp: r3(word('s19', '실험으로', -0.1))};
   // ---- close
   P.close = {sweep: r3(S('s20').start + 0.2), end: r3(S('s20').start)};
   return P;

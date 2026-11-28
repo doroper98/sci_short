@@ -8,11 +8,20 @@
 - 6월·10월 = 유월·시월(TTS-AP-060).
 - 고유어 수사가 필요한 개수 단위(개·명·번·살·마리·시간·시…)는 자동 변환하지 않고 오류를 낸다 → 대본에 명시 tts 를 쓴다.
 auto_tts 가 모르는 것은 그대로 두고, lint_tts 가 남은 숫자·라틴 문자·기호를 잡는다.
+
+발음 규정집(2026-11-28 사용자: "상대성이론 발음이 왜저래. '상대썽이론'이어야 되자나", "재발 방지 목록과 발음 규정집 같은게
+있으면 거기에 다 등록해" — osint 원본에는 없는 부분): 엔진이 표기에 드러나지 않는 된소리를 글자대로 읽는 낱말을
+config/pronunciation.json 에 적어 두고, apply_rulebook 이 합성 직전의 발음 텍스트(명시 tts 와 auto_tts 결과 모두)에서
+write → say 로 바꾼다. 글자 수는 그대로다(글자 시각 정렬·자막 큐가 글자 자리로 맞물린다). 규정과 재발 방지 목록은
+docs/PRONUNCIATION.md.
 """
 
 from __future__ import annotations
 
+import json
 import re
+from functools import lru_cache
+from pathlib import Path
 
 DIGITS = "영일이삼사오육칠팔구"
 SMALL_UNITS = ("", "십", "백", "천")
@@ -117,6 +126,65 @@ def auto_tts(text: str, decimal_word: str = DECIMAL_WORD) -> str:
         return num
 
     return TOKEN.sub(repl, text)
+
+
+RULEBOOK = Path(__file__).resolve().parents[2] / "config" / "pronunciation.json"
+_HANGUL = re.compile(r"^[가-힣]+$")
+
+
+class RulebookError(ValueError):
+    """config/pronunciation.json 의 꼴이 틀렸다(추측하지 않고 멈춘다)."""
+
+
+def check_rulebook(data: dict) -> list[tuple[str, str]]:
+    """규정집 dict → [(write, say)] (긴 낱말부터). 꼴이 틀리면 RulebookError. Pure function."""
+    words = data.get("words")
+    if not isinstance(words, list):
+        raise RulebookError("발음 규정집: words 는 목록이어야 한다")
+    out, seen = [], set()
+    for i, w in enumerate(words):
+        if not isinstance(w, dict) or not isinstance(w.get("write"), str) or not isinstance(w.get("say"), str):
+            raise RulebookError(f"발음 규정집 words[{i}]: write·say 문자열이 있어야 한다")
+        a, b = w["write"], w["say"]
+        if not _HANGUL.match(a) or not _HANGUL.match(b):
+            raise RulebookError(f"발음 규정집 words[{i}]: 한글 낱말만 적는다({a!r} → {b!r})")
+        if len(a) != len(b):
+            raise RulebookError(f"발음 규정집 words[{i}]: write 와 say 의 글자 수가 같아야 한다({a!r} {len(a)}자 → {b!r} {len(b)}자)")
+        if a == b:
+            raise RulebookError(f"발음 규정집 words[{i}]: write 와 say 가 같다({a!r})")
+        if a in seen:
+            raise RulebookError(f"발음 규정집 words[{i}]: {a!r} 가 두 번 적혀 있다")
+        seen.add(a)
+        out.append((a, b))
+    for a, _ in out:                      # say 가 다른 항목의 write 를 다시 만들면 적용 순서에 따라 결과가 달라진다
+        for _, b in out:
+            if a in b:
+                raise RulebookError(f"발음 규정집: {b!r}(say) 안에 다른 항목의 write {a!r} 가 들어 있다")
+    return sorted(out, key=lambda ab: (-len(ab[0]), ab[0]))
+
+
+@lru_cache(maxsize=4)
+def load_rulebook(path: str | None = None) -> tuple[tuple[str, str], ...]:
+    """config/pronunciation.json → ((write, say), …). 파일이 없으면 빈 규정집."""
+    p = Path(path) if path else RULEBOOK
+    if not p.is_file():
+        return ()
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as ex:
+        raise RulebookError(f"발음 규정집을 읽을 수 없다({p}): {ex}") from ex
+    return tuple(check_rulebook(data))
+
+
+def apply_rulebook(tts: str, rules: tuple[tuple[str, str], ...] | None = None) -> tuple[str, list[tuple[str, str]]]:
+    """발음 텍스트의 규정집 낱말을 표준 발음 표기로 바꾼다 → (바뀐 텍스트, [(write, say)] 실제로 바뀐 것). 글자 수는 그대로."""
+    rules = load_rulebook() if rules is None else rules
+    done = []
+    for a, b in rules:
+        if a in tts:
+            tts = tts.replace(a, b)
+            done.append((a, b))
+    return tts, done
 
 
 def lint_tts(tts: str) -> str:

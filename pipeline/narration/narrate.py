@@ -33,7 +33,9 @@ from pipeline.narration import captions as cap  # noqa: E402
 from pipeline.narration import forced_align as fa  # noqa: E402
 from pipeline.narration import prosody, synth  # noqa: E402
 from pipeline.narration import trim as trim_mod  # noqa: E402
-from pipeline.narration.pronounce import PronounceError, TtsLintError, auto_tts, lint_tts  # noqa: E402
+from pipeline.narration.pronounce import (  # noqa: E402
+    PronounceError, RulebookError, TtsLintError, apply_rulebook, auto_tts, lint_tts,
+)
 from pipeline.narration.script_schema import Script, ScriptError, load_script, script_opener_problems  # noqa: E402
 from pipeline.narration.timeline import place_sentences, scene_bounds  # noqa: E402
 from pipeline.narration.voice_config import (  # noqa: E402
@@ -100,8 +102,13 @@ def resolve_tts(script: Script) -> dict[str, tuple[str, str]]:
     for s in script.sentences:
         try:
             tts = s.tts if s.tts is not None else auto_tts(s.text)
+            # 발음 규정집(config/pronunciation.json, 2026-11-28 사용자 "상대썽이론이어야 되자나"): 엔진이 글자대로 읽는
+            # 낱말을 표준 발음 표기로 — 명시 tts 에도 적용한다(잊어도 틀리지 않게). 글자 수는 그대로.
+            tts, swapped = apply_rulebook(tts)
+            if swapped:
+                print(f"  발음 규정집 {s.id}: " + ", ".join(f"{a}→{b}" for a, b in swapped))
             out[s.id] = (lint_tts(tts), "explicit" if s.tts is not None else "auto")
-        except (PronounceError, TtsLintError) as ex:
+        except (PronounceError, TtsLintError, RulebookError) as ex:
             errs.append(f"{s.id}: {ex}")
     if errs:
         raise NarrateError("발음 텍스트 오류(합성 전에 멈춤):\n  " + "\n  ".join(errs))

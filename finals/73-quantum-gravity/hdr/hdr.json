@@ -1,12 +1,12 @@
 {
   "file": "quantum-gravity.hdr.mp4",
-  "bytes": 15136767,
-  "sha256": "33f57998d69b56f47724cfe2cc3f1aed1729fe8b7ea5d25ab5c3b581a1cd36a2",
-  "created": "2026-11-28T01:25:52+00:00",
+  "bytes": 15037502,
+  "sha256": "e3be5509df587bcd317e23ec6426215b6457bb2aca643de1b527a69be6ceffbf",
+  "created": "2026-11-28T02:07:48+00:00",
   "codec": "hevc Main 10",
   "pix_fmt": "yuv420p10le",
   "color": "bt2020 / smpte2084 (PQ) / bt2020nc",
-  "duration": 170.433,
+  "duration": 171.2,
   "settings": {
     "sdr_white_nits": 203,
     "peak_boost": 4,
@@ -19,11 +19,11 @@
     "max_cll": 812,
     "max_fall": 300
   },
-  "frames": 5113,
-  "lit_frames": 4001,
+  "frames": 5136,
+  "lit_frames": 3995,
   "sdr_white_code": 573,
-  "peak_code": 712,
-  "peak_nits_estimate": 895,
-  "encode_seconds": 198.0,
+  "peak_code": 714,
+  "peak_nits_estimate": 914,
+  "encode_seconds": 237.0,
   "note": "peak_nits_estimate 는 무채색으로 보고 luma 코드에서 어림한 값"
 }

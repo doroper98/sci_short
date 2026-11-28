@@ -1,10 +1,10 @@
 {
   "file": "quantum-gravity.mp4",
-  "bytes": 23622035,
-  "sha256": "4c9cb77f585860817e1a277e61c17096b4c227d2124e53cdcb18f3467acb2684",
-  "created": "2026-11-28T01:21:41+00:00",
+  "bytes": 23690834,
+  "sha256": "72a7cc63b401a780b0c5a7430f569ad370f81f2d29c20f36bded26f3360a5511",
+  "created": "2026-11-28T02:02:59+00:00",
   "title": "OpenAI 양자중력이론 — 빛원뿔로 조각낸 시공간",
-  "timeline_duration": 170.419,
+  "timeline_duration": 171.198,
   "max_sec": 180.0,
   "probe": {
     "streams": [
@@ -40,11 +40,11 @@
         "time_base": "1/15360",
         "start_pts": 0,
         "start_time": "0.000000",
-        "duration_ts": 2617856,
-        "duration": "170.433333",
-        "bit_rate": "933149",
+        "duration_ts": 2629632,
+        "duration": "171.200000",
+        "bit_rate": "931225",
         "bits_per_raw_sample": "8",
-        "nb_frames": "5113",
+        "nb_frames": "5136",
         "extradata_size": 50,
         "disposition": {
           "default": 1,
@@ -93,10 +93,10 @@
         "time_base": "1/48000",
         "start_pts": 0,
         "start_time": "0.000000",
-        "duration_ts": 8180112,
-        "duration": "170.419000",
-        "bit_rate": "166802",
-        "nb_frames": "7986",
+        "duration_ts": 8217504,
+        "duration": "171.198000",
+        "bit_rate": "166966",
+        "nb_frames": "8026",
         "extradata_size": 5,
         "disposition": {
           "default": 1,
@@ -132,9 +132,9 @@
       "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
-      "duration": "170.433333",
-      "size": "23622035",
-      "bit_rate": "1108798",
+      "duration": "171.200000",
+      "size": "23690834",
+      "bit_rate": "1107048",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -148,19 +148,19 @@
   "audio_mastering_input": {
     "input_i": "-16.92",
     "input_tp": "-1.90",
-    "input_lra": "4.20",
-    "input_thresh": "-27.24",
-    "output_i": "-13.97",
+    "input_lra": "4.40",
+    "input_thresh": "-27.26",
+    "output_i": "-13.94",
     "output_tp": "-1.50",
-    "output_lra": "3.90",
-    "output_thresh": "-24.29",
+    "output_lra": "4.40",
+    "output_thresh": "-24.28",
     "normalization_type": "dynamic",
-    "target_offset": "-0.03"
+    "target_offset": "-0.06"
   },
   "encoded_audio": {
     "input_i": "-14.06",
-    "input_tp": "-1.43",
-    "input_lra": "3.90"
+    "input_tp": "-1.34",
+    "input_lra": "4.30"
   },
   "targets": {
     "lufs": -14.0,
