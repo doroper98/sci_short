@@ -1,0 +1,2335 @@
+{
+ "version": 1,
+ "notes": "설명용 합성음(녹음 아님). make_sound.mjs 가 model.mjs 의 같은 계획(plan)으로 만든다 — 손으로 고치지 말 것. 기본음 700 Hz 아래, 배경음악 없음.",
+ "ambient": {
+  "enabled": false
+ },
+ "music": {
+  "enabled": false
+ },
+ "events": [
+  {
+   "id": "flash_p0",
+   "at": 0.03,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.06,
+    "gain_db": -14,
+    "click": 0.15
+   },
+   "means": "사건 p 에서 빛이 떠남(첫 섬광)"
+  },
+  {
+   "id": "flash_q0",
+   "at": 0.72,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.06,
+    "gain_db": -17,
+    "click": 0.15
+   },
+   "means": "빛이 사건 q 로 모임"
+  },
+  {
+   "id": "sew_h0",
+   "at": 0.8,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -24,
+    "click": 0.15
+   },
+   "means": "이웃 다이아몬드가 맞붙음"
+  },
+  {
+   "id": "sew_h1",
+   "at": 0.867,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -24,
+    "click": 0.15
+   },
+   "means": "이웃 다이아몬드가 맞붙음"
+  },
+  {
+   "id": "sew_h2",
+   "at": 0.933,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -24,
+    "click": 0.15
+   },
+   "means": "이웃 다이아몬드가 맞붙음"
+  },
+  {
+   "id": "sew_h3",
+   "at": 1,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -24,
+    "click": 0.15
+   },
+   "means": "이웃 다이아몬드가 맞붙음"
+  },
+  {
+   "id": "sew_h4",
+   "at": 1.067,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -24,
+    "click": 0.15
+   },
+   "means": "이웃 다이아몬드가 맞붙음"
+  },
+  {
+   "id": "sew_h5",
+   "at": 1.133,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -24,
+    "click": 0.15
+   },
+   "means": "이웃 다이아몬드가 맞붙음"
+  },
+  {
+   "id": "sew_h6",
+   "at": 1.2,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -24,
+    "click": 0.15
+   },
+   "means": "이웃 다이아몬드가 맞붙음"
+  },
+  {
+   "id": "sew_h7",
+   "at": 1.267,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -24,
+    "click": 0.15
+   },
+   "means": "이웃 다이아몬드가 맞붙음"
+  },
+  {
+   "id": "sew_h8",
+   "at": 1.333,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -24,
+    "click": 0.15
+   },
+   "means": "이웃 다이아몬드가 맞붙음"
+  },
+  {
+   "id": "sew_h9",
+   "at": 1.4,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -24,
+    "click": 0.15
+   },
+   "means": "이웃 다이아몬드가 맞붙음"
+  },
+  {
+   "id": "sew_h10",
+   "at": 1.467,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -24,
+    "click": 0.15
+   },
+   "means": "이웃 다이아몬드가 맞붙음"
+  },
+  {
+   "id": "sew_h11",
+   "at": 1.533,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -24,
+    "click": 0.15
+   },
+   "means": "이웃 다이아몬드가 맞붙음"
+  },
+  {
+   "id": "sew_h12",
+   "at": 1.6,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -24,
+    "click": 0.15
+   },
+   "means": "이웃 다이아몬드가 맞붙음"
+  },
+  {
+   "id": "sew_h13",
+   "at": 1.667,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -24,
+    "click": 0.15
+   },
+   "means": "이웃 다이아몬드가 맞붙음"
+  },
+  {
+   "id": "sew_h14",
+   "at": 1.733,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -24,
+    "click": 0.15
+   },
+   "means": "이웃 다이아몬드가 맞붙음"
+  },
+  {
+   "id": "sew_h15",
+   "at": 1.8,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -24,
+    "click": 0.15
+   },
+   "means": "이웃 다이아몬드가 맞붙음"
+  },
+  {
+   "id": "sew_h16",
+   "at": 1.867,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -24,
+    "click": 0.15
+   },
+   "means": "이웃 다이아몬드가 맞붙음"
+  },
+  {
+   "id": "sew_h17",
+   "at": 1.933,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -24,
+    "click": 0.15
+   },
+   "means": "이웃 다이아몬드가 맞붙음"
+  },
+  {
+   "id": "rewind",
+   "at": 2.2,
+   "kind": "whoosh",
+   "params": {
+    "dur": 1,
+    "f_start": 480,
+    "f_end": 140,
+    "gain_db": -24
+   },
+   "means": "되감기"
+  },
+  {
+   "id": "flash_pl0",
+   "at": 3.5,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.06,
+    "gain_db": -20,
+    "click": 0.15
+   },
+   "means": "빛이 떠남"
+  },
+  {
+   "id": "flash_ql0",
+   "at": 4.5,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.06,
+    "gain_db": -22,
+    "click": 0.15
+   },
+   "means": "빛이 모임"
+  },
+  {
+   "id": "flash_pl1",
+   "at": 5.8,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.06,
+    "gain_db": -20,
+    "click": 0.15
+   },
+   "means": "빛이 떠남"
+  },
+  {
+   "id": "flash_ql1",
+   "at": 6.8,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.06,
+    "gain_db": -22,
+    "click": 0.15
+   },
+   "means": "빛이 모임"
+  },
+  {
+   "id": "ask_0",
+   "at": 10.276,
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "decay": 0.06,
+    "gain_db": -21,
+    "click": 0.15,
+    "pan": 0.35
+   },
+   "means": "물음이 GPT-6 Astra 에 닿음"
+  },
+  {
+   "id": "ans_0",
+   "at": 11.022,
+   "kind": "tick",
+   "params": {
+    "freq": 280,
+    "decay": 0.06,
+    "gain_db": -21,
+    "click": 0.15,
+    "pan": -0.35
+   },
+   "means": "답이 물리학자에게 닿음 — 논문에 한 줄"
+  },
+  {
+   "id": "ask_1",
+   "at": 11.83,
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "decay": 0.06,
+    "gain_db": -21,
+    "click": 0.15,
+    "pan": 0.35
+   },
+   "means": "물음이 GPT-6 Astra 에 닿음"
+  },
+  {
+   "id": "ans_1",
+   "at": 12.576,
+   "kind": "tick",
+   "params": {
+    "freq": 280,
+    "decay": 0.06,
+    "gain_db": -21,
+    "click": 0.15,
+    "pan": -0.35
+   },
+   "means": "답이 물리학자에게 닿음 — 논문에 한 줄"
+  },
+  {
+   "id": "ask_2",
+   "at": 13.383,
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "decay": 0.06,
+    "gain_db": -21,
+    "click": 0.15,
+    "pan": 0.35
+   },
+   "means": "물음이 GPT-6 Astra 에 닿음"
+  },
+  {
+   "id": "ans_2",
+   "at": 14.129,
+   "kind": "tick",
+   "params": {
+    "freq": 280,
+    "decay": 0.06,
+    "gain_db": -21,
+    "click": 0.15,
+    "pan": -0.35
+   },
+   "means": "답이 물리학자에게 닿음 — 논문에 한 줄"
+  },
+  {
+   "id": "ask_3",
+   "at": 14.937,
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "decay": 0.06,
+    "gain_db": -21,
+    "click": 0.15,
+    "pan": 0.35
+   },
+   "means": "물음이 GPT-6 Astra 에 닿음"
+  },
+  {
+   "id": "ans_3",
+   "at": 15.683,
+   "kind": "tick",
+   "params": {
+    "freq": 280,
+    "decay": 0.06,
+    "gain_db": -21,
+    "click": 0.15,
+    "pan": -0.35
+   },
+   "means": "답이 물리학자에게 닿음 — 논문에 한 줄"
+  },
+  {
+   "id": "ask_4",
+   "at": 16.49,
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "decay": 0.06,
+    "gain_db": -21,
+    "click": 0.15,
+    "pan": 0.35
+   },
+   "means": "물음이 GPT-6 Astra 에 닿음"
+  },
+  {
+   "id": "ans_4",
+   "at": 17.236,
+   "kind": "tick",
+   "params": {
+    "freq": 280,
+    "decay": 0.06,
+    "gain_db": -21,
+    "click": 0.15,
+    "pan": -0.35
+   },
+   "means": "답이 물리학자에게 닿음 — 논문에 한 줄"
+  },
+  {
+   "id": "ask_5",
+   "at": 18.044,
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "decay": 0.06,
+    "gain_db": -21,
+    "click": 0.15,
+    "pan": 0.35
+   },
+   "means": "물음이 GPT-6 Astra 에 닿음"
+  },
+  {
+   "id": "ans_5",
+   "at": 18.79,
+   "kind": "tick",
+   "params": {
+    "freq": 280,
+    "decay": 0.06,
+    "gain_db": -21,
+    "click": 0.15,
+    "pan": -0.35
+   },
+   "means": "답이 물리학자에게 닿음 — 논문에 한 줄"
+  },
+  {
+   "id": "mass_land",
+   "at": 21.944,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 70,
+       "dur": 0.5,
+       "attack": 0.004,
+       "release": 0.35,
+       "harmonics": [
+        1,
+        0.6,
+        0.3
+       ],
+       "gain_db": -14
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 50,
+       "high": 220,
+       "release": 0.1,
+       "gain_db": -22
+      }
+     }
+    ]
+   },
+   "means": "질량이 판에 놓임"
+  },
+  {
+   "id": "bend",
+   "at": 21.994,
+   "kind": "tone",
+   "params": {
+    "freq": 92,
+    "dur": 1.3,
+    "attack": 0.3,
+    "release": 0.6,
+    "sustain": 0.6,
+    "harmonics": [
+     1,
+     0.4
+    ],
+    "gain_db": -28
+   },
+   "means": "판이 휨"
+  },
+  {
+   "id": "wobble",
+   "at": 34.39,
+   "kind": "chirp",
+   "params": {
+    "points": [
+     [
+      0,
+      104,
+      0.05
+     ],
+     [
+      0.05,
+      104,
+      0.053
+     ],
+     [
+      0.1,
+      104,
+      0.057
+     ],
+     [
+      0.15,
+      104,
+      0.062
+     ],
+     [
+      0.2,
+      104,
+      0.067
+     ],
+     [
+      0.25,
+      104,
+      0.073
+     ],
+     [
+      0.3,
+      104,
+      0.079
+     ],
+     [
+      0.35,
+      104,
+      0.084
+     ],
+     [
+      0.4,
+      104,
+      0.09
+     ],
+     [
+      0.45,
+      104,
+      0.095
+     ],
+     [
+      0.5,
+      104,
+      0.099
+     ],
+     [
+      0.55,
+      104,
+      0.102
+     ],
+     [
+      0.6,
+      104,
+      0.103
+     ],
+     [
+      0.65,
+      104,
+      0.099
+     ],
+     [
+      0.7,
+      104,
+      0.094
+     ],
+     [
+      0.75,
+      104,
+      0.089
+     ],
+     [
+      0.8,
+      104,
+      0.084
+     ],
+     [
+      0.85,
+      104,
+      0.078
+     ],
+     [
+      0.9,
+      104,
+      0.073
+     ],
+     [
+      0.95,
+      104,
+      0.067
+     ],
+     [
+      1,
+      104,
+      0.062
+     ],
+     [
+      1.05,
+      104,
+      0.058
+     ],
+     [
+      1.1,
+      104,
+      0.055
+     ],
+     [
+      1.15,
+      104,
+      0.052
+     ],
+     [
+      1.2,
+      104,
+      0.051
+     ],
+     [
+      1.25,
+      104,
+      0.05
+     ],
+     [
+      1.3,
+      104,
+      0.051
+     ],
+     [
+      1.35,
+      104,
+      0.052
+     ],
+     [
+      1.4,
+      104,
+      0.055
+     ],
+     [
+      1.45,
+      104,
+      0.058
+     ],
+     [
+      1.5,
+      104,
+      0.062
+     ],
+     [
+      1.55,
+      104,
+      0.067
+     ],
+     [
+      1.6,
+      104,
+      0.073
+     ],
+     [
+      1.65,
+      104,
+      0.078
+     ],
+     [
+      1.7,
+      104,
+      0.084
+     ],
+     [
+      1.75,
+      104,
+      0.089
+     ],
+     [
+      1.8,
+      104,
+      0.094
+     ],
+     [
+      1.85,
+      104,
+      0.099
+     ],
+     [
+      1.9,
+      104,
+      0.103
+     ],
+     [
+      1.95,
+      104,
+      0.106
+     ],
+     [
+      2,
+      104,
+      0.109
+     ],
+     [
+      2.05,
+      104,
+      0.11
+     ],
+     [
+      2.1,
+      104,
+      0.109
+     ],
+     [
+      2.15,
+      104,
+      0.101
+     ],
+     [
+      2.2,
+      104,
+      0.092
+     ],
+     [
+      2.25,
+      104,
+      0.084
+     ],
+     [
+      2.3,
+      104,
+      0.075
+     ],
+     [
+      2.35,
+      104,
+      0.067
+     ],
+     [
+      2.4,
+      104,
+      0.06
+     ],
+     [
+      2.45,
+      104,
+      0.054
+     ]
+    ],
+    "harmonics": [
+     1,
+     0.5,
+     0.25
+    ],
+    "gain_db": -6
+   },
+   "means": "판이 두 모양으로 출렁임(느린 떨림)"
+  },
+  {
+   "id": "rip_1",
+   "at": 39.852,
+   "kind": "tone",
+   "params": {
+    "freq": 170,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -15
+   },
+   "means": "잔물결 k=1 를 더함(먼저 어림, 더한 값 1.000)"
+  },
+  {
+   "id": "rip_2",
+   "at": 41.152,
+   "kind": "tone",
+   "params": {
+    "freq": 215.154,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -21.021
+   },
+   "means": "잔물결 k=2 를 더함(먼저 어림, 더한 값 0.500)"
+  },
+  {
+   "id": "rip_3",
+   "at": 42.452,
+   "kind": "tone",
+   "params": {
+    "freq": 241.568,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -24.542
+   },
+   "means": "잔물결 k=3 를 더함(먼저 어림, 더한 값 0.333)"
+  },
+  {
+   "id": "rip_4",
+   "at": 45.035,
+   "kind": "tone",
+   "params": {
+    "freq": 260.309,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -27.041
+   },
+   "means": "잔물결 k=4 를 더함(먼저 어림, 더한 값 0.250)"
+  },
+  {
+   "id": "rip_5",
+   "at": 45.455,
+   "kind": "tone",
+   "params": {
+    "freq": 274.846,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -28.979
+   },
+   "means": "잔물결 k=5 를 더함(먼저 어림, 더한 값 0.200)"
+  },
+  {
+   "id": "rip_6",
+   "at": 45.875,
+   "kind": "tone",
+   "params": {
+    "freq": 286.723,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -30.563
+   },
+   "means": "잔물결 k=6 를 더함(먼저 어림, 더한 값 0.167)"
+  },
+  {
+   "id": "rip_7",
+   "at": 46.295,
+   "kind": "tone",
+   "params": {
+    "freq": 296.765,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -31.902
+   },
+   "means": "잔물결 k=7 를 더함(먼저 어림, 더한 값 0.143)"
+  },
+  {
+   "id": "rip_8",
+   "at": 46.715,
+   "kind": "tone",
+   "params": {
+    "freq": 305.463,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -33.062
+   },
+   "means": "잔물결 k=8 를 더함(먼저 어림, 더한 값 0.125)"
+  },
+  {
+   "id": "rip_9",
+   "at": 47.135,
+   "kind": "tone",
+   "params": {
+    "freq": 313.136,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -34.085
+   },
+   "means": "잔물결 k=9 를 더함(먼저 어림, 더한 값 0.111)"
+  },
+  {
+   "id": "rip_10",
+   "at": 47.555,
+   "kind": "tone",
+   "params": {
+    "freq": 320,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -35
+   },
+   "means": "잔물결 k=10 를 더함(먼저 어림, 더한 값 0.100)"
+  },
+  {
+   "id": "rip_100",
+   "at": 48.175,
+   "kind": "tone",
+   "params": {
+    "freq": 384,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -11
+   },
+   "means": "잔물결 k=100 를 더함(먼저 어림, 더한 값 2.258)"
+  },
+  {
+   "id": "rip_1000",
+   "at": 48.755,
+   "kind": "tone",
+   "params": {
+    "freq": 448,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -11
+   },
+   "means": "잔물결 k=1000 를 더함(먼저 어림, 더한 값 2.298)"
+  },
+  {
+   "id": "rip_10000",
+   "at": 49.335,
+   "kind": "tone",
+   "params": {
+    "freq": 512,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -11
+   },
+   "means": "잔물결 k=10000 를 더함(먼저 어림, 더한 값 2.302)"
+  },
+  {
+   "id": "rip_100000",
+   "at": 49.915,
+   "kind": "tone",
+   "params": {
+    "freq": 576,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -11
+   },
+   "means": "잔물결 k=100000 를 더함(먼저 어림, 더한 값 2.303)"
+  },
+  {
+   "id": "rip_1000000",
+   "at": 50.495,
+   "kind": "tone",
+   "params": {
+    "freq": 640,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -11
+   },
+   "means": "잔물결 k=1000000 를 더함(먼저 어림, 더한 값 2.303)"
+  },
+  {
+   "id": "flash_c0",
+   "at": 53.426,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.06,
+    "gain_db": -18,
+    "click": 0.15
+   },
+   "means": "빛이 사건에서 퍼짐"
+  },
+  {
+   "id": "flash_cq0",
+   "at": 54.426,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.06,
+    "gain_db": -23,
+    "click": 0.15
+   },
+   "means": "빛이 위 사건으로 모임"
+  },
+  {
+   "id": "flash_c1",
+   "at": 55.726,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.06,
+    "gain_db": -21,
+    "click": 0.15
+   },
+   "means": "빛이 사건에서 퍼짐"
+  },
+  {
+   "id": "flash_cq1",
+   "at": 56.726,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.06,
+    "gain_db": -23,
+    "click": 0.15
+   },
+   "means": "빛이 위 사건으로 모임"
+  },
+  {
+   "id": "flash_c2",
+   "at": 58.026,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.06,
+    "gain_db": -21,
+    "click": 0.15
+   },
+   "means": "빛이 사건에서 퍼짐"
+  },
+  {
+   "id": "flash_cq2",
+   "at": 59.026,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.06,
+    "gain_db": -23,
+    "click": 0.15
+   },
+   "means": "빛이 위 사건으로 모임"
+  },
+  {
+   "id": "flash_c3",
+   "at": 60.326,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.06,
+    "gain_db": -21,
+    "click": 0.15
+   },
+   "means": "빛이 사건에서 퍼짐"
+  },
+  {
+   "id": "flash_cq3",
+   "at": 61.326,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.06,
+    "gain_db": -23,
+    "click": 0.15
+   },
+   "means": "빛이 위 사건으로 모임"
+  },
+  {
+   "id": "flash_p",
+   "at": 63.614,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.06,
+    "gain_db": -15,
+    "click": 0.15
+   },
+   "means": "먼저 일어난 사건에서 빛이 퍼짐"
+  },
+  {
+   "id": "flash_q",
+   "at": 67.878,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.06,
+    "gain_db": -17,
+    "click": 0.15
+   },
+   "means": "나중 사건으로 빛이 모임"
+  },
+  {
+   "id": "sig_arrive",
+   "at": 77.464,
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.05,
+    "gain_db": -22,
+    "click": 0.15
+   },
+   "means": "신호 점들이 나중 사건에 닿음"
+  },
+  {
+   "id": "grav_1",
+   "at": 79.781,
+   "kind": "tone",
+   "params": {
+    "freq": 110,
+    "dur": 0.5,
+    "attack": 0.01,
+    "release": 0.3,
+    "harmonics": [
+     1,
+     0.5,
+     0.3
+    ],
+    "gain_db": -17
+   },
+   "means": "중력자 1번째가 들어감(고리가 원뿔을 지나감)"
+  },
+  {
+   "id": "grav_2",
+   "at": 96.137,
+   "kind": "tone",
+   "params": {
+    "freq": 110,
+    "dur": 0.5,
+    "attack": 0.01,
+    "release": 0.3,
+    "harmonics": [
+     1,
+     0.5,
+     0.3
+    ],
+    "gain_db": -17
+   },
+   "means": "중력자 2번째가 들어감(고리가 원뿔을 지나감)"
+  },
+  {
+   "id": "grav_3",
+   "at": 97.151,
+   "kind": "tone",
+   "params": {
+    "freq": 110,
+    "dur": 0.5,
+    "attack": 0.01,
+    "release": 0.3,
+    "harmonics": [
+     1,
+     0.5,
+     0.3
+    ],
+    "gain_db": -17
+   },
+   "means": "중력자 3번째가 들어감(고리가 원뿔을 지나감)"
+  },
+  {
+   "id": "grav_4",
+   "at": 98.165,
+   "kind": "tone",
+   "params": {
+    "freq": 110,
+    "dur": 0.5,
+    "attack": 0.01,
+    "release": 0.3,
+    "harmonics": [
+     1,
+     0.5,
+     0.3
+    ],
+    "gain_db": -17
+   },
+   "means": "중력자 4번째가 들어감(고리가 원뿔을 지나감)"
+  },
+  {
+   "id": "grav_5",
+   "at": 99.179,
+   "kind": "tone",
+   "params": {
+    "freq": 110,
+    "dur": 0.5,
+    "attack": 0.01,
+    "release": 0.3,
+    "harmonics": [
+     1,
+     0.5,
+     0.3
+    ],
+    "gain_db": -17
+   },
+   "means": "중력자 5번째가 들어감(고리가 원뿔을 지나감)"
+  },
+  {
+   "id": "grav_6",
+   "at": 100.193,
+   "kind": "tone",
+   "params": {
+    "freq": 110,
+    "dur": 0.5,
+    "attack": 0.01,
+    "release": 0.3,
+    "harmonics": [
+     1,
+     0.5,
+     0.3
+    ],
+    "gain_db": -17
+   },
+   "means": "중력자 6번째가 들어감(고리가 원뿔을 지나감)"
+  },
+  {
+   "id": "grav_7",
+   "at": 101.207,
+   "kind": "tone",
+   "params": {
+    "freq": 110,
+    "dur": 0.5,
+    "attack": 0.01,
+    "release": 0.3,
+    "harmonics": [
+     1,
+     0.5,
+     0.3
+    ],
+    "gain_db": -17
+   },
+   "means": "중력자 7번째가 들어감(고리가 원뿔을 지나감)"
+  },
+  {
+   "id": "grav_8",
+   "at": 102.221,
+   "kind": "tone",
+   "params": {
+    "freq": 110,
+    "dur": 0.5,
+    "attack": 0.01,
+    "release": 0.3,
+    "harmonics": [
+     1,
+     0.5,
+     0.3
+    ],
+    "gain_db": -17
+   },
+   "means": "중력자 8번째가 들어감(고리가 원뿔을 지나감)"
+  },
+  {
+   "id": "grav_9",
+   "at": 107.018,
+   "kind": "tone",
+   "params": {
+    "freq": 110,
+    "dur": 0.5,
+    "attack": 0.01,
+    "release": 0.3,
+    "harmonics": [
+     1,
+     0.5,
+     0.3
+    ],
+    "gain_db": -17
+   },
+   "means": "9번째 중력자를 넣으려 함"
+  },
+  {
+   "id": "block",
+   "at": 107.798,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tick",
+      "params": {
+       "freq": 90,
+       "decay": 0.08,
+       "click": 0.1,
+       "gain_db": -12
+      }
+     },
+     {
+      "kind": "noise",
+      "params": {
+       "dur": 0.12,
+       "low": 60,
+       "high": 240,
+       "release": 0.1,
+       "gain_db": -20
+      }
+     }
+    ]
+   },
+   "means": "9번째가 한계선에 막힘(둔한 틱)"
+  },
+  {
+   "id": "sew_1",
+   "at": 114.806,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -22,
+    "click": 0.15
+   },
+   "means": "조각이 맞붙음"
+  },
+  {
+   "id": "term_1",
+   "at": 114.806,
+   "kind": "tone",
+   "params": {
+    "freq": 170,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -15
+   },
+   "means": "어림하지 않음의 항 k=1(더한 값 1.00e+0)"
+  },
+  {
+   "id": "sew_2",
+   "at": 115.586,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -22,
+    "click": 0.15
+   },
+   "means": "조각이 맞붙음"
+  },
+  {
+   "id": "term_2",
+   "at": 115.586,
+   "kind": "tone",
+   "params": {
+    "freq": 215.154,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -27.041
+   },
+   "means": "어림하지 않음의 항 k=2(더한 값 2.50e-1)"
+  },
+  {
+   "id": "sew_3",
+   "at": 116.366,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -22,
+    "click": 0.15
+   },
+   "means": "조각이 맞붙음"
+  },
+  {
+   "id": "term_3",
+   "at": 116.366,
+   "kind": "tone",
+   "params": {
+    "freq": 241.568,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -34.085
+   },
+   "means": "어림하지 않음의 항 k=3(더한 값 1.11e-1)"
+  },
+  {
+   "id": "sew_4",
+   "at": 117.146,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -22,
+    "click": 0.15
+   },
+   "means": "조각이 맞붙음"
+  },
+  {
+   "id": "term_4",
+   "at": 117.146,
+   "kind": "tone",
+   "params": {
+    "freq": 260.309,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -39.082
+   },
+   "means": "어림하지 않음의 항 k=4(더한 값 6.25e-2)"
+  },
+  {
+   "id": "sew_5",
+   "at": 117.926,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -22,
+    "click": 0.15
+   },
+   "means": "조각이 맞붙음"
+  },
+  {
+   "id": "term_5",
+   "at": 117.926,
+   "kind": "tone",
+   "params": {
+    "freq": 274.846,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -42.959
+   },
+   "means": "어림하지 않음의 항 k=5(더한 값 4.00e-2)"
+  },
+  {
+   "id": "sew_6",
+   "at": 118.706,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "gain_db": -22,
+    "click": 0.15
+   },
+   "means": "조각이 맞붙음"
+  },
+  {
+   "id": "term_6",
+   "at": 118.706,
+   "kind": "tone",
+   "params": {
+    "freq": 286.723,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -46.126
+   },
+   "means": "어림하지 않음의 항 k=6(더한 값 2.78e-2)"
+  },
+  {
+   "id": "term_7",
+   "at": 119.486,
+   "kind": "tone",
+   "params": {
+    "freq": 296.765,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -48.804
+   },
+   "means": "어림하지 않음의 항 k=7(더한 값 2.04e-2)"
+  },
+  {
+   "id": "term_8",
+   "at": 119.786,
+   "kind": "tone",
+   "params": {
+    "freq": 305.463,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -51.124
+   },
+   "means": "어림하지 않음의 항 k=8(더한 값 1.56e-2)"
+  },
+  {
+   "id": "term_9",
+   "at": 120.086,
+   "kind": "tone",
+   "params": {
+    "freq": 313.136,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -53.17
+   },
+   "means": "어림하지 않음의 항 k=9(더한 값 1.23e-2)"
+  },
+  {
+   "id": "term_10",
+   "at": 120.386,
+   "kind": "tone",
+   "params": {
+    "freq": 320,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -55
+   },
+   "means": "어림하지 않음의 항 k=10(더한 값 1.00e-2)"
+  },
+  {
+   "id": "term_100",
+   "at": 121.899,
+   "kind": "tone",
+   "params": {
+    "freq": 384,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -36.39
+   },
+   "means": "어림하지 않음의 항 k=100(더한 값 8.52e-2)"
+  },
+  {
+   "id": "term_1000",
+   "at": 122.519,
+   "kind": "tone",
+   "params": {
+    "freq": 448,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -55.963
+   },
+   "means": "어림하지 않음의 항 k=1000(더한 값 8.95e-3)"
+  },
+  {
+   "id": "term_10000",
+   "at": 123.139,
+   "kind": "tone",
+   "params": {
+    "freq": 512,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -75.92
+   },
+   "means": "어림하지 않음의 항 k=10000(더한 값 9.00e-4)"
+  },
+  {
+   "id": "term_100000",
+   "at": 123.759,
+   "kind": "tone",
+   "params": {
+    "freq": 576,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -95.916
+   },
+   "means": "어림하지 않음의 항 k=100000(더한 값 9.00e-5)"
+  },
+  {
+   "id": "term_1000000",
+   "at": 124.379,
+   "kind": "tone",
+   "params": {
+    "freq": 640,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -115.915
+   },
+   "means": "어림하지 않음의 항 k=1000000(더한 값 9.00e-6)"
+  },
+  {
+   "id": "approx_1",
+   "at": 130.343,
+   "kind": "tone",
+   "params": {
+    "freq": 170,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -15
+   },
+   "means": "먼저 어림의 항 k=1(더한 값 1.000)"
+  },
+  {
+   "id": "approx_2",
+   "at": 130.543,
+   "kind": "tone",
+   "params": {
+    "freq": 215.154,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -21.021
+   },
+   "means": "먼저 어림의 항 k=2(더한 값 0.500)"
+  },
+  {
+   "id": "approx_3",
+   "at": 130.743,
+   "kind": "tone",
+   "params": {
+    "freq": 241.568,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -24.542
+   },
+   "means": "먼저 어림의 항 k=3(더한 값 0.333)"
+  },
+  {
+   "id": "approx_4",
+   "at": 130.943,
+   "kind": "tone",
+   "params": {
+    "freq": 260.309,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -27.041
+   },
+   "means": "먼저 어림의 항 k=4(더한 값 0.250)"
+  },
+  {
+   "id": "approx_5",
+   "at": 131.143,
+   "kind": "tone",
+   "params": {
+    "freq": 274.846,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -28.979
+   },
+   "means": "먼저 어림의 항 k=5(더한 값 0.200)"
+  },
+  {
+   "id": "approx_6",
+   "at": 131.343,
+   "kind": "tone",
+   "params": {
+    "freq": 286.723,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -30.563
+   },
+   "means": "먼저 어림의 항 k=6(더한 값 0.167)"
+  },
+  {
+   "id": "approx_7",
+   "at": 131.543,
+   "kind": "tone",
+   "params": {
+    "freq": 296.765,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -31.902
+   },
+   "means": "먼저 어림의 항 k=7(더한 값 0.143)"
+  },
+  {
+   "id": "approx_8",
+   "at": 131.743,
+   "kind": "tone",
+   "params": {
+    "freq": 305.463,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -33.062
+   },
+   "means": "먼저 어림의 항 k=8(더한 값 0.125)"
+  },
+  {
+   "id": "approx_9",
+   "at": 131.943,
+   "kind": "tone",
+   "params": {
+    "freq": 313.136,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -34.085
+   },
+   "means": "먼저 어림의 항 k=9(더한 값 0.111)"
+  },
+  {
+   "id": "approx_10",
+   "at": 132.143,
+   "kind": "tone",
+   "params": {
+    "freq": 320,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -35
+   },
+   "means": "먼저 어림의 항 k=10(더한 값 0.100)"
+  },
+  {
+   "id": "approx_100",
+   "at": 132.343,
+   "kind": "tone",
+   "params": {
+    "freq": 384,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -11
+   },
+   "means": "먼저 어림의 항 k=100(더한 값 2.258)"
+  },
+  {
+   "id": "approx_1000",
+   "at": 132.843,
+   "kind": "tone",
+   "params": {
+    "freq": 448,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -11
+   },
+   "means": "먼저 어림의 항 k=1000(더한 값 2.298)"
+  },
+  {
+   "id": "approx_10000",
+   "at": 133.343,
+   "kind": "tone",
+   "params": {
+    "freq": 512,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -11
+   },
+   "means": "먼저 어림의 항 k=10000(더한 값 2.302)"
+  },
+  {
+   "id": "approx_100000",
+   "at": 133.843,
+   "kind": "tone",
+   "params": {
+    "freq": 576,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -11
+   },
+   "means": "먼저 어림의 항 k=100000(더한 값 2.303)"
+  },
+  {
+   "id": "approx_1000000",
+   "at": 134.343,
+   "kind": "tone",
+   "params": {
+    "freq": 640,
+    "dur": 0.32,
+    "attack": 0.006,
+    "release": 0.2,
+    "harmonics": [
+     1,
+     0.35,
+     0.12
+    ],
+    "gain_db": -11
+   },
+   "means": "먼저 어림의 항 k=1000000(더한 값 2.303)"
+  },
+  {
+   "id": "fall_0",
+   "at": 140.209,
+   "kind": "tone",
+   "params": {
+    "freq": 60,
+    "dur": 0.8,
+    "attack": 0.01,
+    "release": 0.5,
+    "harmonics": [
+     1,
+     0.6,
+     0.3
+    ],
+    "gain_db": -16
+   },
+   "means": "덩어리가 지평선을 넘음"
+  },
+  {
+   "id": "cell_0",
+   "at": 140.309,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_1",
+   "at": 140.376,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_2",
+   "at": 140.409,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_3",
+   "at": 140.476,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_4",
+   "at": 140.509,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_5",
+   "at": 140.542,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_6",
+   "at": 140.576,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_7",
+   "at": 140.609,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_8",
+   "at": 140.642,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_9",
+   "at": 140.709,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_10",
+   "at": 140.776,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "fall_1",
+   "at": 143.209,
+   "kind": "tone",
+   "params": {
+    "freq": 60,
+    "dur": 0.8,
+    "attack": 0.01,
+    "release": 0.5,
+    "harmonics": [
+     1,
+     0.6,
+     0.3
+    ],
+    "gain_db": -16
+   },
+   "means": "덩어리가 지평선을 넘음"
+  },
+  {
+   "id": "cell_11",
+   "at": 143.309,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_12",
+   "at": 143.376,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_13",
+   "at": 143.409,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_14",
+   "at": 143.442,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_15",
+   "at": 143.476,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_16",
+   "at": 143.509,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_17",
+   "at": 143.542,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_18",
+   "at": 143.576,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_19",
+   "at": 143.609,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_20",
+   "at": 143.642,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_21",
+   "at": 143.676,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "cell_22",
+   "at": 143.742,
+   "kind": "tick",
+   "params": {
+    "freq": 240,
+    "decay": 0.03,
+    "gain_db": -29,
+    "click": 0.15
+   },
+   "means": "표면의 칸 하나가 늘어남"
+  },
+  {
+   "id": "mark",
+   "at": 148.212,
+   "kind": "tick",
+   "params": {
+    "freq": 300,
+    "decay": 0.06,
+    "gain_db": -20,
+    "click": 0.15
+   },
+   "means": "표식이 \"공개\"에 섬"
+  },
+  {
+   "id": "close",
+   "at": 161.426,
+   "kind": "tone",
+   "params": {
+    "freq": 82,
+    "dur": 1.6,
+    "attack": 0.2,
+    "release": 0.9,
+    "sustain": 0.4,
+    "harmonics": [
+     1,
+     0.5,
+     0.25
+    ],
+    "gain_db": -22
+   },
+   "means": "조각보 전체를 빛이 한 번 훑음"
+  }
+ ]
+}
