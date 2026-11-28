@@ -890,25 +890,6 @@
       "thumbnail": "0초 프레임(연기 줄이 흐르는 풍동 속의 옆모습 비행기 모형 둘 — 아래 모형은 주황 꼬리날개가 달려 있고, 위 모형은 꼬리날개 자리가 점선이며 떼어 낸 조각이 바람에 실려 가는 중. 흰 물음 두 줄 \"주날개의 4분의 1 크기인데, / 떼면 왜 뒤집힐까?\"와 그 아래 가장 큰 주황 주제어 \"꼬리날개\". 답은 쓰지 않음)",
       "hdr": "finals/66-tail-stability/hdr/tail-stability.hdr.mp4",
       "hdr_bytes": 30191279
-    },
-    {
-      "number": 73,
-      "slug": "quantum-gravity",
-      "title": "OpenAI 양자중력이론 — 빛원뿔로 조각낸 시공간",
-      "status": "final",
-      "folder": "finals/73-quantum-gravity",
-      "video": "finals/73-quantum-gravity/quantum-gravity.mp4",
-      "duration_sec": 171.2,
-      "width": 1080,
-      "height": 1920,
-      "bytes": 23690834,
-      "sha256": "72a7cc63b401a780b0c5a7430f569ad370f81f2d29c20f36bded26f3360a5511",
-      "video_date": "2026-11-28",
-      "episode_code": "episodes/quantum-gravity",
-      "upload_info": "finals/73-quantum-gravity/upload.md",
-      "thumbnail": "0초 프레임(격자 바닥 위에 선 인과 다이아몬드 — 아래 빛원뿔과 위 빛원뿔. 흰 물음 두 줄 \"무한대가 나오던 중력 계산, / 어떻게 유한해진다는 걸까?\"와 그 아래 가장 큰 주황 주제어 두 줄 \"OpenAI / 양자중력이론\". 답은 쓰지 않음)",
-      "hdr": "finals/73-quantum-gravity/hdr/quantum-gravity.hdr.mp4",
-      "hdr_bytes": 15037502
     }
   ],
   "legacy": [

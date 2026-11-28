@@ -80,9 +80,8 @@
 | 62 | 심전도 — 심장 박동의 물결 | 174.8초 | [62-heartbeat-ecg/](62-heartbeat-ecg/) | [upload.md](62-heartbeat-ecg/upload.md) | 2026-11-27 |
 | 64 | 기상 레이더는 비구름을 어떻게 볼까 — 구름을 찍지 않는다. 전파를 쏘고, 빗방울이 돌려보낸 메아리의 시간과 세기를 잰다 | 164.8초 | [64-weather-radar/](64-weather-radar/) | [upload.md](64-weather-radar/upload.md) | 2026-11-15 |
 | 66 | 꼬리날개 — 멀리 있는 작은 날개가 비행기를 되돌린다 | 169.1초 | [66-tail-stability/](66-tail-stability/) | [upload.md](66-tail-stability/upload.md) | 2026-11-22 |
-| 73 | OpenAI 양자중력이론 — 빛원뿔로 조각낸 시공간 | 171.2초 | [73-quantum-gravity/](73-quantum-gravity/) | [upload.md](73-quantum-gravity/upload.md) | 2026-11-28 |
 
-합계 52편, 145.0분, 1136 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
+합계 51편, 142.1분, 1113 MB. 파일 해시·해상도는 [catalog.json](catalog.json).
 <!-- catalog:end -->
 
 ## 이전 작품 (`legacy/`)
