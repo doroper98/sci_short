@@ -742,6 +742,25 @@
       "hdr_bytes": 18180109
     },
     {
+      "number": 51,
+      "slug": "route-finding",
+      "title": "구글맵 길찾기 — 가장 빠른 길을 고르는 계산",
+      "status": "final",
+      "folder": "finals/51-route-finding",
+      "video": "finals/51-route-finding/route-finding.mp4",
+      "duration_sec": 172.2,
+      "width": 1080,
+      "height": 1920,
+      "bytes": 19516705,
+      "sha256": "044bb6d5061a49c8457a0c6d3869a0b68a8d1c5c56fe93f6dbcc86e6afcd91b1",
+      "video_date": "uncommitted",
+      "episode_code": "episodes/route-finding",
+      "upload_info": "finals/51-route-finding/upload.md",
+      "thumbnail": "0초 프레임(숯색 바탕 위에 직접 그린 가상의 도로망 — 무광 블록 사이의 동네 길과 큰길, 둘레를 도는 고속도로, 출발점과 도착점. 흰 물음 두 줄 \"멀리 돌아가는 길이 더 빠를 때 / 그 길을 어떻게 찾을까?\"와 그 아래 가장 큰 주황 주제어 \"구글맵\". 답은 쓰지 않음. 로고·실제 앱 화면·지도 이미지 없음)",
+      "hdr": "finals/51-route-finding/hdr/route-finding.hdr.mp4",
+      "hdr_bytes": 14274677
+    },
+    {
       "number": 53,
       "slug": "messenger-send",
       "title": "카톡 — 보내기를 누르면 메시지는 어디를 거쳐 갈까",

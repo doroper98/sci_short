@@ -38,6 +38,6 @@ if (process.argv.includes('--video')) {
   await kit.renderVideo({stage, duration: tl.duration, frame, out: path.join(out, 'visual.mp4'), ...(useLook ? {crf: 20} : {})});
 } else {
   const times = tl.scenes.flatMap(s => [{t: s.start + Math.min(0.6, (s.end - s.start) / 3), label: s.id + '-start'}, {t: (s.start + s.end) / 2, label: s.id + '-mid'}])
-    .concat(events.map(e => ({t: Math.min(tl.duration - 0.01, e.time + 0.12), label: 'event-' + e.id}))).sort((a, b) => a.t - b.t);
+    .concat(events.filter(e => !/_settle_|_relax_|^ping_/.test(e.id)).map(e => ({t: Math.min(tl.duration - 0.01, e.time + 0.12), label: 'event-' + e.id}))).sort((a, b) => a.t - b.t);
   await kit.renderStills({stage, times, frame, outDir: path.join(out, 'stills')});
 }

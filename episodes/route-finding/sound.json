@@ -1,61 +1,7213 @@
 {
-  "version": 1,
-  "notes": "설명용 합성음입니다(녹음 아님). 각 사건은 scenes.mjs의 ctx.events와 같은 시각을 씁니다. at 문법은 pipeline/README.md 참고.",
-  "events": [
-    {
-      "id": "bond",
-      "at": {
-        "sentence": "s03",
-        "word": "수소 결합"
-      },
-      "kind": "tick",
-      "params": {
-        "freq": 1760,
-        "gain_db": -20,
-        "decay": 0.12,
-        "repeat": 3,
-        "interval": 0.09
-      },
-      "means": "수소 결합이 이어지는 순간 — 화면의 결합선 번쩍임과 같은 시각"
-    },
-    {
-      "id": "float",
-      "at": [
-        "s05",
-        0.15
-      ],
-      "kind": "swell",
-      "params": {
-        "freqs": [
-          220,
-          330,
-          440
-        ],
-        "dur": 1.6,
-        "gain_db": -24
-      },
-      "means": "얼음이 떠오르는 결론 — 화면의 수면 고리와 같은 시각"
-    }
-  ],
-  "ambient": {
-    "enabled": false,
-    "kind": "pad",
-    "seed": 7,
-    "gain_db": -32,
-    "root_hz": 110,
-    "intervals": [
-      0,
-      7,
-      12,
-      16
-    ]
+ "version": 1,
+ "notes": "설명용 합성음(녹음 아님). make_sound.mjs 가 model.mjs 의 같은 시계(plan)로 만든다 — 손으로 고치지 말 것. 기본음·잡음 대역 모두 700 Hz 아래.",
+ "ambient": {
+  "enabled": false
+ },
+ "events": [
+  {
+   "id": "hook0_settle_0",
+   "at": 0.05,
+   "kind": "tick",
+   "params": {
+    "freq": 420,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
   },
-  "music": {
-    "id": "zabriskie_patriarch",
-    "enabled": false,
-    "under_db": 12,
-    "duck_db": 6,
-    "start_sec": 0,
-    "note": "기본 꺼짐(2026-10-31 사용자 결정). 켜려면 enabled true. assets/music/registry.json 의 id. NO_MUSIC=1 이면 생략"
+  {
+   "id": "hook0_settle_2",
+   "at": 0.1,
+   "kind": "tick",
+   "params": {
+    "freq": 391,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_4",
+   "at": 0.15,
+   "kind": "tick",
+   "params": {
+    "freq": 390,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_6",
+   "at": 0.2,
+   "kind": "tick",
+   "params": {
+    "freq": 378,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_8",
+   "at": 0.25,
+   "kind": "tick",
+   "params": {
+    "freq": 363,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_10",
+   "at": 0.3,
+   "kind": "tick",
+   "params": {
+    "freq": 362,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_12",
+   "at": 0.35,
+   "kind": "tick",
+   "params": {
+    "freq": 361,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_14",
+   "at": 0.4,
+   "kind": "tick",
+   "params": {
+    "freq": 354,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_16",
+   "at": 0.45,
+   "kind": "tick",
+   "params": {
+    "freq": 347,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_18",
+   "at": 0.5,
+   "kind": "tick",
+   "params": {
+    "freq": 338,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_20",
+   "at": 0.55,
+   "kind": "tick",
+   "params": {
+    "freq": 333,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_22",
+   "at": 0.6,
+   "kind": "tick",
+   "params": {
+    "freq": 332,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_24",
+   "at": 0.65,
+   "kind": "tick",
+   "params": {
+    "freq": 324,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_26",
+   "at": 0.7,
+   "kind": "tick",
+   "params": {
+    "freq": 317,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_28",
+   "at": 0.75,
+   "kind": "tick",
+   "params": {
+    "freq": 314,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_30",
+   "at": 0.8,
+   "kind": "tick",
+   "params": {
+    "freq": 311,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_32",
+   "at": 0.85,
+   "kind": "tick",
+   "params": {
+    "freq": 309,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_34",
+   "at": 0.9,
+   "kind": "tick",
+   "params": {
+    "freq": 303,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_36",
+   "at": 0.95,
+   "kind": "tick",
+   "params": {
+    "freq": 302,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_38",
+   "at": 1,
+   "kind": "tick",
+   "params": {
+    "freq": 299,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_40",
+   "at": 1.05,
+   "kind": "tick",
+   "params": {
+    "freq": 292,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_42",
+   "at": 1.1,
+   "kind": "tick",
+   "params": {
+    "freq": 290,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_44",
+   "at": 1.15,
+   "kind": "tick",
+   "params": {
+    "freq": 289,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_46",
+   "at": 1.2,
+   "kind": "tick",
+   "params": {
+    "freq": 283,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_48",
+   "at": 1.25,
+   "kind": "tick",
+   "params": {
+    "freq": 280,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_50",
+   "at": 1.3,
+   "kind": "tick",
+   "params": {
+    "freq": 278,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_52",
+   "at": 1.35,
+   "kind": "tick",
+   "params": {
+    "freq": 274,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_54",
+   "at": 1.4,
+   "kind": "tick",
+   "params": {
+    "freq": 268,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_56",
+   "at": 1.45,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_settle_58",
+   "at": 1.5,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "hook0_route",
+   "at": 1.52,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 87,
+       "dur": 0.5,
+       "attack": 0.01,
+       "release": 0.4,
+       "harmonics": [
+        1,
+        0.5,
+        0.25
+       ],
+       "gain_db": -15
+      }
+     }
+    ]
+   },
+   "means": "가장 빠른 길이 켜짐"
+  },
+  {
+   "id": "rewind",
+   "at": 2.2,
+   "kind": "whoosh",
+   "params": {
+    "dur": 0.8,
+    "f_start": 520,
+    "f_end": 150,
+    "gain_db": -24
+   },
+   "means": "되감기"
+  },
+  {
+   "id": "pin",
+   "at": 5.869,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.08,
+    "gain_db": -18
+   },
+   "means": "목적지를 넣음"
+  },
+  {
+   "id": "app_route",
+   "at": 9.72,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 87,
+       "dur": 0.5,
+       "attack": 0.01,
+       "release": 0.4,
+       "harmonics": [
+        1,
+        0.5,
+        0.25
+       ],
+       "gain_db": -17
+      }
+     }
+    ]
+   },
+   "means": "가장 빠른 길이 켜짐"
+  },
+  {
+   "id": "origin_settle_0",
+   "at": 13.634,
+   "kind": "tick",
+   "params": {
+    "freq": 420,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -18
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "origin_settle_1",
+   "at": 14.338,
+   "kind": "tick",
+   "params": {
+    "freq": 378,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -18
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "origin_settle_2",
+   "at": 15.041,
+   "kind": "tick",
+   "params": {
+    "freq": 377,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -18
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "origin_settle_3",
+   "at": 15.745,
+   "kind": "tick",
+   "params": {
+    "freq": 374,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -18
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "origin_settle_4",
+   "at": 16.448,
+   "kind": "tick",
+   "params": {
+    "freq": 340,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -18
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "origin_settle_5",
+   "at": 17.152,
+   "kind": "tick",
+   "params": {
+    "freq": 339,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -18
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "origin_settle_6",
+   "at": 17.855,
+   "kind": "tick",
+   "params": {
+    "freq": 332,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -18
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "origin_settle_7",
+   "at": 18.559,
+   "kind": "tick",
+   "params": {
+    "freq": 330,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -18
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "origin_settle_8",
+   "at": 19.263,
+   "kind": "tick",
+   "params": {
+    "freq": 302,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -18
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "origin_settle_9",
+   "at": 19.966,
+   "kind": "tick",
+   "params": {
+    "freq": 301,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -18
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "origin_settle_10",
+   "at": 20.67,
+   "kind": "tick",
+   "params": {
+    "freq": 295,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -18
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "origin_settle_11",
+   "at": 21.373,
+   "kind": "tick",
+   "params": {
+    "freq": 294,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -18
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "origin_settle_12",
+   "at": 22.077,
+   "kind": "tick",
+   "params": {
+    "freq": 288,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -18
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "origin_settle_13",
+   "at": 22.78,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -18
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "origin_settle_14",
+   "at": 23.484,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -18
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "origin_route",
+   "at": 23.584,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 87,
+       "dur": 0.5,
+       "attack": 0.01,
+       "release": 0.4,
+       "harmonics": [
+        1,
+        0.5,
+        0.25
+       ],
+       "gain_db": -16
+      }
+     }
+    ]
+   },
+   "means": "가장 빠른 길이 켜짐"
+  },
+  {
+   "id": "year",
+   "at": 25.407,
+   "kind": "tick",
+   "params": {
+    "freq": 220,
+    "decay": 0.1,
+    "gain_db": -18
+   },
+   "means": "1959 발표"
+  },
+  {
+   "id": "dijkstra_settle_0",
+   "at": 55.283,
+   "kind": "tick",
+   "params": {
+    "freq": 420,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_0",
+   "at": 55.403,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_1",
+   "at": 55.403,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_2",
+   "at": 55.403,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_3",
+   "at": 55.403,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_1",
+   "at": 55.549,
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_4",
+   "at": 55.669,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_5",
+   "at": 55.669,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_6",
+   "at": 55.669,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_2",
+   "at": 55.815,
+   "kind": "tick",
+   "params": {
+    "freq": 391,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_7",
+   "at": 55.935,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_8",
+   "at": 55.935,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_9",
+   "at": 55.935,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_3",
+   "at": 56.081,
+   "kind": "tick",
+   "params": {
+    "freq": 391,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_10",
+   "at": 56.201,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_4",
+   "at": 56.347,
+   "kind": "tick",
+   "params": {
+    "freq": 390,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_11",
+   "at": 56.467,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_12",
+   "at": 56.467,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_5",
+   "at": 56.613,
+   "kind": "tick",
+   "params": {
+    "freq": 382,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_13",
+   "at": 56.733,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_6",
+   "at": 56.88,
+   "kind": "tick",
+   "params": {
+    "freq": 378,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_14",
+   "at": 57,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_7",
+   "at": 57.146,
+   "kind": "tick",
+   "params": {
+    "freq": 363,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_15",
+   "at": 57.266,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_8",
+   "at": 57.412,
+   "kind": "tick",
+   "params": {
+    "freq": 363,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_16",
+   "at": 57.532,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_17",
+   "at": 57.532,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_9",
+   "at": 57.678,
+   "kind": "tick",
+   "params": {
+    "freq": 362,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_18",
+   "at": 57.798,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_10",
+   "at": 57.944,
+   "kind": "tick",
+   "params": {
+    "freq": 362,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_11",
+   "at": 58.21,
+   "kind": "tick",
+   "params": {
+    "freq": 362,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_19",
+   "at": 58.33,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_20",
+   "at": 58.33,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_12",
+   "at": 58.476,
+   "kind": "tick",
+   "params": {
+    "freq": 361,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_21",
+   "at": 58.596,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_13",
+   "at": 58.742,
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_22",
+   "at": 58.862,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_14",
+   "at": 59.008,
+   "kind": "tick",
+   "params": {
+    "freq": 354,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_23",
+   "at": 59.128,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_24",
+   "at": 59.128,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_15",
+   "at": 59.274,
+   "kind": "tick",
+   "params": {
+    "freq": 352,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_25",
+   "at": 59.394,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_26",
+   "at": 59.394,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_16",
+   "at": 59.54,
+   "kind": "tick",
+   "params": {
+    "freq": 347,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_27",
+   "at": 59.66,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_28",
+   "at": 59.66,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_17",
+   "at": 59.806,
+   "kind": "tick",
+   "params": {
+    "freq": 341,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_29",
+   "at": 59.926,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_30",
+   "at": 59.926,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_31",
+   "at": 59.926,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_18",
+   "at": 60.073,
+   "kind": "tick",
+   "params": {
+    "freq": 338,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_32",
+   "at": 60.193,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_33",
+   "at": 60.193,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_19",
+   "at": 60.339,
+   "kind": "tick",
+   "params": {
+    "freq": 335,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_20",
+   "at": 60.605,
+   "kind": "tick",
+   "params": {
+    "freq": 333,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_21",
+   "at": 60.871,
+   "kind": "tick",
+   "params": {
+    "freq": 332,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_22",
+   "at": 61.137,
+   "kind": "tick",
+   "params": {
+    "freq": 332,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_34",
+   "at": 61.257,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_35",
+   "at": 61.257,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_23",
+   "at": 61.403,
+   "kind": "tick",
+   "params": {
+    "freq": 326,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_36",
+   "at": 61.523,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_24",
+   "at": 61.669,
+   "kind": "tick",
+   "params": {
+    "freq": 324,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_37",
+   "at": 61.789,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_25",
+   "at": 61.935,
+   "kind": "tick",
+   "params": {
+    "freq": 318,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_38",
+   "at": 62.055,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_39",
+   "at": 62.055,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_26",
+   "at": 62.201,
+   "kind": "tick",
+   "params": {
+    "freq": 317,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_40",
+   "at": 62.321,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_41",
+   "at": 62.321,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_27",
+   "at": 62.467,
+   "kind": "tick",
+   "params": {
+    "freq": 317,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_42",
+   "at": 62.587,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_43",
+   "at": 62.587,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_28",
+   "at": 62.733,
+   "kind": "tick",
+   "params": {
+    "freq": 314,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_44",
+   "at": 62.853,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_29",
+   "at": 63,
+   "kind": "tick",
+   "params": {
+    "freq": 313,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_45",
+   "at": 63.119,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_30",
+   "at": 63.266,
+   "kind": "tick",
+   "params": {
+    "freq": 311,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_31",
+   "at": 63.532,
+   "kind": "tick",
+   "params": {
+    "freq": 311,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_32",
+   "at": 63.798,
+   "kind": "tick",
+   "params": {
+    "freq": 309,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_46",
+   "at": 63.918,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_47",
+   "at": 63.918,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_48",
+   "at": 63.918,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_33",
+   "at": 64.064,
+   "kind": "tick",
+   "params": {
+    "freq": 307,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_49",
+   "at": 64.184,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_34",
+   "at": 64.33,
+   "kind": "tick",
+   "params": {
+    "freq": 303,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_50",
+   "at": 64.45,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_51",
+   "at": 64.45,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_35",
+   "at": 64.596,
+   "kind": "tick",
+   "params": {
+    "freq": 303,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_52",
+   "at": 64.716,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_36",
+   "at": 64.862,
+   "kind": "tick",
+   "params": {
+    "freq": 302,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_53",
+   "at": 64.982,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_54",
+   "at": 64.982,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_37",
+   "at": 65.128,
+   "kind": "tick",
+   "params": {
+    "freq": 301,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_38",
+   "at": 65.394,
+   "kind": "tick",
+   "params": {
+    "freq": 299,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_55",
+   "at": 65.514,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_39",
+   "at": 65.66,
+   "kind": "tick",
+   "params": {
+    "freq": 297,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_56",
+   "at": 65.78,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_40",
+   "at": 65.926,
+   "kind": "tick",
+   "params": {
+    "freq": 292,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_57",
+   "at": 66.046,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_41",
+   "at": 66.193,
+   "kind": "tick",
+   "params": {
+    "freq": 290,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_42",
+   "at": 66.459,
+   "kind": "tick",
+   "params": {
+    "freq": 290,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_58",
+   "at": 66.579,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_43",
+   "at": 66.725,
+   "kind": "tick",
+   "params": {
+    "freq": 290,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_59",
+   "at": 66.845,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_60",
+   "at": 66.845,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_relax_61",
+   "at": 66.845,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_44",
+   "at": 66.991,
+   "kind": "tick",
+   "params": {
+    "freq": 289,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_45",
+   "at": 67.257,
+   "kind": "tick",
+   "params": {
+    "freq": 288,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_46",
+   "at": 67.523,
+   "kind": "tick",
+   "params": {
+    "freq": 283,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_47",
+   "at": 67.789,
+   "kind": "tick",
+   "params": {
+    "freq": 280,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_48",
+   "at": 68.055,
+   "kind": "tick",
+   "params": {
+    "freq": 280,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_49",
+   "at": 68.321,
+   "kind": "tick",
+   "params": {
+    "freq": 280,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_50",
+   "at": 68.587,
+   "kind": "tick",
+   "params": {
+    "freq": 278,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_51",
+   "at": 68.853,
+   "kind": "tick",
+   "params": {
+    "freq": 277,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_62",
+   "at": 68.973,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_52",
+   "at": 69.119,
+   "kind": "tick",
+   "params": {
+    "freq": 274,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_63",
+   "at": 69.239,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_53",
+   "at": 69.386,
+   "kind": "tick",
+   "params": {
+    "freq": 273,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_relax_64",
+   "at": 69.506,
+   "kind": "tick",
+   "params": {
+    "freq": 190,
+    "decay": 0.03,
+    "click": 0.1,
+    "gain_db": -27
+   },
+   "means": "이웃의 기록을 고침"
+  },
+  {
+   "id": "dijkstra_settle_54",
+   "at": 69.652,
+   "kind": "tick",
+   "params": {
+    "freq": 268,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_55",
+   "at": 69.918,
+   "kind": "tick",
+   "params": {
+    "freq": 264,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_56",
+   "at": 70.184,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_57",
+   "at": 70.45,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_settle_58",
+   "at": 70.716,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "dijkstra_route",
+   "at": 72.441,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 87,
+       "dur": 0.5,
+       "attack": 0.01,
+       "release": 0.4,
+       "harmonics": [
+        1,
+        0.5,
+        0.25
+       ],
+       "gain_db": -14
+      }
+     }
+    ]
+   },
+   "means": "가장 빠른 길이 켜짐"
+  },
+  {
+   "id": "astar_settle_0",
+   "at": 83.966,
+   "kind": "tick",
+   "params": {
+    "freq": 420,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_1",
+   "at": 84.179,
+   "kind": "tick",
+   "params": {
+    "freq": 391,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_2",
+   "at": 84.392,
+   "kind": "tick",
+   "params": {
+    "freq": 391,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_3",
+   "at": 84.605,
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_4",
+   "at": 84.817,
+   "kind": "tick",
+   "params": {
+    "freq": 390,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_5",
+   "at": 85.03,
+   "kind": "tick",
+   "params": {
+    "freq": 382,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_6",
+   "at": 85.243,
+   "kind": "tick",
+   "params": {
+    "freq": 362,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_7",
+   "at": 85.456,
+   "kind": "tick",
+   "params": {
+    "freq": 361,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_8",
+   "at": 85.669,
+   "kind": "tick",
+   "params": {
+    "freq": 378,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_9",
+   "at": 85.882,
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_10",
+   "at": 86.095,
+   "kind": "tick",
+   "params": {
+    "freq": 363,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_11",
+   "at": 86.308,
+   "kind": "tick",
+   "params": {
+    "freq": 363,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_12",
+   "at": 86.52,
+   "kind": "tick",
+   "params": {
+    "freq": 354,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_13",
+   "at": 86.733,
+   "kind": "tick",
+   "params": {
+    "freq": 362,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_14",
+   "at": 86.946,
+   "kind": "tick",
+   "params": {
+    "freq": 347,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_15",
+   "at": 87.159,
+   "kind": "tick",
+   "params": {
+    "freq": 362,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_16",
+   "at": 87.372,
+   "kind": "tick",
+   "params": {
+    "freq": 338,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_17",
+   "at": 87.585,
+   "kind": "tick",
+   "params": {
+    "freq": 332,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_18",
+   "at": 87.798,
+   "kind": "tick",
+   "params": {
+    "freq": 352,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_19",
+   "at": 88.011,
+   "kind": "tick",
+   "params": {
+    "freq": 332,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_20",
+   "at": 88.223,
+   "kind": "tick",
+   "params": {
+    "freq": 341,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_21",
+   "at": 88.436,
+   "kind": "tick",
+   "params": {
+    "freq": 324,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_22",
+   "at": 88.649,
+   "kind": "tick",
+   "params": {
+    "freq": 317,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_23",
+   "at": 88.862,
+   "kind": "tick",
+   "params": {
+    "freq": 335,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_24",
+   "at": 89.075,
+   "kind": "tick",
+   "params": {
+    "freq": 314,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_25",
+   "at": 89.288,
+   "kind": "tick",
+   "params": {
+    "freq": 318,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_26",
+   "at": 89.501,
+   "kind": "tick",
+   "params": {
+    "freq": 326,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_27",
+   "at": 89.713,
+   "kind": "tick",
+   "params": {
+    "freq": 333,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_28",
+   "at": 89.926,
+   "kind": "tick",
+   "params": {
+    "freq": 317,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_29",
+   "at": 90.139,
+   "kind": "tick",
+   "params": {
+    "freq": 303,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_30",
+   "at": 90.352,
+   "kind": "tick",
+   "params": {
+    "freq": 303,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_31",
+   "at": 90.565,
+   "kind": "tick",
+   "params": {
+    "freq": 302,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_32",
+   "at": 90.778,
+   "kind": "tick",
+   "params": {
+    "freq": 309,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_33",
+   "at": 90.991,
+   "kind": "tick",
+   "params": {
+    "freq": 299,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_34",
+   "at": 91.204,
+   "kind": "tick",
+   "params": {
+    "freq": 290,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_35",
+   "at": 91.416,
+   "kind": "tick",
+   "params": {
+    "freq": 301,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_36",
+   "at": 91.629,
+   "kind": "tick",
+   "params": {
+    "freq": 307,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_37",
+   "at": 91.842,
+   "kind": "tick",
+   "params": {
+    "freq": 311,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_38",
+   "at": 92.055,
+   "kind": "tick",
+   "params": {
+    "freq": 290,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_39",
+   "at": 92.268,
+   "kind": "tick",
+   "params": {
+    "freq": 290,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_40",
+   "at": 92.481,
+   "kind": "tick",
+   "params": {
+    "freq": 313,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_41",
+   "at": 92.694,
+   "kind": "tick",
+   "params": {
+    "freq": 311,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_42",
+   "at": 92.906,
+   "kind": "tick",
+   "params": {
+    "freq": 292,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_43",
+   "at": 93.119,
+   "kind": "tick",
+   "params": {
+    "freq": 277,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_44",
+   "at": 93.332,
+   "kind": "tick",
+   "params": {
+    "freq": 280,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_45",
+   "at": 93.545,
+   "kind": "tick",
+   "params": {
+    "freq": 297,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_46",
+   "at": 93.758,
+   "kind": "tick",
+   "params": {
+    "freq": 273,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_47",
+   "at": 93.971,
+   "kind": "tick",
+   "params": {
+    "freq": 289,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_settle_48",
+   "at": 94.184,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -17
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "astar_route",
+   "at": 94.334,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 87,
+       "dur": 0.5,
+       "attack": 0.01,
+       "release": 0.4,
+       "harmonics": [
+        1,
+        0.5,
+        0.25
+       ],
+       "gain_db": -15
+      }
+     }
+    ]
+   },
+   "means": "가장 빠른 길이 켜짐"
+  },
+  {
+   "id": "bigDij_settle_0",
+   "at": 100.472,
+   "kind": "tick",
+   "params": {
+    "freq": 420,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_4",
+   "at": 100.547,
+   "kind": "tick",
+   "params": {
+    "freq": 411,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_8",
+   "at": 100.623,
+   "kind": "tick",
+   "params": {
+    "freq": 405,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_12",
+   "at": 100.698,
+   "kind": "tick",
+   "params": {
+    "freq": 403,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_16",
+   "at": 100.774,
+   "kind": "tick",
+   "params": {
+    "freq": 400,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_20",
+   "at": 100.849,
+   "kind": "tick",
+   "params": {
+    "freq": 397,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_24",
+   "at": 100.925,
+   "kind": "tick",
+   "params": {
+    "freq": 394,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_28",
+   "at": 101,
+   "kind": "tick",
+   "params": {
+    "freq": 386,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_32",
+   "at": 101.076,
+   "kind": "tick",
+   "params": {
+    "freq": 371,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_36",
+   "at": 101.151,
+   "kind": "tick",
+   "params": {
+    "freq": 364,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_40",
+   "at": 101.227,
+   "kind": "tick",
+   "params": {
+    "freq": 364,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_44",
+   "at": 101.302,
+   "kind": "tick",
+   "params": {
+    "freq": 363,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_48",
+   "at": 101.378,
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_52",
+   "at": 101.453,
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_56",
+   "at": 101.529,
+   "kind": "tick",
+   "params": {
+    "freq": 359,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_60",
+   "at": 101.604,
+   "kind": "tick",
+   "params": {
+    "freq": 357,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_64",
+   "at": 101.68,
+   "kind": "tick",
+   "params": {
+    "freq": 356,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_68",
+   "at": 101.755,
+   "kind": "tick",
+   "params": {
+    "freq": 353,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_72",
+   "at": 101.831,
+   "kind": "tick",
+   "params": {
+    "freq": 352,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_76",
+   "at": 101.906,
+   "kind": "tick",
+   "params": {
+    "freq": 350,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_80",
+   "at": 101.982,
+   "kind": "tick",
+   "params": {
+    "freq": 349,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_84",
+   "at": 102.057,
+   "kind": "tick",
+   "params": {
+    "freq": 346,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_88",
+   "at": 102.133,
+   "kind": "tick",
+   "params": {
+    "freq": 342,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_92",
+   "at": 102.208,
+   "kind": "tick",
+   "params": {
+    "freq": 336,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_96",
+   "at": 102.284,
+   "kind": "tick",
+   "params": {
+    "freq": 333,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_100",
+   "at": 102.359,
+   "kind": "tick",
+   "params": {
+    "freq": 333,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_104",
+   "at": 102.435,
+   "kind": "tick",
+   "params": {
+    "freq": 329,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_108",
+   "at": 102.51,
+   "kind": "tick",
+   "params": {
+    "freq": 328,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_112",
+   "at": 102.586,
+   "kind": "tick",
+   "params": {
+    "freq": 325,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_116",
+   "at": 102.661,
+   "kind": "tick",
+   "params": {
+    "freq": 323,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_120",
+   "at": 102.737,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_124",
+   "at": 102.812,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_128",
+   "at": 102.888,
+   "kind": "tick",
+   "params": {
+    "freq": 319,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_132",
+   "at": 102.963,
+   "kind": "tick",
+   "params": {
+    "freq": 317,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_136",
+   "at": 103.039,
+   "kind": "tick",
+   "params": {
+    "freq": 316,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_140",
+   "at": 103.114,
+   "kind": "tick",
+   "params": {
+    "freq": 316,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_144",
+   "at": 103.19,
+   "kind": "tick",
+   "params": {
+    "freq": 315,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_148",
+   "at": 103.265,
+   "kind": "tick",
+   "params": {
+    "freq": 313,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_152",
+   "at": 103.341,
+   "kind": "tick",
+   "params": {
+    "freq": 312,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_156",
+   "at": 103.416,
+   "kind": "tick",
+   "params": {
+    "freq": 310,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_160",
+   "at": 103.492,
+   "kind": "tick",
+   "params": {
+    "freq": 309,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_164",
+   "at": 103.567,
+   "kind": "tick",
+   "params": {
+    "freq": 308,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_168",
+   "at": 103.643,
+   "kind": "tick",
+   "params": {
+    "freq": 308,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_172",
+   "at": 103.718,
+   "kind": "tick",
+   "params": {
+    "freq": 305,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_176",
+   "at": 103.794,
+   "kind": "tick",
+   "params": {
+    "freq": 302,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_180",
+   "at": 103.869,
+   "kind": "tick",
+   "params": {
+    "freq": 302,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_184",
+   "at": 103.945,
+   "kind": "tick",
+   "params": {
+    "freq": 302,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_188",
+   "at": 104.02,
+   "kind": "tick",
+   "params": {
+    "freq": 301,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_192",
+   "at": 104.096,
+   "kind": "tick",
+   "params": {
+    "freq": 298,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_196",
+   "at": 104.171,
+   "kind": "tick",
+   "params": {
+    "freq": 298,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_200",
+   "at": 104.247,
+   "kind": "tick",
+   "params": {
+    "freq": 297,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_204",
+   "at": 104.322,
+   "kind": "tick",
+   "params": {
+    "freq": 294,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_208",
+   "at": 104.398,
+   "kind": "tick",
+   "params": {
+    "freq": 294,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_212",
+   "at": 104.473,
+   "kind": "tick",
+   "params": {
+    "freq": 291,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_216",
+   "at": 104.549,
+   "kind": "tick",
+   "params": {
+    "freq": 290,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_220",
+   "at": 104.624,
+   "kind": "tick",
+   "params": {
+    "freq": 290,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_224",
+   "at": 104.7,
+   "kind": "tick",
+   "params": {
+    "freq": 287,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_228",
+   "at": 104.775,
+   "kind": "tick",
+   "params": {
+    "freq": 284,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_232",
+   "at": 104.851,
+   "kind": "tick",
+   "params": {
+    "freq": 281,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_236",
+   "at": 104.926,
+   "kind": "tick",
+   "params": {
+    "freq": 274,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_240",
+   "at": 105.002,
+   "kind": "tick",
+   "params": {
+    "freq": 271,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_244",
+   "at": 105.077,
+   "kind": "tick",
+   "params": {
+    "freq": 270,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_248",
+   "at": 105.153,
+   "kind": "tick",
+   "params": {
+    "freq": 266,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_settle_252",
+   "at": 105.228,
+   "kind": "tick",
+   "params": {
+    "freq": 264,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -24
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigDij_route",
+   "at": 105.385,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 87,
+       "dur": 0.5,
+       "attack": 0.01,
+       "release": 0.4,
+       "harmonics": [
+        1,
+        0.5,
+        0.25
+       ],
+       "gain_db": -17
+      }
+     }
+    ]
+   },
+   "means": "가장 빠른 길이 켜짐"
+  },
+  {
+   "id": "lift",
+   "at": 110.77,
+   "kind": "whoosh",
+   "params": {
+    "dur": 1.5999999999999943,
+    "f_start": 160,
+    "f_end": 480,
+    "gain_db": -24
+   },
+   "means": "중요한 선을 위층으로"
+  },
+  {
+   "id": "bigLay_settle_0",
+   "at": 114.086,
+   "kind": "tick",
+   "params": {
+    "freq": 420,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_2",
+   "at": 114.161,
+   "kind": "tick",
+   "params": {
+    "freq": 413,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_4",
+   "at": 114.237,
+   "kind": "tick",
+   "params": {
+    "freq": 411,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_6",
+   "at": 114.312,
+   "kind": "tick",
+   "params": {
+    "freq": 408,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_8",
+   "at": 114.388,
+   "kind": "tick",
+   "params": {
+    "freq": 405,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_10",
+   "at": 114.463,
+   "kind": "tick",
+   "params": {
+    "freq": 404,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_12",
+   "at": 114.539,
+   "kind": "tick",
+   "params": {
+    "freq": 403,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_14",
+   "at": 114.614,
+   "kind": "tick",
+   "params": {
+    "freq": 402,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_16",
+   "at": 114.69,
+   "kind": "tick",
+   "params": {
+    "freq": 400,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_18",
+   "at": 114.765,
+   "kind": "tick",
+   "params": {
+    "freq": 399,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_20",
+   "at": 114.841,
+   "kind": "tick",
+   "params": {
+    "freq": 397,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_22",
+   "at": 114.916,
+   "kind": "tick",
+   "params": {
+    "freq": 395,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_24",
+   "at": 114.992,
+   "kind": "tick",
+   "params": {
+    "freq": 394,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_26",
+   "at": 115.067,
+   "kind": "tick",
+   "params": {
+    "freq": 392,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_28",
+   "at": 115.143,
+   "kind": "tick",
+   "params": {
+    "freq": 386,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_30",
+   "at": 115.218,
+   "kind": "tick",
+   "params": {
+    "freq": 376,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_32",
+   "at": 115.294,
+   "kind": "tick",
+   "params": {
+    "freq": 371,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_34",
+   "at": 115.369,
+   "kind": "tick",
+   "params": {
+    "freq": 368,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_36",
+   "at": 115.445,
+   "kind": "tick",
+   "params": {
+    "freq": 364,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_38",
+   "at": 115.52,
+   "kind": "tick",
+   "params": {
+    "freq": 360,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_40",
+   "at": 115.596,
+   "kind": "tick",
+   "params": {
+    "freq": 359,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_42",
+   "at": 115.671,
+   "kind": "tick",
+   "params": {
+    "freq": 356,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_44",
+   "at": 115.747,
+   "kind": "tick",
+   "params": {
+    "freq": 354,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_46",
+   "at": 115.822,
+   "kind": "tick",
+   "params": {
+    "freq": 352,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_48",
+   "at": 115.898,
+   "kind": "tick",
+   "params": {
+    "freq": 351,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_50",
+   "at": 115.973,
+   "kind": "tick",
+   "params": {
+    "freq": 346,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_52",
+   "at": 116.049,
+   "kind": "tick",
+   "params": {
+    "freq": 346,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_54",
+   "at": 116.124,
+   "kind": "tick",
+   "params": {
+    "freq": 341,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_56",
+   "at": 116.2,
+   "kind": "tick",
+   "params": {
+    "freq": 337,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_58",
+   "at": 116.275,
+   "kind": "tick",
+   "params": {
+    "freq": 333,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_60",
+   "at": 116.351,
+   "kind": "tick",
+   "params": {
+    "freq": 333,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_62",
+   "at": 116.426,
+   "kind": "tick",
+   "params": {
+    "freq": 333,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_64",
+   "at": 116.502,
+   "kind": "tick",
+   "params": {
+    "freq": 328,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_66",
+   "at": 116.577,
+   "kind": "tick",
+   "params": {
+    "freq": 327,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_68",
+   "at": 116.653,
+   "kind": "tick",
+   "params": {
+    "freq": 324,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_70",
+   "at": 116.728,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_72",
+   "at": 116.804,
+   "kind": "tick",
+   "params": {
+    "freq": 316,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_74",
+   "at": 116.879,
+   "kind": "tick",
+   "params": {
+    "freq": 316,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_76",
+   "at": 116.955,
+   "kind": "tick",
+   "params": {
+    "freq": 314,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_78",
+   "at": 117.03,
+   "kind": "tick",
+   "params": {
+    "freq": 310,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_80",
+   "at": 117.106,
+   "kind": "tick",
+   "params": {
+    "freq": 308,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_82",
+   "at": 117.181,
+   "kind": "tick",
+   "params": {
+    "freq": 305,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_84",
+   "at": 117.257,
+   "kind": "tick",
+   "params": {
+    "freq": 302,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_86",
+   "at": 117.332,
+   "kind": "tick",
+   "params": {
+    "freq": 302,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_88",
+   "at": 117.408,
+   "kind": "tick",
+   "params": {
+    "freq": 299,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_90",
+   "at": 117.483,
+   "kind": "tick",
+   "params": {
+    "freq": 297,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_92",
+   "at": 117.559,
+   "kind": "tick",
+   "params": {
+    "freq": 297,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_94",
+   "at": 117.634,
+   "kind": "tick",
+   "params": {
+    "freq": 290,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_96",
+   "at": 117.71,
+   "kind": "tick",
+   "params": {
+    "freq": 283,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_98",
+   "at": 117.785,
+   "kind": "tick",
+   "params": {
+    "freq": 279,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_100",
+   "at": 117.861,
+   "kind": "tick",
+   "params": {
+    "freq": 278,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_102",
+   "at": 117.936,
+   "kind": "tick",
+   "params": {
+    "freq": 274,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_104",
+   "at": 118.012,
+   "kind": "tick",
+   "params": {
+    "freq": 271,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_106",
+   "at": 118.087,
+   "kind": "tick",
+   "params": {
+    "freq": 271,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_108",
+   "at": 118.163,
+   "kind": "tick",
+   "params": {
+    "freq": 270,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_110",
+   "at": 118.238,
+   "kind": "tick",
+   "params": {
+    "freq": 270,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_112",
+   "at": 118.314,
+   "kind": "tick",
+   "params": {
+    "freq": 267,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_114",
+   "at": 118.389,
+   "kind": "tick",
+   "params": {
+    "freq": 266,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_116",
+   "at": 118.465,
+   "kind": "tick",
+   "params": {
+    "freq": 266,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_118",
+   "at": 118.54,
+   "kind": "tick",
+   "params": {
+    "freq": 264,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_settle_120",
+   "at": 118.616,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "bigLay_route",
+   "at": 118.804,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 87,
+       "dur": 0.5,
+       "attack": 0.01,
+       "release": 0.4,
+       "harmonics": [
+        1,
+        0.5,
+        0.25
+       ],
+       "gain_db": -15
+      }
+     }
+    ]
+   },
+   "means": "가장 빠른 길이 켜짐"
+  },
+  {
+   "id": "ping_0",
+   "at": 135.125,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_1",
+   "at": 135.214,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_2",
+   "at": 135.268,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_3",
+   "at": 135.411,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_4",
+   "at": 135.431,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_5",
+   "at": 135.441,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_6",
+   "at": 135.532,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_7",
+   "at": 135.556,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_8",
+   "at": 135.64,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_9",
+   "at": 135.666,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_10",
+   "at": 135.837,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_11",
+   "at": 135.851,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_12",
+   "at": 135.872,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_13",
+   "at": 135.989,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_14",
+   "at": 136.021,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_15",
+   "at": 136.1,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_16",
+   "at": 136.242,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_17",
+   "at": 136.253,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_18",
+   "at": 136.268,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_19",
+   "at": 136.345,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_20",
+   "at": 136.374,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_21",
+   "at": 136.625,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_22",
+   "at": 136.672,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_23",
+   "at": 136.714,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_24",
+   "at": 136.768,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_25",
+   "at": 136.911,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_26",
+   "at": 136.931,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_27",
+   "at": 136.941,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_28",
+   "at": 137.032,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_29",
+   "at": 137.056,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_30",
+   "at": 137.14,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_31",
+   "at": 137.166,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_32",
+   "at": 137.337,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_33",
+   "at": 137.351,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_34",
+   "at": 137.372,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_35",
+   "at": 137.489,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_36",
+   "at": 137.521,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_37",
+   "at": 137.585,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_38",
+   "at": 137.6,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_39",
+   "at": 137.742,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_40",
+   "at": 137.753,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_41",
+   "at": 137.845,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_42",
+   "at": 138.125,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_43",
+   "at": 138.172,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_44",
+   "at": 138.214,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_45",
+   "at": 138.268,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_46",
+   "at": 138.411,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_47",
+   "at": 138.431,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_48",
+   "at": 138.441,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_49",
+   "at": 138.532,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_50",
+   "at": 138.556,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_51",
+   "at": 138.64,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_52",
+   "at": 138.666,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_53",
+   "at": 138.851,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_54",
+   "at": 138.872,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_55",
+   "at": 138.989,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_56",
+   "at": 139.021,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_57",
+   "at": 139.085,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_58",
+   "at": 139.1,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_59",
+   "at": 139.125,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_60",
+   "at": 139.242,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_61",
+   "at": 139.253,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_62",
+   "at": 139.345,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_63",
+   "at": 139.625,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_64",
+   "at": 139.672,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_65",
+   "at": 139.714,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_66",
+   "at": 139.768,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_67",
+   "at": 139.911,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_68",
+   "at": 139.941,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_69",
+   "at": 140.032,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_70",
+   "at": 140.056,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_71",
+   "at": 140.14,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_72",
+   "at": 140.166,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_73",
+   "at": 140.351,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_74",
+   "at": 140.372,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_75",
+   "at": 140.489,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_76",
+   "at": 140.521,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_77",
+   "at": 140.555,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_78",
+   "at": 140.585,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_79",
+   "at": 140.6,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_80",
+   "at": 140.625,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_81",
+   "at": 140.742,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_82",
+   "at": 140.753,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_83",
+   "at": 140.845,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_84",
+   "at": 141.125,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_85",
+   "at": 141.172,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_86",
+   "at": 141.214,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_87",
+   "at": 141.268,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_88",
+   "at": 141.397,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_89",
+   "at": 141.411,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_90",
+   "at": 141.441,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_91",
+   "at": 141.532,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_92",
+   "at": 141.556,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_93",
+   "at": 141.64,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_94",
+   "at": 141.66,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_95",
+   "at": 141.666,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_96",
+   "at": 141.851,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_97",
+   "at": 141.872,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_98",
+   "at": 141.989,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_99",
+   "at": 142.055,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_100",
+   "at": 142.085,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_101",
+   "at": 142.1,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_102",
+   "at": 142.125,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_103",
+   "at": 142.242,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_104",
+   "at": 142.253,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_105",
+   "at": 142.345,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_106",
+   "at": 142.481,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_107",
+   "at": 142.672,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_108",
+   "at": 142.714,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_109",
+   "at": 142.768,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_110",
+   "at": 142.897,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_111",
+   "at": 142.941,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_112",
+   "at": 143.032,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_113",
+   "at": 143.056,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_114",
+   "at": 143.16,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_115",
+   "at": 143.166,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_116",
+   "at": 143.351,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_117",
+   "at": 143.355,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_118",
+   "at": 143.372,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_119",
+   "at": 143.489,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_120",
+   "at": 143.555,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_121",
+   "at": 143.585,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_122",
+   "at": 143.6,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_123",
+   "at": 143.625,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_124",
+   "at": 143.742,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_125",
+   "at": 143.753,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_126",
+   "at": 143.845,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_127",
+   "at": 143.981,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_128",
+   "at": 144.172,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_129",
+   "at": 144.214,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_130",
+   "at": 144.268,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_131",
+   "at": 144.397,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_132",
+   "at": 144.441,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_133",
+   "at": 144.513,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_134",
+   "at": 144.532,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_135",
+   "at": 144.556,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_136",
+   "at": 144.66,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_137",
+   "at": 144.666,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_138",
+   "at": 144.851,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_139",
+   "at": 144.855,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_140",
+   "at": 144.872,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_141",
+   "at": 144.989,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_142",
+   "at": 145.055,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_143",
+   "at": 145.085,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_144",
+   "at": 145.1,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_145",
+   "at": 145.125,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_146",
+   "at": 145.253,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_147",
+   "at": 145.345,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_148",
+   "at": 145.481,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_149",
+   "at": 145.672,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_150",
+   "at": 145.714,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_151",
+   "at": 145.768,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_152",
+   "at": 145.897,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_153",
+   "at": 145.941,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_154",
+   "at": 146.013,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_155",
+   "at": 146.056,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_156",
+   "at": 146.149,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_157",
+   "at": 146.16,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "ping_158",
+   "at": 146.166,
+   "kind": "tone",
+   "params": {
+    "freq": 300,
+    "dur": 0.07,
+    "attack": 0.004,
+    "release": 0.06,
+    "gain_db": -30
+   },
+   "means": "휴대전화가 위치를 알림"
+  },
+  {
+   "id": "jam",
+   "at": 147.188,
+   "kind": "tone",
+   "params": {
+    "freq": 70,
+    "dur": 5.532999999999959,
+    "attack": 0.6,
+    "release": 0.8,
+    "harmonics": [
+     1,
+     0.4
+    ],
+    "gain_db": -28
+   },
+   "means": "고속도로 막힘(설명용 지속음)"
+  },
+  {
+   "id": "detour_settle_0",
+   "at": 148.958,
+   "kind": "tick",
+   "params": {
+    "freq": 420,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_2",
+   "at": 149.036,
+   "kind": "tick",
+   "params": {
+    "freq": 395,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_4",
+   "at": 149.114,
+   "kind": "tick",
+   "params": {
+    "freq": 394,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_6",
+   "at": 149.193,
+   "kind": "tick",
+   "params": {
+    "freq": 384,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_8",
+   "at": 149.271,
+   "kind": "tick",
+   "params": {
+    "freq": 370,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_10",
+   "at": 149.349,
+   "kind": "tick",
+   "params": {
+    "freq": 370,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_12",
+   "at": 149.427,
+   "kind": "tick",
+   "params": {
+    "freq": 369,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_14",
+   "at": 149.505,
+   "kind": "tick",
+   "params": {
+    "freq": 349,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_16",
+   "at": 149.583,
+   "kind": "tick",
+   "params": {
+    "freq": 345,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_18",
+   "at": 149.662,
+   "kind": "tick",
+   "params": {
+    "freq": 345,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_20",
+   "at": 149.74,
+   "kind": "tick",
+   "params": {
+    "freq": 335,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_22",
+   "at": 149.818,
+   "kind": "tick",
+   "params": {
+    "freq": 332,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_24",
+   "at": 149.896,
+   "kind": "tick",
+   "params": {
+    "freq": 322,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_26",
+   "at": 149.974,
+   "kind": "tick",
+   "params": {
+    "freq": 320,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_28",
+   "at": 150.052,
+   "kind": "tick",
+   "params": {
+    "freq": 318,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_30",
+   "at": 150.131,
+   "kind": "tick",
+   "params": {
+    "freq": 309,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_32",
+   "at": 150.209,
+   "kind": "tick",
+   "params": {
+    "freq": 308,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_34",
+   "at": 150.287,
+   "kind": "tick",
+   "params": {
+    "freq": 307,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_36",
+   "at": 150.365,
+   "kind": "tick",
+   "params": {
+    "freq": 297,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_38",
+   "at": 150.443,
+   "kind": "tick",
+   "params": {
+    "freq": 296,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_40",
+   "at": 150.522,
+   "kind": "tick",
+   "params": {
+    "freq": 295,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_42",
+   "at": 150.6,
+   "kind": "tick",
+   "params": {
+    "freq": 286,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_44",
+   "at": 150.678,
+   "kind": "tick",
+   "params": {
+    "freq": 285,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_46",
+   "at": 150.756,
+   "kind": "tick",
+   "params": {
+    "freq": 283,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_48",
+   "at": 150.834,
+   "kind": "tick",
+   "params": {
+    "freq": 275,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_50",
+   "at": 150.912,
+   "kind": "tick",
+   "params": {
+    "freq": 271,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_52",
+   "at": 150.991,
+   "kind": "tick",
+   "params": {
+    "freq": 271,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_54",
+   "at": 151.069,
+   "kind": "tick",
+   "params": {
+    "freq": 263,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_settle_56",
+   "at": 151.147,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -21
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "detour_route",
+   "at": 151.236,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 87,
+       "dur": 0.5,
+       "attack": 0.01,
+       "release": 0.4,
+       "harmonics": [
+        1,
+        0.5,
+        0.25
+       ],
+       "gain_db": -15
+      }
+     }
+    ]
+   },
+   "means": "가장 빠른 길이 켜짐"
+  },
+  {
+   "id": "free_again",
+   "at": 153.021,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 87,
+       "dur": 0.5,
+       "attack": 0.01,
+       "release": 0.4,
+       "harmonics": [
+        1,
+        0.5,
+        0.25
+       ],
+       "gain_db": -18
+      }
+     }
+    ]
+   },
+   "means": "가장 빠른 길이 켜짐"
+  },
+  {
+   "id": "close_settle_0",
+   "at": 164.31,
+   "kind": "tick",
+   "params": {
+    "freq": 420,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_2",
+   "at": 164.4,
+   "kind": "tick",
+   "params": {
+    "freq": 391,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_4",
+   "at": 164.489,
+   "kind": "tick",
+   "params": {
+    "freq": 390,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_6",
+   "at": 164.579,
+   "kind": "tick",
+   "params": {
+    "freq": 378,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_8",
+   "at": 164.669,
+   "kind": "tick",
+   "params": {
+    "freq": 363,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_10",
+   "at": 164.758,
+   "kind": "tick",
+   "params": {
+    "freq": 362,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_12",
+   "at": 164.848,
+   "kind": "tick",
+   "params": {
+    "freq": 361,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_14",
+   "at": 164.938,
+   "kind": "tick",
+   "params": {
+    "freq": 354,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_16",
+   "at": 165.027,
+   "kind": "tick",
+   "params": {
+    "freq": 347,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_18",
+   "at": 165.117,
+   "kind": "tick",
+   "params": {
+    "freq": 338,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_20",
+   "at": 165.207,
+   "kind": "tick",
+   "params": {
+    "freq": 333,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_22",
+   "at": 165.296,
+   "kind": "tick",
+   "params": {
+    "freq": 332,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_24",
+   "at": 165.386,
+   "kind": "tick",
+   "params": {
+    "freq": 324,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_26",
+   "at": 165.476,
+   "kind": "tick",
+   "params": {
+    "freq": 317,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_28",
+   "at": 165.565,
+   "kind": "tick",
+   "params": {
+    "freq": 314,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_30",
+   "at": 165.655,
+   "kind": "tick",
+   "params": {
+    "freq": 311,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_32",
+   "at": 165.744,
+   "kind": "tick",
+   "params": {
+    "freq": 309,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_34",
+   "at": 165.834,
+   "kind": "tick",
+   "params": {
+    "freq": 303,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_36",
+   "at": 165.924,
+   "kind": "tick",
+   "params": {
+    "freq": 302,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_38",
+   "at": 166.013,
+   "kind": "tick",
+   "params": {
+    "freq": 299,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_40",
+   "at": 166.103,
+   "kind": "tick",
+   "params": {
+    "freq": 292,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_42",
+   "at": 166.193,
+   "kind": "tick",
+   "params": {
+    "freq": 290,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_44",
+   "at": 166.282,
+   "kind": "tick",
+   "params": {
+    "freq": 289,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_46",
+   "at": 166.372,
+   "kind": "tick",
+   "params": {
+    "freq": 283,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_48",
+   "at": 166.462,
+   "kind": "tick",
+   "params": {
+    "freq": 280,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_50",
+   "at": 166.551,
+   "kind": "tick",
+   "params": {
+    "freq": 278,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_52",
+   "at": 166.641,
+   "kind": "tick",
+   "params": {
+    "freq": 274,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_54",
+   "at": 166.731,
+   "kind": "tick",
+   "params": {
+    "freq": 268,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_56",
+   "at": 166.82,
+   "kind": "tick",
+   "params": {
+    "freq": 262,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_settle_58",
+   "at": 166.91,
+   "kind": "tick",
+   "params": {
+    "freq": 260,
+    "decay": 0.04,
+    "click": 0.15,
+    "gain_db": -22
+   },
+   "means": "교차로 하나를 확정"
+  },
+  {
+   "id": "close_route",
+   "at": 166.96,
+   "kind": "custom",
+   "params": {
+    "layers": [
+     {
+      "kind": "tone",
+      "params": {
+       "freq": 87,
+       "dur": 0.5,
+       "attack": 0.01,
+       "release": 0.4,
+       "harmonics": [
+        1,
+        0.5,
+        0.25
+       ],
+       "gain_db": -15
+      }
+     }
+    ]
+   },
+   "means": "가장 빠른 길이 켜짐"
   }
+ ]
 }
