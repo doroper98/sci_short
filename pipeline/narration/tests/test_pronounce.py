@@ -81,3 +81,61 @@ def test_lint_accepts_clean():
     assert lint_tts(s) == s
     with pytest.raises(TtsLintError):
         lint_tts("   ")
+
+
+# ---- 발음 규정집 (config/pronunciation.json, 2026-11-28) -----------------------------------------------------------
+
+def test_rulebook_default_loads_and_fixes_sangdaeseong():
+    from pipeline.narration.pronounce import apply_rulebook, load_rulebook
+
+    rules = load_rulebook()
+    assert ("상대성", "상대썽") in rules
+    out, done = apply_rulebook("중력의 이론인 일반상대성이론과 양자역학")
+    assert out == "중력의 이론인 일반상대썽이론과 양자역학"
+    assert done == [("상대성", "상대썽")]
+    assert len(out) == len("중력의 이론인 일반상대성이론과 양자역학")       # 글자 수는 그대로
+
+
+def test_rulebook_is_noop_on_already_fixed_and_unrelated_text():
+    from pipeline.narration.pronounce import apply_rulebook
+
+    for s in ("일반상대썽이론과", "인공위성과 행성, 관성과 탄성", "가능한 상태의 수가 유한합니다."):
+        assert apply_rulebook(s) == (s, [])
+
+
+def test_rulebook_longest_first_and_all_occurrences():
+    from pipeline.narration.pronounce import apply_rulebook, check_rulebook
+
+    rules = tuple(check_rulebook({"words": [{"write": "물결", "say": "물껼"}, {"write": "잔물결", "say": "잔물껼"}]}))
+    assert rules[0][0] == "잔물결"
+    assert apply_rulebook("잔물결과 물결, 또 물결", rules)[0] == "잔물껼과 물껼, 또 물껼"
+
+
+@pytest.mark.parametrize("words,frag", [
+    ([{"write": "상대성", "say": "상대썽이"}], "글자 수"),
+    ([{"write": "GPT", "say": "지피티"}], "한글"),
+    ([{"write": "사건", "say": "사건"}], "같다"),
+    ([{"write": "사건", "say": "사껀"}, {"write": "사건", "say": "사껀"}], "두 번"),
+    ([{"write": "사건"}], "write·say"),
+    ([{"write": "가나", "say": "다라"}, {"write": "다라", "say": "마바"}], "들어 있다"),
+])
+def test_rulebook_shape_errors(words, frag):
+    from pipeline.narration.pronounce import RulebookError, check_rulebook
+
+    with pytest.raises(RulebookError, match=frag):
+        check_rulebook({"words": words})
+
+
+def test_rulebook_applies_to_explicit_tts_in_narrate(tmp_path):
+    import json
+
+    from pipeline.narration.narrate import resolve_tts
+    from pipeline.narration.script_schema import load_script
+
+    f = tmp_path / "script.json"
+    f.write_text(json.dumps({"title": "t", "language": "ko", "sentences": [
+        {"id": "s01", "scene": "a", "text": "상대성이론은 무엇일까요?", "tts": "상대성이론은 무엇일까요?"},
+        {"id": "s02", "scene": "a", "text": "두 사건을 잇습니다."}]}, ensure_ascii=False), encoding="utf-8")
+    got = resolve_tts(load_script(f))
+    assert got["s01"] == ("상대썽이론은 무엇일까요?", "explicit")
+    assert got["s02"] == ("두 사껀을 잇습니다.", "auto")
